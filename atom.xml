@@ -4,7 +4,7 @@
   <title><![CDATA[Jolie Hou's Home]]></title>
   <link href="http://newtamato.github.io/atom.xml" rel="self"/>
   <link href="http://newtamato.github.io/"/>
-  <updated>2014-09-22T23:37:43+08:00</updated>
+  <updated>2014-09-22T23:55:26+08:00</updated>
   <id>http://newtamato.github.io/</id>
   <author>
     <name><![CDATA[Jolie Hou]]></name>
@@ -23,7 +23,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[New Post]]></title>
+    <title type="html"><![CDATA[中文标题]]></title>
     <link href="http://newtamato.github.io/blog/2014/09/22/new-post/"/>
     <updated>2014-09-22T22:45:47+08:00</updated>
     <id>http://newtamato.github.io/blog/2014/09/22/new-post</id>
