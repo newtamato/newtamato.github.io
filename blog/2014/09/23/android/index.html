@@ -1,0 +1,249 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Android - Jolie Hou&#8217;s Home</title>
+  <meta name="author" content="Jolie Hou">
+
+  
+  <meta name="description" content="cocos2d的ios版本移植到android系统 标签（空格分隔）： cocos2dx andorid ios 在AppDelegate中去掉所有与ios有关的函数调用
+将项目中用到的第三方的c＋＋库放到了cocosd下面。本应该设置NDK_MODULE_PATH，但是没有成功。
+为了简单期间， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://newtamato.github.io/blog/2014/09/23/android">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="Jolie Hou's Home" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">Jolie Hou&#8217;s Home</a></h1>
+  
+    <h2>write code, thinking different.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:newtamato.github.io" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Android</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2014-09-23T21:37:13+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>9:37 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h1>cocos2d的ios版本移植到android系统</h1>
+
+<p>标签（空格分隔）： cocos2dx andorid ios</p>
+
+<hr />
+
+<blockquote><ul>
+<li>在AppDelegate中去掉所有与ios有关的函数调用</li>
+<li>将项目中用到的第三方的c＋＋库放到了cocosd下面。本应该设置NDK_MODULE_PATH，但是没有成功。</li>
+<li>为了简单期间，将自己导出的ccshake放到了cocos2d－x/scripting/lua/cocos2d_support/下面，但是在生成so文件的时候，还是出问题</li>
+<li>找到问题的解决方法，我将资源放到了quick工程下面，因此需要改变quick工程的andorid.mk文件，把新的cpp文件路径填写进去。重新编译。</li>
+<li>解决android名字和icon问题。在工程的res文件夹下替换相关的icon图片。</li>
+<li><a href="http://romannurik.github.io/AndroidAssetStudio/icons-launcher.html#foreground.type=image&amp;foreground.space.trim=1&amp;foreground.space.pad=0&amp;foreColor=33b5e5%2C0&amp;crop=0&amp;backgroundShape=none&amp;backColor=fff%2C100">一次性生成不同分辨率的icon</a></li>
+<li>网络连接函数修改，重新build_native.sha一直也没有成功，没有使用加密，找不到原因。现只好clean.sh一下然后在此build，希望有效.果然有效。但是由于clean，删除了asset里面所有的资源！</li>
+<li><a href="http://stackoverflow.com/questions/5350624/set-icon-for-android-application">stack over flow上面对替换icon的问题</a></li>
+<li>遇到的另一个问题是，在android上面读取文件不成功。andorid资源存储分两部分，一部分是在apk中，一部分是在/data中??
+<em>如何在eclipse和device上调试cocos2d代码？
+</em>修改build_native.sh，修改里面的删除asset代码，不能清空否则资源全不存在</li>
+</ul>
+</blockquote>
+
+<p>接下来介绍使用在MAC安裝Genymotion Android模擬器，因为从google下载下来的模拟器启动起来非常耗时耗内存。</p>
+
+<blockquote><ul>
+<li>Genymotion需要运行环境VirtualBox，先去<a href="https://www.virtualbox.org/wiki/Downloads">官网</a>下载</li>
+<li>然后去Genymotion的<a href="https://cloud.genymotion.com/page/launchpad/download/">官网</a>,先注册，注册成功之后跳转到下载界面，下载需要的版本。</li>
+<li>下载结束之后，安装。一路next就可以。</li>
+<li><p>然后运行Genymotion。点击＋添加设备进来。此时需要连接刚才在Genymotion，所以用刚才的用户名和密码登录。登录成功会刷新界面。如下的界面<img src="http://i1.wp.com/photo.minwt.com/img/Content/mac/genymotion-android-mac/genymotion-android-mac_09.jpg" alt="设备列表" /></p></li>
+<li><p>选择你需要的设备，然后开始下载相关的平台SDK。</p></li>
+<li>最后下载google的sdk，在如下界面设置它<img src="http://i1.wp.com/photo.minwt.com/img/Content/mac/genymotion-android-mac/genymotion-android-mac_12.jpg" alt="google sdk setting" /></li>
+</ul>
+</blockquote>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">Jolie Hou</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2014-09-23T21:37:13+08:00'><span class='date'><span class='date-month'>Sep</span> <span class='date-day'>23</span><span class='date-suffix'>rd</span>, <span class='date-year'>2014</span></span> <span class='time'>9:37 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://newtamato.github.io/blog/2014/09/23/android/" data-via="" data-counturl="http://newtamato.github.io/blog/2014/09/23/android/" >Tweet</a>
+  
+  
+  
+
+     <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1376010092688774" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+<!-- JiaThis Button BEGIN -->
+<div class="jiathis_style_32x32">
+	<a class="jiathis_button_qzone"></a>
+	<a class="jiathis_button_tsina"></a>
+	<a class="jiathis_button_tqq"></a>
+	<a class="jiathis_button_weixin"></a>
+	<a class="jiathis_button_renren"></a>
+	<a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jtico jtico_jiathis" target="_blank"></a>
+	<a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js?uid=1376010092688774" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+ 
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2014/09/22/github-octopress-generate/" title="Previous Post: github-Octopress generate">&laquo; github-Octopress generate</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2014/09/23/android/">Android</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/22/github-octopress-generate/">github-Octopress Generate</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2014/09/22/new-post/">中文标题</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2014 - Jolie Hou -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>
