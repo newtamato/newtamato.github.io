@@ -1,0 +1,60 @@
+# 塔西里亚的项目总结
+
+标签（空格分隔）： 未分类
+
+---
+
+从去年8月份开始，塔西里亚项目开始进入了开发的初级阶段，我们对Client的技术实现，使用的是flash 制作UI，cocosbuilder进行动画制作的方法，脚本语言采用quick coco2dx的框架。底层cocos2dx使用的是2.2.3的版本。
+主要的问题有如下几条：
+>1. 触摸事件的处理，单点触摸和多点触摸。幸运的是quick coco2dx 已经对这个问题上给我们做除了解决方案。我们便省去了许多时间
+>2. 动画制作,使用cocosbuilder和序列帧做，但是大量的图片会被加载到内存中，于是会造成内存上涨，当动画播放完成的时候，我们在调用相关函数去写在内存中不用的图片和release相关的对象。
+>3. 内存上涨的问题，不仅仅有cocos2dx对象和GPU内存的上涨还有lua内存的上涨，暂时不知道怎么将lua的内存下降，它有自己的内存管理机制。
+>4. 时许处理我们的逻辑，尤其在播放动画的时候，需要考虑，比如当我们喜欢播放某些动画的时候，其他的面板已经生成，待前面一个动画播放完毕在播放面板的动画。这个时候掌握时序就很重要了。
+>5. cocosbuilder 制作动画，但是资源似乎没有卸载？
+>6. 字体的回收
+>7. tableView的滑动和增加删除，以及动画点击层级关系，coco2dx对于tableView的增加和删除做的并不是很好。并且没有相关的动画支持，我们需要自己制作。
+>8. 动态更新tableView的可触摸区域？
+>9. cocosbuilder制作的动画，某些时候并不会在时间结束的将完成事件派发出来。
+>10. 骨骼动画，可以使用flash的骨骼动画插件Dragbones，或者cocosstudio的骨骼工具，他们均导出动画信息和材质文件，然后调用CCArmature即可播放骨骼动画。初期骨骼动画在播放的时候出现掉帧的现象。现在经过触控公司的维护，这个bug已经解决。但是另一个问题是如果一个小人的头部图片在执行不同动作的时候，材质发生了变化，那么对这个小人做颜色变化，会出现超出预期的问题。因此小人各个器官最好使用同一个材质
+>11. 骨骼动画的回收！
+>12. Spine骨骼动画和Sprite精灵动画的使用，他们的本质都是类似骨骼动画的思想。我并未做深入的研究。
+>13. cocos2dx的触摸思想：事件类似flash的事件系统，分为capture，target，从舞台scene被派发出去，经过scene注册事件监听的节点，里面的各个节点，检查节点是否可以被点击，如果可以检查点击的点是否在节点的碰撞区域中，如果找到了targetNode，从他开始找到舞台，然后从父亲开始向下派发事件。然后走到target阶段，如果事件被targetNode吞噬，则事件不在继续派发，其他的节点则接受不到事件。事件流如下：
+
+```flow
+st=>start: Touch Began
+cond=>condition: is touch some node?
+op=>operation: find Path
+cond2=>condition: keep capturing?
+op2=>operation: touchNode
+cond3=>condition: not isTouchSwallow
+op3=>operation: finding targetNode
+e=>end
+
+st->cond
+cond(yes)->op->cond2
+cond(no)->e
+cond2(yes)->op2->cond3
+cond2(no)->e
+cond3(yes)->op3->op
+cond3(no)->e
+```
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
