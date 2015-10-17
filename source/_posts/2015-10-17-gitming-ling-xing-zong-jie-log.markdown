@@ -1,8 +1,11 @@
-# 根据git log得到版本间文件的变化
-
-标签（空格分隔）： git log format output
-
 ---
+layout: post
+title: "git命令行总结-log"
+date: 2015-10-17 22:08:49 +0800
+comments: true
+categories: 
+---
+
 
 ```
 git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
@@ -23,10 +26,3 @@ git am xxx.patch
 ```
 :%!python -m json.tool       
 ```
-
-
-
-
-
-
-
