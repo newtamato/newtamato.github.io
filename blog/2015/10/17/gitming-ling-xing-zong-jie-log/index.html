@@ -5,17 +5,13 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Blog Archive - My Octopress Blog</title>
+  <title>Git命令行总结-log - My Octopress Blog</title>
   <meta name="author" content="Your Name">
 
   
-  <meta name="description" content="Blog Archive 2015 GenyMotion的安装
-Oct 17 2015 Ls命令行排序
-Oct 17 2015 Vim使用-颜色
-Oct 17 2015 项目管理心得
-Oct 17 2015 Git命令行总结-rebase
-Oct 17 2015 Git命令行总结-log
-Oct &hellip;">
+  <meta name="description" content="1
+git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} ' | uniq 格式化文件输出 1
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d% &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -24,7 +20,7 @@ Oct &hellip;">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://newtamato.github.io/blog/archives">
+  <link rel="canonical" href="http://newtamato.github.io/blog/2015/10/17/gitming-ling-xing-zong-jie-log">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <link href="/atom.xml" rel="alternate" title="My Octopress Blog" type="application/atom+xml">
@@ -70,81 +66,90 @@ Oct &hellip;">
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">Blog Archive</h1>
+    
+      <h1 class="entry-title">Git命令行总结-log</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-10-17T22:08:49+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:08 pm</span></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives">
 
 
-
-  
-  <h2>2015</h2>
-
-<article>
-  
-<h1><a href="/blog/2015/10/17/genymotionde-an-zhuang/">GenyMotion的安装</a></h1>
-<time datetime="2015-10-17T22:28:11+08:00" pubdate><span class='month'>Oct</span> <span class='day'>17</span> <span class='year'>2015</span></time>
+<div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq </span></code></pre></td></tr></table></div></figure>
 
 
-</article>
+<h1>格式化文件输出</h1>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status</span></code></pre></td></tr></table></div></figure>
 
 
+<blockquote><p>1.将某一个commit之后的提交做成patch</p></blockquote>
 
-<article>
-  
-<h1><a href="/blog/2015/10/17/lsming-ling-xing-pai-xu/">Ls命令行排序</a></h1>
-<time datetime="2015-10-17T22:26:44+08:00" pubdate><span class='month'>Oct</span> <span class='day'>17</span> <span class='year'>2015</span></time>
-
-
-</article>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git format-patch -M HEAD~1</span></code></pre></td></tr></table></div></figure>
 
 
+<blockquote><p>1.将patch打到我们的开发分支</p></blockquote>
 
-<article>
-  
-<h1><a href="/blog/2015/10/17/vimshi-yong-yan-se/">Vim使用-颜色</a></h1>
-<time datetime="2015-10-17T22:19:24+08:00" pubdate><span class='month'>Oct</span> <span class='day'>17</span> <span class='year'>2015</span></time>
-
-
-</article>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git am xxx.patch</span></code></pre></td></tr></table></div></figure>
 
 
+<blockquote><p>2.vim中格式化json</p></blockquote>
 
-<article>
-  
-<h1><a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de/">项目管理心得</a></h1>
-<time datetime="2015-10-17T22:14:06+08:00" pubdate><span class='month'>Oct</span> <span class='day'>17</span> <span class='year'>2015</span></time>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase/">Git命令行总结-rebase</a></h1>
-<time datetime="2015-10-17T22:11:24+08:00" pubdate><span class='month'>Oct</span> <span class='day'>17</span> <span class='year'>2015</span></time>
-
-
-</article>
-
-
-
-<article>
-  
-<h1><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log/">Git命令行总结-log</a></h1>
-<time datetime="2015-10-17T22:08:49+08:00" pubdate><span class='month'>Oct</span> <span class='day'>17</span> <span class='year'>2015</span></time>
-
-
-</article>
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:%!python -m json.tool       </span></code></pre></td></tr></table></div></figure>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">Your Name</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-10-17T22:08:49+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:08 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://newtamato.github.io/blog/2015/10/17/gitming-ling-xing-zong-jie-log/" data-via="" data-counturl="http://newtamato.github.io/blog/2015/10/17/gitming-ling-xing-zong-jie-log/" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase/" title="Next Post: Git命令行总结-rebase">Git命令行总结-rebase &raquo;</a>
+      
+    </p>
+  </footer>
 </article>
 
 </div>
