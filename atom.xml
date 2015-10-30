@@ -1,16 +1,178 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[My Octopress Blog]]></title>
+  <title><![CDATA[番茄手册]]></title>
   <link href="http://newtamato.github.io/atom.xml" rel="self"/>
   <link href="http://newtamato.github.io/"/>
-  <updated>2014-12-14T23:19:44+08:00</updated>
+  <updated>2015-10-17T22:57:02+08:00</updated>
   <id>http://newtamato.github.io/</id>
   <author>
-    <name><![CDATA[Your Name]]></name>
+    <name><![CDATA[newtomato]]></name>
     
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[GenyMotion的安装]]></title>
+    <link href="http://newtamato.github.io/blog/2015/10/17/genymotionde-an-zhuang/"/>
+    <updated>2015-10-17T22:28:11+08:00</updated>
+    <id>http://newtamato.github.io/blog/2015/10/17/genymotionde-an-zhuang</id>
+    <content type="html"><![CDATA[<ol>
+<li>先安装虚拟机<a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
+<li>在下载  <a href="http://www.genymotion.cn/#theme=download">GenyMotion</a>,但是他还需要注册，才能继续使用</li>
+<li>主界面的 Settings 按钮，可以用来设置 VirtualBox 及 ADB 路径等信息。</li>
+<li>虚拟机的配置<a href="http://pan.baidu.com/s/1o68yMGM">下载</a></li>
+<li>打上ARM&ndash;>x86补丁：只要将Genymotion-ARM-Translation_v1.1.zip拖入安卓虚拟机即可。此时会提示“File Transfer in Progress”，在弹出的窗口中点击【OK】以完成更新。</li>
+<li><img src="./1428929730092.png" alt="Alt text" /></li>
+<li><p>重启虚拟机（关闭窗口，然后再次启动运行就好）</p></li>
+<li><p>VirtualBox：<a href="https://www.virtualbox.org/wiki/Downloads">官網下載</a></p></li>
+<li>Genymotion：<a href="https://cloud.genymotion.com/page/launchpad/download/">註冊&amp;下載</a></li>
+<li>Android SDK：<a href="https://cloud.genymotion.com/page/launchpad/download/">官網下載</a></li>
+<li>ARM Translation Installer：v1.1<a href="http://forum.xda-developers.com/showthread.php?t=2528952">下載</a>
+5   .Google Play：4.3版 | <a href="http://wiki.rootzwiki.com/Google_Apps#Universal_Packages_2">所有版本</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Ls命令行排序]]></title>
+    <link href="http://newtamato.github.io/blog/2015/10/17/lsming-ling-xing-pai-xu/"/>
+    <updated>2015-10-17T22:26:44+08:00</updated>
+    <id>http://newtamato.github.io/blog/2015/10/17/lsming-ling-xing-pai-xu</id>
+    <content type="html"><![CDATA[<blockquote><p>ls -lSr
+按文件大小降序排列</p>
+
+<p>df -lh
+查看当前电脑上硬盘的使用情况</p>
+
+<p>du -sh * |sort -rm
+这是按兆（M）来排序</p>
+
+<p>du -sh * | sort -rm | head
+选出排在前面的10个</p>
+
+<p>du -sh * | sort -rm | tail
+选出排在后面的10个</p></blockquote>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Vim使用-颜色]]></title>
+    <link href="http://newtamato.github.io/blog/2015/10/17/vimshi-yong-yan-se/"/>
+    <updated>2015-10-17T22:19:24+08:00</updated>
+    <id>http://newtamato.github.io/blog/2015/10/17/vimshi-yong-yan-se</id>
+    <content type="html"><![CDATA[<blockquote><ol>
+<li>首先将Solarized的配色库download下来
+ git clone git://github.com/altercation/solarized.git</li>
+<li>将solarized.vim文件copy 到 ~/.vim/colors/  文件夹下面</li>
+<li>配置.vimrc</li>
+</ol>
+</blockquote>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">syntax</span> <span class="n">on</span>
+</span><span class='line'><span class="nb">set</span> <span class="n">t_Co</span><span class="o">=</span><span class="mi">256</span>
+</span><span class='line'><span class="n">let</span> <span class="n">g</span><span class="p">:</span><span class="n">solarized_termcolors</span><span class="o">=</span><span class="mi">256</span>
+</span><span class='line'><span class="nb">set</span> <span class="n">background</span><span class="o">=</span><span class="n">dark</span>
+</span><span class='line'><span class="n">colorscheme</span> <span class="n">solarized</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p> 有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[项目管理心得]]></title>
+    <link href="http://newtamato.github.io/blog/2015/10/17/xiang-mu-guan-li-xin-de/"/>
+    <updated>2015-10-17T22:14:06+08:00</updated>
+    <id>http://newtamato.github.io/blog/2015/10/17/xiang-mu-guan-li-xin-de</id>
+    <content type="html"><![CDATA[<p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
+
+<p>谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性，因为我自己估算了时间怎么会完不成呢？可是，你是否也会想过这样是否这个srcum就真的没有问题了呢？他是否是适合所有的团队？对于我们这样有些松散的，开发经验并不足够的小团队而言，并且开发任务也很繁重，是否也是适合的呢？</p>
+
+<p>我不否定scrum的作用和他给某些团队带来的便利性，但是我在运用他的时候，往往心有力而力不足，譬如我们有一批任务，这些任务并不涉及太多的技术，有的仅仅是怎么去替换一下本地化的语言。起初我并没有分下去，而是让团队自己去领取任务。然后对任务做好预估的时间。这样一devday结束之后，自己做了多少任务是有数的。我也欢天喜地的认为我们很快就会讲这些小问题解决掉，但事实并不如此。</p>
+
+<p>任务池中的任务下降的速度远不如我的预期。我们在一个周期内解决的问题并不多。在验收产品的时候，我们已经resolve的任务又会被打开。有些又要重回任务池。这样下一个循环开始，周而复始我们的效率也没有提高，而团队里面反而出现了松散的现象，本来很重的任务，其他人好像都感受不深。压力都攒在了我这里。</p>
+
+<p>于是我改变了策略，从每天让他们领任务到现在我给他们发任务并且规定每天完成的数量，可以完不成，但是需要说明什么阻碍了你。我会尽力去为他们清理阻碍。如此坚持几个周期，开发效率提升不小，尽管任务很多，但是合理的安排和计划时间便可以达到在规定的时间内做完，有的时候我们甚至会提前完成。</p>
+
+<p>从此事中，可以看出不是所有的团队，所有的阶段都要组固定的套路，我们应该灵活的变通自己的思路，scrum仅仅是一个工具，工具不顺手，我们应该考虑换别的工具，项目按时完成才是我们最终的目标。不可为此做耽误。待以后团队成熟之后，或者可以在考虑使用scrum。</p>
+
+<p>另一个问题便是对产品的需求的敲定，尤其是那些模糊和待讨论的需求，在初期，开发上手之前，应该让需求方和开发坐在一起，讨论一下这个需求会涉及到什么东西，比如最为简单的问题，文字字体颜色变化，必然在金币“足够”的时候是一种字体，在“不足”的时候，显示另一种颜色，那么这个需求是仅仅放在这一处，还是所有用到金币的体的地方，足够是怎样的量级限定呢？换哪种颜色的字体？如果使用嵌入字体，就需要提供字体。我举的这个例子已经很细节，可是开发中我们往往面对的都是这些细节，如果不敲定这些问题，开发出来总是不对的。</p>
+
+<p>我想每一个前端工程师都曾觉得美术或者UX或者产品经理他们不可理喻，设计出来一个拖拉机的图纸，却希望开发出来卡迪拉克！每当如此，鸡同鸭讲。互相都是不理解的。来来回回无处次修改，有的需求修改甚至可以推到以前的设计，这让以严谨著称的程序员么简直要抓狂，代码是可以灵活多变的，是可以独立的，是可以有各种设计模式帮助我们做出更好的系统，但是每每此刻你会知道哪些东西在需求变化了之后什么都是不重要了，再修身养性的程序员都看破红尘了！</p>
+
+<p>说及以上，大家可以理解讲需求敲定下来是多么重要的啊！因此每当开功能开发的kick off的时候，我们都会讲讲自己的对这个功能的理解，有问题及时拿出来讨论，然后落实到邮件里，便于后面查询。而且最好master能够在程序动手之前让策划美术讲相关的资料先做出来，至少有一个时间节点，做好他们的甘特图才能够做好程序的甘特图。</p>
+
+<p>团队管理不仅仅只有上述两条，还有团队文化，团队默契培养，团队奖罚制度等,剩下的问题待以后遇到在做体会，再拿出来和大家分享。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git命令行总结-rebase]]></title>
+    <link href="http://newtamato.github.io/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase/"/>
+    <updated>2015-10-17T22:11:24+08:00</updated>
+    <id>http://newtamato.github.io/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase</id>
+    <content type="html"><![CDATA[<p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
+
+<p> 使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
+
+<p>  rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。
+rebase的命令格式如下:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='python'><span class='line'><span class="n">git</span> <span class="n">rebase</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="o">|</span> <span class="o">--</span><span class="n">interactive</span><span class="p">]</span> <span class="p">[</span><span class="n">options</span><span class="p">][</span><span class="o">--</span><span class="k">exec</span> <span class="o">&lt;</span><span class="n">cmd</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">onto</span> <span class="o">&lt;</span><span class="n">newbase</span><span class="o">&gt;</span><span class="p">][</span><span class="o">&lt;</span><span class="n">upstream</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">branch</span><span class="o">&gt;</span><span class="p">]</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code>
+它的工作原理：从dev_branch和master的共同祖先开始，后续所有在dev_branch上面的提交都将以master当前最新的提交为新的基准点再次挨个提交。这是重新生成新的提交而非做合并。你会发现在dev_branch上的同样的commit在master上的SHA1校验码是不一样的。</p>
+
+<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？
+我们用到的命令就是｀git rebase &ndash;onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git命令行总结-log]]></title>
+    <link href="http://newtamato.github.io/blog/2015/10/17/gitming-ling-xing-zong-jie-log/"/>
+    <updated>2015-10-17T22:08:49+08:00</updated>
+    <id>http://newtamato.github.io/blog/2015/10/17/gitming-ling-xing-zong-jie-log</id>
+    <content type="html"><![CDATA[<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq </span></code></pre></td></tr></table></div></figure>
+
+
+<h1>格式化文件输出</h1>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>1.将某一个commit之后的提交做成patch</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git format-patch -M HEAD~1</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>1.将patch打到我们的开发分支</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git am xxx.patch</span></code></pre></td></tr></table></div></figure>
+
+
+<blockquote><p>2.vim中格式化json</p></blockquote>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>:%!python -m json.tool       </span></code></pre></td></tr></table></div></figure>
+
+]]></content>
+  </entry>
   
 </feed>
