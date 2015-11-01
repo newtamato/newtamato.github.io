@@ -3,7 +3,7 @@ layout: post
 title: "项目管理心得"
 date: 2015-10-17 22:14:06 +0800
 comments: true
-categories: 
+categories: 管理总结
 ---
 
 

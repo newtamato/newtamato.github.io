@@ -3,7 +3,7 @@ layout: post
 title: "GIT常用方法"
 date: 2015-10-30 10:58:35 +0800
 comments: true
-categories: 
+categories: GIT basic
 ---
 
 使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
