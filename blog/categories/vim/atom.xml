@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:vim | 番茄手册]]></title>
+  <link href="http://newtamato.github.io/blog/categories/vim/atom.xml" rel="self"/>
+  <link href="http://newtamato.github.io/"/>
+  <updated>2015-11-01T21:47:39+08:00</updated>
+  <id>http://newtamato.github.io/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[vim使用-颜色]]></title>
+    <link href="http://newtamato.github.io/blog/vimshi-yong-yan-se.html/"/>
+    <updated>2015-10-17T22:19:24+08:00</updated>
+    <id>http://newtamato.github.io/blog/vimshi-yong-yan-se</id>
+    <content type="html"><![CDATA[<ol>
+  <li>首先将Solarized的配色库download下来</li>
+</ol>
+
+<p><code>python
+git clone git://github.com/altercation/solarized.git
+</code>
+2. 将solarized.vim文件copy 到 ~/.vim/colors/  文件夹下面
+3. 配置.vimrc</p>
+
+<p><code>python
+syntax on  
+set t_Co=256  
+let g:solarized_termcolors=256  
+set background=dark  
+colorscheme solarized  
+</code></p>
+
+<p>**有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色 **</p>
+
+]]></content>
+  </entry>
+  
+</feed>
