@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:lua | 番茄手册]]></title>
+  <link href="http://newtamato.github.io/blog/categories/lua/atom.xml" rel="self"/>
+  <link href="http://newtamato.github.io/"/>
+  <updated>2015-11-01T21:47:39+08:00</updated>
+  <id>http://newtamato.github.io/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[lua基础知识-语法]]></title>
+    <link href="http://newtamato.github.io/blog/lua-basic.html/"/>
+    <updated>2015-11-01T16:51:31+08:00</updated>
+    <id>http://newtamato.github.io/blog/lua-basic</id>
+    <content type="html"><![CDATA[<hr />
+
+<p>lua是一门脚本语言，他是以c语言的标准编写而成，因此天生能够和c语言无缝合作。并且在所有的脚本引擎中，lua是速度最快的。</p>
+
+<p>lua语言非常的简单，可能你看完这一篇文章，就可以自己编写自己的lua文件了。基本用不了30分钟</p>
+
+<p>首先我们讲到运行。怎么运行lua文件呢? 但是的运行一个lua文件，需要一个编译器。请到lua的<a href="http://www.lua.org/download.html">官方网站</a>下载最新的lua编译器.
+下载之后是一个zip文件，解压缩之后，里面有一个doc文档目录，src源码目录还有一个ReadME文件和makefile文件。makefile是用来执行make命令。
+为了安装我们可以查看他的帮助文档，在doc/readme.html
+或者直接在命令行中输入<code>make</code>，他们将支持的平台显示出来给你看。我使用的是苹果电脑。所以我在命令行中输入<code>make macosx</code>，之后make就开始工作，安装lua，并且把他放到了我们的环境变量下，这样我们在命令行中可以直接输入<code>lua</code>来调用lua。</p>
+
+<p>在命令行中输入lua，会出现如下的样子
+<img src="images/1446367451271.png" alt="Alt text" /></p>
+
+<p>是不是和python或者metlab有点像呢？</p>
+
+<p>此时在lua命令行模式下面，我们输入<code>print("abc")</code> ,看它能够很快的给我一个反馈
+<img src="images/1446367541807.png" alt="Alt text" /></p>
+
+<p>或者我们不安装lua, 那么可以通过官方提供的一个<a href="http://www.lua.org/cgi-bin/demo">简单的demo</a>来运行我们想要的结果.</p>
+
+<p>此处还提供了一个默认的打印函数，可以打印复杂的数据结构</p>
+
+<p>&#8220;`lua
+local seen={}</p>
+
+<p>function dump(t,i)
+	seen[t]=true
+	local s={}
+	local n=0
+	for k in pairs(t) do
+		n=n+1 s[n]=k
+	end
+	table.sort(s)
+	for k,v in ipairs(s) do
+		print(i,v)
+		v=t[v]
+		if type(v)==”table” and not seen[v] then
+			dump(v,i..”\t”)
+		end
+	end
+end
+&#8220;`
+我们在输入框中接着输入</p>
+
+<p><code>lua
+local userData = {name = "nick", age = 20}
+dump(userData)
+</code></p>
+
+<p>运行之后即可以看到这个userData的数据结构。</p>
+
+<p>和dump相比起来，print就是最轻量级别的。
+我们可以用print来打印最基本的数据结构，比如字串，数字等。</p>
+
+<p><code>lua
+print("i am a developer ")
+print("this is a number " .. 30)
+</code></p>
+
+<p>看，对于此处打印这样是不是非常的简单？只有两个函数就可以搞定所有的一切。那么为什么lua这么简单呢？
+这是因为lua的数据结构就非常的简单，他没有其他语言那么多的东西，他可以完全的把所有的东西都打印给你看。所有的一切你都可以看成是一张表格。或者说是字典。我称之为万能的table。</p>
+
+<p>至此，安装lua就已经完成。如果你顺利走到这一步，那么就离成功就差一点点的距离了。</p>
+
+<p>接下来我们简单的介绍一下lua的基本数据结构。和其他语言一样，lua自身也支持基本的数据结构。主要number， boolean,,string,nil, userdata, function, thread, table。</p>
+
+<ol>
+  <li>number。是的，就是浮点数。它没有int类型，用浮点的number可以帮助我们处理一切与数字相关的操作。</li>
+  <li>bool类型，true or false。唯一需要注意的就是在lua里面0为真。只有nil和false才为假。</li>
+  <li>String类型，即字串。字串有不少API可以使用。字串的查找，替换，比较，分割。长度，大小写转换等，与字串相关的就是格式化输出某些字串。比如输出i am %{张三}，i am from %{北京} 。 如果是字符串拼接，就是如下的操作
+str = “i am “..张三 .. “,i am from” .. 北京
+但是如果使用格式化输出，就显得很好看，易懂 。
+str = string.format(i am %s,i am from %s, 张三,北京)</li>
+</ol>
+
+<p>看这样，是不是方便了很多？</p>
+
+<ol>
+  <li>Nil类型，用来检测一个变量是否可以用。比如一边量声明了后，但是没有赋值，那么此变量在使用的时候就要慎重。</li>
+</ol>
+
+<p><code>lua
+if (a == nil) then
+	return
+end
+</code>
+5. table类型。在lua中table是一个非常普遍的要使用的结构，他的语法如下
+local a = {}
+a[“name”] = “aaaa”
+a[“age”] = 11
+这和java语言中的字典数据结构很像，但是有不同，在lua中table可以当成数组使用，比如上面的a可以是一个数组进行for循环。</p>
+
+<p><code>lua
+for key,value in pairs(a) do
+	print(string.format("key is %s,vaue is %s",key,value))
+end
+</code></p>
+
+<p>可以删除table的某一个key，语法 <code>a["age"] = nil</code> , 这样就非常方便的将一个键置空，此变量就不存在了。</p>
+
+<p>上面的a并非一个标准的table，标准的table即他们key不是string类型而是number类型，且number保持连续。
+local a = {}
+a[1] = “xxx”
+a[2] = “xxx”
+a[3] = “xxx”
+table.insert(a, “bbbb”)
+table.insert(a,1,”ccc”)
+table.remove(a,3)
+这样我们可以简单的向a插入数据，像一个正常的数组那样去操作a。lua还提供了另一个for循环使用的api专门给予这样标准的table，即ipairs。他的功能和上面的pairs一样。但是必须是标准的table。</p>
+
+<p>table可以嵌套。table中有table，可以理解成多维数组。</p>
+
+<ol>
+  <li>Function类型。即函数类型。
+函数可以当成一个变量来使用。也可以作为参数传递给别的函数调用。
+简单的函数结构如下</li>
+</ol>
+
+<p><code>lua
+local myfunc = function()    
+	print("i am function")
+end
+</code></p>
+
+<p>此处的定义就是一个局域函数，即只能够在定义他的范围域内使用。不能作为全局函数使用，那么怎么才能作为全局函数呢？
+注意到他前面的local了没？我上面定义的变量也有这一个修饰词，有他就表示后面定义的都是局部的，不作为全局。去掉，那么就是全局的函数了。</p>
+
+<ol>
+  <li>userdata类型，顾名思义就是用户的数据结构，最常用的情况就是我们将lua和c进行绑定，可以使用c定义的很多数据结构，那些c定义的数据结构怎么告诉lua呢？让lua来调用，就是将他们转换成了userdata类型。lua才能够顺利的调用他们。具体是怎么转换的呢？那就涉及到lua运行时候的绑定，具体的函数如下</li>
+</ol>
+
+<p><code>lua
+LUA_API void lua_pushlightuserdata (lua_State *L, void *p) {
+  lua_lock(L);
+  setpvalue(L-&gt;top, p);
+  api_incr_top(L);
+  lua_unlock(L);
+}
+</code>
+此段涉及到比较深的内容，以后我们在深入细讲。</p>
+
+<ol>
+  <li>Thread 类型， 即线程。lua的线程不是真正的线程。关于线程开发使用也是比较复杂的部分。可以放到以后在单开一张。</li>
+</ol>
+
+<p>我们平时用到的最后就是前6种类型。
+此时你是否觉得lua很简单? 是的，就是这么简单。尤其是在游戏开发过程中，为了达到能够自动更新的目的，大部分的项目都是使用lua，他简单灵活的语法和较少的限制对于我们的开发简直就是格外的贴心。剩下的就是他提供的集中API，比如如何操作table，如何将字串和数字进行转换。这些都是具体的API，用得到的时候查看帮助文档就能够很快查阅得到。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

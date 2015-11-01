@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:log | 番茄手册]]></title>
+  <link href="http://newtamato.github.io/blog/categories/log/atom.xml" rel="self"/>
+  <link href="http://newtamato.github.io/"/>
+  <updated>2015-11-01T21:47:39+08:00</updated>
+  <id>http://newtamato.github.io/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[git命令行总结-log]]></title>
+    <link href="http://newtamato.github.io/blog/gitming-ling-xing-zong-jie-log.html/"/>
+    <updated>2015-10-17T22:08:49+08:00</updated>
+    <id>http://newtamato.github.io/blog/gitming-ling-xing-zong-jie-log</id>
+    <content type="html"><![CDATA[<p><code>python
+git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
+</code></p>
+
+<h2 id="section">格式化文件输出</h2>
+
+<p><code>python
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
+</code></p>
+
+<h2 id="commitpatch">将某一个commit之后的提交做成patch</h2>
+
+<p><code>python
+git format-patch -M HEAD~1
+</code></p>
+
+<h2 id="patch">将patch打到我们的开发分支</h2>
+
+<p><code>python
+git am xxx.patch
+</code></p>
+
+<h2 id="vimjson">vim中格式化json</h2>
+
+<p><code>python
+:%!python -m json.tool       
+</code></p>
+]]></content>
+  </entry>
+  
+</feed>

@@ -1,0 +1,146 @@
+#GIT常用方法
+使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
+简单地介绍一下GIT的工作流程
+首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。
+
+``` shell
+ git init
+```
+然后新增一个文件。随便写点什么，比如readMe
+
+```shell
+echo hello,world> README
+git add README
+git commit -m"first commit "
+```
+
+配置git的用户信息
+```shell
+ Configure the user which will be used by git
+# Of course you should use your name
+git config --global user.name "Example Surname"
+# Same for the email address
+git config --global user.email "your.email@gmail.com"
+# Set default so that all changes are always pushed to the repository
+git config --global push.default "matching"
+```
+
+到此我们就可以在自己本地的仓库上做任何的事情了。但是只是在本地仓库并未能够和其他人合作。那么我们需要一个服务器做中转，这样我们提交过去，别人也可以在那里获取到最新的代码。
+因此我们需要到github或者bitbucket或者其他的提供git服务的网站上，申请一个仓库的链接。
+比如：
+
+```shell
+git@github.com:${your_name}/${your_res_name}.git
+```
+
+我们要做的就是将自己的代码仓库和这个地址联系起来。使用如下命令就可以达到我们的目的：
+
+```shell
+git remote add origin git@github.com:${your_name}/${your_res_name}.git
+git push -u origin master
+```
+
+那么接下来我们还能够做什么呢？我们能够做更多地事情。
+> 创建分支
+
+```shell
+git branch -b new_branch_name master
+```
+以master为准创建一个分支，名字是new_branch_name
+> 删除分支
+
+```shell
+git branch -d  new_branch_name
+#彻底删除
+git branch -D  new_branch_name 
+```
+> 分支重新命名
+
+```shell
+ git branch (-m | -M) [<oldbranch>] <newbranch>
+```
+将oldbranch改名为newbranch
+
+> 提交代码
+我们在自己的工作区，写了部分的代码之后，需要提交。但是提交有两种含义。一种是本地提交。一种是远端提交。本地提交只有自己看得见。但是远端提交则就是提到了服务器上。大家都可以看得到。
+
+```
+#将自己的修改都添加到本地仓库
+git add xxx 
+git commit -m"我的修改"
+git push origin new_branch_name
+```
+
+git commit实现的就是本地提交。git push实现的就是远端提交。
+
+> 更新仓库
+更新仓库就是将远端的东西都拿下来。简单地命令如下
+
+```shell
+git pull
+```
+即是更新当前分支与远端分支保持一致。
+但是这种方式相当于将远端分支的所有提交fetch 下来，然后做merge操作。类似如下的操作
+
+```
+git fetch origin/new_branch_name
+git merge origin/new_branch_name
+```
+这种方式简单，但是会让提交的显得混乱。还有另一种方法：
+
+```shell
+git fetch origin/new_branch_name
+git rebase origin/new_branch_name
+```
+
+merge和rebase的不同之处在于，rebase是new_branch_name的本地提交，以远端仓库的最后一次提交为准，挨个的增长上去。提交就显得很有序。
+
+> 检查提交记录
+
+```shell
+git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
+```
+
+我们可以通过`gitk&` 的方式查看文件的日志。有些时候我们也可以通过命令行更为直观的看到提交日志。
+如同上面的命令。在命令行中直接回车，你会看到意外地惊喜。
+
+> 修改提交记录
+这里的修改指的是提交到本地仓库没有提交到远端。如果已经提交到了远端，一般是改不了的。
+
+```shell
+git rebase -i head~n
+
+# Commands:
+# p, pick = use commit （使用本次提交）
+# r, reword = use commit, but edit the commit message（使用本次提交，但是要修改提交的message）
+# e, edit = use commit, but stop for amending（使用本次提交，但是禁止追加操作）
+# s, squash = use commit, but meld into previous commit（使用本次提交，但是要合并到上一次）
+# f, fixup = like "squash", but discard this commit's log message（和squash一样，但是不使用本次的提交信息）
+# x, exec = run command (the rest of the line) using shell（运行shell命令）
+
+```
+上面的命令可以讲从head到第head-n次的提交修改进行修改。比如修改commit的信息和将几个提交合并在一次。
+
+> git补丁的创建及应用
+创建补丁的方式有两种，一个是git diff，另一个git format-patch 
+git format-patch的命令方法
+```shell
+#将当前分支超前master的commit做成补丁
+git format-patch -M master
+#hashcode之前n个提交做成补丁，hashcode不写，默认是head
+git format-patch –n hashcode  
+#检查补丁是否可以成功打上
+git apply --check 0001-xxxx.patch
+#开始打补丁
+git am 0001-xxxx.patch
+git am 0002-xxxx.patch
+```
+
+git diff的命令方法
+
+```
+git diff SHA1 SHA2 > diff.patch
+git apply diff.patch
+```
+
+

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:命令行 | 番茄手册]]></title>
+  <link href="http://newtamato.github.io/blog/categories/ming-ling-xing/atom.xml" rel="self"/>
+  <link href="http://newtamato.github.io/"/>
+  <updated>2015-11-01T21:47:39+08:00</updated>
+  <id>http://newtamato.github.io/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[ls命令行排序]]></title>
+    <link href="http://newtamato.github.io/blog/lsming-ling-xing-pai-xu.html/"/>
+    <updated>2015-10-17T22:26:44+08:00</updated>
+    <id>http://newtamato.github.io/blog/lsming-ling-xing-pai-xu</id>
+    <content type="html"><![CDATA[<h2 id="section">按文件大小降序排列</h2>
+<blockquote>
+  <p>ls -lSr </p>
+</blockquote>
+
+<h2 id="section-1">查看当前电脑上硬盘的使用情况</h2>
+<blockquote>
+  <p>df -lh</p>
+</blockquote>
+
+<h2 id="m">这是按兆（M）来排序</h2>
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>du -sh *</td>
+        <td>sort -rm</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<h2 id="section-2">选出排在前面的10个</h2>
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>du -sh *</td>
+        <td>sort -rm</td>
+        <td>head</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+
+<h2 id="section-3">选出排在后面的10个</h2>
+<blockquote>
+  <table>
+    <tbody>
+      <tr>
+        <td>du -sh *</td>
+        <td>sort -rm</td>
+        <td>tail</td>
+      </tr>
+    </tbody>
+  </table>
+</blockquote>
+]]></content>
+  </entry>
+  
+</feed>

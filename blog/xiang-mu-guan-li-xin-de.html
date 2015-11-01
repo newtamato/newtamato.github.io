@@ -1,0 +1,185 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>项目管理心得  | 番茄手册</title>
+
+<meta name="author" content="newtomato"> 
+
+<meta name="description" content="项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。 谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性， &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+
+	
+</head>
+
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">番茄手册</a></h1>
+<h4>A blogging framework for hackers.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:newtamato.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">项目管理心得</h2>
+	<div class="entry-content"><p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
+
+<p>谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性，因为我自己估算了时间怎么会完不成呢？可是，你是否也会想过这样是否这个srcum就真的没有问题了呢？他是否是适合所有的团队？对于我们这样有些松散的，开发经验并不足够的小团队而言，并且开发任务也很繁重，是否也是适合的呢？</p>
+
+<p>我不否定scrum的作用和他给某些团队带来的便利性，但是我在运用他的时候，往往心有力而力不足，譬如我们有一批任务，这些任务并不涉及太多的技术，有的仅仅是怎么去替换一下本地化的语言。起初我并没有分下去，而是让团队自己去领取任务。然后对任务做好预估的时间。这样一devday结束之后，自己做了多少任务是有数的。我也欢天喜地的认为我们很快就会讲这些小问题解决掉，但事实并不如此。</p>
+
+<p>任务池中的任务下降的速度远不如我的预期。我们在一个周期内解决的问题并不多。在验收产品的时候，我们已经resolve的任务又会被打开。有些又要重回任务池。这样下一个循环开始，周而复始我们的效率也没有提高，而团队里面反而出现了松散的现象，本来很重的任务，其他人好像都感受不深。压力都攒在了我这里。</p>
+
+<p>于是我改变了策略，从每天让他们领任务到现在我给他们发任务并且规定每天完成的数量，可以完不成，但是需要说明什么阻碍了你。我会尽力去为他们清理阻碍。如此坚持几个周期，开发效率提升不小，尽管任务很多，但是合理的安排和计划时间便可以达到在规定的时间内做完，有的时候我们甚至会提前完成。</p>
+
+<p>从此事中，可以看出不是所有的团队，所有的阶段都要组固定的套路，我们应该灵活的变通自己的思路，scrum仅仅是一个工具，工具不顺手，我们应该考虑换别的工具，项目按时完成才是我们最终的目标。不可为此做耽误。待以后团队成熟之后，或者可以在考虑使用scrum。</p>
+
+<p>另一个问题便是对产品的需求的敲定，尤其是那些模糊和待讨论的需求，在初期，开发上手之前，应该让需求方和开发坐在一起，讨论一下这个需求会涉及到什么东西，比如最为简单的问题，文字字体颜色变化，必然在金币“足够”的时候是一种字体，在“不足”的时候，显示另一种颜色，那么这个需求是仅仅放在这一处，还是所有用到金币的体的地方，足够是怎样的量级限定呢？换哪种颜色的字体？如果使用嵌入字体，就需要提供字体。我举的这个例子已经很细节，可是开发中我们往往面对的都是这些细节，如果不敲定这些问题，开发出来总是不对的。</p>
+
+<p>我想每一个前端工程师都曾觉得美术或者UX或者产品经理他们不可理喻，设计出来一个拖拉机的图纸，却希望开发出来卡迪拉克！每当如此，鸡同鸭讲。互相都是不理解的。来来回回无处次修改，有的需求修改甚至可以推到以前的设计，这让以严谨著称的程序员么简直要抓狂，代码是可以灵活多变的，是可以独立的，是可以有各种设计模式帮助我们做出更好的系统，但是每每此刻你会知道哪些东西在需求变化了之后什么都是不重要了，再修身养性的程序员都看破红尘了！</p>
+
+<p>说及以上，大家可以理解讲需求敲定下来是多么重要的啊！因此每当开功能开发的kick off的时候，我们都会讲讲自己的对这个功能的理解，有问题及时拿出来讨论，然后落实到邮件里，便于后面查询。而且最好master能够在程序动手之前让策划美术讲相关的资料先做出来，至少有一个时间节点，做好他们的甘特图才能够做好程序的甘特图。</p>
+
+<p>团队管理不仅仅只有上述两条，还有团队文化，团队默契培养，团队奖罚制度等,剩下的问题待以后遇到在做体会，再拿出来和大家分享。</p>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-17T22:14:06+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/guan-li-zong-jie/'>管理总结</a>
+
+</div>
+
+
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> &#8212;>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    newtomato
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+
+</body>
+</html>

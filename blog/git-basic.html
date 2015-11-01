@@ -1,0 +1,356 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>GIT常用方法  | 番茄手册</title>
+
+<meta name="author" content="newtomato"> 
+
+<meta name="description" content="使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
+简单地介绍一下GIT的工作流程
+首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。 1 git init 然后新增一个文件。随便写点什么，比如readMe 1 &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+
+	
+</head>
+
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">番茄手册</a></h1>
+<h4>A blogging framework for hackers.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:newtamato.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">GIT常用方法</h2>
+	<div class="entry-content"><p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
+简单地介绍一下GIT的工作流程
+首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"> <span class="n">git</span> <span class="n">init</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>然后新增一个文件。随便写点什么，比如readMe</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">echo</span> <span class="n">hello</span><span class="p">,</span><span class="n">world</span><span class="o">&gt;</span> <span class="n">README</span>
+</span><span class="line"><span class="n">git</span> <span class="n">add</span> <span class="n">README</span>
+</span><span class="line"><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span><span class="s">&quot;first commit &quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>配置git的用户信息</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="s">&quot;Example Surname&quot;</span>
+</span><span class="line"><span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="s">&quot;your.email@gmail.com&quot;</span>
+</span><span class="line"><span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="n">push</span><span class="o">.</span><span class="n">default</span> <span class="s">&quot;matching&quot;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>到此我们就可以在自己本地的仓库上做任何的事情了。但是只是在本地仓库并未能够和其他人合作。那么我们需要一个服务器做中转，这样我们提交过去，别人也可以在那里获取到最新的代码。
+因此我们需要到github或者bitbucket或者其他的提供git服务的网站上，申请一个仓库的链接。
+比如：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span><span class="nd">@github.com</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="n">your_name</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">your_res_name</span><span class="p">}</span><span class="o">.</span><span class="n">git</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>我们要做的就是将自己的代码仓库和这个地址联系起来。使用如下命令就可以达到我们的目的：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">origin</span> <span class="n">git</span><span class="nd">@github.com</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="n">your_name</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">your_res_name</span><span class="p">}</span><span class="o">.</span><span class="n">git</span>
+</span><span class="line"><span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">master</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>那么接下来我们还能够做什么呢？我们能够做更多地事情。
+&gt; 创建分支</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">b</span> <span class="n">new_branch_name</span> <span class="n">master</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>以master为准创建一个分支，名字是new_branch_name
+&gt; 删除分支</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">d</span>  <span class="n">new_branch_name</span>
+</span><span class="line"><span class="c">#彻底删除</span>
+</span><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">D</span>  <span class="n">new_branch_name</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<blockquote>
+  <p>分支重新命名</p>
+</blockquote>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"> <span class="n">git</span> <span class="n">branch</span> <span class="p">(</span><span class="o">-</span><span class="n">m</span> <span class="o">|</span> <span class="o">-</span><span class="n">M</span><span class="p">)</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">oldbranch</span><span class="o">&gt;</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">newbranch</span><span class="o">&gt;</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>将oldbranch改名为newbranch</p>
+
+<blockquote>
+  <p>提交代码
+我们在自己的工作区，写了部分的代码之后，需要提交。但是提交有两种含义。一种是本地提交。一种是远端提交。本地提交只有自己看得见。但是远端提交则就是提到了服务器上。大家都可以看得到。</p>
+</blockquote>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#将自己的修改都添加到本地仓库</span>
+</span><span class="line"><span class="n">git</span> <span class="n">add</span> <span class="n">xxx</span>
+</span><span class="line"><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span><span class="s">&quot;我的修改&quot;</span>
+</span><span class="line"><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">new_branch_name</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>git commit实现的就是本地提交。git push实现的就是远端提交。</p>
+
+<blockquote>
+  <p>更新仓库
+更新仓库就是将远端的东西都拿下来。简单地命令如下</p>
+</blockquote>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">pull</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>即是更新当前分支与远端分支保持一致。
+但是这种方式相当于将远端分支的所有提交fetch 下来，然后做merge操作。类似如下的操作</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">fetch</span> <span class="n">origin</span><span class="o">/</span><span class="n">new_branch_name</span>
+</span><span class="line"><span class="n">git</span> <span class="n">merge</span> <span class="n">origin</span><span class="o">/</span><span class="n">new_branch_name</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>这种方式简单，但是会让提交的显得混乱。还有另一种方法：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">fetch</span> <span class="n">origin</span><span class="o">/</span><span class="n">new_branch_name</span>
+</span><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="n">origin</span><span class="o">/</span><span class="n">new_branch_name</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>merge和rebase的不同之处在于，rebase是new_branch_name的本地提交，以远端仓库的最后一次提交为准，挨个的增长上去。提交就显得很有序。</p>
+
+<blockquote>
+  <p>检查提交记录</p>
+</blockquote>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">graph</span> <span class="o">--</span><span class="n">pretty</span><span class="o">=</span><span class="n">format</span><span class="p">:</span><span class="s">&#39;%Cred</span><span class="si">%h%</span><span class="s">Creset -%C(yellow)</span><span class="si">%d</span><span class="s">%Creset </span><span class="si">%s</span><span class="s"> %Cgreen(</span><span class="si">%c</span><span class="s">r)%Creset&#39;</span> <span class="o">--</span><span class="n">abbrev</span><span class="o">-</span><span class="n">commit</span> <span class="o">--</span><span class="n">date</span><span class="o">=</span><span class="n">relative</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">status</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>我们可以通过<code>gitk&amp;</code> 的方式查看文件的日志。有些时候我们也可以通过命令行更为直观的看到提交日志。
+如同上面的命令。在命令行中直接回车，你会看到意外地惊喜。</p>
+
+<blockquote>
+  <p>修改提交记录
+这里的修改指的是提交到本地仓库没有提交到远端。如果已经提交到了远端，一般是改不了的。</p>
+</blockquote>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="o">-</span><span class="n">i</span> <span class="n">head</span><span class="o">~</span><span class="n">n</span>
+</span><span class="line">
+</span><span class="line"><span class="c"># Commands:</span>
+</span><span class="line"><span class="c"># p, pick = use commit （使用本次提交）</span>
+</span><span class="line"><span class="c"># r, reword = use commit, but edit the commit message（使用本次提交，但是要修改提交的message）</span>
+</span><span class="line"><span class="c"># e, edit = use commit, but stop for amending（使用本次提交，但是禁止追加操作）</span>
+</span><span class="line"><span class="c"># s, squash = use commit, but meld into previous commit（使用本次提交，但是要合并到上一次）</span>
+</span><span class="line"><span class="c"># f, fixup = like &quot;squash&quot;, but discard this commit&#39;s log message（和squash一样，但是不使用本次的提交信息）</span>
+</span><span class="line"><span class="c"># x, exec = run command (the rest of the line) using python（运行python命令）</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>上面的命令可以讲从head到第head-n次的提交修改进行修改。比如修改commit的信息和将几个提交合并在一次。</p>
+
+<blockquote>
+  <p>git补丁的创建及应用
+创建补丁的方式有两种，一个是git diff，另一个git format-patch </p>
+</blockquote>
+
+<p>git format-patch的命令方法:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#将当前分支超前master的commit做成补丁</span>
+</span><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">-</span><span class="n">M</span> <span class="n">master</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#hashcode之前n个提交做成补丁，hashcode不写，默认是head</span>
+</span><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="err">–</span><span class="n">n</span> <span class="n">hashcode</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#检查补丁是否可以成功打上</span>
+</span><span class="line"><span class="n">git</span> <span class="nb">apply</span> <span class="o">--</span><span class="n">check</span> <span class="mo">0001</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#开始打补丁</span>
+</span><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="mo">0001</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
+</span><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="mo">0002</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>git diff的命令方法</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">diff</span> <span class="n">SHA1</span> <span class="n">SHA2</span> <span class="o">&gt;</span> <span class="n">diff</span><span class="o">.</span><span class="n">patch</span>
+</span><span class="line"><span class="n">git</span> <span class="nb">apply</span> <span class="n">diff</span><span class="o">.</span><span class="n">patch</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-30T10:58:35+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/basic/'>basic</a>, <a class='category' href='/blog/categories/git/'>git</a>
+
+</div>
+
+
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> &#8212;>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    newtomato
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+
+
+</body>
+</html>
