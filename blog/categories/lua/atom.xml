@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[分类:lua | 番茄手册]]></title>
-  <link href="http://newtamato.github.io/blog/categories/lua/atom.xml" rel="self"/>
-  <link href="http://newtamato.github.io/"/>
-  <updated>2015-11-01T21:47:39+08:00</updated>
-  <id>http://newtamato.github.io/</id>
+  <link href="http://www.newtomato.me/blog/categories/lua/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2015-11-02T14:28:38+08:00</updated>
+  <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[lua基础知识-语法]]></title>
-    <link href="http://newtamato.github.io/blog/lua-basic.html/"/>
+    <link href="http://www.newtomato.me/blog/lua-basic.html/"/>
     <updated>2015-11-01T16:51:31+08:00</updated>
-    <id>http://newtamato.github.io/blog/lua-basic</id>
+    <id>http://www.newtomato.me/blog/lua-basic</id>
     <content type="html"><![CDATA[<hr />
 
 <p>lua是一门脚本语言，他是以c语言的标准编写而成，因此天生能够和c语言无缝合作。并且在所有的脚本引擎中，lua是速度最快的。</p>

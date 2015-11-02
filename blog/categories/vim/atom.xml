@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[分类:vim | 番茄手册]]></title>
-  <link href="http://newtamato.github.io/blog/categories/vim/atom.xml" rel="self"/>
-  <link href="http://newtamato.github.io/"/>
-  <updated>2015-11-01T21:47:39+08:00</updated>
-  <id>http://newtamato.github.io/</id>
+  <link href="http://www.newtomato.me/blog/categories/vim/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2015-11-02T14:28:38+08:00</updated>
+  <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[vim使用-颜色]]></title>
-    <link href="http://newtamato.github.io/blog/vimshi-yong-yan-se.html/"/>
+    <link href="http://www.newtomato.me/blog/vimshi-yong-yan-se.html/"/>
     <updated>2015-10-17T22:19:24+08:00</updated>
-    <id>http://newtamato.github.io/blog/vimshi-yong-yan-se</id>
+    <id>http://www.newtomato.me/blog/vimshi-yong-yan-se</id>
     <content type="html"><![CDATA[<ol>
   <li>首先将Solarized的配色库download下来</li>
 </ol>

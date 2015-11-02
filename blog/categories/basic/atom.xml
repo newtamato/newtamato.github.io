@@ -2,10 +2,10 @@
 <feed xmlns="http://www.w3.org/2005/Atom">
 
   <title><![CDATA[分类:basic | 番茄手册]]></title>
-  <link href="http://newtamato.github.io/blog/categories/basic/atom.xml" rel="self"/>
-  <link href="http://newtamato.github.io/"/>
-  <updated>2015-11-01T21:47:39+08:00</updated>
-  <id>http://newtamato.github.io/</id>
+  <link href="http://www.newtomato.me/blog/categories/basic/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2015-11-02T14:28:38+08:00</updated>
+  <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
     
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[lua基础知识-语法]]></title>
-    <link href="http://newtamato.github.io/blog/lua-basic.html/"/>
+    <link href="http://www.newtomato.me/blog/lua-basic.html/"/>
     <updated>2015-11-01T16:51:31+08:00</updated>
-    <id>http://newtamato.github.io/blog/lua-basic</id>
+    <id>http://www.newtomato.me/blog/lua-basic</id>
     <content type="html"><![CDATA[<hr />
 
 <p>lua是一门脚本语言，他是以c语言的标准编写而成，因此天生能够和c语言无缝合作。并且在所有的脚本引擎中，lua是速度最快的。</p>
@@ -172,9 +172,9 @@ LUA_API void lua_pushlightuserdata (lua_State *L, void *p) {
   
   <entry>
     <title type="html"><![CDATA[GIT常用方法]]></title>
-    <link href="http://newtamato.github.io/blog/git-basic.html/"/>
+    <link href="http://www.newtomato.me/blog/git-basic.html/"/>
     <updated>2015-10-30T10:58:35+08:00</updated>
-    <id>http://newtamato.github.io/blog/git-basic</id>
+    <id>http://www.newtomato.me/blog/git-basic</id>
     <content type="html"><![CDATA[<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
 简单地介绍一下GIT的工作流程
 首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。</p>
