@@ -1,76 +1,76 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>http://newtamato.github.io/blog/the-last-of-us-you-xi.html/</loc>
+    <loc>http://www.newtomato.me/blog/the-last-of-us-you-xi.html/</loc>
     <lastmod>2015-11-01T19:31:52+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/you-zhou-si-shi-qing-yin-fa-de-si-kao.html/</loc>
+    <loc>http://www.newtomato.me/blog/you-zhou-si-shi-qing-yin-fa-de-si-kao.html/</loc>
     <lastmod>2015-11-01T17:06:47+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/lua-basic.html/</loc>
+    <loc>http://www.newtomato.me/blog/lua-basic.html/</loc>
     <lastmod>2015-11-01T16:51:31+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/git-basic.html/</loc>
+    <loc>http://www.newtomato.me/blog/git-basic.html/</loc>
     <lastmod>2015-10-30T10:58:35+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/genymotionde-an-zhuang.html/</loc>
+    <loc>http://www.newtomato.me/blog/genymotionde-an-zhuang.html/</loc>
     <lastmod>2015-10-17T22:28:11+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/lsming-ling-xing-pai-xu.html/</loc>
+    <loc>http://www.newtomato.me/blog/lsming-ling-xing-pai-xu.html/</loc>
     <lastmod>2015-10-17T22:26:44+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/vimshi-yong-yan-se.html/</loc>
+    <loc>http://www.newtomato.me/blog/vimshi-yong-yan-se.html/</loc>
     <lastmod>2015-10-17T22:19:24+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/xiang-mu-guan-li-xin-de.html/</loc>
+    <loc>http://www.newtomato.me/blog/xiang-mu-guan-li-xin-de.html/</loc>
     <lastmod>2015-10-17T22:14:06+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/gitming-ling-xing-zong-jie-rebase.html/</loc>
+    <loc>http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-rebase.html/</loc>
     <lastmod>2015-10-17T22:11:24+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/gitming-ling-xing-zong-jie-log.html/</loc>
+    <loc>http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-log.html/</loc>
     <lastmod>2015-10-17T22:08:49+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/archives/</loc>
-    <lastmod>2015-11-01T21:47:39+08:00</lastmod>
+    <loc>http://www.newtomato.me/blog/archives/</loc>
+    <lastmod>2015-11-02T14:28:38+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/archives/</loc>
-    <lastmod>2015-11-01T21:47:39+08:00</lastmod>
+    <loc>http://www.newtomato.me/archives/</loc>
+    <lastmod>2015-11-02T14:28:38+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/blog/</loc>
-    <lastmod>2015-11-01T21:47:39+08:00</lastmod>
+    <loc>http://www.newtomato.me/blog/</loc>
+    <lastmod>2015-11-02T14:28:38+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>http://newtamato.github.io/</loc>
-    <lastmod>2015-11-01T21:47:39+08:00</lastmod>
+    <loc>http://www.newtomato.me/</loc>
+    <lastmod>2015-11-02T14:28:38+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
