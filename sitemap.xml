@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://www.newtomato.me/blog/function-closure-upvalue.html/</loc>
+    <lastmod>2015-11-11T00:00:00+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://www.newtomato.me/blog/the-last-of-us-you-xi.html/</loc>
     <lastmod>2015-11-01T19:31:52+08:00</lastmod>
     <priority>0.8</priority>
@@ -52,25 +57,25 @@
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/archives/</loc>
-    <lastmod>2015-11-02T14:28:38+08:00</lastmod>
+    <lastmod>2015-11-11T19:02:59+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/archives/</loc>
-    <lastmod>2015-11-02T14:28:38+08:00</lastmod>
+    <lastmod>2015-11-11T19:02:59+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/</loc>
-    <lastmod>2015-11-02T14:28:38+08:00</lastmod>
+    <lastmod>2015-11-11T19:02:59+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/</loc>
-    <lastmod>2015-11-02T14:28:38+08:00</lastmod>
+    <lastmod>2015-11-11T19:02:59+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>
