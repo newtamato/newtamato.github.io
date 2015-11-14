@@ -4,7 +4,7 @@
   <title><![CDATA[分类:basic | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/basic/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-14T10:45:23+08:00</updated>
+  <updated>2015-11-14T11:09:33+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -28,12 +28,12 @@
 或者直接在命令行中输入<code>make</code>，他们将支持的平台显示出来给你看。我使用的是苹果电脑。所以我在命令行中输入<code>make macosx</code>，之后make就开始工作，安装lua，并且把他放到了我们的环境变量下，这样我们在命令行中可以直接输入<code>lua</code>来调用lua。</p>
 
 <p>在命令行中输入lua，会出现如下的样子<br />
-<img src="images/1446367451271.png" alt="Alt text" /></p>
+<img src="/images/1446367451271.png" alt="Alt text" /></p>
 
 <p>是不是和python或者metlab有点像呢？</p>
 
 <p>此时在lua命令行模式下面，我们输入<code>print("abc")</code> ,看它能够很快的给我一个反馈<br />
-<img src="images/1446367541807.png" alt="Alt text" /></p>
+<img src="/images/1446367541807.png" alt="Alt text" /></p>
 
 <p>或者我们不安装lua, 那么可以通过官方提供的一个<a href="http://www.lua.org/cgi-bin/demo">简单的demo</a>来运行我们想要的结果.</p>
 

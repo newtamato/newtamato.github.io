@@ -4,7 +4,7 @@
   <title><![CDATA[分类:android开发 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/androidkai-fa/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-14T10:45:23+08:00</updated>
+  <updated>2015-11-14T11:09:33+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -24,7 +24,7 @@
   <li>主界面的 Settings 按钮，可以用来设置 VirtualBox 及 ADB 路径等信息。</li>
   <li>虚拟机的配置<a href="http://pan.baidu.com/s/1o68yMGM">下载</a></li>
   <li>打上ARM–&gt;x86补丁：只要将Genymotion-ARM-Translation_v1.1.zip拖入安卓虚拟机即可。此时会提示“File Transfer in Progress”，在弹出的窗口中点击【OK】以完成更新。</li>
-  <li><img src="images/1428929730092.png" alt="Alt text" /></li>
+  <li><img src="/images/1428929730092.png" alt="Alt text" /></li>
   <li>
     <p>重启虚拟机（关闭窗口，然后再次启动运行就好）</p>
   </li>
