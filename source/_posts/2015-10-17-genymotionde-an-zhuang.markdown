@@ -3,7 +3,9 @@ layout: post
 title: "GenyMotion的安装"
 date: 2015-10-17 22:28:11 +0800
 comments: true
-categories: android GenyMotion
+categories: android开发
+tags: [android GenyMotion]
+keywords: android, GenyMotion
 ---
 
 1.	先安装虚拟机[VirtualBox](https://www.virtualbox.org/wiki/Downloads)

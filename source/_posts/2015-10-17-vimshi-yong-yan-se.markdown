@@ -6,7 +6,6 @@ comments: true
 categories: VIM 
 ---
 
-
 1. 首先将Solarized的配色库download下来
 
 ```python

@@ -6,17 +6,34 @@ comments: true
 categories: 命令行
 ---
 
-##按文件大小降序排列
->ls -lSr 
+按文件大小降序排列
 
-##查看当前电脑上硬盘的使用情况
-> df -lh
+```
+ ls -lSr 
+```
 
-##这是按兆（M）来排序
-> du -sh * |sort -rm
+查看当前电脑上硬盘的使用情况
 
-##选出排在前面的10个
->du -sh * | sort -rm | head
+```
+df -lh
+```
 
-##选出排在后面的10个
->du -sh * | sort -rm | tail
+这是按兆（M）来排序
+
+```
+ du -sh * |sort -rm
+```
+
+选出排在前面的10个
+
+```
+du -sh * | sort -rm | head
+```
+
+选出排在后面的10个
+
+```
+ du -sh * | sort -rm | tail
+```
+
+

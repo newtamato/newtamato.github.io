@@ -6,7 +6,6 @@ comments: true
 categories: Git log
 ---
 
-
 ```python
 git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
 ```

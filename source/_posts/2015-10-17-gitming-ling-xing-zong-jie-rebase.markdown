@@ -6,7 +6,6 @@ comments: true
 categories: Git rebase
 ---
 
-
 [原文](http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88)
 
 使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。
