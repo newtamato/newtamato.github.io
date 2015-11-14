@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-14T10:27:25+08:00</updated>
+  <updated>2015-11-14T10:45:23+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -1753,7 +1753,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
     <link href="http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi"/>
     <updated>2015-11-01T19:31:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi</id>
-    <content type="html"><![CDATA[<p><img src="images/1446377446064.jpg" alt="Alt text" /></p>
+    <content type="html"><![CDATA[<p><img src="http://www.newtomato.me/images/1446377446064.jpg" alt="Alt text" /></p>
 
 <p>今年年初的时候，在同事那里听说了the last of us的这款游戏，同事说的眉飞色舞，吹捧拔高至此毫不吝啬，甚至不惜把他家里的PS3拿给我让我玩。当时的我甚至没有买过一台PS3，或者一张游戏碟片。<br />
 自然一点想玩的想法都没有，婉言谢绝了同事的好意。</p>
@@ -1795,7 +1795,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
 
 <p>至少他们会在水坝安静的呆上一段日子。</p>
 
-<p><img src="images/1446377484270.jpg" alt="Alt text" /></p>
+<p><img src="http://www.newtomato.me/images/1446377484270.jpg" alt="Alt text" /></p>
 
 ]]></content>
   </entry>
