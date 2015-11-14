@@ -4,7 +4,7 @@
   <title><![CDATA[分类:git | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-11T19:02:59+08:00</updated>
+  <updated>2015-11-14T10:18:12+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -18,102 +18,93 @@
     <link href="http://www.newtomato.me/blog/git-basic.html/"/>
     <updated>2015-10-30T10:58:35+08:00</updated>
     <id>http://www.newtomato.me/blog/git-basic</id>
-    <content type="html"><![CDATA[<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
-简单地介绍一下GIT的工作流程
+    <content type="html"><![CDATA[<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
+简单地介绍一下GIT的工作流程<br />
+<!--more--><br />
 首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。</p>
 
-<p><code>python
- git init
-</code>
-然后新增一个文件。随便写点什么，比如readMe</p>
+<pre><code class="language-python"> git init
+</code></pre>
+<p>然后新增一个文件。随便写点什么，比如readMe</p>
 
-<p><code>python
-echo hello,world&gt; README
+<pre><code class="language-python">echo hello,world&gt; README
 git add README
 git commit -m"first commit "
-</code></p>
+</code></pre>
 
 <p>配置git的用户信息</p>
 
-<p>&#8220;`python</p>
+<pre><code class="language-python">
+git config --global user.name "Example Surname"
+git config --global user.email "your.email@gmail.com"
+git config --global push.default "matching"
 
-<p>git config –global user.name “Example Surname”
-git config –global user.email “your.email@gmail.com”
-git config –global push.default “matching”</p>
+</code></pre>
 
-<p>&#8220;`</p>
-
-<p>到此我们就可以在自己本地的仓库上做任何的事情了。但是只是在本地仓库并未能够和其他人合作。那么我们需要一个服务器做中转，这样我们提交过去，别人也可以在那里获取到最新的代码。
-因此我们需要到github或者bitbucket或者其他的提供git服务的网站上，申请一个仓库的链接。
+<p>到此我们就可以在自己本地的仓库上做任何的事情了。但是只是在本地仓库并未能够和其他人合作。那么我们需要一个服务器做中转，这样我们提交过去，别人也可以在那里获取到最新的代码。<br />
+因此我们需要到github或者bitbucket或者其他的提供git服务的网站上，申请一个仓库的链接。<br />
 比如：</p>
 
-<p><code>python
-git@github.com:${your_name}/${your_res_name}.git
-</code></p>
+<pre><code class="language-python">git@github.com:${your_name}/${your_res_name}.git
+</code></pre>
 
 <p>我们要做的就是将自己的代码仓库和这个地址联系起来。使用如下命令就可以达到我们的目的：</p>
 
-<p><code>python
-git remote add origin git@github.com:${your_name}/${your_res_name}.git
+<pre><code class="language-python">git remote add origin git@github.com:${your_name}/${your_res_name}.git
 git push -u origin master
-</code></p>
+</code></pre>
 
-<p>那么接下来我们还能够做什么呢？我们能够做更多地事情。
+<p>那么接下来我们还能够做什么呢？我们能够做更多地事情。<br />
 &gt; 创建分支</p>
 
-<p><code>python
-git branch -b new_branch_name master
-</code>
-以master为准创建一个分支，名字是new_branch_name
+<pre><code class="language-python">git branch -b new_branch_name master
+</code></pre>
+<p>以master为准创建一个分支，名字是new_branch_name<br />
 &gt; 删除分支</p>
 
-<p><code>python
-git branch -d  new_branch_name
+<pre><code class="language-python">git branch -d  new_branch_name
 #彻底删除
 git branch -D  new_branch_name 
-</code>
-&gt; 分支重新命名</p>
+</code></pre>
+<blockquote>
+  <p>分支重新命名</p>
+</blockquote>
 
-<p><code>python
- git branch (-m | -M) [&lt;oldbranch&gt;] &lt;newbranch&gt;
-</code>
-将oldbranch改名为newbranch</p>
+<pre><code class="language-python"> git branch (-m | -M) [&lt;oldbranch&gt;] &lt;newbranch&gt;
+</code></pre>
+<p>将oldbranch改名为newbranch</p>
 
 <blockquote>
-  <p>提交代码
+  <p>提交代码<br />
 我们在自己的工作区，写了部分的代码之后，需要提交。但是提交有两种含义。一种是本地提交。一种是远端提交。本地提交只有自己看得见。但是远端提交则就是提到了服务器上。大家都可以看得到。</p>
 </blockquote>
 
-<p><code>
-#将自己的修改都添加到本地仓库
+<pre><code>#将自己的修改都添加到本地仓库
 git add xxx 
 git commit -m"我的修改"
 git push origin new_branch_name
-</code></p>
+</code></pre>
 
 <p>git commit实现的就是本地提交。git push实现的就是远端提交。</p>
 
 <blockquote>
-  <p>更新仓库
+  <p>更新仓库<br />
 更新仓库就是将远端的东西都拿下来。简单地命令如下</p>
 </blockquote>
 
-<p><code>python
-git pull
-</code>
-即是更新当前分支与远端分支保持一致。
+<pre><code class="language-python">git pull
+</code></pre>
+<p>即是更新当前分支与远端分支保持一致。<br />
 但是这种方式相当于将远端分支的所有提交fetch 下来，然后做merge操作。类似如下的操作</p>
 
-<p><code>
-git fetch origin/new_branch_name
+<pre><code>git fetch origin/new_branch_name
 git merge origin/new_branch_name
-</code>
-这种方式简单，但是会让提交的显得混乱。还有另一种方法：</p>
+</code></pre>
+<p>这种方式简单，但是会让提交的显得混乱。还有另一种方法：</p>
 
-<p><code>python
-git fetch origin/new_branch_name
+<pre><code class="language-python">git fetch origin/new_branch_name
 git rebase origin/new_branch_name
-</code></p>
+</code></pre>
 
 <p>merge和rebase的不同之处在于，rebase是new_branch_name的本地提交，以远端仓库的最后一次提交为准，挨个的增长上去。提交就显得很有序。</p>
 
@@ -121,66 +112,59 @@ git rebase origin/new_branch_name
   <p>检查提交记录</p>
 </blockquote>
 
-<p><code>python
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
-</code></p>
+<pre><code class="language-python">git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
+</code></pre>
 
-<p>我们可以通过<code>gitk&amp;</code> 的方式查看文件的日志。有些时候我们也可以通过命令行更为直观的看到提交日志。
+<p>我们可以通过<code>gitk&amp;</code> 的方式查看文件的日志。有些时候我们也可以通过命令行更为直观的看到提交日志。<br />
 如同上面的命令。在命令行中直接回车，你会看到意外地惊喜。</p>
 
 <blockquote>
-  <p>修改提交记录
+  <p>修改提交记录<br />
 这里的修改指的是提交到本地仓库没有提交到远端。如果已经提交到了远端，一般是改不了的。</p>
 </blockquote>
 
-<p>&#8220;`python
-git rebase -i head~n</p>
+<pre><code class="language-python">git rebase -i head~n
 
-<h1 id="commands">Commands:</h1>
-<p># p, pick = use commit （使用本次提交）
+# Commands:
+# p, pick = use commit （使用本次提交）
 # r, reword = use commit, but edit the commit message（使用本次提交，但是要修改提交的message）
 # e, edit = use commit, but stop for amending（使用本次提交，但是禁止追加操作）
 # s, squash = use commit, but meld into previous commit（使用本次提交，但是要合并到上一次）
-# f, fixup = like “squash”, but discard this commit’s log message（和squash一样，但是不使用本次的提交信息）
-# x, exec = run command (the rest of the line) using python（运行python命令）</p>
+# f, fixup = like "squash", but discard this commit's log message（和squash一样，但是不使用本次的提交信息）
+# x, exec = run command (the rest of the line) using python（运行python命令）
 
-<p>&#8220;`
-上面的命令可以讲从head到第head-n次的提交修改进行修改。比如修改commit的信息和将几个提交合并在一次。</p>
+</code></pre>
+<p>上面的命令可以讲从head到第head-n次的提交修改进行修改。比如修改commit的信息和将几个提交合并在一次。</p>
 
 <blockquote>
-  <p>git补丁的创建及应用
-创建补丁的方式有两种，一个是git diff，另一个git format-patch </p>
+  <p>git补丁的创建及应用<br />
+创建补丁的方式有两种，一个是git diff，另一个git format-patch</p>
 </blockquote>
 
 <p>git format-patch的命令方法:</p>
 
-<p><code>python
-#将当前分支超前master的commit做成补丁
+<pre><code class="language-python">#将当前分支超前master的commit做成补丁
 git format-patch -M master
-</code></p>
+</code></pre>
 
-<p><code>python
-#hashcode之前n个提交做成补丁，hashcode不写，默认是head
+<pre><code class="language-python">#hashcode之前n个提交做成补丁，hashcode不写，默认是head
 git format-patch –n hashcode  
-</code></p>
+</code></pre>
 
-<p><code>python
-#检查补丁是否可以成功打上
+<pre><code class="language-python">#检查补丁是否可以成功打上
 git apply --check 0001-xxxx.patch
-</code></p>
+</code></pre>
 
-<p><code>python
-#开始打补丁
+<pre><code class="language-python">#开始打补丁
 git am 0001-xxxx.patch
 git am 0002-xxxx.patch
-</code></p>
+</code></pre>
 
 <p>git diff的命令方法</p>
 
-<p><code>
-git diff SHA1 SHA2 &gt; diff.patch
+<pre><code>git diff SHA1 SHA2 &gt; diff.patch
 git apply diff.patch
-</code></p>
+</code></pre>
 
 ]]></content>
   </entry>
@@ -196,16 +180,15 @@ git apply diff.patch
 
 <p>rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。</p>
 
-<h2 id="rebase">rebase的命令格式如下:</h2>
+<p>##rebase的命令格式如下:</p>
 
-<p><code>python
-git rebase [-i | --interactive] [options][--exec &lt;cmd&gt;] [--onto &lt;newbase&gt;][&lt;upstream&gt;] [&lt;branch&gt;]
-</code></p>
+<pre><code class="language-python">git rebase [-i | --interactive] [options][--exec &lt;cmd&gt;] [--onto &lt;newbase&gt;][&lt;upstream&gt;] [&lt;branch&gt;]
+</code></pre>
 
-<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code>
+<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code><br />
 它的工作原理：从dev_branch和master的共同祖先开始，后续所有在dev_branch上面的提交都将以master当前最新的提交为新的基准点再次挨个提交。这是重新生成新的提交而非做合并。你会发现在dev_branch上的同样的commit在master上的SHA1校验码是不一样的。</p>
 
-<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？
+<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？<br />
 我们用到的命令就是｀git rebase –onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
 
 ]]></content>
@@ -216,33 +199,28 @@ git rebase [-i | --interactive] [options][--exec &lt;cmd&gt;] [--onto &lt;newbas
     <link href="http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-log.html/"/>
     <updated>2015-10-17T22:08:49+08:00</updated>
     <id>http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-log</id>
-    <content type="html"><![CDATA[<p><code>python
-git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
-</code></p>
+    <content type="html"><![CDATA[<pre><code class="language-python">git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
+</code></pre>
 
-<h2 id="section">格式化文件输出</h2>
+<p>##格式化文件输出</p>
 
-<p><code>python
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
-</code></p>
+<pre><code class="language-python">git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
+</code></pre>
 
-<h2 id="commitpatch">将某一个commit之后的提交做成patch</h2>
+<p>##将某一个commit之后的提交做成patch</p>
 
-<p><code>python
-git format-patch -M HEAD~1
-</code></p>
+<pre><code class="language-python">git format-patch -M HEAD~1
+</code></pre>
 
-<h2 id="patch">将patch打到我们的开发分支</h2>
+<p>##将patch打到我们的开发分支</p>
 
-<p><code>python
-git am xxx.patch
-</code></p>
+<pre><code class="language-python">git am xxx.patch
+</code></pre>
 
-<h2 id="vimjson">vim中格式化json</h2>
+<p>##vim中格式化json</p>
 
-<p><code>python
-:%!python -m json.tool       
-</code></p>
+<pre><code class="language-python">:%!python -m json.tool       
+</code></pre>
 ]]></content>
   </entry>
   
