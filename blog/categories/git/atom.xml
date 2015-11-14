@@ -4,7 +4,7 @@
   <title><![CDATA[分类:git | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-14T10:18:12+08:00</updated>
+  <updated>2015-11-14T10:27:25+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[GIT常用方法]]></title>
-    <link href="http://www.newtomato.me/blog/git-basic.html/"/>
+    <link href="http://www.newtomato.me/blog/2015/10/30/git-basic"/>
     <updated>2015-10-30T10:58:35+08:00</updated>
-    <id>http://www.newtomato.me/blog/git-basic</id>
+    <id>http://www.newtomato.me/blog/2015/10/30/git-basic</id>
     <content type="html"><![CDATA[<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
 简单地介绍一下GIT的工作流程<br />
 <!--more--><br />
@@ -171,9 +171,9 @@ git apply diff.patch
   
   <entry>
     <title type="html"><![CDATA[Git命令行总结-rebase]]></title>
-    <link href="http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-rebase.html/"/>
+    <link href="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase"/>
     <updated>2015-10-17T22:11:24+08:00</updated>
-    <id>http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-rebase</id>
+    <id>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase</id>
     <content type="html"><![CDATA[<p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
 
 <p>使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
@@ -196,9 +196,9 @@ git apply diff.patch
   
   <entry>
     <title type="html"><![CDATA[git命令行总结-log]]></title>
-    <link href="http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-log.html/"/>
+    <link href="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log"/>
     <updated>2015-10-17T22:08:49+08:00</updated>
-    <id>http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-log</id>
+    <id>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log</id>
     <content type="html"><![CDATA[<pre><code class="language-python">git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
 </code></pre>
 

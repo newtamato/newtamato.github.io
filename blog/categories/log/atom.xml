@@ -4,7 +4,7 @@
   <title><![CDATA[分类:log | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/log/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-14T10:18:12+08:00</updated>
+  <updated>2015-11-14T10:27:25+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[git命令行总结-log]]></title>
-    <link href="http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-log.html/"/>
+    <link href="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log"/>
     <updated>2015-10-17T22:08:49+08:00</updated>
-    <id>http://www.newtomato.me/blog/gitming-ling-xing-zong-jie-log</id>
+    <id>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log</id>
     <content type="html"><![CDATA[<pre><code class="language-python">git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
 </code></pre>
 

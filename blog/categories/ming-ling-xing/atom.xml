@@ -4,7 +4,7 @@
   <title><![CDATA[分类:命令行 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/ming-ling-xing/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-14T10:18:12+08:00</updated>
+  <updated>2015-11-14T10:27:25+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[ls命令行排序]]></title>
-    <link href="http://www.newtomato.me/blog/lsming-ling-xing-pai-xu.html/"/>
+    <link href="http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu"/>
     <updated>2015-10-17T22:26:44+08:00</updated>
-    <id>http://www.newtomato.me/blog/lsming-ling-xing-pai-xu</id>
+    <id>http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu</id>
     <content type="html"><![CDATA[<p>按文件大小降序排列</p>
 
 <pre><code> ls -lSr 
