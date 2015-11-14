@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom">
 
-  <title><![CDATA[分类:android | 番茄手册]]></title>
-  <link href="http://www.newtomato.me/blog/categories/android/atom.xml" rel="self"/>
+  <title><![CDATA[分类:android开发 | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/androidkai-fa/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-11T19:02:59+08:00</updated>
+  <updated>2015-11-14T10:18:12+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -31,7 +31,7 @@
   <li>VirtualBox：<a href="https://www.virtualbox.org/wiki/Downloads">官網下載</a></li>
   <li>Genymotion：<a href="https://cloud.genymotion.com/page/launchpad/download/">註冊&amp;下載</a></li>
   <li>Android SDK：<a href="https://cloud.genymotion.com/page/launchpad/download/">官網下載</a></li>
-  <li>ARM Translation Installer：v1.1<a href="http://forum.xda-developers.com/showthread.php?t=2528952">下載</a>
+  <li>ARM Translation Installer：v1.1<a href="http://forum.xda-developers.com/showthread.php?t=2528952">下載</a><br />
 5	.Google Play：4.3版 | <a href="http://wiki.rootzwiki.com/Google_Apps#Universal_Packages_2">所有版本</a></li>
 </ol>
 ]]></content>

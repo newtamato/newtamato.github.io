@@ -9,7 +9,9 @@
 
 <meta name="author" content="newtomato"> 
 
-<meta name="description" content="按文件大小降序排列 ls -lSr 查看当前电脑上硬盘的使用情况 df -lh 这是按兆（M）来排序 du -sh * sort -rm 选出排在前面的10个 du -sh * sort -rm head 选出排在后面的10个 du -sh * sort -rm tail 命令行 "> <meta name="keywords" content="">
+<meta name="description" content="按文件大小降序排列 1 ls -lSr 查看当前电脑上硬盘的使用情况 1
+df -lh 这是按兆（M）来排序 1 du -sh * |sort -rm 选出排在前面的10个 1
+du -sh * | sort -rm | head 选出排在后面的10个 1 du -sh * | sort -rm &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -98,53 +100,31 @@ $(document).ready(
 
 	<div id="content" class="inner"><article class="post">
 	<h2 class="title">Ls命令行排序</h2>
-	<div class="entry-content"><h2 id="section">按文件大小降序排列</h2>
-<blockquote>
-  <p>ls -lSr </p>
-</blockquote>
+	<div class="entry-content"><p>按文件大小降序排列</p>
 
-<h2 id="section-1">查看当前电脑上硬盘的使用情况</h2>
-<blockquote>
-  <p>df -lh</p>
-</blockquote>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> ls -lSr </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<h2 id="m">这是按兆（M）来排序</h2>
-<blockquote>
-  <table>
-    <tbody>
-      <tr>
-        <td>du -sh *</td>
-        <td>sort -rm</td>
-      </tr>
-    </tbody>
-  </table>
-</blockquote>
+<p>查看当前电脑上硬盘的使用情况</p>
 
-<h2 id="section-2">选出排在前面的10个</h2>
-<blockquote>
-  <table>
-    <tbody>
-      <tr>
-        <td>du -sh *</td>
-        <td>sort -rm</td>
-        <td>head</td>
-      </tr>
-    </tbody>
-  </table>
-</blockquote>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">df -lh</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<h2 id="section-3">选出排在后面的10个</h2>
-<blockquote>
-  <table>
-    <tbody>
-      <tr>
-        <td>du -sh *</td>
-        <td>sort -rm</td>
-        <td>tail</td>
-      </tr>
-    </tbody>
-  </table>
-</blockquote>
+<p>这是按兆（M）来排序</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * |sort -rm</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在前面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">du -sh * | sort -rm | head</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在后面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * | sort -rm | tail</span></code></pre></td></tr></table></div></figure></notextile></div>
+
 </div>
 
 
@@ -172,6 +152,9 @@ $(document).ready(
 
 
 	
+	
+      | <a href="#comments">Comments</a>
+     
 </div></article>
 
 	<div class="share">
@@ -187,6 +170,25 @@ $(document).ready(
 </div>
 
 
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="Ls命令行排序"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"newtomato"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
 </div>
 	<footer id="footer" class="inner">Copyright &copy; 2015
 

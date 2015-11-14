@@ -1,8 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://www.newtomato.me/blog/lua-deep-3.html/</loc>
+    <lastmod>2015-11-12T21:48:47+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/lua-deep-2.html/</loc>
+    <lastmod>2015-11-12T21:47:58+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/lua-deep.html/</loc>
+    <lastmod>2015-11-12T21:46:51+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://www.newtomato.me/blog/function-closure-upvalue.html/</loc>
-    <lastmod>2015-11-11T00:00:00+08:00</lastmod>
+    <lastmod>2015-11-11T19:01:05+08:00</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
@@ -57,25 +72,25 @@
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/archives/</loc>
-    <lastmod>2015-11-11T19:02:59+08:00</lastmod>
+    <lastmod>2015-11-14T10:18:12+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/archives/</loc>
-    <lastmod>2015-11-11T19:02:59+08:00</lastmod>
+    <lastmod>2015-11-14T10:18:12+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/</loc>
-    <lastmod>2015-11-11T19:02:59+08:00</lastmod>
+    <lastmod>2015-11-14T10:18:12+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/</loc>
-    <lastmod>2015-11-11T19:02:59+08:00</lastmod>
+    <lastmod>2015-11-14T10:18:12+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

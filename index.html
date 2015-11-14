@@ -9,11 +9,7 @@
 
 <meta name="author" content="newtomato"> 
 
-<meta name="description" content="layout: post
-title: “Function, Closures, up values “
-date: 2015-11-11 19:01:05 +0800
-comments: true
-categories: — lua 未找到原文出处，从网络博客天道酬勤,重剑无锋上转载。 Lua &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然， &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -106,113 +102,21 @@ $(document).ready(
     <article class="post">
 	<h2 class="title">
 		
-		<a href="/blog/function-closure-upvalue.html/">
+		<a href="/blog/lua-deep-3.html/">
 		
-			Function Closure Upvalue</a>
+			Lua脚本在C++下的舞步（三）</a>
 	</h2>
 	<div class="entry-content">
-		<hr />
-<p>layout: post
-title: “Function, Closures, up values “
-date: 2015-11-11 19:01:05 +0800
-comments: true
-categories: 
-— lua </p>
+		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
 
-<p>未找到原文出处，从网络博客<a href="http://blog.chinaunix.net/uid-52437-id-2108789.html">天道酬勤,重剑无锋</a>上转载。</p>
+<p>上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然，这些功能是为了今天这篇文章而铺路的。</p>
 
-<p>Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)，所以在函数体中仍然可以定义函数。</p>
+<p>看了七猫的回帖，呵呵，确实应该说一下SWIG这个工具，说真的，我对这个工具理解不深，因为没有怎么用过，读过一些关于它的文章，似乎是帮你把C++的功能封装成一个Lua基本库的东西，但是后来研究，他可以很轻松帮你把公用函数封装成一个Lua的基本库(类似C++的dll)，但是对于我的需求而言，可能不太一样。因为我大量的是需要在C++里面进行数据传输以及变量的交互，所以为了紧贴C++，我需要很多关联数据的处理。 <br />
+我是一名C++程序员，所以在很多时候，不想过多的使用Lua的特性，因为个人感觉，Lua的语法要比C++的更加灵活。而我更希望，在函数调用的某些习惯上，遵循一些C++的规则。</p>
 
-<p>假设函数f2定义在函数f1中，那么就称f2为f1的内嵌(inner)函数，f1为f2的外包(enclosing)函数，外包和内嵌都具有传递性，即f2的内嵌必然是f1 的内嵌，而f1的外包也一定是f2的外包。内嵌函数可以访问外包函数已经创建的所有局部变量，这种特性便是所谓的词法定界(lexical scoping)，而这些局部变量则称为该内嵌函数的外部局部变量(external local variable)或者upvalue(这个词多少会让人产生误解，因为upvalue实际指的是变量而不是值)。试看如下代码：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">function f1(n) -- 函数参数也是局部变量
-</span><span class="line">  local function f2()
-</span><span class="line">   print(n) -- 引用外包函数的局部变量 
-</span><span class="line">  end 
-</span><span class="line">  return f2
-</span><span class="line">end
-</span><span class="line">g1 = f1(1979)
-</span><span class="line">g1() -- 打印出1979
-</span><span class="line">g2 = f1(500)
-</span><span class="line">g2() -- 打印出500</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>当执行完g1 = f1(1979)后，局部变量n的生命本该结束，但因为它已经成了内嵌函数f2(它又被赋给了变量g1)的upvalue，所以它仍然能以某种形式继续“存活”下来，从而令g1()打印出正确的值。</p>
-
-<p>可为什么g2与g1的函数体一样(都是f1的内嵌函数f2的函数体)，但打印值不同？这就涉及到一个相当重要的概念——闭包(closure)。
-事实上，Lua编译一个函数时，会为它生成一个原型(prototype)，其中包含了函数体对应的虚拟机指令、函数用到的常量值(数，文本字符串等等)和一些调试信息。在运行时，每当Lua执行一个形如function…end 这样的表达式时，它就会创建一个新的数据对象，其中包含了相应函数原型的引用、环境(environment，用来查找全局变量的表)的引用以及一个由所有upvalue引用组成的数组，而这个数据对象就称为闭包。由此可见，函数是编译期概念，是静态的，而闭包是运行期概念，是动态的。</p>
-
-<p>g1和g2的值严格来说不是函数而是闭包，并且是两个不相同的闭包，而每个闭包可以保有自己的upvalue值，所以g1和g2打印出的结果当然就不一样了。虽然闭包和函数是本质不同的概念，但为了方便，且在不引起混淆的情况下，我们对它们不做区分。</p>
-
-<p>使用upvalue很方便，但它们的语义也很微妙，需要引起注意。比如将f1函数改成：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">function f1(n) 
-</span><span class="line">  local function f2() 
-</span><span class="line">     print(n) 
-</span><span class="line">     end
-</span><span class="line">   n = n + 10 
-</span><span class="line">   return f2
-</span><span class="line">end
-</span><span class="line">g1 = f1(1979)
-</span><span class="line">g1() -- 打印出1989</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>内嵌函数定义在n = n + 10这条语句之前，可为什么g1()打印出的却是1989？upvalue实际是局部变量，而局部变量是保存在函数堆栈框架上(stack frame)的，所以只要upvalue还没有离开自己的作用域，它就一直生存在函数堆栈上。这种情况下，闭包将通过指向堆栈上的upvalue的引用来访问它们，一旦upvalue即将离开自己的作用域(这也意味着它马上要从堆栈中消失)，闭包就会为它分配空间并保存当前的值，以后便可通过指向新分配空间的引用来访问该upvalue。</p>
-
-<p>当执行到f1(1979)的n = n + 10时，闭包已经创建了，但是n并没有离开作用域，所以闭包仍然引用堆栈上的n，当return f2完成时，n即将结束生命，此时闭包便将n(已经是1989了)复制到自己管理的空间中以便将来访问。弄清楚了内部的秘密后，运行结果就不难解释了。</p>
-
-<p>upvalue还可以为闭包之间提供一种数据共享的机制。试看下例：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">function Create(n) 
-</span><span class="line">  local function foo1() 
-</span><span class="line">    print(n) 
-</span><span class="line">  end
-</span><span class="line">  local function foo2() 
-</span><span class="line">    n = n + 10 
-</span><span class="line">  end
-</span><span class="line">  return foo1,foo2
-</span><span class="line">end
-</span><span class="line">f1,f2 = Create(1979)
-</span><span class="line">f1() -- 打印1979 
-</span><span class="line">f2() f1() -- 打印1989 
-</span><span class="line">f2() f1() -- 打印1999</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>f1, f2这两个闭包的原型分别是Create中的内嵌函数foo1和foo2，而foo1和foo2引用的upvalue是同一个，即Create的局部变量 n。
-前面已说过，执行完Create调用后，闭包会把堆栈上n的值复制出来，那么是否f1和f2就分别拥有一个n的拷贝呢？其实不然，当Lua发现两个闭包的upvalue指向的是当前堆栈上的相同变量时，会聪明地只生成一个拷贝，然后让这两个闭包共享该拷贝，这样任一个闭包对该upvalue进行修改都会被另一个探知。
-上述例子很清楚地说明了这点：每次调用f2都将upvalue的值增加了10，随后f1将更新后的值打印出来。upvalue的这种语义很有价值，它使得闭包之间可以不依赖全局变量进行通讯，从而使代码的可靠性大大提高。</p>
 
 		
-		
+		<a href="/blog/lua-deep-3.html/" class="more-link">阅读全文&rarr;</a>
 	</div>
 
 
@@ -229,11 +133,166 @@ categories:
   
 
 
-<time datetime="2015-11-11T00:00:00+08:00" pubdate data-updated="true"></time></div>
+<time datetime="2015-11-12T21:48:47+08:00" pubdate data-updated="true"></time></div>
 	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
 
 
 	
+	
+      | <a href="/blog/lua-deep-3.html/#comments">Comments</a>
+     
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/lua-deep-2.html/">
+		
+			Lua脚本在C++下的舞步（二）</a>
+	</h2>
+	<div class="entry-content">
+		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂，就不会有人使用了。 <br />
+下面，我要强调一下，Lua的栈的一些概念，因为这个确实很重要，你会经常用到。熟练使用Lua，最重要的就是要时刻知道什么时候栈里面的数据是什么顺序，都是什么。如果你能熟练知道这些，实际你已经是Lua运用的高手了。</p>
+
+
+		
+		<a href="/blog/lua-deep-2.html/" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-12T21:47:58+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+	
+      | <a href="/blog/lua-deep-2.html/#comments">Comments</a>
+     
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/lua-deep.html/">
+		
+			Lua脚本在C++下的舞步(入门指引)（转）</a>
+	</h2>
+	<div class="entry-content">
+		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>现在，越来越多的C++服务器和客户端融入了脚本的支持，尤其在网游领域，脚本语言已经渗透到了方方面面，比如你可以在你的客户端增加一个脚本，这个脚本将会帮你在界面上显示新的数据，亦或帮你完成某些任务，亦或帮你查看别的玩家或者NPC的状态。。。如此等等。</p>
+
+<p>但是我觉得，其实脚本语言与C++的结合，远远比你在游戏中看到的特效要来的迅猛。它可以运用到方方面面的领域，比如你最常见的应用领域。比如，你可以用文本编辑器，写一个脚本语言，然后用你的程序加载一下，就会产生出很绚丽的界面。亦或一两句文本语言，就会让你的程序发送数据给服务器，是不是很酷呢？</p>
+
+
+		
+		<a href="/blog/lua-deep.html/" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-12T21:46:51+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+	
+      | <a href="/blog/lua-deep.html/#comments">Comments</a>
+     
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/function-closure-upvalue.html/">
+		
+			Function, Closures, Up Values</a>
+	</h2>
+	<div class="entry-content">
+		<p>未找到原文出处，从网络博客<a href="http://blog.chinaunix.net/uid-52437-id-2108789.html">天道酬勤,重剑无锋</a>上转载。</p>
+
+<p>Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)，所以在函数体中仍然可以定义函数。<br />
+
+		
+		<a href="/blog/function-closure-upvalue.html/" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-11T19:01:05+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+	
+      | <a href="/blog/function-closure-upvalue.html/#comments">Comments</a>
+     
 </div></article>
 
 
@@ -245,53 +304,14 @@ categories:
 			通关the Last of US的感悟</a>
 	</h2>
 	<div class="entry-content">
-		<hr />
+		<p><img src="images/1446377446064.jpg" alt="Alt text" /></p>
 
-<p><img src="images/1446377446064.jpg" alt="Alt text" /></p>
-
-<p>今年年初的时候，在同事那里听说了the last of us的这款游戏，同事说的眉飞色舞，吹捧拔高至此毫不吝啬，甚至不惜把他家里的PS3拿给我让我玩。当时的我甚至没有买过一台PS3，或者一张游戏碟片。
+<p>今年年初的时候，在同事那里听说了the last of us的这款游戏，同事说的眉飞色舞，吹捧拔高至此毫不吝啬，甚至不惜把他家里的PS3拿给我让我玩。当时的我甚至没有买过一台PS3，或者一张游戏碟片。<br />
 自然一点想玩的想法都没有，婉言谢绝了同事的好意。</p>
 
-<p>直到很多人都在讨论这款游戏，正巧顽皮狗重制版的the last of us开卖， 可以在PS4上看到更清晰的画面了，于是自己也就开始卖了一台。</p>
-
-<p>顺便在淘宝上买了一个数字版本的游戏。非常便宜才花费了30元。此处真的应该良心的说，这款游戏做的不知比别的手游或者网游高多少档次了，那些动辄就有玩家充值上千上万。而这款游戏你只要花费30元就能玩的超爽，从头到尾不需要在冲任何钱。真的是良心到家了呀。</p>
-
-<p>由于是第一次上手玩这样的游戏，起初的镜头摇晃是非常不适应的。但是玩上几关就被剧情吸引到了。简直是停不下手。时间悄无声的就到了夜里3点，在玩一会儿，就到了4点。真的是非常的让人欲罢不能。除了最后一个绝地模式没有玩之外。剩下的模式全被我一一通关。甚至已经玩过十几篇普通难度。痴迷到的程度已经让我决定顽皮狗一生的粉！</p>
-
-<p>再次我也做一次推荐。甚至终身的推荐！是真正爱玩游戏的人，都应该是尝试一下这款游戏。绝对会给你难以言明的感受。
-这款游戏好在什么地方呢？我没有玩过其他的PS游戏，所以我的理由仅代表我个人的感受。</p>
-
-<blockquote>
-  <p>游戏的操作。游戏的操作相当的简单，几个按键就能快速的反应。相对于我后来玩到的其他PS游戏真的是很简单。游戏是简洁的UI界面。快速切换武器，镜头移动，都很简单舒服。我想应该是顽皮狗想让玩家的注意力更多的放在故事剧情上而不要被过多的UI操作挡在了外面。</p>
-</blockquote>
-
-<blockquote>
-  <p>故事的剧情。在末日残酷中失去心爱女儿的大叔乔，残忍冷酷内敛，话不多但是杀人不眨眼。和自己的伙伴泰丝无意中接了一桩“偷运货物”到城外的活儿。而这个货就是我们的女主人公小女孩艾丽。小女孩艾丽在末世中出生，性格独立好强，面对残酷的环境，比大叔更有过之而无不及的样子。两个人经历种种，从一开始泰丝，后来的比尔，和汤姆兄弟以及大叔的弟弟以及后来的食人者大卫和火影皇后的故事。从一开始的陌生，彼此嫌隙。到后来相互扶持，相互照顾的深刻感情。都让给我感动到哭！游戏后来还有专门的一个DLC章节，讲述大叔受重伤。艾丽出去给他找药那段。那个冬天真的是非常的残酷。她独自一个人四处躲避出现的僵尸和前抢他们人。以前光看到大叔对艾丽的照顾，而此时我们才真正感受到了艾丽对大叔的照顾和无所畏惧的勇气。两个人的感情已经不能够用简单的伙伴关系来界定了。</p>
-</blockquote>
-
-<blockquote>
-  <p>游戏的音乐。<strong>《最后生还者》的音乐作曲家古斯塔沃·桑塔欧拉拉（Gustavo Santaolalla）是一位具有多重身份的音乐人：电影配乐、专辑制作、组建另类电音摇滚探戈乐队Bajofondo等；并曾两度问鼎奥斯卡最佳电影配乐奖与金球奖最佳配乐奖。</strong> 这是我在百度百科上找到的注释。配乐简直大赞！游戏通关后，那种末日的苍凉悲壮孤独绝望的音乐响起的时候，我真个人呆在沙发里，无法自拔。故事似乎未完，可是故事已经结束。接下来呢？内心缺失了好大一块，急需找人来填补。</p>
-</blockquote>
-
-<p>如今，我已经几个月没有在摸过the last of us了。但是想到这个游戏，我心依然澎湃的想要推荐给大家。他不仅仅是一款游戏作品，更是一场惊险的冒险。玩家参与进来，一关一关的通过，它带给我们通关的成就感之外，还有对两位主人公的牵挂和担心。每个人在末世中都想活下来，僵尸不是最可怕的，可怕的是人心。僵尸在明处，而人在暗处给我们一刀。乔也曾说过自己做过那种事。他也不是好人。好人在末世中只有被人吊打烧死的结局。人性一直如此，这也为乔最终没有拯救人类买下了伏笔。</p>
-
-<p>这个故事值得细想和回味的故事太多，泰丝和乔的故事，他们是一对生意伙伴，是患难之交，彼此依靠。彼此之间是否还有更深刻的感情呢？泰丝似乎有很多感情债，为什么和乔之间没有呢？乔主动给泰丝让路，说女士优先，乔说过，我也是很浪漫的。这明显是赤裸裸的勾引。说明乔有意和泰丝发展关系。但是泰丝并不同意。我想泰丝是真的把乔看成了自己的生死之交。是非常相信乔的，才不会和乔之间产生多余的感情。这样会对他们彼此都会产生更多的麻烦。像泰丝那样处处留情的人，和乔如果有一段，那么以后他们之间不再是伙伴，或者就成了路人了。我想泰丝想的非常明白。</p>
-
-<p>乔的朋友比尔，一个同性恋。这个小小的细节还是在后来玩过很多遍才看明白。里面有一个小小的剧情就是乔找到了一封比尔伙伴查尔斯的信交给了比尔。以及效果娘艾丽偷拿了比尔的肌肉男漫画。我才明白比尔是这么一个人。比尔是非常聪明的人，会利用僵尸来为自己做掩护。懂得制作炸弹。给乔弄到了可以发动的汽车。同时你能看出比尔是一个很讲义气的人，乔来要求比尔还人情，比尔大可以不换，但是他答应了。还有后面，他扔给乔一个油管，都让我觉得比尔是个好人，只是面容凶煞了点。桥走后，我反而更加担心比尔，他一个人留在了小镇上。小镇上只剩下僵尸与他为伴。以后他怎么活下去呢？泰丝死了，他的Parter去了，会有人来看他吗？这样活下去有什么意义呢？看到乔和艾丽在外面遇到的麻烦，我想比尔这样也挺好，至少他擅长和僵尸打交道，他可以杀死僵尸。而不用被其他人类杀死。</p>
-
-<p>后面遇到的汤姆兄弟，在下水道那一段，又不少细节我们会发现有一个艾需的人。他来自大海，发生人类末日危机的时候，他在海里捕鱼，躲过了一劫，后来他用光所有的物资，来到了岸上，找到了一个下水道，他躲在了里面，然后遇到了其他人类，他便和他们一起住在了下水道里，这似乎是一个躲避外界最好的世外桃源。这里有儿童，有教室，还有收集雨的装置，看得出来没有被感染的时候，他们在里面过了一段幸福快乐的时光了，但是不幸最后还是发生了。艾需和几个同伴一起逃了出来。至于是否活了下来，真的不可而知。这些小小的细节都是顽皮狗很用心之处，他寥寥几笔，便将艾需这个人饱满的出现在我们面前。</p>
-
-<p>最让我印象深刻的要数小姑娘艾丽一个人对付食人大叔大卫了。在那个咖啡馆里，我简直是吓坏了，手紧张的握不住手柄。尤其是在后面的一个模式，没有了聆听功能。我无法判定大叔在那个方位，只能靠眼睛去观察。那一刻我就是艾丽，躲是躲不过的，只能坚持的玩下去，我把希望寄托在大叔乔身上，但是最后绕来绕去大叔乔还是没来，游戏半点提示没有，我找准机会捅了大卫一刀。但是他这个大boss竟然没死。还拿起砍刀对准我。被砍死无数次才明白，只能靠自己。真是紧张刺激。现在我已经顺利通关很多次，但是每次玩到杀死大卫那关，我还是不自主的紧张起来。大卫曾说过，这个冬天非常残酷。想来也是顽皮狗的伏笔，这个冬天过去之后，艾丽真的变得不同了。很少再吹起口哨。</p>
-
-<p>到最后的解决，乔一层层的杀过去，救出了艾丽。而我也不自主的为其叫好。他放弃拯救人类，他只想救出艾丽。人类有自身的命运，不是艾丽一个人可以拯救的。这不是她一个人的责任，为何要她来背负。聪明的艾丽醒来就知道乔在撒谎。但是她没有戳破，她死死的盯着乔，要乔给她承诺，那个眼神真的好特别，就像我自己撒了谎，我自己都犹豫起来。而她说，ok。看似她不在问，但是更像是弄了一把锁深深的把我锁在了这个秘密中。不知以后会如何？</p>
-
-<p>至少他们会在水坝安静的呆上一段日子。</p>
-
-<p><img src="images/1446377484270.jpg" alt="Alt text" /></p>
-
 
 		
-		
+		<a href="/blog/the-last-of-us-you-xi.html/" class="more-link">阅读全文&rarr;</a>
 	</div>
 
 
@@ -319,6 +339,9 @@ categories:
 
 
 	
+	
+      | <a href="/blog/the-last-of-us-you-xi.html/#comments">Comments</a>
+     
 </div></article>
 
 
@@ -334,18 +357,9 @@ categories:
 
 <p>此事的起因说到本质，便是我想让他能够讲责任负起来，做事能有效率有些，而他却并不以为意。当时的语气急躁了一些，语气便也急冲了起来，尤其当时看到他散漫不负责任的态度，让我更加有些急火攻心。类似这样的冲突发生了不止一次。可能大家也会遇到这样的情况，尤其是在创业团队，为了一个功能具体的细节的争吵，操作不当就会出现这样的情况。</p>
 
-<p>现在冷静下来想想，当时真是没有必要要那么冲动，什么问题不能够解决呢？自己当时那么做反而是最最下策的。在此我为这件事情做一个总结，也算是从以往那些争吵中学到些经验，促进自己的成长。</p>
-
-<p>与人沟通什么最重要呢，能够让彼此都理解和明白怎么去解决问题？是目的最重要吗，直接了当的说了自己的需求和对方的需求，就可以了？还是聊天时候的态度最重要，如春风般温暖的微笑就能够让对方理解你的想法么？我试过前者，也用过后者，但是毕竟自己是个性子急躁的人，做得这些像是束缚了自己的想法，也像是在哄着别人，时间久了自己也觉得辛苦。找到合适自己的沟通方法才是最重要的.尤其是在团队里面，若能稍微培养一些察言观色的本事，那自然再好不过了，知道说什么，该做什么，与人沟通无非就是一个心理交流，如果能够让对方心悦诚服的和你合作，且合作愉快，那才是沟通的最高境界。可是如果这种本事没有培养起来的时候，怎么办呢？那就记住一条，我们沟通的目的是解决问题，不是将问题升级化。所以以此为念，态度自然便朝着解决问题的方向去了。</p>
-
-<p>其次如果到时真的不可避免的争吵起来了，那么切记要给对方留有空间余地，切不要把争吵带到死胡同中，否则彼此都会拼命反击，会生出更多问题出来。适可而止的争吵既可以发泄当时的怒火又不会伤及彼此的感情。待下次大家都冷静了再找时间沟通便可。</p>
-
-<p>再者，如果有些问题是自己出错了就不要强撑着自己不认错。总会有人在某处比你更厉害，看的更深，研究的更认真，那就应该向这样的人学习。自己愚蠢些没有关系，整个团队能够向前走并且和谐融洽才是最为重要的。</p>
-
-<p>曾经有个出租车司机和我讲过一个道理，他说不要小瞧了这个世界，付出总会有回报，你付出的越多得到的也会越多。你选择了这份工作，可以不去热爱它，但是你要为他负责，不仅仅要知道它能够给你带来好处，快乐，用处，还会给你带来痛苦，折磨，压抑，不公。所有的东西都有两面性，这样想来，一切都便释怀了。什么事情都不是问题。只要记得自己当初创业的热情和期许，这之间总会遇到不同的人，总会发生不满的事情，总会有超出预期的问题，但是不忘初心放得始终，不遭此磨难便用不知道自己能否真的成才。</p>
 
 		
-		
+		<a href="/blog/you-zhou-si-shi-qing-yin-fa-de-si-kao.html/" class="more-link">阅读全文&rarr;</a>
 	</div>
 
 
@@ -373,6 +387,9 @@ categories:
 
 
 	
+	
+      | <a href="/blog/you-zhou-si-shi-qing-yin-fa-de-si-kao.html/#comments">Comments</a>
+     
 </div></article>
 
 
@@ -384,190 +401,12 @@ categories:
 			Lua基础知识-语法</a>
 	</h2>
 	<div class="entry-content">
-		<hr />
+		<p>lua是一门脚本语言，他是以c语言的标准编写而成，因此天生能够和c语言无缝合作。并且在所有的脚本引擎中，lua是速度最快的。</p>
 
-<p>lua是一门脚本语言，他是以c语言的标准编写而成，因此天生能够和c语言无缝合作。并且在所有的脚本引擎中，lua是速度最快的。</p>
-
-<p>lua语言非常的简单，可能你看完这一篇文章，就可以自己编写自己的lua文件了。基本用不了30分钟</p>
-
-<p>首先我们讲到运行。怎么运行lua文件呢? 但是的运行一个lua文件，需要一个编译器。请到lua的<a href="http://www.lua.org/download.html">官方网站</a>下载最新的lua编译器.
-下载之后是一个zip文件，解压缩之后，里面有一个doc文档目录，src源码目录还有一个ReadME文件和makefile文件。makefile是用来执行make命令。
-为了安装我们可以查看他的帮助文档，在doc/readme.html
-或者直接在命令行中输入<code>make</code>，他们将支持的平台显示出来给你看。我使用的是苹果电脑。所以我在命令行中输入<code>make macosx</code>，之后make就开始工作，安装lua，并且把他放到了我们的环境变量下，这样我们在命令行中可以直接输入<code>lua</code>来调用lua。</p>
-
-<p>在命令行中输入lua，会出现如下的样子
-<img src="images/1446367451271.png" alt="Alt text" /></p>
-
-<p>是不是和python或者metlab有点像呢？</p>
-
-<p>此时在lua命令行模式下面，我们输入<code>print("abc")</code> ,看它能够很快的给我一个反馈
-<img src="images/1446367541807.png" alt="Alt text" /></p>
-
-<p>或者我们不安装lua, 那么可以通过官方提供的一个<a href="http://www.lua.org/cgi-bin/demo">简单的demo</a>来运行我们想要的结果.</p>
-
-<p>此处还提供了一个默认的打印函数，可以打印复杂的数据结构</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="kd">local</span> <span class="n">seen</span><span class="o">=</span><span class="p">{}</span>
-</span><span class="line">
-</span><span class="line"><span class="k">function</span> <span class="nf">dump</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
-</span><span class="line">	<span class="n">seen</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">=</span><span class="kc">true</span>
-</span><span class="line">	<span class="kd">local</span> <span class="n">s</span><span class="o">=</span><span class="p">{}</span>
-</span><span class="line">	<span class="kd">local</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
-</span><span class="line">	<span class="k">for</span> <span class="n">k</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">do</span>
-</span><span class="line">		<span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span> <span class="n">s</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="n">k</span>
-</span><span class="line">	<span class="k">end</span>
-</span><span class="line">	<span class="nb">table.sort</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</span><span class="line">	<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="k">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">do</span>
-</span><span class="line">		<span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
-</span><span class="line">		<span class="n">v</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
-</span><span class="line">		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">==</span><span class="s2">&quot;</span><span class="s">table&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">seen</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">then</span>
-</span><span class="line">			<span class="n">dump</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="o">..</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">)</span>
-</span><span class="line">		<span class="k">end</span>
-</span><span class="line">	<span class="k">end</span>
-</span><span class="line"><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>我们在输入框中接着输入</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="kd">local</span> <span class="n">userData</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">nick&quot;</span><span class="p">,</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">20</span><span class="p">}</span>
-</span><span class="line"><span class="n">dump</span><span class="p">(</span><span class="n">userData</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>运行之后即可以看到这个userData的数据结构。</p>
-
-<p>和dump相比起来，print就是最轻量级别的。
-我们可以用print来打印最基本的数据结构，比如字串，数字等。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">i am a developer &quot;</span><span class="p">)</span>
-</span><span class="line"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">this is a number &quot;</span> <span class="o">..</span> <span class="mi">30</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>看，对于此处打印这样是不是非常的简单？只有两个函数就可以搞定所有的一切。那么为什么lua这么简单呢？
-这是因为lua的数据结构就非常的简单，他没有其他语言那么多的东西，他可以完全的把所有的东西都打印给你看。所有的一切你都可以看成是一张表格。或者说是字典。我称之为万能的table。</p>
-
-<p>至此，安装lua就已经完成。如果你顺利走到这一步，那么就离成功就差一点点的距离了。</p>
-
-<p>接下来我们简单的介绍一下lua的基本数据结构。和其他语言一样，lua自身也支持基本的数据结构。主要number， boolean,,string,nil, userdata, function, thread, table。</p>
-
-<ol>
-  <li>number。是的，就是浮点数。它没有int类型，用浮点的number可以帮助我们处理一切与数字相关的操作。</li>
-  <li>bool类型，true or false。唯一需要注意的就是在lua里面0为真。只有nil和false才为假。</li>
-  <li>String类型，即字串。字串有不少API可以使用。字串的查找，替换，比较，分割。长度，大小写转换等，与字串相关的就是格式化输出某些字串。比如输出i am %{张三}，i am from %{北京} 。 如果是字符串拼接，就是如下的操作
-str = “i am “..张三 .. “,i am from” .. 北京
-但是如果使用格式化输出，就显得很好看，易懂 。
-str = string.format(i am %s,i am from %s, 张三,北京)</li>
-</ol>
-
-<p>看这样，是不是方便了很多？</p>
-
-<ol>
-  <li>Nil类型，用来检测一个变量是否可以用。比如一边量声明了后，但是没有赋值，那么此变量在使用的时候就要慎重。</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">then</span>
-</span><span class="line">	<span class="k">return</span>
-</span><span class="line"><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<ol>
-  <li>table类型。在lua中table是一个非常普遍的要使用的结构，他的语法如下
-local a = {}
-a[“name”] = “aaaa”
-a[“age”] = 11
-这和java语言中的字典数据结构很像，但是有不同，在lua中table可以当成数组使用，比如上面的a可以是一个数组进行for循环。</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">do</span>
-</span><span class="line">	<span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">key is %s,vaue is %s&quot;</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">))</span>
-</span><span class="line"><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>可以删除table的某一个key，语法 <code>a["age"] = nil</code> , 这样就非常方便的将一个键置空，此变量就不存在了。</p>
-
-<p>上面的a并非一个标准的table，标准的table即他们key不是string类型而是number类型，且number保持连续。
-local a = {}
-a[1] = “xxx”
-a[2] = “xxx”
-a[3] = “xxx”
-table.insert(a, “bbbb”)
-table.insert(a,1,”ccc”)
-table.remove(a,3)
-这样我们可以简单的向a插入数据，像一个正常的数组那样去操作a。lua还提供了另一个for循环使用的api专门给予这样标准的table，即ipairs。他的功能和上面的pairs一样。但是必须是标准的table。</p>
-
-<p>table可以嵌套。table中有table，可以理解成多维数组。</p>
-
-<ol>
-  <li>Function类型。即函数类型。
-函数可以当成一个变量来使用。也可以作为参数传递给别的函数调用。
-简单的函数结构如下</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="kd">local</span> <span class="n">myfunc</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span>
-</span><span class="line">	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">i am function&quot;</span><span class="p">)</span>
-</span><span class="line"><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>此处的定义就是一个局域函数，即只能够在定义他的范围域内使用。不能作为全局函数使用，那么怎么才能作为全局函数呢？
-注意到他前面的local了没？我上面定义的变量也有这一个修饰词，有他就表示后面定义的都是局部的，不作为全局。去掉，那么就是全局的函数了。</p>
-
-<ol>
-  <li>userdata类型，顾名思义就是用户的数据结构，最常用的情况就是我们将lua和c进行绑定，可以使用c定义的很多数据结构，那些c定义的数据结构怎么告诉lua呢？让lua来调用，就是将他们转换成了userdata类型。lua才能够顺利的调用他们。具体是怎么转换的呢？那就涉及到lua运行时候的绑定，具体的函数如下</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="n">LUA_API</span> <span class="n">void</span> <span class="n">lua_pushlightuserdata</span> <span class="p">(</span><span class="n">lua_State</span> <span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="n">void</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
-</span><span class="line">  <span class="n">lua_lock</span><span class="p">(</span><span class="n">L</span><span class="p">);</span>
-</span><span class="line">  <span class="n">setpvalue</span><span class="p">(</span><span class="n">L</span><span class="o">-&gt;</span><span class="n">top</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
-</span><span class="line">  <span class="n">api_incr_top</span><span class="p">(</span><span class="n">L</span><span class="p">);</span>
-</span><span class="line">  <span class="n">lua_unlock</span><span class="p">(</span><span class="n">L</span><span class="p">);</span>
-</span><span class="line"><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>此段涉及到比较深的内容，以后我们在深入细讲。</p>
-
-<ol>
-  <li>Thread 类型， 即线程。lua的线程不是真正的线程。关于线程开发使用也是比较复杂的部分。可以放到以后在单开一张。</li>
-</ol>
-
-<p>我们平时用到的最后就是前6种类型。
-此时你是否觉得lua很简单? 是的，就是这么简单。尤其是在游戏开发过程中，为了达到能够自动更新的目的，大部分的项目都是使用lua，他简单灵活的语法和较少的限制对于我们的开发简直就是格外的贴心。剩下的就是他提供的集中API，比如如何操作table，如何将字串和数字进行转换。这些都是具体的API，用得到的时候查看帮助文档就能够很快查阅得到。</p>
-
+<p>lua语言非常的简单，可能你看完这一篇文章，就可以自己编写自己的lua文件了。基本用不了30分钟<br />
 
 		
-		
+		<a href="/blog/lua-basic.html/" class="more-link">阅读全文&rarr;</a>
 	</div>
 
 
@@ -595,6 +434,9 @@ table.remove(a,3)
 
 
 	
+	
+      | <a href="/blog/lua-basic.html/#comments">Comments</a>
+     
 </div></article>
 
 
@@ -606,198 +448,11 @@ table.remove(a,3)
 			GIT常用方法</a>
 	</h2>
 	<div class="entry-content">
-		<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
-简单地介绍一下GIT的工作流程
-首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"> <span class="n">git</span> <span class="n">init</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>然后新增一个文件。随便写点什么，比如readMe</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">echo</span> <span class="n">hello</span><span class="p">,</span><span class="n">world</span><span class="o">&gt;</span> <span class="n">README</span>
-</span><span class="line"><span class="n">git</span> <span class="n">add</span> <span class="n">README</span>
-</span><span class="line"><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span><span class="s">&quot;first commit &quot;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>配置git的用户信息</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="n">user</span><span class="o">.</span><span class="n">name</span> <span class="s">&quot;Example Surname&quot;</span>
-</span><span class="line"><span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="n">user</span><span class="o">.</span><span class="n">email</span> <span class="s">&quot;your.email@gmail.com&quot;</span>
-</span><span class="line"><span class="n">git</span> <span class="n">config</span> <span class="o">--</span><span class="k">global</span> <span class="n">push</span><span class="o">.</span><span class="n">default</span> <span class="s">&quot;matching&quot;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>到此我们就可以在自己本地的仓库上做任何的事情了。但是只是在本地仓库并未能够和其他人合作。那么我们需要一个服务器做中转，这样我们提交过去，别人也可以在那里获取到最新的代码。
-因此我们需要到github或者bitbucket或者其他的提供git服务的网站上，申请一个仓库的链接。
-比如：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span><span class="nd">@github.com</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="n">your_name</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">your_res_name</span><span class="p">}</span><span class="o">.</span><span class="n">git</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>我们要做的就是将自己的代码仓库和这个地址联系起来。使用如下命令就可以达到我们的目的：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">remote</span> <span class="n">add</span> <span class="n">origin</span> <span class="n">git</span><span class="nd">@github.com</span><span class="p">:</span><span class="err">$</span><span class="p">{</span><span class="n">your_name</span><span class="p">}</span><span class="o">/</span><span class="err">$</span><span class="p">{</span><span class="n">your_res_name</span><span class="p">}</span><span class="o">.</span><span class="n">git</span>
-</span><span class="line"><span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">master</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>那么接下来我们还能够做什么呢？我们能够做更多地事情。
-&gt; 创建分支</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">b</span> <span class="n">new_branch_name</span> <span class="n">master</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>以master为准创建一个分支，名字是new_branch_name
-&gt; 删除分支</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">d</span>  <span class="n">new_branch_name</span>
-</span><span class="line"><span class="c">#彻底删除</span>
-</span><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">D</span>  <span class="n">new_branch_name</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<blockquote>
-  <p>分支重新命名</p>
-</blockquote>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"> <span class="n">git</span> <span class="n">branch</span> <span class="p">(</span><span class="o">-</span><span class="n">m</span> <span class="o">|</span> <span class="o">-</span><span class="n">M</span><span class="p">)</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">oldbranch</span><span class="o">&gt;</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">newbranch</span><span class="o">&gt;</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>将oldbranch改名为newbranch</p>
-
-<blockquote>
-  <p>提交代码
-我们在自己的工作区，写了部分的代码之后，需要提交。但是提交有两种含义。一种是本地提交。一种是远端提交。本地提交只有自己看得见。但是远端提交则就是提到了服务器上。大家都可以看得到。</p>
-</blockquote>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#将自己的修改都添加到本地仓库</span>
-</span><span class="line"><span class="n">git</span> <span class="n">add</span> <span class="n">xxx</span>
-</span><span class="line"><span class="n">git</span> <span class="n">commit</span> <span class="o">-</span><span class="n">m</span><span class="s">&quot;我的修改&quot;</span>
-</span><span class="line"><span class="n">git</span> <span class="n">push</span> <span class="n">origin</span> <span class="n">new_branch_name</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>git commit实现的就是本地提交。git push实现的就是远端提交。</p>
-
-<blockquote>
-  <p>更新仓库
-更新仓库就是将远端的东西都拿下来。简单地命令如下</p>
-</blockquote>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">pull</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>即是更新当前分支与远端分支保持一致。
-但是这种方式相当于将远端分支的所有提交fetch 下来，然后做merge操作。类似如下的操作</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">fetch</span> <span class="n">origin</span><span class="o">/</span><span class="n">new_branch_name</span>
-</span><span class="line"><span class="n">git</span> <span class="n">merge</span> <span class="n">origin</span><span class="o">/</span><span class="n">new_branch_name</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>这种方式简单，但是会让提交的显得混乱。还有另一种方法：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">fetch</span> <span class="n">origin</span><span class="o">/</span><span class="n">new_branch_name</span>
-</span><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="n">origin</span><span class="o">/</span><span class="n">new_branch_name</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>merge和rebase的不同之处在于，rebase是new_branch_name的本地提交，以远端仓库的最后一次提交为准，挨个的增长上去。提交就显得很有序。</p>
-
-<blockquote>
-  <p>检查提交记录</p>
-</blockquote>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">graph</span> <span class="o">--</span><span class="n">pretty</span><span class="o">=</span><span class="n">format</span><span class="p">:</span><span class="s">&#39;%Cred</span><span class="si">%h%</span><span class="s">Creset -%C(yellow)</span><span class="si">%d</span><span class="s">%Creset </span><span class="si">%s</span><span class="s"> %Cgreen(</span><span class="si">%c</span><span class="s">r)%Creset&#39;</span> <span class="o">--</span><span class="n">abbrev</span><span class="o">-</span><span class="n">commit</span> <span class="o">--</span><span class="n">date</span><span class="o">=</span><span class="n">relative</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">status</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>我们可以通过<code>gitk&amp;</code> 的方式查看文件的日志。有些时候我们也可以通过命令行更为直观的看到提交日志。
-如同上面的命令。在命令行中直接回车，你会看到意外地惊喜。</p>
-
-<blockquote>
-  <p>修改提交记录
-这里的修改指的是提交到本地仓库没有提交到远端。如果已经提交到了远端，一般是改不了的。</p>
-</blockquote>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="o">-</span><span class="n">i</span> <span class="n">head</span><span class="o">~</span><span class="n">n</span>
-</span><span class="line">
-</span><span class="line"><span class="c"># Commands:</span>
-</span><span class="line"><span class="c"># p, pick = use commit （使用本次提交）</span>
-</span><span class="line"><span class="c"># r, reword = use commit, but edit the commit message（使用本次提交，但是要修改提交的message）</span>
-</span><span class="line"><span class="c"># e, edit = use commit, but stop for amending（使用本次提交，但是禁止追加操作）</span>
-</span><span class="line"><span class="c"># s, squash = use commit, but meld into previous commit（使用本次提交，但是要合并到上一次）</span>
-</span><span class="line"><span class="c"># f, fixup = like &quot;squash&quot;, but discard this commit&#39;s log message（和squash一样，但是不使用本次的提交信息）</span>
-</span><span class="line"><span class="c"># x, exec = run command (the rest of the line) using python（运行python命令）</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>上面的命令可以讲从head到第head-n次的提交修改进行修改。比如修改commit的信息和将几个提交合并在一次。</p>
-
-<blockquote>
-  <p>git补丁的创建及应用
-创建补丁的方式有两种，一个是git diff，另一个git format-patch </p>
-</blockquote>
-
-<p>git format-patch的命令方法:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#将当前分支超前master的commit做成补丁</span>
-</span><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">-</span><span class="n">M</span> <span class="n">master</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#hashcode之前n个提交做成补丁，hashcode不写，默认是head</span>
-</span><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="err">–</span><span class="n">n</span> <span class="n">hashcode</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#检查补丁是否可以成功打上</span>
-</span><span class="line"><span class="n">git</span> <span class="nb">apply</span> <span class="o">--</span><span class="n">check</span> <span class="mo">0001</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#开始打补丁</span>
-</span><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="mo">0001</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
-</span><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="mo">0002</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>git diff的命令方法</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">diff</span> <span class="n">SHA1</span> <span class="n">SHA2</span> <span class="o">&gt;</span> <span class="n">diff</span><span class="o">.</span><span class="n">patch</span>
-</span><span class="line"><span class="n">git</span> <span class="nb">apply</span> <span class="n">diff</span><span class="o">.</span><span class="n">patch</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
+		<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
+简单地介绍一下GIT的工作流程<br />
 
 		
-		
+		<a href="/blog/git-basic.html/" class="more-link">阅读全文&rarr;</a>
 	</div>
 
 
@@ -825,6 +480,9 @@ table.remove(a,3)
 
 
 	
+	
+      | <a href="/blog/git-basic.html/#comments">Comments</a>
+     
 </div></article>
 
 
@@ -849,7 +507,7 @@ table.remove(a,3)
   <li>VirtualBox：<a href="https://www.virtualbox.org/wiki/Downloads">官網下載</a></li>
   <li>Genymotion：<a href="https://cloud.genymotion.com/page/launchpad/download/">註冊&amp;下載</a></li>
   <li>Android SDK：<a href="https://cloud.genymotion.com/page/launchpad/download/">官網下載</a></li>
-  <li>ARM Translation Installer：v1.1<a href="http://forum.xda-developers.com/showthread.php?t=2528952">下載</a>
+  <li>ARM Translation Installer：v1.1<a href="http://forum.xda-developers.com/showthread.php?t=2528952">下載</a><br />
 5	.Google Play：4.3版 | <a href="http://wiki.rootzwiki.com/Google_Apps#Universal_Packages_2">所有版本</a></li>
 </ol>
 
@@ -876,12 +534,15 @@ table.remove(a,3)
 
 <div class="tags">
 
-	<a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/genymotion/'>genymotion</a>
+	<a class='category' href='/blog/categories/androidkai-fa/'>android开发</a>
 
 </div>
 
 
 	
+	
+      | <a href="/blog/genymotionde-an-zhuang.html/#comments">Comments</a>
+     
 </div></article>
 
 
@@ -893,53 +554,31 @@ table.remove(a,3)
 			Ls命令行排序</a>
 	</h2>
 	<div class="entry-content">
-		<h2 id="section">按文件大小降序排列</h2>
-<blockquote>
-  <p>ls -lSr </p>
-</blockquote>
+		<p>按文件大小降序排列</p>
 
-<h2 id="section-1">查看当前电脑上硬盘的使用情况</h2>
-<blockquote>
-  <p>df -lh</p>
-</blockquote>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> ls -lSr </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<h2 id="m">这是按兆（M）来排序</h2>
-<blockquote>
-  <table>
-    <tbody>
-      <tr>
-        <td>du -sh *</td>
-        <td>sort -rm</td>
-      </tr>
-    </tbody>
-  </table>
-</blockquote>
+<p>查看当前电脑上硬盘的使用情况</p>
 
-<h2 id="section-2">选出排在前面的10个</h2>
-<blockquote>
-  <table>
-    <tbody>
-      <tr>
-        <td>du -sh *</td>
-        <td>sort -rm</td>
-        <td>head</td>
-      </tr>
-    </tbody>
-  </table>
-</blockquote>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">df -lh</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<h2 id="section-3">选出排在后面的10个</h2>
-<blockquote>
-  <table>
-    <tbody>
-      <tr>
-        <td>du -sh *</td>
-        <td>sort -rm</td>
-        <td>tail</td>
-      </tr>
-    </tbody>
-  </table>
-</blockquote>
+<p>这是按兆（M）来排序</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * |sort -rm</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在前面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">du -sh * | sort -rm | head</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在后面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * | sort -rm | tail</span></code></pre></td></tr></table></div></figure></notextile></div>
+
 
 		
 		
@@ -970,193 +609,9 @@ table.remove(a,3)
 
 
 	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/vimshi-yong-yan-se.html/">
-		
-			Vim使用-颜色</a>
-	</h2>
-	<div class="entry-content">
-		<ol>
-  <li>首先将Solarized的配色库download下来</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">altercation</span><span class="o">/</span><span class="n">solarized</span><span class="o">.</span><span class="n">git</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<ol>
-  <li>将solarized.vim文件copy 到 ~/.vim/colors/  文件夹下面</li>
-  <li>配置.vimrc</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">syntax</span> <span class="n">on</span>
-</span><span class="line"><span class="nb">set</span> <span class="n">t_Co</span><span class="o">=</span><span class="mi">256</span>
-</span><span class="line"><span class="n">let</span> <span class="n">g</span><span class="p">:</span><span class="n">solarized_termcolors</span><span class="o">=</span><span class="mi">256</span>
-</span><span class="line"><span class="nb">set</span> <span class="n">background</span><span class="o">=</span><span class="n">dark</span>
-</span><span class="line"><span class="n">colorscheme</span> <span class="n">solarized</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>**有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色 **</p>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:19:24+08:00" pubdate data-updated="true"></time></div>
 	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/vim/'>vim</a>
-
-</div>
-
-
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/xiang-mu-guan-li-xin-de.html/">
-		
-			项目管理心得</a>
-	</h2>
-	<div class="entry-content">
-		<p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
-
-<p>谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性，因为我自己估算了时间怎么会完不成呢？可是，你是否也会想过这样是否这个srcum就真的没有问题了呢？他是否是适合所有的团队？对于我们这样有些松散的，开发经验并不足够的小团队而言，并且开发任务也很繁重，是否也是适合的呢？</p>
-
-<p>我不否定scrum的作用和他给某些团队带来的便利性，但是我在运用他的时候，往往心有力而力不足，譬如我们有一批任务，这些任务并不涉及太多的技术，有的仅仅是怎么去替换一下本地化的语言。起初我并没有分下去，而是让团队自己去领取任务。然后对任务做好预估的时间。这样一devday结束之后，自己做了多少任务是有数的。我也欢天喜地的认为我们很快就会讲这些小问题解决掉，但事实并不如此。</p>
-
-<p>任务池中的任务下降的速度远不如我的预期。我们在一个周期内解决的问题并不多。在验收产品的时候，我们已经resolve的任务又会被打开。有些又要重回任务池。这样下一个循环开始，周而复始我们的效率也没有提高，而团队里面反而出现了松散的现象，本来很重的任务，其他人好像都感受不深。压力都攒在了我这里。</p>
-
-<p>于是我改变了策略，从每天让他们领任务到现在我给他们发任务并且规定每天完成的数量，可以完不成，但是需要说明什么阻碍了你。我会尽力去为他们清理阻碍。如此坚持几个周期，开发效率提升不小，尽管任务很多，但是合理的安排和计划时间便可以达到在规定的时间内做完，有的时候我们甚至会提前完成。</p>
-
-<p>从此事中，可以看出不是所有的团队，所有的阶段都要组固定的套路，我们应该灵活的变通自己的思路，scrum仅仅是一个工具，工具不顺手，我们应该考虑换别的工具，项目按时完成才是我们最终的目标。不可为此做耽误。待以后团队成熟之后，或者可以在考虑使用scrum。</p>
-
-<p>另一个问题便是对产品的需求的敲定，尤其是那些模糊和待讨论的需求，在初期，开发上手之前，应该让需求方和开发坐在一起，讨论一下这个需求会涉及到什么东西，比如最为简单的问题，文字字体颜色变化，必然在金币“足够”的时候是一种字体，在“不足”的时候，显示另一种颜色，那么这个需求是仅仅放在这一处，还是所有用到金币的体的地方，足够是怎样的量级限定呢？换哪种颜色的字体？如果使用嵌入字体，就需要提供字体。我举的这个例子已经很细节，可是开发中我们往往面对的都是这些细节，如果不敲定这些问题，开发出来总是不对的。</p>
-
-<p>我想每一个前端工程师都曾觉得美术或者UX或者产品经理他们不可理喻，设计出来一个拖拉机的图纸，却希望开发出来卡迪拉克！每当如此，鸡同鸭讲。互相都是不理解的。来来回回无处次修改，有的需求修改甚至可以推到以前的设计，这让以严谨著称的程序员么简直要抓狂，代码是可以灵活多变的，是可以独立的，是可以有各种设计模式帮助我们做出更好的系统，但是每每此刻你会知道哪些东西在需求变化了之后什么都是不重要了，再修身养性的程序员都看破红尘了！</p>
-
-<p>说及以上，大家可以理解讲需求敲定下来是多么重要的啊！因此每当开功能开发的kick off的时候，我们都会讲讲自己的对这个功能的理解，有问题及时拿出来讨论，然后落实到邮件里，便于后面查询。而且最好master能够在程序动手之前让策划美术讲相关的资料先做出来，至少有一个时间节点，做好他们的甘特图才能够做好程序的甘特图。</p>
-
-<p>团队管理不仅仅只有上述两条，还有团队文化，团队默契培养，团队奖罚制度等,剩下的问题待以后遇到在做体会，再拿出来和大家分享。</p>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:14:06+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/guan-li-zong-jie/'>管理总结</a>
-
-</div>
-
-
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/gitming-ling-xing-zong-jie-rebase.html/">
-		
-			Git命令行总结-rebase</a>
-	</h2>
-	<div class="entry-content">
-		<p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
-
-<p>使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
-
-<p>rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。</p>
-
-<h2 id="rebase">rebase的命令格式如下:</h2>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="o">|</span> <span class="o">--</span><span class="n">interactive</span><span class="p">]</span> <span class="p">[</span><span class="n">options</span><span class="p">][</span><span class="o">--</span><span class="k">exec</span> <span class="o">&lt;</span><span class="n">cmd</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">onto</span> <span class="o">&lt;</span><span class="n">newbase</span><span class="o">&gt;</span><span class="p">][</span><span class="o">&lt;</span><span class="n">upstream</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">branch</span><span class="o">&gt;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code>
-它的工作原理：从dev_branch和master的共同祖先开始，后续所有在dev_branch上面的提交都将以master当前最新的提交为新的基准点再次挨个提交。这是重新生成新的提交而非做合并。你会发现在dev_branch上的同样的commit在master上的SHA1校验码是不一样的。</p>
-
-<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？
-我们用到的命令就是｀git rebase –onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:11:24+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/rebase/'>rebase</a>
-
-</div>
-
-
-	
+      | <a href="/blog/lsming-ling-xing-pai-xu.html/#comments">Comments</a>
+     
 </div></article>
 
 <nav id="pagenavi">
