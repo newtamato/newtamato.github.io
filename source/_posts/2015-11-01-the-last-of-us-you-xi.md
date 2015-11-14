@@ -6,7 +6,7 @@ comments: true
 categories: 游戏
 ---
 
-![Alt text](images/1446377446064.jpg)
+![Alt text](/images/1446377446064.jpg)
 
 今年年初的时候，在同事那里听说了the last of us的这款游戏，同事说的眉飞色舞，吹捧拔高至此毫不吝啬，甚至不惜把他家里的PS3拿给我让我玩。当时的我甚至没有买过一台PS3，或者一张游戏碟片。
 自然一点想玩的想法都没有，婉言谢绝了同事的好意。
@@ -46,5 +46,5 @@ categories: 游戏
 至少他们会在水坝安静的呆上一段日子。
 
 
-![Alt text](images/1446377484270.jpg)
+![Alt text](/images/1446377484270.jpg)
 
