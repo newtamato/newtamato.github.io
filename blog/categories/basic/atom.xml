@@ -4,7 +4,7 @@
   <title><![CDATA[分类:basic | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/basic/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-14T10:18:12+08:00</updated>
+  <updated>2015-11-14T10:27:25+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -15,9 +15,9 @@
   
   <entry>
     <title type="html"><![CDATA[lua基础知识-语法]]></title>
-    <link href="http://www.newtomato.me/blog/lua-basic.html/"/>
+    <link href="http://www.newtomato.me/blog/2015/11/01/lua-basic"/>
     <updated>2015-11-01T16:51:31+08:00</updated>
-    <id>http://www.newtomato.me/blog/lua-basic</id>
+    <id>http://www.newtomato.me/blog/2015/11/01/lua-basic</id>
     <content type="html"><![CDATA[<p>lua是一门脚本语言，他是以c语言的标准编写而成，因此天生能够和c语言无缝合作。并且在所有的脚本引擎中，lua是速度最快的。</p>
 
 <p>lua语言非常的简单，可能你看完这一篇文章，就可以自己编写自己的lua文件了。基本用不了30分钟<br />
@@ -165,9 +165,9 @@ end
   
   <entry>
     <title type="html"><![CDATA[GIT常用方法]]></title>
-    <link href="http://www.newtomato.me/blog/git-basic.html/"/>
+    <link href="http://www.newtomato.me/blog/2015/10/30/git-basic"/>
     <updated>2015-10-30T10:58:35+08:00</updated>
-    <id>http://www.newtomato.me/blog/git-basic</id>
+    <id>http://www.newtomato.me/blog/2015/10/30/git-basic</id>
     <content type="html"><![CDATA[<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
 简单地介绍一下GIT的工作流程<br />
 <!--more--><br />
