@@ -1,97 +1,544 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>番茄手册</title>
-  <meta name="author" content="newtomato">
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>A blogging framework for hackers.  | 番茄手册</title>
 
-  
-  <meta name="description" content="先安装虚拟机VirtualBox
-在下载 GenyMotion,但是他还需要注册，才能继续使用
-主界面的 Settings 按钮，可以用来设置 VirtualBox 及 ADB 路径等信息。
-虚拟机的配置下载
-打上ARM&ndash;>x86补丁：只要将Genymotion-ARM- &hellip;&#8221;>
-  
+<meta name="author" content="newtomato"> 
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="上一章，我们说过reuqire其实就是将一份已经加载过得数据返回，因此多次加载一份文件，其实就是一个数据，而不是多个。
+那么如何实现多个呢？ 只要我们脑洞大开，就可以发现其实只要通过setmetatable就能够巧妙地实现这个问题。
+只要我们将require进来的数据作为另一个表数据的元数据， &hellip;"> <meta name="keywords" content="">
 
-  
-  <link rel="canonical" href="http://newtamato.github.io">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
 
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+
+	
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">番茄手册</a></h1>
-  
-    <h2>A blogging framework for hackers.</h2>
-  
-</hgroup>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">番茄手册</a></h1>
+<h4>A blogging framework for hackers.</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:newtamato.github.io">
+			</form>
+		</div>
+	</div>
+</nav>
+
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+
+	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/15/lua-object/">
+		
+			Lua一份模板创建多个对象</a>
+	</h2>
+	<div class="entry-content">
+		<p>上一章，我们说过reuqire其实就是将一份已经加载过得数据返回，因此多次加载一份文件，其实就是一个数据，而不是多个。
+那么如何实现多个呢？</p>
+
+<p>只要我们脑洞大开，就可以发现其实只要通过setmetatable就能够巧妙地实现这个问题。
+只要我们将require进来的数据作为另一个表数据的元数据，是不是就算是已经创建了一个新的对象呢？比如</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>a = require("A")
+</span><span class='line'>b = {}
+</span><span class='line'>setmetatable(b,{__index =  a})</span></code></pre></td></tr></table></div></figure>
+
+
+<p> 此时我们require了A，创建了模块A的数据并把它作为b的元表，而B是一个非常干净的table，它是否就相当于a的一个对象呢？
+ 想想这样和其他语言的创建对象是否如出一辙呢？如此一来，我们就可以多次创建。比如</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>c = {}
+</span><span class='line'>c.x = 10
+</span><span class='line'>c.y = 100
+</span><span class='line'>setmetatable(c,{__index =  a})
+</span><span class='line'>d = {}
+</span><span class='line'>setmetatable(d,{__index =  a})</span></code></pre></td></tr></table></div></figure>
+
+
+<p>看，这样b,c,d都是以a为元表。每个表都可以有自己的数据并不影响彼此（只要元表不改变）。
+A.lua 的结构如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>local A = {}
+</span><span class='line'>A.number1 = 1
+</span><span class='line'>A.number2 = 1
+</span><span class='line'>function A.doAction()
+</span><span class='line'>  print(string.format("doAction:%d",(A.number1+A.number2)))
+</span><span class='line'>end 
+</span><span class='line'>function A.moveToPosition(x,y)
+</span><span class='line'>  print(string.format("we want to move to %d,%d",x,y))
+</span><span class='line'>end 
+</span><span class='line'>return A</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是这个A里面怎么操作我们自己的数据呢？比如我们想在<code>doAction</code>中调用b自己的数据,但是你看这个函数里面定义的是将A的number1和number2进行了加法。如果我们的b也有这两个变量，会不会调用的就是b的变量呢？</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>a = require("A")
+</span><span class='line'>b = {}
+</span><span class='line'>b.number1 = 10
+</span><span class='line'>b.number2 = 10
+</span><span class='line'>setmetatable(b,{__index =  a})
+</span><span class='line'>b.doAction()</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是打印的却是</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>doAction:2</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这说明最终使用的还是a的变量，怎么才能让它调用b自身的变量呢？</p>
+
+<p>简单地方法就是将b作为参数传给doAction。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function A.doAction(tableData)
+</span><span class='line'>  print(string.format("doAction:%d",(tableData.number1+tableData.number2)))
+</span><span class='line'>end </span></code></pre></td></tr></table></div></figure>
+
+
+<p>如此当b调用doAction的时候，就需要<code>b.doAction(b)</code>这样子！这非常奇怪，但也能够容忍。
+有没有别的方法呢？
+是的，有。lua提供另外一种语法来解决这个问题。可以讲调用者自己传到函数中做第一个参数。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>function A:doAction()
+</span><span class='line'>  print(string.format("doAction:%d",(self.number1+self.number2)))
+</span><span class='line'>end </span></code></pre></td></tr></table></div></figure>
+
+
+<p>仔细看，这个函数和上面的定义最大的区别就是用了冒号。如此一来，在函数里面就可以用self来指示函数的调用者。
+因此，我们的调用方式就变成了<code>b:doAction()</code>即可！</p>
+
+<p>讲到此处，你是否对lua有一个整体的感受了。如果不懂也没有关系，报错也没有关系，请下载我上一篇文章推荐的zerobrain studio编辑器。通过断点调试一点点的尝试，你就能够很快明白的！</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
-</ul>
+
+
+<time datetime="2015-11-15T20:48:08+08:00" pubdate data-updated="true"></time></div>
+	
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/15/lua-require/">
+		
+			Lua中require到底做了什么事情？</a>
+	</h2>
+	<div class="entry-content">
+		<p>require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>DEBUG = false
+</span><span class='line'>USER_NAME = "newtomao"
+</span><span class='line'>USER_IMAGE = "cat.png"
+</span><span class='line'>VERSION = ""
+</span><span class='line'>
+</span><span class='line'>function printBool(boolValue)
+</span><span class='line'>  print("[printBook]:" .. tostring(boolValue))
+</span><span class='line'>end
+</span><span class='line'>
+</span><span class='line'>function getRandomNumber()
+</span><span class='line'>  return  math.random(100)
+</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
+
+
+<p>当我在另一个文件B.lua里面<code>require("A")</code>的时候，我们可以直接调用<code>getRandomNumber</code>和上面定义的常量。因此我们可以任务require就是将另一个文件注册到全局表_G中。这样我们就可以在全局范围内的使用A文件中定义的函数和变量。</p>
+
+<p>我们讲require&#8221;A&#8221;的结果打印出来如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>retA = require("A")
+</span><span class='line'>dump(retA)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>结果如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>"require之后的结果" = true</span></code></pre></td></tr></table></div></figure>
+
+
+<p>但是如果A文件不是上面的样子，而是如下的样子：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>local A = {}
+</span><span class='line'>A.userName = "hello"
+</span><span class='line'>function A.doAction()
+</span><span class='line'>  print("doAction")
+</span><span class='line'>end
+</span><span class='line'>return A</span></code></pre></td></tr></table></div></figure>
+
+
+<p>此时我们require(A.lua)之后，是否可以也直接调用doAction呢？且慢。仔细看下面有一个<code>return</code>, 这表示这个lua文件如果被require进来，返回的是A，就是一个完整的模块table。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>retA = require("A")
+</span><span class='line'>dump(retA,"require之后的结果")</span></code></pre></td></tr></table></div></figure>
+
+
+<p> 打印的结果如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>"require之后的结果" = {
+</span><span class='line'>    "doAction" = function: 0x7fcc024dddb0
+</span><span class='line'>    "userName" = "hello"
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>你看她返回的结果是一个table，打印了A的结构。此时我们就可以通过<code>retA.doAction()</code>的形式去调用。
+retA就是类似一个对象，但是又不完全是对象，它更像是一个命名空间。规定了函数和变量的上下文环境是在A这个空间内。如果外面想要访问userName，需要在前面加上命名空间的限定。
+如果A被我们require多次结果会不会不同呢？比如如下：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>a = require("A")
+</span><span class='line'>a2 = require("A")
+</span><span class='line'>print(a == a2)</span></code></pre></td></tr></table></div></figure>
+
+
+<p>结果是怎么样的呢？答案就是true，是的，a和a2是一个地址。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>print(a)
+</span><span class='line'>table: 0x7fac50500ad0
+</span><span class='line'>print(a2)
+</span><span class='line'>table: 0x7fac50500ad0</span></code></pre></td></tr></table></div></figure>
+
+
+<p>那么这样看来你require多次和require一次的结果是一样的。那么require到底做了什么？
+我们来看lua中对require函数的实现：</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+<span class='line-number'>27</span>
+<span class='line-number'>28</span>
+<span class='line-number'>29</span>
+<span class='line-number'>30</span>
+<span class='line-number'>31</span>
+<span class='line-number'>32</span>
+<span class='line-number'>33</span>
+<span class='line-number'>34</span>
+<span class='line-number'>35</span>
+<span class='line-number'>36</span>
+<span class='line-number'>37</span>
+<span class='line-number'>38</span>
+<span class='line-number'>39</span>
+<span class='line-number'>40</span>
+<span class='line-number'>41</span>
+<span class='line-number'>42</span>
+<span class='line-number'>43</span>
+<span class='line-number'>44</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>static int ll_require (lua_State *L) {
+</span><span class='line'>  const char *name = luaL_checkstring(L, 1);
+</span><span class='line'>  int i;
+</span><span class='line'>  lua_settop(L, 1);  /* _LOADED table will be at index 2 */
+</span><span class='line'>  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
+</span><span class='line'>  lua_getfield(L, 2, name);
+</span><span class='line'>  if (lua_toboolean(L, -1)) {  /* is it there? */
+</span><span class='line'>    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
+</span><span class='line'>      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
+</span><span class='line'>    return 1;  /* package is already loaded */
+</span><span class='line'>  }
+</span><span class='line'>  /* else must load it; iterate over available loaders */
+</span><span class='line'>  lua_getfield(L, LUA_ENVIRONINDEX, "loaders");
+</span><span class='line'>  if (!lua_istable(L, -1))
+</span><span class='line'>    luaL_error(L, LUA_QL("package.loaders") " must be a table");
+</span><span class='line'>  lua_pushliteral(L, "");  /* error message accumulator */
+</span><span class='line'>  for (i=1; ; i++) {
+</span><span class='line'>    lua_rawgeti(L, -2, i);  /* get a loader */
+</span><span class='line'>    if (lua_isnil(L, -1))
+</span><span class='line'>      luaL_error(L, "module " LUA_QS " not found:%s",
+</span><span class='line'>                    name, lua_tostring(L, -2));
+</span><span class='line'>    lua_pushstring(L, name);
+</span><span class='line'>    lua_call(L, 1, 1);  /* call it */
+</span><span class='line'>    if (lua_isfunction(L, -1))  /* did it find module? */
+</span><span class='line'>      break;  /* module loaded successfully */
+</span><span class='line'>    else if (lua_isstring(L, -1))  /* loader returned error message? */
+</span><span class='line'>      lua_concat(L, 2);  /* accumulate it */
+</span><span class='line'>    else
+</span><span class='line'>      lua_pop(L, 1);
+</span><span class='line'>  }
+</span><span class='line'>  lua_pushlightuserdata(L, sentinel);
+</span><span class='line'>  lua_setfield(L, 2, name);  /* _LOADED[name] = sentinel */
+</span><span class='line'>  lua_pushstring(L, name);  /* pass name as argument to module */
+</span><span class='line'>  lua_call(L, 1, 1);  /* run loaded module */
+</span><span class='line'>  if (!lua_isnil(L, -1))  /* non-nil return? */
+</span><span class='line'>    lua_setfield(L, 2, name);  /* _LOADED[name] = returned value */
+</span><span class='line'>  lua_getfield(L, 2, name);
+</span><span class='line'>  if (lua_touserdata(L, -1) == sentinel) {   /* module did not set a value? */
+</span><span class='line'>    lua_pushboolean(L, 1);  /* use true as result */
+</span><span class='line'>    lua_pushvalue(L, -1);  /* extra copy to be returned */
+</span><span class='line'>    lua_setfield(L, 2, name);  /* _LOADED[name] = true */
+</span><span class='line'>  }
+</span><span class='line'>  return 1;
+</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
+
+
+<p>这个函数并不复杂，但是对于初学者来说可能看到之后会被吓到，大部分都是出栈入栈的操作。我们先看前几行</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>lua_settop(L, 1);  /* _LOADED table will be at index 2 */
+</span><span class='line'>  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
+</span><span class='line'>  lua_getfield(L, 2, name);
+</span><span class='line'>  if (lua_toboolean(L, -1)) {  /* is it there? */
+</span><span class='line'>    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
+</span><span class='line'>      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
+</span><span class='line'>    return 1;  /* package is already loaded */
+</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>不用看函数，且看注释，他的意思就是先将栈指针移到第一个位置，由于lua所以从1开始，移到1即意味着要讲栈里面的元素清空，然后将LUA_REGISTRYINDEX执行的表数据里面名字是“_LOADED” 这个数据放到第2个位置，接下来讲在第2位的数据里面，名字叫做name的数据放到第三位。那么在第二位的不正是loaded的数据嘛！
+接下来，lua检查栈顶元素是否是bool类型，那么栈顶元素是哪一个呢?不正是第三步放进来的数据嘛！
+检查这个数据是否是boolean类型，只要存在，也就是加载过这个name模块，那么就任务已经被加载过了。就直接返回无需再次加载。</p>
+
+<p>而如果没有数据，那么就需要检查是否能够正确地加载。</p>
+
+<p>这就解释了为什么多次require其实并没有什么意义。</p>
+
+<p>接下来代码会寻找一个有效地loader加载器加载lua模块然后讲模块加载的结果放到了_LOADED中。因此我们在require之后，可以通过打印package.loaded来检查。</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'> "package.loaded" = {
+</span><span class='line'>     "A" = {
+</span><span class='line'>         "doAction" = function: 0x7f88fec5c2d0
+</span><span class='line'>         "userName" = "hello"
+</span><span class='line'>     }
+</span><span class='line'>     "B" = true
+</span><span class='line'>    }</span></code></pre></td></tr></table></div></figure>
+
+
+<p>看到这里，各位同学应该已经了解这个reuqire之后，其实并未创建新的对象，而是将lua文件运行之后的结果返回来了。那么这个已经被放到了loaded的“A”更像是一个类文件的模板。而不是对象。</p>
+
+<p>那么这对于我们习惯面向对象开发的同学来说，如何用lua来实现面向对象的开发呢？
+别急，请看下一篇文章。</p>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:newtamato.github.io" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/17/genymotionde-an-zhuang/">GenyMotion的安装</a></h1>
-    
-    
-      <p class="meta">
-        
 
 
+<time datetime="2015-11-15T20:47:27+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
 
 
-<time class='entry-date' datetime='2015-10-17T22:28:11+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:28 pm</span></time>
-        
-      </p>
-    
-  </header>
+	
+</div></article>
 
 
-  <div class="entry-content"><ol>
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/genymotionde-an-zhuang/">
+		
+			GenyMotion的安装</a>
+	</h2>
+	<div class="entry-content">
+		<ol>
 <li>先安装虚拟机<a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
 <li>在下载  <a href="http://www.genymotion.cn/#theme=download">GenyMotion</a>,但是他还需要注册，才能继续使用</li>
 <li>主界面的 Settings 按钮，可以用来设置 VirtualBox 及 ADB 路径等信息。</li>
@@ -106,35 +553,42 @@
 5   .Google Play：4.3版 | <a href="http://wiki.rootzwiki.com/Google_Apps#Universal_Packages_2">所有版本</a></li>
 </ol>
 
-</div>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
-  
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/17/lsming-ling-xing-pai-xu/">Ls命令行排序</a></h1>
-    
-    
-      <p class="meta">
-        
+<time datetime="2015-10-17T22:28:11+08:00" pubdate data-updated="true"></time></div>
+	
 
 
+	
+</div></article>
 
 
-<time class='entry-date' datetime='2015-10-17T22:26:44+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:26 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><p>ls -lSr
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/lsming-ling-xing-pai-xu/">
+		
+			Ls命令行排序</a>
+	</h2>
+	<div class="entry-content">
+		<blockquote><p>ls -lSr
 按文件大小降序排列</p>
 
 <p>df -lh
@@ -148,35 +602,42 @@
 
 <p>du -sh * | sort -rm | tail
 选出排在后面的10个</p></blockquote>
-</div>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
-  
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/17/vimshi-yong-yan-se/">Vim使用-颜色</a></h1>
-    
-    
-      <p class="meta">
-        
+<time datetime="2015-10-17T22:26:44+08:00" pubdate data-updated="true"></time></div>
+	
 
 
+	
+</div></article>
 
 
-<time class='entry-date' datetime='2015-10-17T22:19:24+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:19 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote><ol>
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/vimshi-yong-yan-se/">
+		
+			Vim使用-颜色</a>
+	</h2>
+	<div class="entry-content">
+		<blockquote><ol>
 <li>首先将Solarized的配色库download下来
  git clone git://github.com/altercation/solarized.git</li>
 <li>将solarized.vim文件copy 到 ~/.vim/colors/  文件夹下面</li>
@@ -198,35 +659,42 @@
 
 
 <p> 有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色</p>
-</div>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
-  
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de/">项目管理心得</a></h1>
-    
-    
-      <p class="meta">
-        
+<time datetime="2015-10-17T22:19:24+08:00" pubdate data-updated="true"></time></div>
+	
 
 
+	
+</div></article>
 
 
-<time class='entry-date' datetime='2015-10-17T22:14:06+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:14 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de/">
+		
+			项目管理心得</a>
+	</h2>
+	<div class="entry-content">
+		<p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
 
 <p>谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性，因为我自己估算了时间怎么会完不成呢？可是，你是否也会想过这样是否这个srcum就真的没有问题了呢？他是否是适合所有的团队？对于我们这样有些松散的，开发经验并不足够的小团队而言，并且开发任务也很繁重，是否也是适合的呢？</p>
 
@@ -245,35 +713,42 @@
 <p>说及以上，大家可以理解讲需求敲定下来是多么重要的啊！因此每当开功能开发的kick off的时候，我们都会讲讲自己的对这个功能的理解，有问题及时拿出来讨论，然后落实到邮件里，便于后面查询。而且最好master能够在程序动手之前让策划美术讲相关的资料先做出来，至少有一个时间节点，做好他们的甘特图才能够做好程序的甘特图。</p>
 
 <p>团队管理不仅仅只有上述两条，还有团队文化，团队默契培养，团队奖罚制度等,剩下的问题待以后遇到在做体会，再拿出来和大家分享。</p>
-</div>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
-  
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase/">Git命令行总结-rebase</a></h1>
-    
-    
-      <p class="meta">
-        
+<time datetime="2015-10-17T22:14:06+08:00" pubdate data-updated="true"></time></div>
+	
 
 
+	
+</div></article>
 
 
-<time class='entry-date' datetime='2015-10-17T22:11:24+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:11 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase/">
+		
+			Git命令行总结-rebase</a>
+	</h2>
+	<div class="entry-content">
+		<p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
 
 <p> 使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
 
@@ -290,35 +765,42 @@ rebase的命令格式如下:</p>
 
 <p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？
 我们用到的命令就是｀git rebase &ndash;onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
-</div>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
   
-  
 
 
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log/">Git命令行总结-log</a></h1>
-    
-    
-      <p class="meta">
-        
+<time datetime="2015-10-17T22:11:24+08:00" pubdate data-updated="true"></time></div>
+	
 
 
+	
+</div></article>
 
 
-<time class='entry-date' datetime='2015-10-17T22:08:49+08:00'><span class='date'><span class='date-month'>Oct</span> <span class='date-day'>17</span><span class='date-suffix'>th</span>, <span class='date-year'>2015</span></span> <span class='time'>10:08 pm</span></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log/">
+		
+			Git命令行总结-log</a>
+	</h2>
+	<div class="entry-content">
+		<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq </span></code></pre></td></tr></table></div></figure>
 
 
@@ -345,80 +827,52 @@ rebase的命令格式如下:</p>
 <figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
 </pre></td><td class='code'><pre><code class=''><span class='line'>:%!python -m json.tool       </span></code></pre></td></tr></table></div></figure>
 
-</div>
-  
-  
+
+		
+		
+	</div>
 
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-  </div>
-</div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/10/17/genymotionde-an-zhuang/">GenyMotion的安装</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/17/lsming-ling-xing-pai-xu/">Ls命令行排序</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/17/vimshi-yong-yan-se/">Vim使用-颜色</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de/">项目管理心得</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase/">Git命令行总结-rebase</a>
-      </li>
-    
-  </ul>
-</section>
+<div class="meta">
+	<div class="date">
+
+
+
 
 
 
 
 
   
-</aside>
 
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - newtomato -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
 
+<time datetime="2015-10-17T22:08:49+08:00" pubdate data-updated="true"></time></div>
+	
+
+
+	
+</div></article>
+
+<nav id="pagenavi">
+    
+    
+    <div class="center"><a href="/archives">Blog Archives</a></div>
+</nav></div>
+	<footer id="footer" class="inner">Copyright &copy; 2015
+
+    newtomato
+
+<br>
+Powered by Octopress.
 </footer>
-  
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
 
-
-
-
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
 
 
 
