@@ -101,7 +101,7 @@ $(document).ready(
 		<div class="container">
 			<form action="https://www.google.com/search" method="get">
 				<input type="text" name="q" results="0">
-				<input type="hidden" name="q" value="site:newtamato.github.io">
+				<input type="hidden" name="q" value="site:www.newtomato.me">
 			</form>
 		</div>
 	</div>
@@ -112,225 +112,211 @@ $(document).ready(
 
 	<div id="content" class="inner"><article class="post">
 	<h2 class="title">Lua中require到底做了什么事情？</h2>
-	<div class="entry-content"><p>require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件</p>
+	<div class="entry-content"><p>require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件<br />
+<!--more--></p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>DEBUG = false
-</span><span class='line'>USER_NAME = "newtomao"
-</span><span class='line'>USER_IMAGE = "cat.png"
-</span><span class='line'>VERSION = ""
-</span><span class='line'>
-</span><span class='line'>function printBool(boolValue)
-</span><span class='line'>  print("[printBook]:" .. tostring(boolValue))
-</span><span class='line'>end
-</span><span class='line'>
-</span><span class='line'>function getRandomNumber()
-</span><span class='line'>  return  math.random(100)
-</span><span class='line'>end</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">DEBUG = false
+</span><span class="line">USER_NAME = "newtomao"
+</span><span class="line">USER_IMAGE = "cat.png"
+</span><span class="line">VERSION = ""
+</span><span class="line">
+</span><span class="line">function printBool(boolValue)
+</span><span class="line">	print("[printBook]:" .. tostring(boolValue))
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">function getRandomNumber()
+</span><span class="line">	return  math.random(100)
+</span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>当我在另一个文件B.lua里面<code>require("A")</code>的时候，我们可以直接调用<code>getRandomNumber</code>和上面定义的常量。因此我们可以任务require就是将另一个文件注册到全局表_G中。这样我们就可以在全局范围内的使用A文件中定义的函数和变量。</p>
 
-<p>我们讲require&#8221;A&#8221;的结果打印出来如下：</p>
+<p>我们讲require”A”的结果打印出来如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>retA = require("A")
-</span><span class='line'>dump(retA)</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">retA = require("A")
+</span><span class="line">dump(retA)</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>结果如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>"require之后的结果" = true</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">"require之后的结果" = true</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>但是如果A文件不是上面的样子，而是如下的样子：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>local A = {}
-</span><span class='line'>A.userName = "hello"
-</span><span class='line'>function A.doAction()
-</span><span class='line'>  print("doAction")
-</span><span class='line'>end
-</span><span class='line'>return A</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local A = {}
+</span><span class="line">A.userName = "hello"
+</span><span class="line">function A.doAction()
+</span><span class="line">	print("doAction")
+</span><span class="line">end
+</span><span class="line">return A</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>此时我们require(A.lua)之后，是否可以也直接调用doAction呢？且慢。仔细看下面有一个<code>return</code>, 这表示这个lua文件如果被require进来，返回的是A，就是一个完整的模块table。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>retA = require("A")
-</span><span class='line'>dump(retA,"require之后的结果")</span></code></pre></td></tr></table></div></figure>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">retA = require("A")
+</span><span class="line">dump(retA,"require之后的结果")</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>打印的结果如下：<br />
+&lt;div class=&#8217;bogus-wrapper&#8217;&gt;<notextile><figure class="code">&lt;div class=&#8221;highlight&#8221;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#8221;gutter&#8221;&gt;&lt;pre class=&#8221;line-numbers&#8221;&gt;<span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#8217;code&#8217;&gt;&lt;pre&gt;<code class=""><span class="line">"require之后的结果" = {
+</span><span class="line">    "doAction" = function: 0x7fcc024dddb0
+</span><span class="line">    "userName" = "hello"
+</span><span class="line">}</span></code>&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</figure></notextile>&lt;/div&gt;</p>
 
-
-<p> 打印的结果如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>"require之后的结果" = {
-</span><span class='line'>    "doAction" = function: 0x7fcc024dddb0
-</span><span class='line'>    "userName" = "hello"
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
-
-<p>你看她返回的结果是一个table，打印了A的结构。此时我们就可以通过<code>retA.doAction()</code>的形式去调用。
-retA就是类似一个对象，但是又不完全是对象，它更像是一个命名空间。规定了函数和变量的上下文环境是在A这个空间内。如果外面想要访问userName，需要在前面加上命名空间的限定。
+<p>你看她返回的结果是一个table，打印了A的结构。此时我们就可以通过<code>retA.doAction()</code>的形式去调用。<br />
+retA就是类似一个对象，但是又不完全是对象，它更像是一个命名空间。规定了函数和变量的上下文环境是在A这个空间内。如果外面想要访问userName，需要在前面加上命名空间的限定。<br />
 如果A被我们require多次结果会不会不同呢？比如如下：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>a = require("A")
-</span><span class='line'>a2 = require("A")
-</span><span class='line'>print(a == a2)</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">a2 = require("A")
+</span><span class="line">print(a == a2)</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>结果是怎么样的呢？答案就是true，是的，a和a2是一个地址。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>print(a)
-</span><span class='line'>table: 0x7fac50500ad0
-</span><span class='line'>print(a2)
-</span><span class='line'>table: 0x7fac50500ad0</span></code></pre></td></tr></table></div></figure>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">print(a)
+</span><span class="line">table: 0x7fac50500ad0
+</span><span class="line">print(a2)
+</span><span class="line">table: 0x7fac50500ad0</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-
-<p>那么这样看来你require多次和require一次的结果是一样的。那么require到底做了什么？
+<p>那么这样看来你require多次和require一次的结果是一样的。那么require到底做了什么？<br />
 我们来看lua中对require函数的实现：</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-<span class='line-number'>11</span>
-<span class='line-number'>12</span>
-<span class='line-number'>13</span>
-<span class='line-number'>14</span>
-<span class='line-number'>15</span>
-<span class='line-number'>16</span>
-<span class='line-number'>17</span>
-<span class='line-number'>18</span>
-<span class='line-number'>19</span>
-<span class='line-number'>20</span>
-<span class='line-number'>21</span>
-<span class='line-number'>22</span>
-<span class='line-number'>23</span>
-<span class='line-number'>24</span>
-<span class='line-number'>25</span>
-<span class='line-number'>26</span>
-<span class='line-number'>27</span>
-<span class='line-number'>28</span>
-<span class='line-number'>29</span>
-<span class='line-number'>30</span>
-<span class='line-number'>31</span>
-<span class='line-number'>32</span>
-<span class='line-number'>33</span>
-<span class='line-number'>34</span>
-<span class='line-number'>35</span>
-<span class='line-number'>36</span>
-<span class='line-number'>37</span>
-<span class='line-number'>38</span>
-<span class='line-number'>39</span>
-<span class='line-number'>40</span>
-<span class='line-number'>41</span>
-<span class='line-number'>42</span>
-<span class='line-number'>43</span>
-<span class='line-number'>44</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>static int ll_require (lua_State *L) {
-</span><span class='line'>  const char *name = luaL_checkstring(L, 1);
-</span><span class='line'>  int i;
-</span><span class='line'>  lua_settop(L, 1);  /* _LOADED table will be at index 2 */
-</span><span class='line'>  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
-</span><span class='line'>  lua_getfield(L, 2, name);
-</span><span class='line'>  if (lua_toboolean(L, -1)) {  /* is it there? */
-</span><span class='line'>    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
-</span><span class='line'>      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
-</span><span class='line'>    return 1;  /* package is already loaded */
-</span><span class='line'>  }
-</span><span class='line'>  /* else must load it; iterate over available loaders */
-</span><span class='line'>  lua_getfield(L, LUA_ENVIRONINDEX, "loaders");
-</span><span class='line'>  if (!lua_istable(L, -1))
-</span><span class='line'>    luaL_error(L, LUA_QL("package.loaders") " must be a table");
-</span><span class='line'>  lua_pushliteral(L, "");  /* error message accumulator */
-</span><span class='line'>  for (i=1; ; i++) {
-</span><span class='line'>    lua_rawgeti(L, -2, i);  /* get a loader */
-</span><span class='line'>    if (lua_isnil(L, -1))
-</span><span class='line'>      luaL_error(L, "module " LUA_QS " not found:%s",
-</span><span class='line'>                    name, lua_tostring(L, -2));
-</span><span class='line'>    lua_pushstring(L, name);
-</span><span class='line'>    lua_call(L, 1, 1);  /* call it */
-</span><span class='line'>    if (lua_isfunction(L, -1))  /* did it find module? */
-</span><span class='line'>      break;  /* module loaded successfully */
-</span><span class='line'>    else if (lua_isstring(L, -1))  /* loader returned error message? */
-</span><span class='line'>      lua_concat(L, 2);  /* accumulate it */
-</span><span class='line'>    else
-</span><span class='line'>      lua_pop(L, 1);
-</span><span class='line'>  }
-</span><span class='line'>  lua_pushlightuserdata(L, sentinel);
-</span><span class='line'>  lua_setfield(L, 2, name);  /* _LOADED[name] = sentinel */
-</span><span class='line'>  lua_pushstring(L, name);  /* pass name as argument to module */
-</span><span class='line'>  lua_call(L, 1, 1);  /* run loaded module */
-</span><span class='line'>  if (!lua_isnil(L, -1))  /* non-nil return? */
-</span><span class='line'>    lua_setfield(L, 2, name);  /* _LOADED[name] = returned value */
-</span><span class='line'>  lua_getfield(L, 2, name);
-</span><span class='line'>  if (lua_touserdata(L, -1) == sentinel) {   /* module did not set a value? */
-</span><span class='line'>    lua_pushboolean(L, 1);  /* use true as result */
-</span><span class='line'>    lua_pushvalue(L, -1);  /* extra copy to be returned */
-</span><span class='line'>    lua_setfield(L, 2, name);  /* _LOADED[name] = true */
-</span><span class='line'>  }
-</span><span class='line'>  return 1;
-</span><span class='line'>}</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">static int ll_require (lua_State *L) {
+</span><span class="line">  const char *name = luaL_checkstring(L, 1);
+</span><span class="line">  int i;
+</span><span class="line">  lua_settop(L, 1);  /* _LOADED table will be at index 2 */
+</span><span class="line">  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
+</span><span class="line">  lua_getfield(L, 2, name);
+</span><span class="line">  if (lua_toboolean(L, -1)) {  /* is it there? */
+</span><span class="line">    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
+</span><span class="line">      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
+</span><span class="line">    return 1;  /* package is already loaded */
+</span><span class="line">  }
+</span><span class="line">  /* else must load it; iterate over available loaders */
+</span><span class="line">  lua_getfield(L, LUA_ENVIRONINDEX, "loaders");
+</span><span class="line">  if (!lua_istable(L, -1))
+</span><span class="line">    luaL_error(L, LUA_QL("package.loaders") " must be a table");
+</span><span class="line">  lua_pushliteral(L, "");  /* error message accumulator */
+</span><span class="line">  for (i=1; ; i++) {
+</span><span class="line">    lua_rawgeti(L, -2, i);  /* get a loader */
+</span><span class="line">    if (lua_isnil(L, -1))
+</span><span class="line">      luaL_error(L, "module " LUA_QS " not found:%s",
+</span><span class="line">                    name, lua_tostring(L, -2));
+</span><span class="line">    lua_pushstring(L, name);
+</span><span class="line">    lua_call(L, 1, 1);  /* call it */
+</span><span class="line">    if (lua_isfunction(L, -1))  /* did it find module? */
+</span><span class="line">      break;  /* module loaded successfully */
+</span><span class="line">    else if (lua_isstring(L, -1))  /* loader returned error message? */
+</span><span class="line">      lua_concat(L, 2);  /* accumulate it */
+</span><span class="line">    else
+</span><span class="line">      lua_pop(L, 1);
+</span><span class="line">  }
+</span><span class="line">  lua_pushlightuserdata(L, sentinel);
+</span><span class="line">  lua_setfield(L, 2, name);  /* _LOADED[name] = sentinel */
+</span><span class="line">  lua_pushstring(L, name);  /* pass name as argument to module */
+</span><span class="line">  lua_call(L, 1, 1);  /* run loaded module */
+</span><span class="line">  if (!lua_isnil(L, -1))  /* non-nil return? */
+</span><span class="line">    lua_setfield(L, 2, name);  /* _LOADED[name] = returned value */
+</span><span class="line">  lua_getfield(L, 2, name);
+</span><span class="line">  if (lua_touserdata(L, -1) == sentinel) {   /* module did not set a value? */
+</span><span class="line">    lua_pushboolean(L, 1);  /* use true as result */
+</span><span class="line">    lua_pushvalue(L, -1);  /* extra copy to be returned */
+</span><span class="line">    lua_setfield(L, 2, name);  /* _LOADED[name] = true */
+</span><span class="line">  }
+</span><span class="line">  return 1;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>这个函数并不复杂，但是对于初学者来说可能看到之后会被吓到，大部分都是出栈入栈的操作。我们先看前几行</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>lua_settop(L, 1);  /* _LOADED table will be at index 2 */
-</span><span class='line'>  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
-</span><span class='line'>  lua_getfield(L, 2, name);
-</span><span class='line'>  if (lua_toboolean(L, -1)) {  /* is it there? */
-</span><span class='line'>    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
-</span><span class='line'>      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
-</span><span class='line'>    return 1;  /* package is already loaded */
-</span><span class='line'>  }</span></code></pre></td></tr></table></div></figure>
-
-
-<p>不用看函数，且看注释，他的意思就是先将栈指针移到第一个位置，由于lua所以从1开始，移到1即意味着要讲栈里面的元素清空，然后将LUA_REGISTRYINDEX执行的表数据里面名字是“_LOADED” 这个数据放到第2个位置，接下来讲在第2位的数据里面，名字叫做name的数据放到第三位。那么在第二位的不正是loaded的数据嘛！
-接下来，lua检查栈顶元素是否是bool类型，那么栈顶元素是哪一个呢?不正是第三步放进来的数据嘛！
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">lua_settop(L, 1);  /* _LOADED table will be at index 2 */
+</span><span class="line">  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
+</span><span class="line">  lua_getfield(L, 2, name);
+</span><span class="line">  if (lua_toboolean(L, -1)) {  /* is it there? */
+</span><span class="line">    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
+</span><span class="line">      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
+</span><span class="line">    return 1;  /* package is already loaded */
+</span><span class="line">  }</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>不用看函数，且看注释，他的意思就是先将栈指针移到第一个位置，由于lua所以从1开始，移到1即意味着要讲栈里面的元素清空，然后将LUA_REGISTRYINDEX执行的表数据里面名字是“_LOADED” 这个数据放到第2个位置，接下来讲在第2位的数据里面，名字叫做name的数据放到第三位。那么在第二位的不正是loaded的数据嘛！<br />
+接下来，lua检查栈顶元素是否是bool类型，那么栈顶元素是哪一个呢?不正是第三步放进来的数据嘛！<br />
 检查这个数据是否是boolean类型，只要存在，也就是加载过这个name模块，那么就任务已经被加载过了。就直接返回无需再次加载。</p>
 
 <p>而如果没有数据，那么就需要检查是否能够正确地加载。</p>
@@ -339,25 +325,24 @@ retA就是类似一个对象，但是又不完全是对象，它更像是一个�
 
 <p>接下来代码会寻找一个有效地loader加载器加载lua模块然后讲模块加载的结果放到了_LOADED中。因此我们在require之后，可以通过打印package.loaded来检查。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'> "package.loaded" = {
-</span><span class='line'>     "A" = {
-</span><span class='line'>         "doAction" = function: 0x7f88fec5c2d0
-</span><span class='line'>         "userName" = "hello"
-</span><span class='line'>     }
-</span><span class='line'>     "B" = true
-</span><span class='line'>    }</span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> "package.loaded" = {
+</span><span class="line">     "A" = {
+</span><span class="line">         "doAction" = function: 0x7f88fec5c2d0
+</span><span class="line">         "userName" = "hello"
+</span><span class="line">     }
+</span><span class="line">     "B" = true
+</span><span class="line">    }</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>看到这里，各位同学应该已经了解这个reuqire之后，其实并未创建新的对象，而是将lua文件运行之后的结果返回来了。那么这个已经被放到了loaded的“A”更像是一个类文件的模板。而不是对象。</p>
 
-<p>那么这对于我们习惯面向对象开发的同学来说，如何用lua来实现面向对象的开发呢？
+<p>那么这对于我们习惯面向对象开发的同学来说，如何用lua来实现面向对象的开发呢？<br />
 别急，请看下一篇文章。</p>
 </div>
 
@@ -386,6 +371,9 @@ retA就是类似一个对象，但是又不完全是对象，它更像是一个�
 
 
 	
+	
+      | <a href="#comments">Comments</a>
+     
 </div></article>
 
 	<div class="share">
@@ -401,6 +389,25 @@ retA就是类似一个对象，但是又不完全是对象，它更像是一个�
 </div>
 
 
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="Lua中require到底做了什么事情？"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"newtomato"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
 </div>
 	<footer id="footer" class="inner">Copyright &copy; 2015
 

@@ -89,7 +89,7 @@ $(document).ready(
 		<div class="container">
 			<form action="https://www.google.com/search" method="get">
 				<input type="text" name="q" results="0">
-				<input type="hidden" name="q" value="site:newtamato.github.io">
+				<input type="hidden" name="q" value="site:www.newtomato.me">
 			</form>
 		</div>
 	</div>
@@ -100,112 +100,101 @@ $(document).ready(
 
 	<div id="content" class="inner"><article class="post">
 	<h2 class="title">Lua一份模板创建多个对象</h2>
-	<div class="entry-content"><p>上一章，我们说过reuqire其实就是将一份已经加载过得数据返回，因此多次加载一份文件，其实就是一个数据，而不是多个。
+	<div class="entry-content"><p>上一章，我们说过reuqire其实就是将一份已经加载过得数据返回，因此多次加载一份文件，其实就是一个数据，而不是多个。<br />
 那么如何实现多个呢？</p>
 
-<p>只要我们脑洞大开，就可以发现其实只要通过setmetatable就能够巧妙地实现这个问题。
+<!--more-->
+<p>只要我们脑洞大开，就可以发现其实只要通过setmetatable就能够巧妙地实现这个问题。<br />
 只要我们将require进来的数据作为另一个表数据的元数据，是不是就算是已经创建了一个新的对象呢？比如</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>a = require("A")
-</span><span class='line'>b = {}
-</span><span class='line'>setmetatable(b,{__index =  a})</span></code></pre></td></tr></table></div></figure>
-
-
-<p> 此时我们require了A，创建了模块A的数据并把它作为b的元表，而B是一个非常干净的table，它是否就相当于a的一个对象呢？
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">b = {}
+</span><span class="line">setmetatable(b,{__index =  a})</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>此时我们require了A，创建了模块A的数据并把它作为b的元表，而B是一个非常干净的table，它是否就相当于a的一个对象呢？<br />
  想想这样和其他语言的创建对象是否如出一辙呢？如此一来，我们就可以多次创建。比如</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>c = {}
-</span><span class='line'>c.x = 10
-</span><span class='line'>c.y = 100
-</span><span class='line'>setmetatable(c,{__index =  a})
-</span><span class='line'>d = {}
-</span><span class='line'>setmetatable(d,{__index =  a})</span></code></pre></td></tr></table></div></figure>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">c = {}
+</span><span class="line">c.x = 10
+</span><span class="line">c.y = 100
+</span><span class="line">setmetatable(c,{__index =  a})
+</span><span class="line">d = {}
+</span><span class="line">setmetatable(d,{__index =  a})</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-
-<p>看，这样b,c,d都是以a为元表。每个表都可以有自己的数据并不影响彼此（只要元表不改变）。
-A.lua 的结构如下：</p>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-<span class='line-number'>7</span>
-<span class='line-number'>8</span>
-<span class='line-number'>9</span>
-<span class='line-number'>10</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>local A = {}
-</span><span class='line'>A.number1 = 1
-</span><span class='line'>A.number2 = 1
-</span><span class='line'>function A.doAction()
-</span><span class='line'>  print(string.format("doAction:%d",(A.number1+A.number2)))
-</span><span class='line'>end 
-</span><span class='line'>function A.moveToPosition(x,y)
-</span><span class='line'>  print(string.format("we want to move to %d,%d",x,y))
-</span><span class='line'>end 
-</span><span class='line'>return A</span></code></pre></td></tr></table></div></figure>
-
+<p>看，这样b,c,d都是以a为元表。每个表都可以有自己的数据并不影响彼此（只要元表不改变）。<br />
+A.lua 的结构如下：<br />
+&lt;div class=&#8217;bogus-wrapper&#8217;&gt;<notextile><figure class="code">&lt;div class=&#8221;highlight&#8221;&gt;&lt;table&gt;&lt;tr&gt;&lt;td class=&#8221;gutter&#8221;&gt;&lt;pre class=&#8221;line-numbers&#8221;&gt;<span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+&lt;/pre&gt;&lt;/td&gt;&lt;td class=&#8217;code&#8217;&gt;&lt;pre&gt;<code class=""><span class="line">local A = {}
+</span><span class="line">A.number1 = 1
+</span><span class="line">A.number2 = 1
+</span><span class="line">function A.doAction()
+</span><span class="line">	print(string.format("doAction:%d",(A.number1+A.number2)))
+</span><span class="line">end 
+</span><span class="line">function A.moveToPosition(x,y)
+</span><span class="line">	print(string.format("we want to move to %d,%d",x,y))
+</span><span class="line">end 
+</span><span class="line">return A</span></code>&lt;/pre&gt;&lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;&lt;/div&gt;</figure></notextile>&lt;/div&gt;</p>
 
 <p>但是这个A里面怎么操作我们自己的数据呢？比如我们想在<code>doAction</code>中调用b自己的数据,但是你看这个函数里面定义的是将A的number1和number2进行了加法。如果我们的b也有这两个变量，会不会调用的就是b的变量呢？</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-<span class='line-number'>4</span>
-<span class='line-number'>5</span>
-<span class='line-number'>6</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>a = require("A")
-</span><span class='line'>b = {}
-</span><span class='line'>b.number1 = 10
-</span><span class='line'>b.number2 = 10
-</span><span class='line'>setmetatable(b,{__index =  a})
-</span><span class='line'>b.doAction()</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">b = {}
+</span><span class="line">b.number1 = 10
+</span><span class="line">b.number2 = 10
+</span><span class="line">setmetatable(b,{__index =  a})
+</span><span class="line">b.doAction()</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>但是打印的却是</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>doAction:2</span></code></pre></td></tr></table></div></figure>
-
-
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">doAction:2</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>这说明最终使用的还是a的变量，怎么才能让它调用b自身的变量呢？</p>
 
 <p>简单地方法就是将b作为参数传给doAction。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function A.doAction(tableData)
-</span><span class='line'>  print(string.format("doAction:%d",(tableData.number1+tableData.number2)))
-</span><span class='line'>end </span></code></pre></td></tr></table></div></figure>
-
-
-<p>如此当b调用doAction的时候，就需要<code>b.doAction(b)</code>这样子！这非常奇怪，但也能够容忍。
-有没有别的方法呢？
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">function A.doAction(tableData)
+</span><span class="line">	print(string.format("doAction:%d",(tableData.number1+tableData.number2)))
+</span><span class="line">end </span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>如此当b调用doAction的时候，就需要<code>b.doAction(b)</code>这样子！这非常奇怪，但也能够容忍。<br />
+有没有别的方法呢？<br />
 是的，有。lua提供另外一种语法来解决这个问题。可以讲调用者自己传到函数中做第一个参数。</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-<span class='line-number'>2</span>
-<span class='line-number'>3</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>function A:doAction()
-</span><span class='line'>  print(string.format("doAction:%d",(self.number1+self.number2)))
-</span><span class='line'>end </span></code></pre></td></tr></table></div></figure>
-
-
-<p>仔细看，这个函数和上面的定义最大的区别就是用了冒号。如此一来，在函数里面就可以用self来指示函数的调用者。
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">function A:doAction()
+</span><span class="line">	print(string.format("doAction:%d",(self.number1+self.number2)))
+</span><span class="line">end </span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>仔细看，这个函数和上面的定义最大的区别就是用了冒号。如此一来，在函数里面就可以用self来指示函数的调用者。<br />
 因此，我们的调用方式就变成了<code>b:doAction()</code>即可！</p>
 
 <p>讲到此处，你是否对lua有一个整体的感受了。如果不懂也没有关系，报错也没有关系，请下载我上一篇文章推荐的zerobrain studio编辑器。通过断点调试一点点的尝试，你就能够很快明白的！</p>
+
 </div>
 
 
@@ -227,6 +216,9 @@ A.lua 的结构如下：</p>
 
 
 	
+	
+      | <a href="#comments">Comments</a>
+     
 </div></article>
 
 	<div class="share">
@@ -242,6 +234,25 @@ A.lua 的结构如下：</p>
 </div>
 
 
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="Lua一份模板创建多个对象"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"newtomato"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
 </div>
 	<footer id="footer" class="inner">Copyright &copy; 2015
 

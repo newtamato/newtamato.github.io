@@ -10,8 +10,8 @@
 <meta name="author" content="newtomato"> 
 
 <meta name="description" content="1
-git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} ' | uniq 格式化文件输出 1
-git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d% &hellip;"> <meta name="keywords" content="">
+git log --name-only --oneline 8692a53f1..HEAD| grep -v &#39;.{7} &#39; | uniq ##格式化文件输出 1
+git log --graph --pretty=format:&#39;%Cred%h%Creset -%C( &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -89,7 +89,7 @@ $(document).ready(
 		<div class="container">
 			<form action="https://www.google.com/search" method="get">
 				<input type="text" name="q" results="0">
-				<input type="hidden" name="q" value="site:newtamato.github.io">
+				<input type="hidden" name="q" value="site:www.newtomato.me">
 			</form>
 		</div>
 	</div>
@@ -100,33 +100,33 @@ $(document).ready(
 
 	<div id="content" class="inner"><article class="post">
 	<h2 class="title">Git命令行总结-log</h2>
-	<div class="entry-content"><figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq </span></code></pre></td></tr></table></div></figure>
+	<div class="entry-content"><div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">only</span> <span class="o">--</span><span class="n">oneline</span> <span class="mi">8692</span><span class="n">a53f1</span><span class="o">..</span><span class="n">HEAD</span><span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s">&#39;.{7} &#39;</span>  <span class="o">|</span> <span class="n">uniq</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
+<p>##格式化文件输出</p>
 
-<h1>格式化文件输出</h1>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">graph</span> <span class="o">--</span><span class="n">pretty</span><span class="o">=</span><span class="n">format</span><span class="p">:</span><span class="s">&#39;%Cred</span><span class="si">%h%</span><span class="s">Creset -%C(yellow)</span><span class="si">%d</span><span class="s">%Creset </span><span class="si">%s</span><span class="s"> %Cgreen(</span><span class="si">%c</span><span class="s">r)%Creset&#39;</span> <span class="o">--</span><span class="n">abbrev</span><span class="o">-</span><span class="n">commit</span> <span class="o">--</span><span class="n">date</span><span class="o">=</span><span class="n">relative</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">status</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status</span></code></pre></td></tr></table></div></figure>
+<p>##将某一个commit之后的提交做成patch</p>
 
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">-</span><span class="n">M</span> <span class="n">HEAD</span><span class="o">~</span><span class="mi">1</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<blockquote><p>1.将某一个commit之后的提交做成patch</p></blockquote>
+<p>##将patch打到我们的开发分支</p>
 
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git format-patch -M HEAD~1</span></code></pre></td></tr></table></div></figure>
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="n">xxx</span><span class="o">.</span><span class="n">patch</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
+<p>##vim中格式化json</p>
 
-<blockquote><p>1.将patch打到我们的开发分支</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>git am xxx.patch</span></code></pre></td></tr></table></div></figure>
-
-
-<blockquote><p>2.vim中格式化json</p></blockquote>
-
-<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
-</pre></td><td class='code'><pre><code class=''><span class='line'>:%!python -m json.tool       </span></code></pre></td></tr></table></div></figure>
-
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="p">:</span><span class="o">%</span><span class="err">!</span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">json</span><span class="o">.</span><span class="n">tool</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 </div>
 
 
@@ -146,8 +146,17 @@ $(document).ready(
 <time datetime="2015-10-17T22:08:49+08:00" pubdate data-updated="true"></time></div>
 	
 
+<div class="tags">
+
+	<a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/log/'>log</a>
+
+</div>
+
 
 	
+	
+      | <a href="#comments">Comments</a>
+     
 </div></article>
 
 	<div class="share">
@@ -163,6 +172,25 @@ $(document).ready(
 </div>
 
 
+
+
+  <section>
+    <h1>Comments</h1>
+    <div id="comments" aria-live="polite"><!-- Duoshuo Comment BEGIN -->
+<div class="ds-thread" data-title="Git命令行总结-log"></div>
+<script type="text/javascript">
+  var duoshuoQuery = {short_name:"newtomato"};
+  (function() {
+    var ds = document.createElement('script');
+    ds.type = 'text/javascript';ds.async = true;
+    ds.src = 'http://static.duoshuo.com/embed.js';
+    ds.charset = 'UTF-8';
+    (document.getElementsByTagName('head')[0] 
+    || document.getElementsByTagName('body')[0]).appendChild(ds);
+  })();
+</script>
+<!-- Duoshuo Comment END --></div>
+  </section>
 </div>
 	<footer id="footer" class="inner">Copyright &copy; 2015
 
