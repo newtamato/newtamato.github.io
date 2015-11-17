@@ -6,6 +6,7 @@ comments: true
 categories: lua
 ---
 require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件
+<!--more-->
 
 ```
 DEBUG = false
