@@ -1,0 +1,1010 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:c++ | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/c-plus-plus/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2015-11-29T18:21:58+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Lua脚本在C++下的舞步（三）]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/12/lua-deep-3"/>
+    <updated>2015-11-12T21:48:47+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/12/lua-deep-3</id>
+    <content type="html"><![CDATA[<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然，这些功能是为了今天这篇文章而铺路的。</p>
+
+<p>看了七猫的回帖，呵呵，确实应该说一下SWIG这个工具，说真的，我对这个工具理解不深，因为没有怎么用过，读过一些关于它的文章，似乎是帮你把C++的功能封装成一个Lua基本库的东西，但是后来研究，他可以很轻松帮你把公用函数封装成一个Lua的基本库(类似C++的dll)，但是对于我的需求而言，可能不太一样。因为我大量的是需要在C++里面进行数据传输以及变量的交互，所以为了紧贴C++，我需要很多关联数据的处理。 <br />
+我是一名C++程序员，所以在很多时候，不想过多的使用Lua的特性，因为个人感觉，Lua的语法要比C++的更加灵活。而我更希望，在函数调用的某些习惯上，遵循一些C++的规则。</p>
+
+<!--more-->
+
+<p>好了，废话少说，我们先来看一个类（头文件）。假设我们要把这个对象，传输给Lua进行调用。</p>
+
+<pre><code>#ifndef _TEST_H 
+#define _TEST_H
+class CTest 
+{ 
+public: 
+        CTest(void); 
+        ~CTest(void);
+        char* GetData(); 
+        void SetData(const char* pData);
+private: 
+        char m_szData[200]; 
+}; 
+#endif
+</code></pre>
+
+<p>这个类里面有两个函数，一个是GetData()，一个是SetData()，之所以这么写，我要让Lua不仅能使用我的类，还可以给这个类使用参数。 <br />
+那么，cpp文件，我们姑且这样写。（当然，你可以进行修改，按照你喜欢的方式写一个方法，呵呵）</p>
+
+<pre><code>char* CTest::GetData() 
+{ 
+        printf(“[CTest::GetData]%s./n”, m_szData); 
+        return m_szData; 
+}
+
+void CTest::SetData(const char* pData) 
+{ 
+        sprintf(m_szData, “%s”, pData); 
+}
+</code></pre>
+
+<p>这是一个标准的类，我需要这个类在Lua里面可以创造出来，并赋予数值，甚至我可以把CTest作为一个Lua函数参数，传给Lua函数让它去给我处理。让我们来看看怎么做。如果使用标准的Lua语法，有点多，所以我就借用一下上次提到的tolua来做到这一切，我一句句的解释。姑且我们把这些代码放在LuaFn.cpp里面。</p>
+
+<p>&#8220;`c++<br />
+static int tolua_new_CTest(lua_State* pState) <br />
+{ <br />
+        CTest* pTest = new CTest(); <br />
+        tolua_pushusertype(pState, pTest, “CTest”); <br />
+        return 1; <br />
+}</p>
+
+<p>static int tolua_delete_CTest(lua_State* pState) <br />
+{ <br />
+        CTest* pTest = (CTest* )tolua_tousertype(pState, 1, 0); <br />
+        if(NULL != pTest) <br />
+        { <br />
+                delete pTest; <br />
+        } <br />
+        return 1; <br />
+}</p>
+
+<p>static int tolua_SetData_CTest(lua_State* pState) <br />
+{ <br />
+        CTest* pTest = (CTest* )tolua_tousertype(pState, 1, 0); <br />
+        const char* pData = tolua_tostring(pState, 2, 0);</p>
+
+<pre><code>    if(pData != NULL &amp;&amp; pTest != NULL) 
+    { 
+            pTest-&gt;SetData(pData); 
+    }
+
+    return 1;  }
+</code></pre>
+
+<p>static int tolua_GetData_CTest(lua_State* pState) <br />
+{ <br />
+        CTest* pTest = (CTest* )tolua_tousertype(pState, 1, 0);</p>
+
+<pre><code>    if(pTest != NULL) 
+    { 
+            char* pData = pTest-&gt;GetData(); 
+            tolua_pushstring(pState, pData); 
+    }
+
+    return 1;  } ```
+</code></pre>
+
+<p>看看这几个静态函数在干什么。 <br />
+我要在Lua里面使用CTest，必须让Lua里这个CTest对象能够顺利的创造和销毁。<code>tolua_new_CTest()</code>和<code>tolua_delete_CTest()</code>就是干这个的。 <br />
+<code>tolua_pushusertype(pState, pTest, “CTest”);</code> 这句话的意思是，将一个已经在Lua注册的”CTest”对象指针，压入数据栈。 <br />
+同理，<code>CTest* pTest = (CTest* )tolua_tousertype(pState, 1, 0);</code>是将数据栈下的对象以(CTest* )的指针形式弹出来。</p>
+
+<p><code>tolua_SetData_CTest()</code>函数和<code>tolua_GetData_CTest</code>分别对应CTest的SetData方法和GetData()方法。因为我们的SetData方法里面存在变量，那么同样，我们需要使用<code>const char* pData = tolua_tostring(pState, 2, 0);</code>将参数弹出来，然后输入到<code>pTest-&gt;SetData(pData);</code>对象中去，当然，你可以有更多若干个参数。随你的喜好。这里只做一个举例。</p>
+
+<p>好了，你一定会问，这么多的静态函数，用在哪里？呵呵，当然是给Lua注册，当你把这些数据注册到Lua里面，你就可以轻松的在Lua中使用它们。 <br />
+让我们看看，注册是怎么做到的。</p>
+
+<p>还是在CLuaFn类里面，我们增加一个函数。比如叫做bool InitClass();</p>
+
+<p>&#8220;`c++<br />
+bool CLuaFn::InitClass() <br />
+{ <br />
+        if(NULL == m_pState) <br />
+        { <br />
+                printf(“[CLuaFn::InitClass]m_pState is NULL./n”); <br />
+                return false; <br />
+        }</p>
+
+<pre><code>    tolua_open(m_pState); 
+    tolua_module(m_pState, NULL, 0); 
+    tolua_beginmodule(m_pState, NULL);
+
+    tolua_usertype(m_pState, “CTest”); 
+    tolua_cclass(m_pState, “CTest”, “CTest”, “”, tolua_delete_CTest);
+
+    tolua_beginmodule(m_pState, “CTest”); 
+    tolua_function(m_pState, “new”, tolua_new_CTest); 
+    tolua_function(m_pState, “SetData”, tolua_SetData_CTest); 
+    tolua_function(m_pState, “GetData”, tolua_GetData_CTest); 
+    tolua_endmodule(m_pState);
+
+    tolua_endmodule(m_pState);
+
+    return true;  } ```
+</code></pre>
+
+<p>上面的代码，就是我把上面的几个静态函数，绑定到Lua的基础对象中去。 <br />
+<code>tolua_beginmodule(m_pState, “CTest”);</code>是只注册一个模块，比如，我们管CTest叫做”CTest”，保持和C++的名称一样。这样在Lua的对象库中就会多了一个CTest的对象描述，等同于string,number等等基本类型，同理，你也可以用同样的方法，注册你的MFC类。是不是有点明白了？这里要注意，<code>tolua_beginmodule()</code>和<code>tolua_endmodule()</code>对象必须成对出现，如果出现不成对的，你注册的C++类型将会失败。 <br />
+<code>tolua_function(m_pState, “SetData”, tolua_SetData_CTest);</code>指的是将Lua里面CTest对象的”SetData”绑定到你的<code>tolua_SetData_CTest()</code>函数中去。</p>
+
+<p>好的，让我们来点激动人心的东西。还记得我们的Simple.lua的文件么。我们来改一下它。</p>
+
+<pre><code>function func_Add(x, y) 
+  local test = CTest:new(); 
+  test:SetData(“I’m freeeyes!”); 
+  test:GetData(); 
+  return x..y; 
+end
+</code></pre>
+
+<p>我在这个函数里面，New了一个CTest对象，并进行赋值操作，最后把结果打印在屏幕上。你或许会问，最后一句不是x+y么，怎么变成了x..y，呵呵，在Lua中，..表示联合的意思，就好比在C++里面， string strName += “freeeyes”。原来觉得x+y有点土，索性返回一个两个字符串的联合吧。</p>
+
+<p>好了，我们已经把我们的这个CTest类注册到了Lua里面，让我们来调用一下吧。修改一下Main函数。变成以下的样子。</p>
+
+<pre><code>int _tmain(int argc, _TCHAR* argv[]) 
+{ 
+        CLuaFn LuaFn;
+
+        LuaFn.InitClass();
+
+        LuaFn.LoadLuaFile(“Sample.lua”);
+
+        CParamGroup ParamIn; 
+        CParamGroup ParamOut;
+
+        char szData1[20] = {‘/0′}; 
+        sprintf(szData1, “[freeeyes]“); 
+        _ParamData* pParam1 = new _ParamData(szData1, “string”, (int)strlen(szData1)); 
+        ParamIn.Push(pParam1);
+
+        char szData2[20] = {‘/0′}; 
+        sprintf(szData2, “[shiqiang]“); 
+        _ParamData* pParam2 = new _ParamData(szData2, “string”, (int)strlen(szData2)); 
+        ParamIn.Push(pParam2); 
+        char szData3[40] = {‘/0′}; 
+        _ParamData* pParam3 = new _ParamData(szData3, “string”, 40); 
+        ParamOut.Push(pParam3);
+
+        LuaFn.CallFileFn(“func_Add”, ParamIn, ParamOut);
+
+        char* pData = (char* )ParamOut.GetParam(0)-&gt;GetParam(); 
+        printf("[Main]Sum = %s./n", pData);
+
+        getchar();
+
+        return 0; 
+}
+</code></pre>
+<p>如果你完全按照我的，你就可以编译你的工程了，运行一下，看看是啥结果？</p>
+
+<pre><code>[CTest::GetData]I’m freeeyes!. 
+[Main]Sum = [freeeyes][shiqiang]. 
+</code></pre>
+
+<p>看看，是不是和我输出的一样？<br />
+呵呵，有意思吧，你已经可以在Lua里面用C++的函数了，那么咱们再增加一点难度，比如，我有一个CTest对象，要作为一个参数，传输给func_Add()执行，怎么办？ <br />
+很简单，如果你对上面的代码仔细阅读，你会发现下面的代码一样简洁。为了支持刚才要说的需求，我们需要把Sample.lua再做一点修改。</p>
+
+<pre><code>function func_Add(x, y, f) 
+  f:SetData(“I’m freeeyes!”); 
+  f:GetData(); 
+  return x..y; 
+end
+</code></pre>
+<p>f假设就是我们要传入的CTest对象。我们要在Lua里面使用它。（我们的CLuaFn都不用改，把main函数稍微改一下即可，来看看怎么写。）</p>
+
+<p>LuaSample.cpp : 定义控制台应用程序的入口点。</p>
+
+<p>&#8220;`c++</p>
+
+<p>#include “stdafx.h” <br />
+#include “LuaFn.h”</p>
+
+<p>int _tmain(int argc, _TCHAR* argv[]) <br />
+{ <br />
+        CLuaFn LuaFn;</p>
+
+<pre><code>    LuaFn.InitClass();
+
+    LuaFn.LoadLuaFile(“Sample.lua”);
+
+    CParamGroup ParamIn; 
+    CParamGroup ParamOut;
+
+    char szData1[20] = {‘/0′}; 
+    sprintf(szData1, “[freeeyes]“); 
+    _ParamData* pParam1 = new _ParamData(szData1, “string”, (int)strlen(szData1)); 
+    ParamIn.Push(pParam1);
+
+    char szData2[20] = {‘/0′}; 
+    sprintf(szData2, “[shiqiang]“); 
+    _ParamData* pParam2 = new _ParamData(szData2, “string”, (int)strlen(szData2)); 
+    ParamIn.Push(pParam2);
+
+    //只追加了这里 
+    CTest* pTest = new CTest(); 
+    _ParamData* pParam3 = new _ParamData(pTest, “CTest”, sizeof(CTest)); 
+    ParamIn.Push(pParam3); 
+   //追加结束 
+    char szData4[40] = {‘/0′}; 
+    _ParamData* pParam4 = new _ParamData(szData4, “string”, 40); 
+    ParamOut.Push(pParam4);
+
+    LuaFn.CallFileFn(“func_Add”, ParamIn, ParamOut);
+
+    char* pData = (char* )ParamOut.GetParam(0)-&gt;GetParam(); 
+    printf(“[Main]Sum = %s./n”, pData);
+
+    getchar();
+
+    return 0;  } ``` 好了，就这么点代码，改好了，我们再Build一下，然后点击运行。看看输出结果，是不是和以前的一样？  恩，是不是有点兴奋了？你成功的让Lua开始调用你的C++对象了！并且按照你要的方式执行！还记得我曾在第一篇文章里面许诺过，我会让你画出一个MFC窗体么？呵呵，如果你到现在依然觉得很清晰的话，说明你的距离已经不远了。
+</code></pre>
+
+<p>既然已经到了这里，我们索性再加点难度，如果我要把CTest作为一个对象返回回来怎么做？很简单，且看。</p>
+
+<p>&#8220;`c++<br />
+int _tmain(int argc, _TCHAR* argv[]) <br />
+{ <br />
+        CLuaFn LuaFn;</p>
+
+<pre><code>    LuaFn.InitClass();
+
+    LuaFn.LoadLuaFile(“Sample.lua”);
+
+    CParamGroup ParamIn; 
+    CParamGroup ParamOut;
+
+    char szData1[20] = {‘/0′}; 
+    sprintf(szData1, “[freeeyes]“); 
+    _ParamData* pParam1 = new _ParamData(szData1, “string”, (int)strlen(szData1)); 
+    ParamIn.Push(pParam1);
+
+    char szData2[20] = {‘/0′}; 
+    sprintf(szData2, “[shiqiang]“); 
+    _ParamData* pParam2 = new _ParamData(szData2, “string”, (int)strlen(szData2)); 
+    ParamIn.Push(pParam2);
+
+    CTest* pTest = new CTest(); 
+    _ParamData* pParam3 = new _ParamData(pTest, “CTest”, sizeof(CTest)); 
+    ParamIn.Push(pParam3); 
+    CTest* pTestRsult = NULL; 
+    _ParamData* pParam4 = new _ParamData(pTestRsult, “CTest”, sizeof(pTestRsult)); 
+    ParamOut.Push(pParam4);
+
+    LuaFn.CallFileFn(“func_Add”, ParamIn, ParamOut);
+
+    //接受Lua返回参数为CTest类型，并调用其中的方法。 
+    pTestRsult = (CTest* )ParamOut.GetParam(0)-&gt;GetParam(); 
+    pTestRsult-&gt;GetData();
+
+    getchar();
+
+    return 0;  } ```
+</code></pre>
+
+<p>好，编译，执行。呵呵，看到了吧。</p>
+
+<p>看到这里，如果你能看的明白，说明你已经对Lua如何调用C++接口，以及C++如何调用Lua有了一定的理解。当然，我写的这个类也不是很完善，不过做一半的Lua开发，应该是够用了。以以上的方式，你可以使用Lua驾驭你的C++代码。</p>
+
+<p>好了，咱们既然已经说到这里了，再深一步，如果我的类是继承的，怎么办？呵呵，很好的问题。 <br />
+比如，我的CTest继承了一个CBase，我的CBase又继承了一个。。。 <br />
+在Lua里面，一样简单，我拿MFC的例子来举例吧，想必大家更喜欢看。 比如 CCmdTarget继承自CObject。 <br />
+那么我在注册的时候可以这么写。<br />
+<code>
+tolua_cclass(tolua_S, “CCmdTarget”,      ”CCmdTarget”,      ”CObject”,            NULL); 
+</code><br />
+这个表示CCmdTarget继承自CObject对象。 <br />
+当然，MFC里面还会有很多类型，比如常数，Lua一样能处理。 <br />
+举个例子说。<br />
+<code>
+tolua_constant(tolua_S, “ES_AUTOHSCROLL”,   ES_AUTOHSCROLL); 
+</code><br />
+这样注册，你就可以在 Lua里面使用ES_AUTOHSCROLL这个常数，它会自动绑定ES_AUTOHSCROLL这个C++常数对象。<br />
+呵呵，说了这么多，让我们来点实际的。我给大家一个我以前写的MFC封装类（由于代码太多，我变成附件给大家），你们可以调用，当然，如果你有兴趣，就用我的MFC类，来做一个你喜欢的窗体吧，当然，你必须要用Lua脚本把它画出来，作为最后的考验，呵呵。</p>
+
+<p><img src="/images/HelloLua_01_03.rar" alt="附带全部工程（附带Lua及tolua++）" /></p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Lua脚本在C++下的舞步（二）]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/12/lua-deep-2"/>
+    <updated>2015-11-12T21:47:58+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/12/lua-deep-2</id>
+    <content type="html"><![CDATA[<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂，就不会有人使用了。 <br />
+下面，我要强调一下，Lua的栈的一些概念，因为这个确实很重要，你会经常用到。熟练使用Lua，最重要的就是要时刻知道什么时候栈里面的数据是什么顺序，都是什么。如果你能熟练知道这些，实际你已经是Lua运用的高手了。</p>
+
+<!--more-->
+
+<p>说真的，第一次我接触栈的时候，没有把它想的很复杂，倒是看了网上很多的关于Lua的文章让我对栈的理解云里雾里，什么元表，什么User，什么局部变量，什么全局变量位移。说的那叫一个晕。本人脑子笨，理解不了这么多，也不知道为什么很多人喜欢把Lua栈弄的七上八下，代码晦涩难懂。后来实在受不了了，去Lua网站下载了Lua的文档，写的很清晰。Lua的栈实际上几句话足以。 <br />
+当你初始化一个栈的时候，它的栈底是1，而栈顶相对位置是-1，说形象一些，你可以把栈想象成一个环，有一个指针标记当前位置，如果-1，就是当前栈顶，如果是-2就是当前栈顶前面一个参数的位置。以此类推。当然，你也可以正序去取，这里要注意，对于Lua的很多API，下标是从1开始的。这个和C++有些不同。而且，在栈的下标中，正数表示绝对栈底的下标，负数表示相对栈顶的相对地址，这个一定要有清晰的概念，否则很容易看晕了。 <br />
+让我们看一些例子，加深理解。</p>
+
+<pre><code>lua_pushnumber(m_pState, 11); 
+lua_pushnumber(m_pState, 12);
+int nIn = lua_gettop(m_pState); 
+</code></pre>
+
+<p>这里加了一行， lua_gettop()这个API是告诉你目前栈里元素的个数。 <br />
+如果仅仅是Push两个参数，那么nIn的数值是2，对。没错。那么咱们看看栈里面是怎么放的。我再加两行代码。</p>
+
+<pre><code>int nData1 = lua_tonumber(m_pState, 1);     //读取栈底第一个绝对坐标中的元素 
+int nData2 = lua_tonumber(m_pState, 2);     //读取栈底第二个绝对坐标中的元素 
+printf(“[Test]nData1  = %d, nData2  = %d./n”); 
+</code></pre>
+
+<p>如果是你，凭直觉，告诉我答案是什么？ <br />
+现在公布答案，看看是不是和你想的一样。 <br />
+[Test]nData1  = 11, nData2  = 12</p>
+
+<p>呵呵，那么，如果我把代码换成</p>
+
+<pre><code>lua_pushnumber(m_pState, 11); 
+lua_pushnumber(m_pState, 12);
+
+int nIn = lua_gettop(m_pState)
+
+int nData1 = lua_tonumber(m_pState, -1);     &lt;–读取栈顶第一个相对坐标中的元素 
+int nData2 = lua_tonumber(m_pState, -2);     &lt;–读取栈顶第二个相对坐标中的元素 
+printf(“[Test]nData1  = %d, nData2  = %d./n”);
+</code></pre>
+
+<p>请你告诉我输出是什么？ <br />
+答案是 <br />
+[Test]nData1  = 12, nData2  = 11</p>
+
+<p>呵呵，挺简单的吧，对了，其实就这么简单。网上其它的高阶运用，其实大部分都是对栈的位置进行调整。只要你抓住主要概念，看懂还是不难的。什么元表，什么变量，其实都一样，抓住核心，时刻知道栈里面的样子，就没有问题。 <br />
+好了，回到我上一节的那个代码。</p>
+
+<pre><code>bool CLuaFn::CallFileFn(const char* pFunctionName, int nParam1, int nParam2) 
+{ 
+        int nRet = 0; 
+        if(NULL == m_pState) 
+        { 
+                printf(“[CLuaFn::CallFileFn]m_pState is NULL./n”); 
+                return false; 
+        }
+
+        lua_getglobal(m_pState, pFunctionName);
+
+        lua_pushnumber(m_pState, nParam1); 
+        lua_pushnumber(m_pState, nParam2);
+
+        int nIn = lua_gettop(m_pState); &lt;–在这里加一行。
+
+        nRet = lua_pcall(m_pState, 2, 1, 0); 
+        if (nRet != 0) 
+        { 
+                printf(“[CLuaFn::CallFileFn]call function(%s) error(%d)./n”, pFunctionName, nRet); 
+                return false; 
+        }
+
+        if (lua_isnumber(m_pState, -1) == 1) 
+        { 
+                int nSum = lua_tonumber(m_pState, -1); 
+                printf(“[CLuaFn::CallFileFn]Sum = %d./n”, nSum); 
+        }
+
+        int nOut = lua_gettop(m_pState); &lt;–在这里加一行。
+
+        return true; 
+}
+</code></pre>
+
+<p>nIn的答案是多少？或许你会说是2吧，呵呵，实际是3。或许你会问，为什么会多一个？其实我第一次看到这个数字，也很诧异。但是确实是3。因为你调用的函数名称占据了一个堆栈的位置。其实，在获取nIn那一刻，堆栈的样子是这样的（函数接口地址，参数1，参数2），函数名称也是一个变量入栈的。而nOut输出是1，lua_pcall()函数在调用成功之后，会自动的清空栈，然后把结果放入栈中。在获取nOut的一刻，栈内是这幅摸样(输出参数1)。</p>
+
+<p>这里就要再迁出一个更重要的概念了，Lua不是C++，对于C++程序员而言，一个函数会自动创建栈，当函数执行完毕后会自动清理栈，Lua可不会给你这么做，对于Lua而言，它没有函数这个概念，一个栈对应一个lua_State指针，也就是说，你必须手动去清理你不用的栈，否则会造成垃圾数据占据你的内存。</p>
+
+<p>不信？那么咱们来验证一下，就拿昨天的代码吧，你用for循环调用100万次。看看nOut的输出结果。。我相信，程序执行不到100万次就会崩溃，而你的内存也会变的硕大无比。而nOut的输出也会是这样的 1,2,3,4,5,6。。。。。 <br />
+原因就是，Lua不会清除你以前栈内的数据，每调用一次都会给你生成一个新的栈元素插入其中。 <br />
+那么怎么解决呢？呵呵，其实，如果不考虑多线程的话，在你的函数最后退出前加一句话，就可以轻松解决这个问题。(Lua栈操作是非线程安全的！)</p>
+
+<pre><code>lua_settop(m_pState, -2); 
+</code></pre>
+
+<p>这句话的意思是什么？lua_settop()是设置栈顶的位置，我这么写，意思就是，栈顶指针目前在当前位置的-2的元素上。这样，我就实现了对栈的清除。仔细想一下，是不是这个道理呢？</p>
+
+<pre><code>bool CLuaFn::CallFileFn(const char* pFunctionName, int nParam1, int nParam2) 
+{ 
+        int nRet = 0; 
+        if(NULL == m_pState) 
+        { 
+                printf(“[CLuaFn::CallFileFn]m_pState is NULL./n”); 
+                return false; 
+        }
+
+        lua_getglobal(m_pState, pFunctionName);
+
+        lua_pushnumber(m_pState, nParam1); 
+        lua_pushnumber(m_pState, nParam2);
+
+        int nIn = lua_gettop(m_pState); &lt;–在这里加一行。
+
+        nRet = lua_pcall(m_pState, 2, 1, 0); 
+        if (nRet != 0) 
+        { 
+                printf(“[CLuaFn::CallFileFn]call function(%s) error(%d)./n”, pFunctionName, nRet); 
+                return false; 
+        }
+
+        if (lua_isnumber(m_pState, -1) == 1) 
+        { 
+                int nSum = lua_tonumber(m_pState, -1); 
+                printf(“[CLuaFn::CallFileFn]Sum = %d./n”, nSum); 
+        }
+
+        int nOut = lua_gettop(m_pState); &lt;–在这里加一行。 
+        lua_settop(m_pState, -2);             &lt;–清除不用的栈。
+
+        return true; 
+}
+</code></pre>
+
+<p>好了，再让我们运行100万次，看看你的程序内存，看看你的程序还崩溃不？ <br />
+如果你想打印 nOut的话，输出会变成1,1,1,1,1。。。。 <br />
+最后说一句，lua_tonumber()或lua_tostring()还有以后我们要用到的lua_touserdata()一定要将数据完全取出后保存到你的别的变量中去，否则会因为清栈操作，导致你的程序异常，切记！</p>
+
+<p>呵呵，说了这么多，主要是让大家如何写一个严谨的Lua程序，不要运行没两下就崩溃了。好了，基础栈的知识先说到这里，以后还有一些技巧的运用，到时候会给大家展示。</p>
+
+<p>下面说一下，Lua的工具。（为什么要说这个呢？呵呵，因为我们下一步要用到其中的一个帮助我们的开发。） <br />
+呵呵，其实，Lua里面有很多简化开发的工具，你可以去http://www.sourceforge.net/去找一下。它们能够帮助你简化C++对象与Lua对象互转之间的代码。 <br />
+这里说几个有名的，当然可能不全。</p>
+
+<blockquote>
+  <p>(lua tinker)如果你的系统在windows下，而且不考虑移植，那么我强烈推荐你去下载一个叫做lua tinker的小工具，整个工具非常简单，一个.h和一个.cpp。直接就可以引用到你的工程中，连独立编译都不用，这是一个韩国人写的Lua与 C++接口转换的类，十分方便，代码简洁（居家旅行，必备良药）。它是基于模板的，所以你可以很轻松的把你的C++对象绑定到Lua中。代码较长，呵呵，有兴趣的朋友可以给我留言索要lua tinker的例子。就不贴在这里了。不过我个人不推荐这个东西，因为它在Linux下是编译不过去的。它使用了一种g++不支持的模板写法，虽然有人在尝试把它修改到Linux下编译，但据我所知，修改后效果较好的似乎还没有。不过如果你只是在  windows下，那就没什么可犹豫的，强烈推荐，你会喜欢它的。</p>
+</blockquote>
+
+<blockquote>
+  <p>(Luabinder)相信用过Boost库的朋友，或许对这个家伙很熟悉。它是一个很强大的Linux下Lua扩展包，帮你封装了很多Lua的复杂操作，主要解决了绑定C++对象和Lua对象互动的关系，非常强大，不过嘛，对于freeeyes而言，还是不推荐，因为freeeyes很懒，不想为了一个Lua还要去编译一个庞大的boost库，当然，见仁见智，如果你的程序本身就已经加载了boost，那么就应该毫不犹豫的选择它。</p>
+</blockquote>
+
+<blockquote>
+  <p>(lua++)呵呵，这是我最喜欢，也是我一直用到现在的库，比较前两个而言，lua++的封装性没有那么好，很多东西还是需要一点代码的，不过之所以我喜欢，是因为它是用C写的，可以在windows下和linux下轻松转换。如果鱼与熊掌不能兼得，那么我宁愿选择一个兼顾两者的东西，如果有的话，呵呵。当然，lua++就是这么一个东西，如果你继续看我的文章，或许你也会喜欢它的。</p>
+</blockquote>
+
+<p>好了，废话少说，就让我选择lua++作为我们继续进行下去的垫脚石吧。 <br />
+说到<a href="http://www.codenix.com/~tolua/">Lua++</a>，这个东西还是挺有渊源的，请你先下载一个。我教你怎么编译。</p>
+
+<p>还记得我昨天说过如何编译Lua么，现在请你再做一遍，不同的是，请把lua++的程序包中的src/lib中的所有h和cpp，还有include下的那个.h拷贝到你上次建立的lua工程中。然后全部添加到你的静态链接库工程中去，重新编译。会生成一个新的lua.lib，这个lua就自动包含了lua++的功能。最后记得把tolua++.h放在你的Include文件夹下。 <br />
+行了，我们把上次CLuaFn类稍微改一下。</p>
+
+<pre><code>extern “C” 
+{ 
+        #include “lua.h” 
+        #include “lualib.h” 
+        #include “lauxlib.h” 
+        #include “tolua++”   //这里加一行 
+};
+
+class CLuaFn 
+{ 
+public: 
+        CLuaFn(void); 
+        ~CLuaFn(void);
+
+        void Init();            //初始化Lua对象指针参数 
+        void Close();         //关闭Lua对象指针
+		//加载指定的Lua文件 
+        bool LoadLuaFile(const char* pFileName);                              
+        //执行指定Lua文件中的函数
+        bool CallFileFn(const char* pFunctionName, int nParam1, int nParam2);        
+private: 
+        lua_State* m_pState;   //这个是Lua的State对象指针，你可以一个lua文件对应一个。 
+};
+</code></pre>
+
+<p>行了，这样我们就能用Lua++下的功能了。</p>
+
+<p>昨天，大家看到了 bool CallFileFn(const char* pFunctionName, int nParam1, int nParam2);这个函数的运用。演示了怎么调用Lua函数。 <br />
+下面，我改一下，这个函数。为什么？还是因为freeeyes很懒，我可不想每有一个函数，我都要写一个C++函数去调用，太累！我要写一个通用的！支持任意函数调用的接口！ <br />
+于是我创建了两个类。支持任意参数的输入和输出，并打包送给lua去执行，说干就干。</p>
+
+<pre><code>#ifndef _PARAMDATA_H 
+#define _PARAMDATA_H
+
+#include &lt;vector&gt;
+
+#define MAX_PARAM_200 200
+
+using namespace std;
+
+struct _ParamData 
+{ 
+public: 
+        void* m_pParam; 
+        char  m_szType[MAX_PARAM_200]; 
+        int   m_TypeLen;
+
+public: 
+        _ParamData() 
+        { 
+                m_pParam    = NULL; 
+                m_szType[0] = ‘/0′; 
+                m_TypeLen   = 0; 
+        };
+
+        _ParamData(void* pParam, const char* szType, int nTypeLen) 
+        { 
+                SetParam(pParam, szType, nTypeLen); 
+        }
+
+        ~_ParamData() {};
+
+        void SetParam(void* pParam, const char* szType, int nTypeLen) 
+        { 
+                m_pParam = pParam; 
+                sprintf(m_szType, “%s”, szType); 
+                m_TypeLen = nTypeLen; 
+        };
+
+        bool SetData(void* pParam, int nLen) 
+        { 
+                if(m_TypeLen &lt; nLen) 
+                { 
+                        return false; 
+                }
+
+                if(nLen &gt; 0) 
+                { 
+                        memcpy(m_pParam, pParam, nLen); 
+                } 
+                else 
+                { 
+                        memcpy(m_pParam, pParam, m_TypeLen); 
+                } 
+                return true; 
+        }
+
+        void* GetParam() 
+        { 
+                return m_pParam; 
+        }
+
+        const char* GetType() 
+        { 
+                return m_szType; 
+        }
+
+        bool CompareType(const char* pType) 
+        { 
+                if(0 == strcmp(m_szType, pType)) 
+                { 
+                        return true; 
+                } 
+                else 
+                { 
+                        return false; 
+                } 
+        } 
+};
+
+class CParamGroup 
+{ 
+public: 
+        CParamGroup() {}; 
+        ~CParamGroup() 
+        { 
+                Close(); 
+        };
+
+        void Init() 
+        { 
+                m_vecParamData.clear(); 
+        };
+
+        void Close() 
+        { 
+                for(int i = 0; i &lt; (int)m_vecParamData.size(); i++) 
+                { 
+                        _ParamData* pParamData = m_vecParamData; 
+                        delete pParamData; 
+                        pParamData = NULL; 
+                } 
+                m_vecParamData.clear(); 
+        };
+
+        void Push(_ParamData* pParam) 
+        { 
+                if(pParam != NULL) 
+                { 
+                        m_vecParamData.push_back(pParam); 
+                } 
+        };
+
+        _ParamData* GetParam(int nIndex) 
+        { 
+                if(nIndex &lt; (int)m_vecParamData.size()) 
+                { 
+                        return m_vecParamData[nIndex]; 
+                } 
+                else 
+                { 
+                        return NULL; 
+                } 
+        };
+
+        int GetCount() 
+        { 
+                return (int)m_vecParamData.size(); 
+        }
+
+private: 
+        typedef vector&lt;_ParamData*&gt; vecParamData; 
+        vecParamData m_vecParamData; 
+};
+
+#endif
+#endif
+</code></pre>
+
+<p>我创建了两个类，把Lua要用到的类型，数据都封装起来了。这样，我只需要这么改写这个函数。 <br />
+bool CallFileFn(const char* pFunctionName, CParamGroup&amp; ParamIn, CParamGroup&amp; ParamOut); <br />
+它就能按照不同的参数自动给我调用，嘿嘿，懒到家吧！ <br />
+其实这两个类很简单，_ParamData是参数类，把你要用到的参数放入到这个对象中去，标明类型的大小，类型名称，内存块。而CParamGroup负责将很多很多的_ParamData打包在一起，放在vector里面。</p>
+
+<p>好了，让我们看看CallFileFn函数里面我怎么改的。</p>
+
+<pre><code>bool CLuaFn::CallFileFn(const char* pFunctionName, CParamGroup&amp; ParamIn, CParamGroup&amp; ParamOut) 
+{ 
+        int nRet = 0; 
+        int i    = 0; 
+        if(NULL == m_pState) 
+        { 
+                printf(“[CLuaFn::CallFileFn]m_pState is NULL./n”); 
+                return false; 
+        }
+
+        lua_getglobal(m_pState, pFunctionName);
+
+        //加载输入参数 
+        for(i = 0; i &lt; ParamIn.GetCount(); i++) 
+        { 
+                PushLuaData(m_pState, ParamIn.GetParam(i)); 
+        }
+
+        nRet = lua_pcall(m_pState, ParamIn.GetCount(), ParamOut.GetCount(), 0); 
+        if (nRet != 0) 
+        { 
+                printf(“[CLuaFn::CallFileFn]call function(%s) error(%s)./n”, pFunctionName, lua_tostring(m_pState, -1)); 
+                return false; 
+        }
+
+        //获得输出参数 
+        int nPos = 0; 
+        for(i = ParamOut.GetCount() – 1; i &gt;= 0; i–) 
+        { 
+                nPos–; 
+                PopLuaData(m_pState, ParamOut.GetParam(i), nPos); 
+        }
+
+        int nCount = lua_gettop(m_pState); 
+        lua_settop(m_pState, -1-ParamOut.GetCount());
+
+        return true; 
+}
+</code></pre>
+
+<p>呵呵，别的没变，加了两个循环，因为考虑lua是可以支持多结果返回的，所以我也做了一个循环接受参数。 <br />
+lua_settop(m_pState, -1-ParamOut.GetCount());这句话是不是有些意思，恩，是的，我这里做了一个小技巧，因为我不知道返回参数有几个，所以我会根据返回参数的个数重新设置栈顶。这样做可以返回任意数量的栈而且清除干净。 <br />
+或许细心的你已经发现，里面多了两个函数。恩，是的。来看看这两个函数在干什么。</p>
+
+<pre><code>bool CLuaFn::PushLuaData(lua_State* pState, _ParamData* pParam) 
+{ 
+        if(pParam == NULL) 
+        { 
+                return false; 
+        }
+
+        if(pParam-&gt;CompareType(“string”)) 
+        { 
+                lua_pushstring(m_pState, (char* )pParam-&gt;GetParam()); 
+                return true; 
+        }
+
+        if(pParam-&gt;CompareType(“int”)) 
+        { 
+                int* nData = (int* )pParam-&gt;GetParam(); 
+                lua_pushnumber(m_pState, *nData); 
+                return true; 
+        } 
+        else 
+        { 
+                void* pVoid = pParam-&gt;GetParam(); 
+                tolua_pushusertype(m_pState, pVoid, pParam-&gt;GetType()); 
+                return true; 
+        } 
+}
+</code></pre>
+
+<p>参数入栈操作，呵呵，或许你会问tolua_pushusertype(m_pState, pVoid, pParam-&gt;GetType());这句话，你可能有些看不懂，没关系，我会在下一讲详细的解释Lua++的一些API的用法。现在大概和你说一下，这句话的意思就是，把一个C++对象传输给Lua函数。 <br />
+再看看，下面一个。</p>
+
+<pre><code>bool CLuaFn:: PopLuaData(lua_State* pState, _ParamData* pParam, int nIndex) 
+{ 
+        if(pParam == NULL) 
+        { 
+                return false; 
+        }
+
+        if(pParam-&gt;CompareType(“string”)) 
+        { 
+                if (lua_isstring(m_pState, nIndex) == 1) 
+                { 
+                        const char* pData = (const char*)lua_tostring(m_pState, nIndex); 
+                        pParam-&gt;SetData((void* )pData, (int)strlen(pData)); 
+                } 
+                return true; 
+        }
+
+        if(pParam-&gt;CompareType(“int”)) 
+        { 
+                if (lua_isnumber(m_pState, nIndex) == 1) 
+                { 
+                        int nData = (int)lua_tonumber(m_pState, nIndex); 
+                        pParam-&gt;SetData(&amp;nData, sizeof(int)); 
+                } 
+                return true; 
+        } 
+        else 
+        { 
+                pParam-&gt;SetData(tolua_tousertype(m_pState, nIndex, NULL), -1); 
+                return true; 
+        } 
+}
+</code></pre>
+
+<p>弹出一个参数并赋值。pParam-&gt;SetData(tolua_tousertype(m_pState, nIndex, NULL), -1);这句话同样，我在下一讲中详细介绍。 <br />
+呵呵，好了，我们又进了一步，我们可以用这个函数绑定任意一个Lua函数格式。而代码不用多写，懒蛋的目的达到了。 <br />
+呵呵，这一讲主要是介绍了一些基本知识，或许有点多余，但是我觉得是必要的，在下一讲中，我讲开始详细介绍如何绑定一个C++对象给Lua，并让Lua对其修改。然后返回结果。休息一下，休息一下先。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Lua脚本在C++下的舞步(入门指引)（转）]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/12/lua-deep"/>
+    <updated>2015-11-12T21:46:51+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/12/lua-deep</id>
+    <content type="html"><![CDATA[<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>现在，越来越多的C++服务器和客户端融入了脚本的支持，尤其在网游领域，脚本语言已经渗透到了方方面面，比如你可以在你的客户端增加一个脚本，这个脚本将会帮你在界面上显示新的数据，亦或帮你完成某些任务，亦或帮你查看别的玩家或者NPC的状态。。。如此等等。</p>
+
+<p>但是我觉得，其实脚本语言与C++的结合，远远比你在游戏中看到的特效要来的迅猛。它可以运用到方方面面的领域，比如你最常见的应用领域。比如，你可以用文本编辑器，写一个脚本语言，然后用你的程序加载一下，就会产生出很绚丽的界面。亦或一两句文本语言，就会让你的程序发送数据给服务器，是不是很酷呢？</p>
+
+<!--more-->
+
+<p>本来我想，写一篇关于主流脚本语言Lua和Python的文章，但是感觉这样过于乏味，于是分开来一一介绍，相信对C++了解的你，看过我的文章后会对脚本语言这种东西产生浓厚的兴趣，我想起以前听的一个故事，当年Java的创造者讲课的时候，一开始先拿一个简单的不能简单的小例子，不断的扩展，最后成为一个复杂而完美的程序。今天我也就这样实验一下吧，呵呵。</p>
+
+<p>当然，我本人不敢说对脚本语言了如指掌，只能说略微掌握一些，用过几年，偏颇之处请大家指正。 <br />
+下面，开始吧，先说LUA！（本文面向初学者）<br />
+Lua语言（http://www.lua.org/），想必不少程序员都听过，据我所知，由于《魔兽世界》里面对它的加载，它一下子变成了很多游戏开发者竞相研究的对象，至于这个巴西创造者么，我不过多介绍，大家有兴趣可以谷歌一下。其实网上有很多关于lua的教材和例子，说真的，对于当年的我而言，几乎看不懂，当时很郁闷，感觉Lua复杂的要命，有些惧怕，后来沉下心来一点点研究，觉得其实还是蛮简洁的。只是网上的资料或许偏向于某些功能，导致了逻辑和代码的复杂。后来总结，其实学习一种脚本语言，完全可以抱着放松的心态一点点的研究，反而效果会更好。</p>
+
+<p>在讲代码之前，我要说Lua的一些特点，这些特点有利于你在复杂的代码调用中，清晰的掌握中间的来龙去脉。实际上，你能常常用到的lua的API，不过超过10个，再复杂的逻辑。基本上也是这么多API组成的。至于它们是什么，下面的文章会介绍。另外一个重要之重要的概念，就是栈。Lua与别的语言交互以及交换数据，是通过栈完成的。其实简单的解释一下，你可以把栈想象成一个箱子，你要给他数据，就要按顺序一个个的把数据放进去，当然，Lua执行完毕，可能会有结果返回给你，那么Lua还会利用你的箱子，一个个的继续放下去。而你取出返回数据呢，要从箱子顶上取出，如果你想要获得你的输入参数呢？那也很简单，按照顶上返回数据的个数，再按顺序一个个的取出，就行了。不过这里提醒大家，关于栈的位置，永远是相对的，比如-1代表的是当前栈顶，-2代表的是当前栈顶下一个数据的位置。栈是数据交换的地方，一定要有一些栈的概念。</p>
+
+<p>好了，基础的lua语法不在这里讲，百度一下有很多。 <br />
+先去http://www.lua.org/ 去下载一个最新的Lua代码（现在稳定版是lua-5.1.4）。它的代码是用C写的，所以很容易兼容很多平台。</p>
+
+<p>在linux下，目录src下就有专门的Makefile。很简单，啥都不用做，指定一下位置编译即可。 <br />
+在windows下，以VS2005为例，建立一个空的静态库工程（最好不使用预编译头，把预编译头的选项勾去掉），然后把src下的所有文件（除了Makefile）一股脑拷到工程中去。然后将这些文件添加到你的工程中，编译，会生成一个<em>.llib(</em>是你起的lua库名)，行了，建立一个目录lib，把它拷过去，然后再建立一个include的文件夹，把你工程目录下的lua.h，lualib.h，lauxlib.h，拷贝过去。行了，拿着这两个文件夹，你就可以在你的工程里使用lua了。 <br />
+行了，材料齐了，我们来看看怎么写一个简单的lua程序吧。<br />
+建立一个文件，起名Sample.lua <br />
+里面添加这样的代码。</p>
+
+<pre><code>function func_Add(x, y) 
+   return x+y; 
+end
+</code></pre>
+
+<p>这是一个标准的lua语法，一个函数，实现简单的a+b操作，并返回操作结果。 <br />
+保存退出。 <br />
+多一句嘴，在Lua里面，是可以支持多数据返回的。 <br />
+比如你这么写：</p>
+
+<pre><code>function func_Add(x, y) 
+   return x+y, x-y; 
+end
+</code></pre>
+
+<p>意思是返回第一个参数是相加的结果，第二个是相减的结果，也是可以的。在lua里面没有类型的概念。当然，在C++接受这样的返回值的时候，也很简单，请往下看。 <br />
+好了，材料齐备了，咱们来看看C++程序怎么调用它。 <br />
+首先，建立一个类，负责加载这个lua文件，并执行函数操作，我们姑且叫做CLuaFn <br />
+要加载这个lua文件，按照正常的思路，我们应该先加载，然后再调用不同的函数。恩，对了，咱们就这么做。</p>
+
+<pre><code>extern “C” 
+{ 
+        #include “lua.h” 
+        #include “lualib.h” 
+        #include “lauxlib.h” 
+};
+
+class CLuaFn 
+{ 
+public: 
+        CLuaFn(void); 
+        ~CLuaFn(void);
+
+        void Init();            //初始化Lua对象指针参数 
+        void Close();         //关闭Lua对象指针
+
+		//加载指定的Lua文件 
+        bool LoadLuaFile(const char* pFileName); 
+        //执行指定Lua文件中的函数
+        bool CallFileFn(const char* pFunctionName, int nParam1, int nParam2);
+private: 
+        lua_State* m_pState;   //这个是Lua的State对象指针，你可以一个lua文件对应一个。 
+};
+</code></pre>
+
+<p>恩，头文件就这么多，看看，一点也不复杂吧，看了cpp我想你会更高兴，因为代码一样很少。我一个个函数给你们介绍。</p>
+
+<pre><code>void CLuaFn::Init() 
+{ 
+        if(NULL == m_pState) 
+        { 
+                m_pState = lua_open(); 
+                luaL_openlibs(m_pState); 
+        } 
+}
+</code></pre>
+
+<p>初始化函数，标准代码，没啥好说的，lua_open()是返回给你一个lua对象指针，luaL_openlibs()是一个好东西，在lua4，初始化要做一大堆的代码，比如加载lua的string库，io库，math库等等等等，代码洋洋洒洒一大堆，其实都是不必要的，因为这些库你基本都需要用到，除了练习你的打字能力别的意义不大，因为代码写法都是固定的。于是在5以后，Lua的创造者修改了很多，这就是其一，一句话帮你加载了所有你可能用到的Lua基本库。</p>
+
+<pre><code>void CLuaFn::Close() 
+{ 
+        if(NULL != m_pState) 
+        { 
+                lua_close(m_pState); 
+                m_pState = NULL; 
+        } 
+}
+</code></pre>
+
+<p>顾名思义，我用完了，关闭我的Lua对象并释放资源。呵呵，标准写法，没啥好说的。</p>
+
+<pre><code>bool CLuaFn:: LoadLuaFile(const char* pFileName) 
+{ 
+        int nRet = 0; 
+        if(NULL == m_pState) 
+        { 
+                printf(“[CLuaFn:: LoadLuaFile]m_pState is NULL./n”); 
+                return false; 
+        }
+
+        nRet = luaL_dofile(m_pState, pFileName); 
+        if (nRet != 0) 
+        { 
+                printf(“[CLuaFn:: LoadLuaFile]luaL_loadfile(%s) is file(%d)(%s)./n”, pFileName, nRet, lua_tostring(m_pState, -1)); 
+                return false; 
+        }
+
+        return true; 
+}
+</code></pre>
+
+<p>呵呵，这个有点意思，加载一个Lua文件。 <br />
+这里我要详细的说一下，因为Lua是脚本语言，加载lua文件本身的时候才会编译。 <br />
+所以，推荐大家在加载文件的时候尽量放在程序的初始化中，因为当你执行luaL_dofile()函数的时候，Lua会启用语法分析器，去分析你的脚本语法是否符合Lua规则，如果你胡乱的传一个文件过去，Lua就会告诉你文件语法错误，无法加载。如果你的Lua脚本很大，函数很多，语法分析器会比较耗时，所以，加载的时候，尽量放在合适的地方，而且，对于一个Lua文件而言，反复加载luaL_dofile()除了会使你的CPU变热没有任何意义。</p>
+
+<p>许你对printf(“[CLuaFn:: LoadLuaFile]luaL_loadfile(%s) is file(%d)(%s)./n”, pFileName, nRet, lua_tostring(m_pState, -1));这句话很感兴趣，这个在干什么？这里我先说lua_tostring(m_pState, -1)这是在干什么，还记得我说的Lua是基于栈传输数据的么？那么，如果报错，我怎么知道错误是什么？luaL_dofile标准返回一个int，我总不能到lua.h里面遍历这个nRet 是啥意思吧，恩，Lua创造者早就为你想好了，只不过你需要稍微动一下你的脑筋。Lua的创造者在语法分析器分析你的语法的时候，发现错误，会有一段文字告诉你是什么错误，它会把这个字符串放在栈顶。那么，怎么取得栈顶的字符串呢？lua_tostring(m_pState, -1)就可以，-1代表的是当前栈的位置是相对栈顶。当然，你也可以看看栈里面还有一些什么其他古怪的数据，你可以用1,2,3（这些是绝对位置，而-1是相对位置）去尝试，呵呵。不过，相信你得到的也很难看懂，因为一个Lua对象执行的时候，会用很多次栈进行数据交换，而你看到的，有可能是交换中的数据。那么，话说回来，这句话的意思就是”[CLuaFn:: LoadLuaFile]luaL_loadfile(文件名) is file(错误编号)(错误具体描述文字)./n”</p>
+
+<pre><code>bool CLuaFn::CallFileFn(const char* pFunctionName, int nParam1, int nParam2) 
+{ 
+        int nRet = 0; 
+        if(NULL == m_pState) 
+        { 
+                printf(“[CLuaFn::CallFileFn]m_pState is NULL./n”); 
+                return false; 
+        }
+
+        lua_getglobal(m_pState, pFunctionName);
+
+        lua_pushnumber(m_pState, nParam1); 
+        lua_pushnumber(m_pState, nParam2);
+
+        nRet = lua_pcall(m_pState, 2, 1, 0); 
+        if (nRet != 0) 
+        { 
+                printf(“[CLuaFn::CallFileFn]call function(%s) error(%d)./n”, pFunctionName, nRet); 
+                return false; 
+        }
+
+        if (lua_isnumber(m_pState, -1) == 1) 
+        { 
+                int nSum = lua_tonumber(m_pState, -1); 
+                printf(“[CLuaFn::CallFileFn]Sum = %d./n”, nSum); 
+        }
+
+        return true; 
+}
+</code></pre>
+<p>这个函数是，传入函数名称和参数，去你的Lua文件中去执行。 <br />
+lua_getglobal(m_pState, pFunctionName); <br />
+这个函数是验证你的Lua函数是否在你当前加载的Lua文件中，并把指针指向这个函数位置。</p>
+
+<p>lua_pushnumber(m_pState, nParam1);   &lt;—对应你的x参数 <br />
+lua_pushnumber(m_pState, nParam2);   &lt;—对应你的y参数</p>
+
+<p>这就是著名的压栈操作了，把你的参数压入Lua的数据栈。供Lua语法器去获得你的数据。 <br />
+lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串。。。</p>
+
+<p>那么你会问，如果我有一个自己的类型，一个类指针或者别的什么，我怎么压入？别着急，方法当然是有的，呵呵，不过你先看看如果简单的如何做，在下几讲中，我会告诉你更强大的Lua压栈艺术。 <br />
+这里需要注意的是，压栈的顺序，对，简单说，就是从左到右的参数，左边的先进栈，右边的最后进栈。</p>
+
+<pre><code>nRet = lua_pcall(m_pState, 2, 1, 0); 
+</code></pre>
+
+<p>这句话的意思是，执行这个函数，2是输入参数的个数，1是输出参数的个数。当然，如果你把Lua函数改成</p>
+
+<pre><code>return x+y, x-y; 
+</code></pre>
+
+<p>代码需要改成nRet = lua_pcall(m_pState, 2, 2, 0); <br />
+明白了吧，呵呵，很简单吧。</p>
+
+<p>当然，如果函数执行失败，会触发nRet，我这里偷了个懒，如果你想得到为什么错了？可以用lua_tostring(m_pState, -1)去栈顶找，明白？是不是有点感觉了？</p>
+
+<pre><code>lua_isnumber(m_pState, -1) 
+</code></pre>
+
+<p>这句话是判定栈顶的元素是不是数字。因为如果执行成功，栈顶就应该是你的数据返回值。</p>
+
+<pre><code>int nSum = lua_tonumber(m_pState, -1); 
+printf(“[CLuaFn::CallFileFn]Sum = %d./n”, nSum); 
+</code></pre>
+
+<p>这个nSum就是返回的结果。 <br />
+当然，你会问，如果 return x+y, x-y;我该怎么办？</p>
+
+<pre><code>int nSum = lua_tonumber(m_pState, -1); 
+int nSub = lua_tonumber(m_pState, -2); 
+</code></pre>
+
+<p>搞定，看见没。按照压栈顺序。呵呵，是不是又有感觉了，对，栈就是数据交互的核心。对Lua的理解程度和运用技巧，其实就是对栈的灵活运用和操作。</p>
+
+<p>好了。你的第一个Lua程序大功告成！竟然不是Hello world，呵呵。 <br />
+好了，我们看看Main函数怎么写吧，相信大家都会写。</p>
+
+<pre><code>#include “LuaFn.h”
+
+int _tmain(int argc, _TCHAR* argv[]) 
+{ 
+        CLuaFn LuaFn;
+
+        //LuaFn.InitClass();
+
+        LuaFn.LoadLuaFile(“Sample.lua”); 
+        LuaFn.CallFileFn(“func_Add”, 11, 12); 
+        getchar();
+
+        return 0; 
+}
+</code></pre>
+
+<p>行了，Build一下，看看，是不是你要的结果？如果是，贺喜你，你已经迈出了Lua的第一步。 <br />
+洋洋洒洒写了一个小时，喝口水吧，呵呵，下一讲，我将强化这个LuaFn类，让它给我做更多的事情。呵呵，最后，我会让你打到，用Lua文件直接画出一个Windows窗体来。并在上面画出各种按钮，列表，以及复选框。是不是感觉很酷？用文本去创造一个程序？很激动吧，恩，确实，Lua能给你做到。只要你有耐心看下去。。。</p>
+]]></content>
+  </entry>
+  
+</feed>
