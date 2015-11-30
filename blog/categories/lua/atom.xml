@@ -4,7 +4,7 @@
   <title><![CDATA[分类:lua | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/lua/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-30T10:45:34+08:00</updated>
+  <updated>2015-11-30T10:47:46+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[setfenv有何用？]]></title>
+    <title type="html"><![CDATA[Setfenv有何用？]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/18/lua-setfenv"/>
     <updated>2015-11-18T00:39:31+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/18/lua-setfenv</id>
@@ -105,7 +105,7 @@ b.doAction()
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lua中require到底做了什么事情？]]></title>
+    <title type="html"><![CDATA[Lua中require到底做了什么事情？]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/15/lua-require"/>
     <updated>2015-11-15T20:47:27+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/15/lua-require</id>
