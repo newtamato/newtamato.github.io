@@ -1,0 +1,463 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Cocos2dx如果实现骨骼动画的换装 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="我的工作环境是:
+quick cocos2dx 2.2.6
+flash IDE dragbone官方的插件 首先我们要知道如何创建一个骨骼动画，主要涉及到两个部分，一部分是做加载资源，一部分是根据刚刚加载的资源创建骨骼动画。 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-70121917-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Cocos2dx如果实现骨骼动画的换装</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-11-22T17:33:52+08:00'><span class='date'>2015 年11 月22 日</span> <span class='time'>5:33 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>我的工作环境是:<br />
+quick cocos2dx 2.2.6<br />
+flash IDE dragbone官方的插件</p>
+
+<p>首先我们要知道如何创建一个骨骼动画，主要涉及到两个部分，一部分是做加载资源，一部分是根据刚刚加载的资源创建骨骼动画。</p>
+
+<!--more-->
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">#加载资源的函数
+</span><span class="line">    void addArmatureFileInfo(const char *configFilePath);
+</span><span class="line">
+</span><span class="line">    /**
+</span><span class="line">     *	@brief	Add ArmatureFileInfo, it is managed by CCArmatureDataManager.
+</span><span class="line">     *			It will load data in a new thread
+</span><span class="line">     */
+</span><span class="line">    void addArmatureFileInfoAsync(const char *configFilePath, CCObject *target, SEL_SCHEDULE selector);
+</span><span class="line">
+</span><span class="line">    /**
+</span><span class="line">     *	@brief	Add ArmatureFileInfo, it is managed by CCArmatureDataManager.
+</span><span class="line">     */
+</span><span class="line">    void addArmatureFileInfo(const char *imagePath, const char *plistPath, const char *configFilePath);
+</span><span class="line">
+</span><span class="line">    /**
+</span><span class="line">     *	@brief	Add ArmatureFileInfo, it is managed by CCArmatureDataManager.
+</span><span class="line">     *			It will load data in a new thread
+</span><span class="line">     */
+</span><span class="line">    void addArmatureFileInfoAsync(const char *imagePath, const char *plistPath, const char *configFilePath, CCObject *target, SEL_SCHEDULE selector);
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>而创建骨骼动画就很简单了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">bool CCArmature::init(const char *name)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>我们看到按照加载资源的函数要求，我们一般要提供三个文件，png，plist和一个config文件。这三个文件刚好是dragonbone插件为我们生成的。<br />
+<img src="/images/1448177716730.png" alt="Alt text" /></p>
+
+<p>然后就是创建，传入一个name参数，这个那么是什么呢？这就要我们打开生成的xml文件看一下它的结构了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;skeleton name="battles_effect" frameRate="24" version="2.2"&gt;
+</span><span class="line">  &lt;armatures&gt;
+</span><span class="line">    &lt;armature name="battles_effect"&gt;
+</span><span class="line">      &lt;b name="fsa" x="17" y="-52.95" kX="0" kY="0" cX="1" cY="1" pX="150" pY="120" z="0"&gt;
+</span><span class="line">        &lt;d name="battles_effect0001" pX="0" pY="0"/&gt;
+</span><span class="line">        &lt;d name="battles_effect0002" pX="0" pY="0"/&gt;
+</span><span class="line">      &lt;/b&gt;
+</span><span class="line">    &lt;/armature&gt;
+</span><span class="line">  &lt;/armatures&gt;
+</span><span class="line">  &lt;animations&gt;
+</span><span class="line">    &lt;animation name="battles_effect"&gt;
+</span><span class="line">      &lt;mov name="walk" dr="4" to="6" drTW="4" lp="0" twE="NaN"&gt;
+</span><span class="line">        &lt;b name="fsa" sc="1" dl="0"&gt;
+</span><span class="line">          &lt;f x="17" y="-52.95" cocos2d_x="-133" cocos2d_y="-172.95" kX="0" kY="0" cX="1" cY="1" pX="150" pY="120" z="0" dI="0" dr="1"/&gt;
+</span><span class="line">          &lt;f x="17" y="-52.95" cocos2d_x="-133" cocos2d_y="-172.95" kX="0" kY="0" cX="1" cY="1" pX="150" pY="120" z="0" dI="1" dr="1"/&gt;
+</span><span class="line">        &lt;/b&gt;
+</span><span class="line">      &lt;/mov&gt;
+</span><span class="line">    &lt;/animation&gt;
+</span><span class="line">  &lt;/animations&gt;
+</span><span class="line">  &lt;TextureAtlas name="battles_effect" width="1024" height="512"&gt;
+</span><span class="line">    &lt;SubTexture name="battles_effect0004" width="300" height="240" cocos2d_pX="0" cocos2d_pY="0" x="604" y="0"/&gt;
+</span><span class="line">    &lt;SubTexture name="battles_effect0003" width="300" height="240" cocos2d_pX="0" cocos2d_pY="0" x="0" y="242"/&gt;
+</span><span class="line">  &lt;/TextureAtlas&gt;
+</span><span class="line">&lt;/skeleton&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这是一个简单地骨骼动画文件。它分为三个部分，第一个部分是<armatures></armatures>，表示有几个骨骼小人，他的名字就是我们要创建骨骼小人是用到的参数,第二个部分就是<animations></animations>他表示上面对应骨骼小人的动画，位置，缩放，关键帧事件等信息，它里面每一个mov表示小人能做的动作，比如walk，表示小人能播放走路的动画。第三个部分<textureatlas></textureatlas>表示对应的骨骼小人用到的图片资源。</p>
+
+<p>然后，我们将生成的素材资源放到xcode的工程的Resource目录下面，通过上面提供的函数和方法就可以创建出来一个简单的骨骼小人了。</p>
+
+<p>在cocoschina的官方论坛上关于此部分有详细的讲解<a href="http://www.cocoachina.com/bbs/read.php?tid=158607">直达论坛</a></p>
+
+<p>我们今天要讲的就是如果让小人换装。但是保持的动作不变。也就是上面提到了三个文件，只需要变化一个文件即可！<br />
+既然要变装，那就是改变显示的样子，只要变化png那个文件即可。这样从应用的size角度考虑，我们能够节省不少的资源。</p>
+
+<p>也就是说动画信息文件不变，也就是里面要求的SubTexture也不会变化，那么怎么做到换装呢？能够想到的就是在解析这个xml文件的时候对其进行修改，到指定的png中去获取对应的图片。而我们在传入参数的时候是不是只要传入新的png地址就可以了呢？理论上是这样的，但是实际做起来又不是这样子。<br />
+我们先看加载资源的时候cocos2dx做了什么事情？</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void CCArmatureDataManager::addArmatureFileInfo(const char *imagePath, const char *plistPath, const char *configFilePath)
+</span><span class="line">{
+</span><span class="line">    addRelativeData(configFilePath);
+</span><span class="line">
+</span><span class="line">    m_bAutoLoadSpriteFile = false;
+</span><span class="line">    CCDataReaderHelper::sharedDataReaderHelper()-&gt;addDataFromFile(configFilePath);
+</span><span class="line">
+</span><span class="line">    addSpriteFrameFromFile(plistPath, imagePath, configFilePath);
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>addRelativeData是以configFilePath为key去检查是否有缓存一个CCRelativeData的数据，如果没有则创建一个。然后CCDataReaderHelper去加载configFilePath文件。<br />
+addSpriteFrameFromFile则是根据plist中的配置去切割png图片。</p>
+
+<p>然后再CCDataReaderHelper中我们继续往下看，发现她使用如下命令<code>CCDataReaderHelper::addDataFromCache(load_str.c_str(), &amp;dataInfo);</code>会处理xml文件。<br />
+而在这个函数里面则按照我们上面说得讲xml文件分成了三部分进行解析。<br />
+并且将解析出来对应的CCArmatureData，CCAnimationData，CCTextureData都存到了以上面提到的CCRelativeData数据中。</p>
+
+<p>而addSpriteFrameFromFile最终调用的就是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">CCSpriteFrameCache::sharedSpriteFrameCache()-&gt;addSpriteFramesWithFile(plistPath, imagePath);</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>这样一来我们加载的图片资源都要存到了CCSpriteFrameCache的一个大的表<code>m_pSpriteFrames</code>中。<br />
+问题来了，<code>m_pSpriteFrames</code>里是图片的名字为查找索引的，而我们没有改变plist文件，那么也就是两张图片最终会再这里被重叠覆盖。因此也就达不到换装的目的。<br />
+那么关键的一步就是让<code>m_pSpriteFrames</code>里面的图片名字发生变化，即我们读到了plist，但不完全plist里面记录的名字为准，还需要我们自己的变化。<br />
+由于这里面名字发生了变化，也就是上面那个xml里面SubTexture对应的名字也要发生变化，armature下面d<br />
+标签对应的名字也要发生变化。<br />
+这样我们只需要在<code>CCDataReaderHelper::addDataFromCache(load_str.c_str(), &amp;dataInfo);</code>函数里面对上面提到的两处进行处理即可。参数dataInfo就是下面提到的DataInfo结构体。</p>
+
+<p>我们只需要需要传入一个参数，用于区分是否是加载换装资源。</p>
+
+<p>CCSpriteFrameCache里面函数</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void addSpriteFrameFromFile(const char *plistPath, const char *imagePath, const char *configFilePath = "",const char *prefix = "");</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>CCArmatureDataManager里面函数处理</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void addArmatureFileInfo(const char *imagePath, const char *plistPath, const char *configFilePath, const char* prefix= "");</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>DataInfo结构体增加一个prefix</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">typedef struct _DataInfo
+</span><span class="line">{
+</span><span class="line">    AsyncStruct *asyncStruct;
+</span><span class="line">    std::queue&lt;std::string&gt;      configFileQueue;
+</span><span class="line">    float contentScale;
+</span><span class="line">    std::string    filename;
+</span><span class="line">    std::string    baseFilePath;
+</span><span class="line">    std::string    prefix;
+</span><span class="line">    float flashToolVersion;
+</span><span class="line">    float cocoStudioVersion;
+</span><span class="line">} DataInfo;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>讲到这里，大家是否心里已经对换装有所了解了。上面的方式是从根本上直接解决问题。当然还有另外一种方法。<br />
+比如我们只需要换一个头部资源。可以通过对骨骼小人的骨头规则命名拿到头部骨头数据CCBone。</p>
+
+<p>伪代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local headDisplayData = CCDisplayData:create()
+</span><span class="line">headDisplayData.displayType = CS_DISPLAY_SPRITE
+</span><span class="line">headDisplayData.name = "new_head.png"
+</span><span class="line">armature:getBone("head")-&gt;addDisplay(headDisplayData,0); </span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>但是这种方法有个问题就是如果头部骨头，在做动画中又切换了新的图片，你就会非常痛苦，图片又换回去了！<br />
+因此需要保证头部骨头不要发生变化。</p>
+
+<p>大家可以根据具体的需求，比较看看那个更符合自己的要求。</p>
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-11-22T17:33:52+08:00'><span class='date'>2015 年11 月22 日</span> <span class='time'>5:33 pm</span></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocos2dxgu-ge-dong-hua-huan-zhuang/'>cocos2dx骨骼动画换装</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang" data-via="" data-counturl="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/11/18/lua-setfenv" title="Previous Post: setfenv有何用？">&laquo; setfenv有何用？</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/11/22/git-remove-branch-remotely" title="Next Post: git如何在本地和远端都删除相关的分支">git如何在本地和远端都删除相关的分支 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/dev-certification-provision2">Certificate与provision Profiles 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/dev-certification-provision1">Certificate与provision Profiles</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/the-last-of-us-story">The Last of Us 故事板</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/22/git-remove-branch-remotely">Git如何在本地和远端都删除相关的分支</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang">Cocos2dx如果实现骨骼动画的换装</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (7)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

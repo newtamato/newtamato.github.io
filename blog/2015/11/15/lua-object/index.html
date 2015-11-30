@@ -1,0 +1,328 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Lua一份模板创建多个对象 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="上一章，我们说过reuqire其实就是将一份已经加载过得数据返回，因此多次加载一份文件，其实就是一个数据，而不是多个。
+那么如何实现多个呢？ 只要我们脑洞大开，就可以发现其实只要通过setmetatable就能够巧妙地实现这个问题。
+只要我们将require进来的数据作为另一个表数据的元数据， &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2015/11/15/lua-object">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="//fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="//fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-70121917-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
+  
+    <h2>A blogging framework for hackers.</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Lua一份模板创建多个对象</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+<time class='entry-date' datetime='2015-11-15T20:48:08+08:00'><span class='date'>2015 年11 月15 日</span> <span class='time'>8:48 pm</span></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>上一章，我们说过reuqire其实就是将一份已经加载过得数据返回，因此多次加载一份文件，其实就是一个数据，而不是多个。<br />
+那么如何实现多个呢？</p>
+
+<!--more-->
+<p>只要我们脑洞大开，就可以发现其实只要通过setmetatable就能够巧妙地实现这个问题。<br />
+只要我们将require进来的数据作为另一个表数据的元数据，是不是就算是已经创建了一个新的对象呢？比如</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">b = {}
+</span><span class="line">setmetatable(b,{__index =  a})</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>此时我们require了A，创建了模块A的数据并把它作为b的元表，而B是一个非常干净的table，它是否就相当于a的一个对象呢？<br />
+ 想想这样和其他语言的创建对象是否如出一辙呢？如此一来，我们就可以多次创建。比如</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">c = {}
+</span><span class="line">c.x = 10
+</span><span class="line">c.y = 100
+</span><span class="line">setmetatable(c,{__index =  a})
+</span><span class="line">d = {}
+</span><span class="line">setmetatable(d,{__index =  a})</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>看，这样b,c,d都是以a为元表。每个表都可以有自己的数据并不影响彼此（只要元表不改变）。<br />
+A.lua 的结构如下：</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local A = {}
+</span><span class="line">A.number1 = 1
+</span><span class="line">A.number2 = 1
+</span><span class="line">function A.doAction()
+</span><span class="line">	print(string.format("doAction:%d",(A.number1+A.number2)))
+</span><span class="line">end 
+</span><span class="line">function A.moveToPosition(x,y)
+</span><span class="line">	print(string.format("we want to move to %d,%d",x,y))
+</span><span class="line">end 
+</span><span class="line">return A</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>但是这个A里面怎么操作我们自己的数据呢？比如我们想在<code>doAction</code>中调用b自己的数据,但是你看这个函数里面定义的是将A的number1和number2进行了加法。如果我们的b也有这两个变量，会不会调用的就是b的变量呢？</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">b = {}
+</span><span class="line">b.number1 = 10
+</span><span class="line">b.number2 = 10
+</span><span class="line">setmetatable(b,{__index =  a})
+</span><span class="line">b.doAction()</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>但是打印的却是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">doAction:2</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>这说明最终使用的还是a的变量，怎么才能让它调用b自身的变量呢？</p>
+
+<p>简单地方法就是将b作为参数传给doAction。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">function A.doAction(tableData)
+</span><span class="line">	print(string.format("doAction:%d",(tableData.number1+tableData.number2)))
+</span><span class="line">end </span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>如此当b调用doAction的时候，就需要<code>b.doAction(b)</code>这样子！这非常奇怪，但也能够容忍。<br />
+有没有别的方法呢？<br />
+是的，有。lua提供另外一种语法来解决这个问题。可以讲调用者自己传到函数中做第一个参数。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">function A:doAction()
+</span><span class="line">	print(string.format("doAction:%d",(self.number1+self.number2)))
+</span><span class="line">end </span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>仔细看，这个函数和上面的定义最大的区别就是用了冒号。如此一来，在函数里面就可以用self来指示函数的调用者。<br />
+因此，我们的调用方式就变成了<code>b:doAction()</code>即可！</p>
+
+<p>讲到此处，你是否对lua有一个整体的感受了。如果不懂也没有关系，报错也没有关系，请下载我上一篇文章推荐的zerobrain studio编辑器。通过断点调试一点点的尝试，你就能够很快明白的！</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+<time class='entry-date' datetime='2015-11-15T20:48:08+08:00'><span class='date'>2015 年11 月15 日</span> <span class='time'>8:48 pm</span></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2015/11/15/lua-object" data-via="" data-counturl="http://www.newtomato.me/blog/2015/11/15/lua-object" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/11/15/lua-require" title="Previous Post: lua中require到底做了什么事情？">&laquo; lua中require到底做了什么事情？</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/11/15/serpent-for-lua" title="Next Post: Serpent：lua序列化和pretty的输出">Serpent：lua序列化和pretty的输出 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/dev-certification-provision2">Certificate与provision Profiles 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/dev-certification-provision1">Certificate与provision Profiles</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/the-last-of-us-story">The Last of Us 故事板</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/22/git-remove-branch-remotely">Git如何在本地和远端都删除相关的分支</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang">Cocos2dx如果实现骨骼动画的换装</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (7)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

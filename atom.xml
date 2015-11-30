@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-14T11:09:33+08:00</updated>
+  <updated>2015-11-30T10:47:46+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,1213 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Certificate与provision Profiles 2]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2"/>
+    <updated>2015-11-29T20:10:15+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2</id>
+    <content type="html"><![CDATA[<p>我们在创建Certificate的时候，要求先自己生成一个CSR文件。<br />
+<img src="http://www.newtomato.me/images/1448076369836.png" alt="Alt text" /><br />
+<!--more--><br />
+生成的这个CSR文件，用sublime打开之后，里面的样子如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">-----BEGIN CERTIFICATE REQUEST-----
+</span><span class="line">MIIByjCCATMCAQAwgYkxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+</span><span class="line">MRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRMwEQYDVQQKEwpHb29nbGUgSW5jMR8w
+</span><span class="line">HQYDVQQLExZJbmZvcm1hdGlvbiBUZWNobm9sb2d5MRcwFQYDVQQDEw53d3cuZ29v
+</span><span class="line">Z2xlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEApZtYJCHJ4VpVXHfV
+</span><span class="line">IlstQTlO4qC03hjX+ZkPyvdYd1Q4+qbAeTwXmCUKYHThVRd5aXSqlPzyIBwieMZr
+</span><span class="line">WFlRQddZ1IzXAlVRDWwAo60KecqeAXnnUK+5fXoTI/UgWshre8tJ+x/TMHaQKR/J
+</span><span class="line">cIWPhqaQhsJuzZbvAdGA80BLxdMCAwEAAaAAMA0GCSqGSIb3DQEBBQUAA4GBAIhl
+</span><span class="line">4PvFq+e7ipARgI5ZM+GZx6mpCz44DTo0JkwfRDf+BtrsaC0q68eTf2XhYOsq4fkH
+</span><span class="line">Q0uA0aVog3f5iJxCa3Hp5gxbJQ6zV6kJ0TEsuaaOhEko9sdpCoPOnRBm2i/XRD2D
+</span><span class="line">6iNh8f8z0ShGsFqjDgFHyF3o+lUyj+UC6H1QW7bn
+</span><span class="line">-----END CERTIFICATE REQUEST-----</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这里面包含了什么信息呢 ？<br />
+<img src="http://www.newtomato.me/images/1448076787997.png" alt="Alt text" /><br />
+<a href="https://www.sslshopper.com/what-is-a-csr-certificate-signing-request.html">来源</a></p>
+
+<p>从上面的表格，我们可以看到这里面包含了我们生成它的时候填写的信息还有一个关键的就是public key。<br />
+也就是说我们在生成CSR文件的时候，还声称了一个public key。因此我们可以在keychain中检查以下是否真的有这个public key。<br />
+<img src="http://www.newtomato.me/images/1448076932966.png" alt="Alt text" /><br />
+果然，在keychain中有一个钥匙对，私钥和公钥。<br />
+CSR自动包含了公钥，然后我们将这个CSR文件提交给苹果的member center。<br />
+<img src="http://www.newtomato.me/images/1448077003733.png" alt="Alt text" /><br />
+此时会生成.cer文件。将此文件下载下来，双击安装。此时在keychain当中就会将我们的私钥和这个certificate绑定起来。<br />
+<img src="http://www.newtomato.me/images/1448077535385.png" alt="Alt text" /></p>
+
+<p>这个certificate就是验证开发者身份。</p>
+
+<p>接下来的mobileprovision则是验证开发者权限的。<br />
+我们将自己生成的开发版mobileprovision打开看看。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;key&gt;Entitlements&lt;/key&gt;
+</span><span class="line">  &lt;dict&gt;
+</span><span class="line">    &lt;key&gt;keychain-access-groups&lt;/key&gt;
+</span><span class="line">      &lt;array&gt;
+</span><span class="line">          &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
+</span><span class="line">      &lt;/array&gt;
+</span><span class="line">      &lt;key&gt;get-task-allow&lt;/key&gt;
+</span><span class="line">      &lt;true/&gt;
+</span><span class="line">      &lt;key&gt;application-identifier&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
+</span><span class="line">      &lt;key&gt;com.apple.developer.team-identifier&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;L23FMABA6X&lt;/string&gt;
+</span><span class="line">      &lt;key&gt;aps-environment&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;development&lt;/string&gt;
+</span><span class="line">  
+</span><span class="line">  &lt;/dict&gt;
+</span><span class="line">	
+</span><span class="line">	...
+</span><span class="line">
+</span><span class="line">  &lt;key&gt;ProvisionedDevices&lt;/key&gt;
+</span><span class="line">  &lt;array&gt;
+</span><span class="line">      &lt;string&gt;11f30c7340e54187e93e1d085f85574570206cd9&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;0545f62295c9f117e2d6c19131df55444b0b8444&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8bcbf9be5476b09969fa597bf38f3949ed9b6e7d&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;57a453b5e5f39618c4e09d6399efff2e2d0b59a4&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;eff3c07516897e04c5d2aefaf91c2cf05e13a933&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;5256d0acb2218cef2748641582c4993c0f193ed9&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;030662def7e5fc03311f20891f0944f2b7f73251&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;a3216d9f5e611dd1f76e45858432d9c5e945d73c&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;cdd59a0a353c66a75a86a8419598a83a4db98e7c&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;7001583678ac38d05b18928d049098329531d3e3&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8bd9c88be11675b7ef71de1d6122ba95292a3472&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;bd63797509b861368e5a293717537b909d58c846&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;89f4b347703111b0067b79d7d4226684d6efe6a3&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;01798a0796437ae7eff5dddb3a442912ae57d50e&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;6a7cf9c50f068ddcca529f589e3d70141c8f85de&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;3c6e42454f9c551abc1738836ebf7a9513a90afa&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;cad8d51523e6fdb4d96fc33df65376545a9a683e&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;7b3a694a86e1d54e942ae1cbe6498eba4b2e68c6&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c&lt;/string&gt;
+</span><span class="line">  &lt;/array&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>里面明确的告诉了我们aps-environment和相关的设备序列号。以及keychain-access-groups，在这里他告诉我们要使用keychain当中一个L23FMABA6X的文件。这是什么呢？可以打开keychain到Certificate当中检查一下，这就是我们刚才上面生成的! 如此一来mobileprovision就和我们的Certificate绑定在一起了。</p>
+
+<p>因此一个开发版的mobileprovision包含的内容有，appID, 开发设备，以及Certificate等内容<br />
+如果我们生成的是Production版本的证书又该是什么样子呢？这个大家可以去试试看。</p>
+
+<p>最后，<a href="http://0xc010d.net/mobileprovision-files-structure-and-reading/">iDev blog</a>的作者提供了一个工具，用于检测证书的类型。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f &lt;fileName&gt; [-o &lt;option&gt;]</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>例：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision
+</span><span class="line">
+</span><span class="line">debug</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision -o devices
+</span><span class="line">
+</span><span class="line">11f30c7340e54187e93e1d085f85574570206cd9
+</span><span class="line">0545f62295c9f117e2d6c19131df55444b0b8444
+</span><span class="line">...
+</span><span class="line">8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec
+</span><span class="line">a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这样也能够方便的知晓证书的基本信息。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Certificate与provision Profiles]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1"/>
+    <updated>2015-11-29T20:04:52+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1</id>
+    <content type="html"><![CDATA[<p>作为需要将应用上传到App Store的开发者，我们肯定会遇到一个有意思的问题，那就是申请AppId和开发者证书。</p>
+
+<p>开发者证书主要有两种类型。Developer Program 和Enterprise Program 。前一种就是99美金的开发者证书，而后一种就是299美金的开发者证书，具体的区别请参看下图：<br />
+<img src="http://www.newtomato.me/images/iOS.png" alt="Alt text" /><br />
+<!--more--></p>
+
+<p>其中有一个AdHoc的发布方式，认为可以将应用发布到100个设备上面，但是必须将这100个设备的UUID也放到证书当中，否则设备是无法运行应用的。<br />
+而In House的发布方式，则非常的简单，可以不需要uuid就可以装在设备上。<br />
+申请开发者证书 步骤如下：<br />
+1. 通过自己的开发者账号进入到个人后台，前提是你已经购买了99美金或者299美金的开发者资格。<br />
+2. 进入申请证书界面。<br />
+3. 选择Certificates<br />
+<img src="http://www.newtomato.me/images/1447855210829.png" alt="Alt text" />。<br />
+下面会要求你上传一个签名，此签名作用非常的大，后面我们在说。生成签名的方式也很简单，因为只要你用苹果电脑开发，就会在keychain中申请一个签名。<br />
+4. 提交了自己生产的CSR( Certificate Signing Request )文件。就会生成一个p12文件。需要将其下载下来。<br />
+5. 接下来生成mobileprovision文件。<br />
+<img src="http://www.newtomato.me/images/1447987845690.png" alt="Alt text" /><br />
+上面我们看到有identifier和Devices，暂时可以不用设置，我们生成mobileprovision的时候会要求我们设置的。<br />
+按照苹果的要求填写，最后会生成一个mobileprovision文件。同样也要下载下来。</p>
+
+<p>接下来就要将其和我们的xcode结合在一起。<br />
+1. 双击p12文件安装。他会自动安装到mac电脑的keychain中。用于验证我们的身份。<br />
+2. 双击mobileprovision文件。他会自动的安装到~/Library/MobileDevice/Provisioning\ Profiles下面。<br />
+也可以通过xcode的账户同步功能，将开发者账号下面的mobileprovision同步下来。<br />
+<img src="http://www.newtomato.me/images/1447988460200.png" alt="Alt text" /></p>
+
+<p>这样做了之后，我们点击自己工程的的build setting，在其下面的code signing就可以看到mobileprovision<br />
+<img src="http://www.newtomato.me/images/1447988655673.png" alt="Alt text" /><br />
+点击选择我们自己的mobileprovision即可！</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[The Last of Us 故事板]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/29/the-last-of-us-story"/>
+    <updated>2015-11-29T18:08:09+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/29/the-last-of-us-story</id>
+    <content type="html"><![CDATA[<p><img src="http://www.newtomato.me/images/thelou2.jpg" alt="Alt text" /></p>
+
+<p>The Last of Us是由著名工作室顽皮狗第二团队秘密开发两年的作品，讲述了人类因现代传染病而面临绝种危机，当环境从废墟的都市再度自然化时，幸存的人类为了生存而自相残杀的故事。但是和以往的同类题材游戏有着很大的不同，两名主角个性鲜明，在探索困境下人类的心里波动，突出放大主角们的心里活动。<br />
+游戏在还未正式发售时，就已经提前征服了各大游戏媒体，截止到2013年6月它已经获得了共计30个媒体的满分。这些给出满分评价的网站媒体中包括IGN、Eurogamer、CVG、Edge等一干著名媒体，[1]  并在2013年大部分游戏媒体中享有极高的评价。</p>
+
+<p>今天我们开始讲讲这部经典之作所讲述的故事。<br />
+<!--more--></p>
+
+<p><img src="http://www.newtomato.me/images/15.jpg" alt="Alt text" /><br />
+故事一开始是下班回来的大叔乔和自己的女儿sari在聊天，当天晚上是大叔的生日，懂事的sari给大叔送了一块手表。他们的互动和后面几处消息及可以看得出父女两人关系非常亲密。这为后面大叔失去了女儿做了铺垫。</p>
+
+<p><img src="http://www.newtomato.me/images/7.jpg" alt="Alt text" /><br />
+接下来，瘟疫爆发了。而人们还在熟睡中。sari被叔叔tommy的电话吵醒。电话打来是找他爸爸乔的。但是乔不在。sari只好下楼找乔。这是电视机里面播放着人们对已经变异的人的一些报到，只是知道他们生病了，并不知道这种病及其具有传染性。上面是我找到的一张人变异之后的样子。</p>
+
+<p>变异大约分为4个阶段，意识变异被咬阶段。此时人还是人，伤口在不断扩散。然后到了第二阶段，人失去了意识，大脑被病毒入侵，如同行尸走肉。但是有意识的到处去找别的活人。吃他们似乎是这种行尸走肉的本能。然后再接着进化，变成第三种，就是上图展示的那种，真个大脑已经裂开，人变得面目全非。此时这种动物无法靠视觉来分辨人，只能靠听觉，因此被成为遁声者。发出滴滴的声音。如果这些遁声者没有死亡，那么接下来就会进化到第四个阶段，他们会在某个地方像发霉腐烂的食物一样开始腐化，并同时散发出孢子，这种东西如果人吸入，就会被感染病毒。因此后面你会看到大叔乔遇到孢子总是要带上防毒面具。而自身有抗体的艾丽则不需要。</p>
+
+<p>罗伯特<br />
+时间一晃到了20年之后，乔已经成了大叔。他靠做一些“生意”来为生。图上是他和自己的伙伴泰丝在讨论。他们有一笔枪，是在罗伯特手里，本来罗伯特是要将这笔枪交给他们的，但是罗伯特出于别的考虑给了火莹。并且暗中派人要杀死泰丝。泰丝这种身手矫健，头脑清晰的女人一眼就看破罗伯特的阴谋，因此干死了派来杀死自己的人之后找到了乔。两个人商量去找罗伯特谈谈“生意”。</p>
+
+<p>一路上危险重重自不必说。<br />
+<img src="http://www.newtomato.me/images/18.jpg" alt="Alt text" /><br />
+<img src="http://www.newtomato.me/images/泰丝.png" alt="泰丝" /><br />
+<img src="http://www.newtomato.me/images/若波.png" alt="Alt text" /></p>
+
+<p>最终在找到了罗波之后，从罗波口中得到，原本要给大叔乔他们的那批武器给了firefly皇后。一怒之下泰丝就杀死了罗波。</p>
+
+<p>正在他们苦于怎么找回武器的时候，firefly皇后出现了！<br />
+<img src="http://www.newtomato.me/images/firfly.png" alt="Alt text" /></p>
+
+<p>看样子她身受重伤，她来找罗波本想和罗波谈另外一笔生意，但是罗波已近死了，于是她决定让乔和泰丝做这笔生意，就是就“货”运出城。一开始泰丝有些犹豫，但是皇后答应一旦成功，将给与双倍的武器做交换。泰丝便答应了下来。</p>
+
+<p>当然第一次我们的大叔乔和艾丽之间的相处是很不愉快的。大叔心理防备重，他对艾丽身份很好奇。抱有很大的疑问。<br />
+接下来按照计划，他们开始运送艾丽出城，当天晚上刚好下雨。在一条排水沟里被巡逻的警察抓到，原本不是很紧张的事情，但却暴露出艾丽感染者的身份。于是三人只好开始躲避巡逻队，逃到了另一个下水道里。泰丝对此有着积极的想法，一定要把艾丽送到指定的地点，而乔却不这么认为。但是最后只要服从了泰丝。于是他们在雨夜继续前行。</p>
+
+<p><img src="http://www.newtomato.me/images/雨夜2.jpg" alt="Alt text" /><br />
+<img src="http://www.newtomato.me/images/雨夜3.jpg" alt="Alt text" /></p>
+
+<p>他们将要穿过一座大楼，当然大楼里面也是危机重重，时不时的会有一堆的丧尸等着要打！<br />
+<img src="http://www.newtomato.me/images/雨夜大楼.jpg" alt="Alt text" /></p>
+
+<p>最终他们穿过大楼，穿过博物馆，来到了目的地，议会大楼。<br />
+<img src="http://www.newtomato.me/images/议会大楼.jpg" alt="Alt text" /></p>
+
+<p>在这里，火莹的接头人已经被军队的人干掉了，同时乔知道了泰丝已经感染。军队的人也发现了他们，泰丝告诉乔，艾丽才是我们的希望，于是让乔和艾丽离开，自己一个人对付将来来临的危险。</p>
+
+<p>乔只好和艾丽离开。接下来，乔决定去找比尔，比尔可以给他弄一辆车。<br />
+<img src="http://www.newtomato.me/images/bier.png" alt="Alt text" /><br />
+比尔一个人住在一个小镇上，以僵尸为伴，既让他们为自己抵挡外面的危险，又设计重重陷阱，不让僵尸过来伤害自己，是一个非常聪明的发明天才。<br />
+他脾气暴躁，但是为人仗义。答应给乔搞到一辆汽车。于是他们三人一起来到了废弃的学校，这里刚好有一辆车，里面有可以启动的电池。<br />
+历经磨难，终于在比尔的好基友的屋子里找到了电池和汽车。好基友弗拉克想要离开小镇，于是自己冒着危险去取电池，却感染了病毒。为了防止自己发病，成为不人不鬼的样子，自己上吊死了。<br />
+搞到了车，乔和艾丽便离开了小镇。继续寻找火莹。<br />
+<img src="http://www.newtomato.me/images/离开比尔.jpg" alt="Alt text" /></p>
+
+<p>他们来到了匹兹堡，这里有更坏的人盘踞在这里。抢劫财物，杀死弱者，用于玩乐。大叔和艾丽也是步步为营小心谨慎的往前走。但是在一个饭店里，大叔乔把艾丽推上去之后，自己从电梯那里掉了下去！两个人第一次分离。大叔寻找从地下室到上面的路。在马上要逃出去的时候，被一个杂兵甲给抓住了，命悬一线，艾丽及时出现。一枪毙命。打死了杂兵！大叔面上不说，但是心里还是很感激的！<br />
+<img src="http://www.newtomato.me/images/信任.jpg" alt="Alt text" /><br />
+然后大叔和艾丽两人合作把饭店旁边的一干散兵游勇全给干掉了！<br />
+<img src="http://www.newtomato.me/images/授枪.jpg" alt="Alt text" /></p>
+
+<p>经此一役，大叔和艾丽之间开启了一种伙伴合作模式。大叔开始教艾丽怎么用枪。双方亲密度明显提升！</p>
+
+<p>继续前行之后，竟然遇到了一辆无敌坦克。大叔和艾丽被追着打。几乎不敢抬头。也由此遇到了亨利汤姆兄弟。两人和自己的队伍冲散了，先下的目标是要找到火莹基地。成为拯救世界的一员。亨利对这个汤姆弟弟真的是关心爱护至极。几次危险都最新考虑的是汤姆，包括后来，本来已经和大叔乔达成一致，一起离开，但是最后架不住后面急切的追兵，最终是丢下了乔，自己带着汤姆先跑了。<br />
+后来大叔乔和艾丽一起跳海，躲过了坦克的追击。被海水冲到岸上后与亨利会和。二人再次决定一起合作，寻找出路。于是在经历下水道“意外”后，四人在郊区的一处住宅区被一群敌人再次困住。但是这也难不住大叔乔的。但是不幸的是打死敌人之后，又来了一批僵尸。这次僵尸的袭击，就感染了汤姆。亨利也因此失去了活下去的希望，饮弹自杀。</p>
+
+<p>秋天到了。<br />
+冷冷的雨水打湿了乔和艾丽的衣物，两人继续前行。来到一处水坝这里。意外的遇到了大叔乔的弟弟tommy。真是天无绝人之路，tommy和自己的妻子玛利亚在这里带领大家一起保卫家园。正如tommy说的这里给了他们这些人第二次机会。大叔乔和tommy讲了艾丽的事情，希望tommy能够帮忙把艾丽送到火莹那里，因为tommy以前是火莹的成员，因为主张不同，从火莹那里离开了。<br />
+<img src="http://www.newtomato.me/images/tommy.png" alt="Alt text" /><br />
+大叔本以为会得到tommy的认可，但是tommy已经和以前不同了，他现在更关心自己的家人。两人差一点打起来。刚好出气筒来了，正是附近的一些散兵。二人共同协作一起打败了敌人。或许是往昔那种惺惺相惜的感情又回来了，tommy最终答应了由他来负责把艾丽送到火莹。<br />
+这件事情乔并未和艾丽商量，但是机敏的艾丽早就察觉了，愤而离开了。<br />
+大叔和tommy只好出去寻找艾丽。<br />
+此时是大叔和艾丽第一次发生冲突。此时艾丽认为自己和大叔之间是互相依靠的，是不会抛弃彼此的，但是大叔却把他交给tommy，从此似要分道扬镳了。大叔则担心自己不能完成护送艾丽到火莹基地的任务，交给tommy是正确明智的选择。两人争吵过后，心结也就解开了。</p>
+
+<p>接下来告别弟弟tommy，大叔乔和艾丽去盐湖城寻找火莹的医院，医院在一个大学里面。 大学里面不用说也是陷阱重重，危机四伏，不仅仅要对付僵尸还要对付意外冲进来的散兵。在紧张激烈的冲突下，大叔乔被一个散兵推倒了楼下，被一个钢管贯穿！艾丽一边顾着大叔，一边射杀那些前来杀他们的人。终于保住性命逃了出去。此时冬天也来临了。漫天飘散着冰冷的雪花。<br />
+<img src="http://www.newtomato.me/images/1448790842144.png" alt="Alt text" /></p>
+
+<p>大叔的伤非常的重，如果没有抗生素之类的药物恐怕活不下去。艾丽安顿好大叔，便开始四处找药。冬天异常寒冷，但是却没有冻死那些僵尸和前来找麻烦的人。此时艾丽想起自己的好朋友莱利。莱利和自己同时被僵尸感染，但是莱利没有自己幸运。（两人感染后莱利肯定先发病了，身边只有艾丽，我想当时艾丽也是迫不得已只能杀死她，自己的好朋友死在自己手里，估计这种痛要伴随一生的吧。）想到她和大叔乔在大坝附近的农场争吵那次，艾丽说自己认为重要的人一个一个都离开了自己，只剩下孤单的自己。为了不让大叔死去，艾丽真是拼尽所有，先是在一家大型商场找到了一架坠地的急救飞行机，在里面刚好有一个急救包。给大叔争取了一些时间，接下来又遇到了变态恋童癖的大卫。从大卫手里拿到了药。但是也因此暴露了自己的行踪。<br />
+<img src="http://www.newtomato.me/images/1448791072332.png" alt="Alt text" /></p>
+
+<p>起初的大卫给人一种和善可靠的感觉，甚至把手里最好用的来福枪给了艾丽，共同击退了一波一波的僵尸和遁声者。但是事实上大卫一开始就认出了艾丽，他的手下就是大叔乔在匹兹堡那里干掉的那一帮人。大卫派他们出去寻找”食物”。结果只一个人活着回来报告了消息。因此大卫是不可能放过大叔乔的，但是他没想到艾丽这么优秀，让他产生了浓厚的兴趣，因此想自己把艾丽招安到自己这里，成为自己的宠物。艾丽发现了真相，开始逃跑，为了不让他们发现大叔乔的落脚点，便以自己为诱饵逃了出去，但毕竟自己是个孩子，很快就又被大卫给抓住了。<br />
+<img src="http://www.newtomato.me/images/1448791224205.png" alt="Alt text" /></p>
+
+<p>大卫开始说服她，不然就把她当食物分食。艾丽趁机拗断了大卫的大拇指！惹怒了大卫，大卫便叫来了詹姆斯决定对艾丽开膛破肚。艾丽适时的讲出自己是感染者的事情，刚好为保命拖延时间找准了时机跑了出去。然后大卫便开始让一众人等开始搜寻艾丽，杀无赦！此时天降大雪，狂风席卷暴雪吹得人睁不开眼睛。艾丽在雪中艰难的前行，躲避着那些随时都会要了自己命的敌人。</p>
+
+<p>而此刻的大叔则刚刚醒过来，艾丽不在，他记得艾丽走的时候说的那番话，此时艾丽生死未卜，大叔急忙带上背包出去寻找艾丽。果然外面碰上了那些在寻找自己的大卫的狗腿！从狗腿口中，大叔知道了艾丽的下落。至少艾丽还活着，大叔则往大卫的那个小镇继续前行。</p>
+
+<p>而此时的艾丽则逃到了一个酒吧里，修养片刻，准备出发，没料到竟然被大卫发现，大卫左手持砍刀，右手枪的闯进来要杀死艾丽，艾丽手里则只有一个小刀，因此只能与大卫周旋，不能硬拼。在周旋数次之后，艾丽终于捅死了大卫，但是自己也晕倒了。当她再次苏醒过来的时候，竟然是被大卫踹醒的。大卫还能苟延残喘！大卫想看到艾丽求饶，不停的去踹艾丽。此时编剧惯用伎俩再次显现！眼看没有希望了，总有一线生机，艾丽看到了一把匕首，再次给了大卫致命一击！场面过于血腥！几近逼疯艾丽。<br />
+大叔乔恰好赶到！艾丽终于安全了。<br />
+<img src="http://www.newtomato.me/images/1448791447750.png" alt="Alt text" /></p>
+
+<p>这个冬天真的很残酷！</p>
+
+<p>冬天过去，春天很快也就来了，大叔乔和艾丽继续赶路，去往火莹的实验室，艾丽和大叔聊起自己做的一个关于飞机的梦。她说自己看到飞机在坠毁，但是自己却无能为力。此处的暗示已经明显不过了。也为后来大叔救出艾丽埋下了一个伏笔。两人前行，途径一处公交车站，里面僵尸boss好多只，潜行火瓶好轻松。过了公交站就遇到了火莹的人。到了实验室！此时艾丽溺水，大叔被火莹逮捕，二人再次分开！</p>
+
+<p>醒来之后，火莹皇后对大叔的勇敢连连称奇！同时也告诉大叔他们拯救人类的方法就是将艾丽体内的抗体提取出来，通过反向工程，研制出对抗病毒的药物，但是由于艾丽体内的病毒已经感染到了脑部，提取抗体，也就意味着艾丽会死去。火莹皇后为此很难过但是她必须这么做，为了人类！但是大叔不这么认为，却已无法阻止。火莹皇后下令杀了大叔乔。于是为拯救艾丽也为拯救自己，大叔乔开始了团灭！从第一层开始，清理火莹的人！直到找到了顶层的手术室。救出了艾丽！但是却在停车场又被火莹皇后给堵住了。她动之以情的期望大叔能够回头是岸！人类需要艾丽，艾丽也希望牺牲自己拯救人类。大叔有点犹豫了！火莹皇后收起了枪，以此想让大叔自愿把艾丽交回来，这正好给了大叔一个反击的机会。乘机给了她一枪！如果让她活着，她会对艾丽穷追不舍！于是大叔只好干掉了火莹皇后！</p>
+
+<p>自己编了一套谎言，但是怎么能够瞒得过聪明的艾丽！艾丽没有戳穿他。大叔以为自己瞒过去了，心情轻松不少，两人决定去tommy的水坝！路上还愉快地和她讲起了自己以前常带着sari一起出去远行！这件事总要有个正式的结尾，艾丽一直想着这件事情，心事重重，快到水坝的时候，她问起了这件事情。大叔不是个善于撒谎的人，艾丽直视大叔的双眼，等待着大叔的答案！</p>
+
+<p>大叔乔的答案是什么已不重要了，重要的是艾丽心中相信的是什么！<br />
+<img src="http://www.newtomato.me/images/8.jpg" alt="Alt text" /></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Git如何在本地和远端都删除相关的分支]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/22/git-remove-branch-remotely"/>
+    <updated>2015-11-22T17:45:01+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/22/git-remove-branch-remotely</id>
+    <content type="html"><![CDATA[<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">git branch -r #查看本地和远端同步的分支
+</span><span class="line">origin/change_avatar_cloth
+</span><span class="line">origin/develop
+</span><span class="line">origin/master</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<!--more-->
+
+<p>通过命令<code>git branch -rd  branch_name</code>，将存在自己本地的remote分支删除。但是并没有通知远端。因此还需要如下的命令<code>git push origin: branch_name</code> 将本地的分支同步出去。<br />
+如果此时想要让别人同步服务器的分支，也就是和服务器保持一样，如果服务器的分支被删除了，本地的分支也照样删除，可以使用如下命令：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">git pull --prune</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>后来到stack overflow当中找到了高票答案</p>
+
+<blockquote>
+  <p>As of Git v1.7.0, you can delete a remote branch using<br />
+git push origin –delete <branchname>
+which is easier to remember than
+git push origin :<branchname>
+which was added in Git v1.5.0 &#8220;to delete a remote branch or a tag.&#8221;</branchname></branchname></p>
+</blockquote>
+
+<p>也就是说如果是1.7.0版本的Git，可以通过<code>git push origin --delete branch_name</code> 的方法去删除一个远端分支，而在1.5.0版本的Git重则可以直接使用<code>git push origin: branch_name</code> 的方法</p>
+
+<p>或者就是先批量通过删除本地remote的仓库，然后通过如下的方法<code>git push --prune origin</code>直接和远端和本地仓库做同步。也就是说如果本地remote分支不存在，那么远端也就删除掉。因此这个命令如同放大招，最好慎用。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cocos2dx如果实现骨骼动画的换装]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang"/>
+    <updated>2015-11-22T17:33:52+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang</id>
+    <content type="html"><![CDATA[<p>我的工作环境是:<br />
+quick cocos2dx 2.2.6<br />
+flash IDE dragbone官方的插件</p>
+
+<p>首先我们要知道如何创建一个骨骼动画，主要涉及到两个部分，一部分是做加载资源，一部分是根据刚刚加载的资源创建骨骼动画。</p>
+
+<!--more-->
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">#加载资源的函数
+</span><span class="line">    void addArmatureFileInfo(const char *configFilePath);
+</span><span class="line">
+</span><span class="line">    /**
+</span><span class="line">     *	@brief	Add ArmatureFileInfo, it is managed by CCArmatureDataManager.
+</span><span class="line">     *			It will load data in a new thread
+</span><span class="line">     */
+</span><span class="line">    void addArmatureFileInfoAsync(const char *configFilePath, CCObject *target, SEL_SCHEDULE selector);
+</span><span class="line">
+</span><span class="line">    /**
+</span><span class="line">     *	@brief	Add ArmatureFileInfo, it is managed by CCArmatureDataManager.
+</span><span class="line">     */
+</span><span class="line">    void addArmatureFileInfo(const char *imagePath, const char *plistPath, const char *configFilePath);
+</span><span class="line">
+</span><span class="line">    /**
+</span><span class="line">     *	@brief	Add ArmatureFileInfo, it is managed by CCArmatureDataManager.
+</span><span class="line">     *			It will load data in a new thread
+</span><span class="line">     */
+</span><span class="line">    void addArmatureFileInfoAsync(const char *imagePath, const char *plistPath, const char *configFilePath, CCObject *target, SEL_SCHEDULE selector);
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>而创建骨骼动画就很简单了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">bool CCArmature::init(const char *name)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>我们看到按照加载资源的函数要求，我们一般要提供三个文件，png，plist和一个config文件。这三个文件刚好是dragonbone插件为我们生成的。<br />
+<img src="http://www.newtomato.me/images/1448177716730.png" alt="Alt text" /></p>
+
+<p>然后就是创建，传入一个name参数，这个那么是什么呢？这就要我们打开生成的xml文件看一下它的结构了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;skeleton name="battles_effect" frameRate="24" version="2.2"&gt;
+</span><span class="line">  &lt;armatures&gt;
+</span><span class="line">    &lt;armature name="battles_effect"&gt;
+</span><span class="line">      &lt;b name="fsa" x="17" y="-52.95" kX="0" kY="0" cX="1" cY="1" pX="150" pY="120" z="0"&gt;
+</span><span class="line">        &lt;d name="battles_effect0001" pX="0" pY="0"/&gt;
+</span><span class="line">        &lt;d name="battles_effect0002" pX="0" pY="0"/&gt;
+</span><span class="line">      &lt;/b&gt;
+</span><span class="line">    &lt;/armature&gt;
+</span><span class="line">  &lt;/armatures&gt;
+</span><span class="line">  &lt;animations&gt;
+</span><span class="line">    &lt;animation name="battles_effect"&gt;
+</span><span class="line">      &lt;mov name="walk" dr="4" to="6" drTW="4" lp="0" twE="NaN"&gt;
+</span><span class="line">        &lt;b name="fsa" sc="1" dl="0"&gt;
+</span><span class="line">          &lt;f x="17" y="-52.95" cocos2d_x="-133" cocos2d_y="-172.95" kX="0" kY="0" cX="1" cY="1" pX="150" pY="120" z="0" dI="0" dr="1"/&gt;
+</span><span class="line">          &lt;f x="17" y="-52.95" cocos2d_x="-133" cocos2d_y="-172.95" kX="0" kY="0" cX="1" cY="1" pX="150" pY="120" z="0" dI="1" dr="1"/&gt;
+</span><span class="line">        &lt;/b&gt;
+</span><span class="line">      &lt;/mov&gt;
+</span><span class="line">    &lt;/animation&gt;
+</span><span class="line">  &lt;/animations&gt;
+</span><span class="line">  &lt;TextureAtlas name="battles_effect" width="1024" height="512"&gt;
+</span><span class="line">    &lt;SubTexture name="battles_effect0004" width="300" height="240" cocos2d_pX="0" cocos2d_pY="0" x="604" y="0"/&gt;
+</span><span class="line">    &lt;SubTexture name="battles_effect0003" width="300" height="240" cocos2d_pX="0" cocos2d_pY="0" x="0" y="242"/&gt;
+</span><span class="line">  &lt;/TextureAtlas&gt;
+</span><span class="line">&lt;/skeleton&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这是一个简单地骨骼动画文件。它分为三个部分，第一个部分是<armatures></armatures>，表示有几个骨骼小人，他的名字就是我们要创建骨骼小人是用到的参数,第二个部分就是<animations></animations>他表示上面对应骨骼小人的动画，位置，缩放，关键帧事件等信息，它里面每一个mov表示小人能做的动作，比如walk，表示小人能播放走路的动画。第三个部分<textureatlas></textureatlas>表示对应的骨骼小人用到的图片资源。</p>
+
+<p>然后，我们将生成的素材资源放到xcode的工程的Resource目录下面，通过上面提供的函数和方法就可以创建出来一个简单的骨骼小人了。</p>
+
+<p>在cocoschina的官方论坛上关于此部分有详细的讲解<a href="http://www.cocoachina.com/bbs/read.php?tid=158607">直达论坛</a></p>
+
+<p>我们今天要讲的就是如果让小人换装。但是保持的动作不变。也就是上面提到了三个文件，只需要变化一个文件即可！<br />
+既然要变装，那就是改变显示的样子，只要变化png那个文件即可。这样从应用的size角度考虑，我们能够节省不少的资源。</p>
+
+<p>也就是说动画信息文件不变，也就是里面要求的SubTexture也不会变化，那么怎么做到换装呢？能够想到的就是在解析这个xml文件的时候对其进行修改，到指定的png中去获取对应的图片。而我们在传入参数的时候是不是只要传入新的png地址就可以了呢？理论上是这样的，但是实际做起来又不是这样子。<br />
+我们先看加载资源的时候cocos2dx做了什么事情？</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void CCArmatureDataManager::addArmatureFileInfo(const char *imagePath, const char *plistPath, const char *configFilePath)
+</span><span class="line">{
+</span><span class="line">    addRelativeData(configFilePath);
+</span><span class="line">
+</span><span class="line">    m_bAutoLoadSpriteFile = false;
+</span><span class="line">    CCDataReaderHelper::sharedDataReaderHelper()-&gt;addDataFromFile(configFilePath);
+</span><span class="line">
+</span><span class="line">    addSpriteFrameFromFile(plistPath, imagePath, configFilePath);
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>addRelativeData是以configFilePath为key去检查是否有缓存一个CCRelativeData的数据，如果没有则创建一个。然后CCDataReaderHelper去加载configFilePath文件。<br />
+addSpriteFrameFromFile则是根据plist中的配置去切割png图片。</p>
+
+<p>然后再CCDataReaderHelper中我们继续往下看，发现她使用如下命令<code>CCDataReaderHelper::addDataFromCache(load_str.c_str(), &amp;dataInfo);</code>会处理xml文件。<br />
+而在这个函数里面则按照我们上面说得讲xml文件分成了三部分进行解析。<br />
+并且将解析出来对应的CCArmatureData，CCAnimationData，CCTextureData都存到了以上面提到的CCRelativeData数据中。</p>
+
+<p>而addSpriteFrameFromFile最终调用的就是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">CCSpriteFrameCache::sharedSpriteFrameCache()-&gt;addSpriteFramesWithFile(plistPath, imagePath);</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>这样一来我们加载的图片资源都要存到了CCSpriteFrameCache的一个大的表<code>m_pSpriteFrames</code>中。<br />
+问题来了，<code>m_pSpriteFrames</code>里是图片的名字为查找索引的，而我们没有改变plist文件，那么也就是两张图片最终会再这里被重叠覆盖。因此也就达不到换装的目的。<br />
+那么关键的一步就是让<code>m_pSpriteFrames</code>里面的图片名字发生变化，即我们读到了plist，但不完全plist里面记录的名字为准，还需要我们自己的变化。<br />
+由于这里面名字发生了变化，也就是上面那个xml里面SubTexture对应的名字也要发生变化，armature下面d<br />
+标签对应的名字也要发生变化。<br />
+这样我们只需要在<code>CCDataReaderHelper::addDataFromCache(load_str.c_str(), &amp;dataInfo);</code>函数里面对上面提到的两处进行处理即可。参数dataInfo就是下面提到的DataInfo结构体。</p>
+
+<p>我们只需要需要传入一个参数，用于区分是否是加载换装资源。</p>
+
+<p>CCSpriteFrameCache里面函数</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void addSpriteFrameFromFile(const char *plistPath, const char *imagePath, const char *configFilePath = "",const char *prefix = "");</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>CCArmatureDataManager里面函数处理</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void addArmatureFileInfo(const char *imagePath, const char *plistPath, const char *configFilePath, const char* prefix= "");</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>DataInfo结构体增加一个prefix</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">typedef struct _DataInfo
+</span><span class="line">{
+</span><span class="line">    AsyncStruct *asyncStruct;
+</span><span class="line">    std::queue&lt;std::string&gt;      configFileQueue;
+</span><span class="line">    float contentScale;
+</span><span class="line">    std::string    filename;
+</span><span class="line">    std::string    baseFilePath;
+</span><span class="line">    std::string    prefix;
+</span><span class="line">    float flashToolVersion;
+</span><span class="line">    float cocoStudioVersion;
+</span><span class="line">} DataInfo;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>讲到这里，大家是否心里已经对换装有所了解了。上面的方式是从根本上直接解决问题。当然还有另外一种方法。<br />
+比如我们只需要换一个头部资源。可以通过对骨骼小人的骨头规则命名拿到头部骨头数据CCBone。</p>
+
+<p>伪代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local headDisplayData = CCDisplayData:create()
+</span><span class="line">headDisplayData.displayType = CS_DISPLAY_SPRITE
+</span><span class="line">headDisplayData.name = "new_head.png"
+</span><span class="line">armature:getBone("head")-&gt;addDisplay(headDisplayData,0); </span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>但是这种方法有个问题就是如果头部骨头，在做动画中又切换了新的图片，你就会非常痛苦，图片又换回去了！<br />
+因此需要保证头部骨头不要发生变化。</p>
+
+<p>大家可以根据具体的需求，比较看看那个更符合自己的要求。</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Setfenv有何用？]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/18/lua-setfenv"/>
+    <updated>2015-11-18T00:39:31+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/18/lua-setfenv</id>
+    <content type="html"><![CDATA[<p>上一章，我们提到了模块里面的函数，使用点语法的方式定义函数和变量。点之前的名字类似一个命名空间。比如<code>function A.function() end</code>,此处A就相当于一个命名空间，那么我们能不能有更好地方法不用写这个命名空间呢？当然是可以的。lua提供这样的方式。</p>
+
+<!--more-->
+
+<p>这个方法涉及到一个核心函数<code>setfenv()</code>, 我们看一下这个函数的API：<br />
+setfenv(f, table)：设置一个函数的环境<br />
+1. 当第一个参数为一个函数时，表示设置该函数的环境<br />
+2. 当第一个参数为一个数字时，为1代表当前函数，2代表调用自己的函数，3代表调用自己的函数的函数，以此类推</p>
+
+<p>看第一条，他说到可以设置函数的环境。如果我们不调用setfenv，那么函数的环境是什么呢？其实就是默认的_G.所有已经加载了函数变量模块都会被注册到_G中，因此我们可以在B.lua文件中直接调用A.lua中定义的USER_NAME就不会报错。</p>
+
+<p>但是如果我们调用了setfenv()，会发生什么事情？我们来试试。<br />
+A.lua</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">USER_NAME = "jolie"
+</span><span class="line">ITEM_NAME = "abc"
+</span><span class="line">ITEM_COUNT = 123</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>调用函数：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">require("A")
+</span><span class="line">setfenv(1,{})
+</span><span class="line">tostring(USER_NAME)
+</span><span class="line">print("i want to print user name")</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>结果会是什么样子的呢？<br />
+结果就是tostring，print无法被调用，咦？这是怎么回事呢？其实很简单，原来tostring和print很早就被注册到了_G中，我们把函数环境设成了空表，于是再也找不到了tostring和print了。这就报错了！</p>
+
+<p>因此既然我们用得到print和tostring，我们就把这两个函数保存起来，传递给我们当前的函数环境。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">setfenv(1,{print = _G["print"],tostring = _G["tostring"]})</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>再次运行，发现了没有，没有报错。正确打印了。<br />
+但是这样会不会因此影响到其他的模块呢？比如有一个B.lua，他是否能够正确执行？</p>
+
+<p>A.lua</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local A = {print = _G["print"],tostring = _G["tostring"]}
+</span><span class="line">setfenv(1,A)
+</span><span class="line">-- setfenv(1,{})
+</span><span class="line">name = "hello,A"
+</span><span class="line">function doA( ... )
+</span><span class="line">	print("i am A, i call doA function")
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">function doA2( ... )
+</span><span class="line">	print("i am doA2, i call doA2 function")
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">return A</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>B.lua</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local B = {}
+</span><span class="line">function B.doAction()
+</span><span class="line">	local a = {}
+</span><span class="line">	table.insert(a,1)
+</span><span class="line">	table.insert(a,2)
+</span><span class="line">	table.insert(a,3)
+</span><span class="line">	for k,v in pairs(a) do
+</span><span class="line">		print(k,v)
+</span><span class="line">	end
+</span><span class="line">end
+</span><span class="line">return B</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>调用代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">a.doA()
+</span><span class="line">a.doA2()
+</span><span class="line">print("i want to print user name , "..a.name)
+</span><span class="line">b = require("B")
+</span><span class="line">b.doAction()</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>看见打印了么？没错！我们设置了A的函数环境，但是并没有因此而影响到B和调用的地方。这说明setfenv只是对当前的模块函数环境进行了设置，而并没有影响到其他。这就是setfenv第一个参数的作用，它指定了当前函数，而不是全局函数，因此只对A这个当前的函数模块进行了设置。</p>
+
+<p>setfenv()还有什么特别的用处？敬请等待下回分析！</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Serpent：lua序列化和pretty的输出]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/15/serpent-for-lua"/>
+    <updated>2015-11-15T21:32:34+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/15/serpent-for-lua</id>
+    <content type="html"><![CDATA[<p><img src="http://www.newtomato.me/images/1447594435836.png" alt="Alt text" /></p>
+
+<p>翻译自http://notebook.kulchenko.com/programming/serpent-lua-serializer-pretty-printer<br />
+本人翻译能力有限，如有不妥之处还望指正。</p>
+
+<p>为ZeroBrane Studio我一直开发Lua debugger。我意识到我需要一个table的序列化打印浮躁的结构，例如堆栈和一些在调试器组件使用的表数据。Serpent就是我开发出来的用于lua序列化和pretty的输出。<br />
+<!--more--></p>
+
+<p>因为动态变量的要求lua本身几乎不提供内置的方法去序列化table。那样需要被一个函数去处理（我们在this thread讨论过）。我第一步停在了TableSerializaiton 页面上，在处理table序列化方面它提供了几个不错的信息并且带有不少的例子。</p>
+
+<p>看了已有的模块，我发现没有个哪一个满足我的需求<br />
+1. 需要是单纯的lua（这条需求排除了类似PlutoLibrary的库）<br />
+2. 需要既能够漂亮的输出，又能够强大的序列化。（这条排除了serialize.lua）<br />
+3. 需要能够打印共享的handler和自我引用（这条排除了许多的实现）<br />
+4. 序列化不同类型的key，包括以table做key（这条排除了pretty.lua）<br />
+5. 需要剪短并且不需要太多的依赖。（这条排除了 tserialise/tpretty from lua-nucleo）</p>
+
+<p>metalua的serialize.lua很接近我的需要，但是他不能够处理全局的函数或者math.huge数。而且也不能够漂亮的输出（这个也要求很多不同的方法）；table.tostring和serialize结合起来几乎是我想要的一大半代码了。</p>
+
+<p>Penlight的pretty.lua 能够做到很漂亮的输出，但是依赖两个其他的模块，并且不能够处理boolean值和将table作为key的数据，共享表格以及自身引用。</p>
+
+<p>lua-nucleo的tserialize.lua在序列化不同类型方面做的很出色（能够很好的打印math.huge数字，而另外两个模块就不支持），但是不能够处理作为key或者value的函数。</p>
+
+<p>我更希望结果是可读性很好的，而且我能够使用loadstring得到的依然是一个有效的片段。例如，我想keys能够以数字的方式被列出，比如<code>{'a','b'}</code> 打印之后就是<code>{[1] = 'a', [2] = 'b'}</code>,<code>{1, nil, 3}</code>打印之后就是 <code>{1, [3]=3}</code>,<code>{foo = 'foo'}</code>打印之后就是<code>{['foo'] = 'foo'}.</code></p>
+
+<p>Serpent并不处理upvalues和元表;对于弱引用或者transient 对象（io.stdin和其他userdata的对象是能够通过名字序列化的），函数尽可能序列化，全队函数被他们的名字替代。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local b = {text="ha'ns", ['co\nl or']='bl"ue', str="\"\n'\\\000"}
+</span><span class="line">local c = function() return 1 end
+</span><span class="line">local a = {
+</span><span class="line">  x=1, [true] = {b}, [not true]=2, -- boolean as key
+</span><span class="line">  ['true'] = 'some value', -- keyword as a key
+</span><span class="line">  z = c, -- function as value
+</span><span class="line">  list={'a',nil,nil, -- embedded nils
+</span><span class="line">        [9]='i','f',[5]='g',[7]={}, ['3'] = 33}, -- empty table
+</span><span class="line">  [c] = print, -- function as key, global as value
+</span><span class="line">  [io.stdin] = 3, -- global userdata as key
+</span><span class="line">  ['label 2'] = b, -- shared reference
+</span><span class="line">  [b] = 0/0, -- table as key, undefined value as value
+</span><span class="line">  [math.huge] = -math.huge, -- huge as number value
+</span><span class="line">}
+</span><span class="line">a.c = a -- self-reference
+</span><span class="line">a[a] = a -- self-reference with table as key</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>The library provides three functions – dump, line, and block – with the last two being shortcuts for the main dump function.</p>
+
+<p>这个库提供三个函数，dump,line和block，后面两个是dump函数的简易版本。</p>
+
+<p>####漂亮的多行打印</p>
+
+<hr />
+
+<p>调试的时候如果你像看到一个表套表，这个就非常有用了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local serpent = require("serpent")
+</span><span class="line">print(serpent.block(a))</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>输出结构：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">{
+</span><span class="line">  [1/0 --[[math.huge]]] = -1/0 --[[-math.huge]],
+</span><span class="line">  c = nil --[[ref]],
+</span><span class="line">  ["label 2"] = {
+</span><span class="line">    ["co\nl or"] = "bl\"ue",
+</span><span class="line">    str = "\"\n'\\\000",
+</span><span class="line">    text = "ha'ns"
+</span><span class="line">  } --[[table: 001752B0]],
+</span><span class="line">  list = {
+</span><span class="line">    "a",
+</span><span class="line">    nil,
+</span><span class="line">    nil,
+</span><span class="line">    "f",
+</span><span class="line">    "g",
+</span><span class="line">    nil,
+</span><span class="line">    {} --[[table: 00175350]],
+</span><span class="line">    [9] = "i",
+</span><span class="line">    ["3"] = 33
+</span><span class="line">  } --[[table: 00175328]],
+</span><span class="line">  ["true"] = "some value",
+</span><span class="line">  x = 1,
+</span><span class="line">  z = loadstring("LuaQ...",'@serialized') --[[function: 00171020]],
+</span><span class="line">  [false] = 2,
+</span><span class="line">  [io.stdin --[[file (767D0958)]]] = 3,
+</span><span class="line">  [true] = {
+</span><span class="line">    nil --[[ref]]
+</span><span class="line">  } --[[table: 00175300]]
+</span><span class="line">} --[[table: 001752D8]]</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>####单行打印</p>
+
+<hr />
+<p>这是一个更加紧凑一点的展示。一行就展示出序列化的字符串。<br />
+不是一个完全的展示，不包括自我引用，共享数据，循环引用。</p>
+
+<p>local serpent = require(“serpent”)<br />
+print(serpent.dump(a, {name = ‘a’}))</p>
+
+<p>输出结果：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">do local a={[false]=2,[true]={[1]={str="\"\n'\\\000",text="ha'ns",["co\nl or"]
+</span><span class="line">="bl\"ue"}},c=nil --[[ref]],["label 2"]=nil --[[ref]],[1/0 --[[math.huge]]]=-1/0
+</span><span class="line">--[[-math.huge]],x=1,z=loadstring("LuaQ...",'@serialized'),[io.stdin]=3,list=
+</span><span class="line">{[1]="a",[4]="f",[5]="g",[7]={},["3"]=33,[9]="i"},["true"]="some value"};
+</span><span class="line">a.c=a;a[a]=a;a["label 2"]=a[true][1];a[a[true][1]]=0/0;a[a.z]=print;return a;end</span></code></pre></td></tr></table></div></figure></notextile></div>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Lua一份模板创建多个对象]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/15/lua-object"/>
+    <updated>2015-11-15T20:48:08+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/15/lua-object</id>
+    <content type="html"><![CDATA[<p>上一章，我们说过reuqire其实就是将一份已经加载过得数据返回，因此多次加载一份文件，其实就是一个数据，而不是多个。<br />
+那么如何实现多个呢？</p>
+
+<!--more-->
+<p>只要我们脑洞大开，就可以发现其实只要通过setmetatable就能够巧妙地实现这个问题。<br />
+只要我们将require进来的数据作为另一个表数据的元数据，是不是就算是已经创建了一个新的对象呢？比如</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">b = {}
+</span><span class="line">setmetatable(b,{__index =  a})</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>此时我们require了A，创建了模块A的数据并把它作为b的元表，而B是一个非常干净的table，它是否就相当于a的一个对象呢？<br />
+ 想想这样和其他语言的创建对象是否如出一辙呢？如此一来，我们就可以多次创建。比如</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">c = {}
+</span><span class="line">c.x = 10
+</span><span class="line">c.y = 100
+</span><span class="line">setmetatable(c,{__index =  a})
+</span><span class="line">d = {}
+</span><span class="line">setmetatable(d,{__index =  a})</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>看，这样b,c,d都是以a为元表。每个表都可以有自己的数据并不影响彼此（只要元表不改变）。<br />
+A.lua 的结构如下：</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local A = {}
+</span><span class="line">A.number1 = 1
+</span><span class="line">A.number2 = 1
+</span><span class="line">function A.doAction()
+</span><span class="line">	print(string.format("doAction:%d",(A.number1+A.number2)))
+</span><span class="line">end 
+</span><span class="line">function A.moveToPosition(x,y)
+</span><span class="line">	print(string.format("we want to move to %d,%d",x,y))
+</span><span class="line">end 
+</span><span class="line">return A</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>但是这个A里面怎么操作我们自己的数据呢？比如我们想在<code>doAction</code>中调用b自己的数据,但是你看这个函数里面定义的是将A的number1和number2进行了加法。如果我们的b也有这两个变量，会不会调用的就是b的变量呢？</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">b = {}
+</span><span class="line">b.number1 = 10
+</span><span class="line">b.number2 = 10
+</span><span class="line">setmetatable(b,{__index =  a})
+</span><span class="line">b.doAction()</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>但是打印的却是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">doAction:2</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>这说明最终使用的还是a的变量，怎么才能让它调用b自身的变量呢？</p>
+
+<p>简单地方法就是将b作为参数传给doAction。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">function A.doAction(tableData)
+</span><span class="line">	print(string.format("doAction:%d",(tableData.number1+tableData.number2)))
+</span><span class="line">end </span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>如此当b调用doAction的时候，就需要<code>b.doAction(b)</code>这样子！这非常奇怪，但也能够容忍。<br />
+有没有别的方法呢？<br />
+是的，有。lua提供另外一种语法来解决这个问题。可以讲调用者自己传到函数中做第一个参数。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">function A:doAction()
+</span><span class="line">	print(string.format("doAction:%d",(self.number1+self.number2)))
+</span><span class="line">end </span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>仔细看，这个函数和上面的定义最大的区别就是用了冒号。如此一来，在函数里面就可以用self来指示函数的调用者。<br />
+因此，我们的调用方式就变成了<code>b:doAction()</code>即可！</p>
+
+<p>讲到此处，你是否对lua有一个整体的感受了。如果不懂也没有关系，报错也没有关系，请下载我上一篇文章推荐的zerobrain studio编辑器。通过断点调试一点点的尝试，你就能够很快明白的！</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Lua中require到底做了什么事情？]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/15/lua-require"/>
+    <updated>2015-11-15T20:47:27+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/15/lua-require</id>
+    <content type="html"><![CDATA[<p>require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件<br />
+<!--more--></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">DEBUG = false
+</span><span class="line">USER_NAME = "newtomao"
+</span><span class="line">USER_IMAGE = "cat.png"
+</span><span class="line">VERSION = ""
+</span><span class="line">
+</span><span class="line">function printBool(boolValue)
+</span><span class="line">	print("[printBook]:" .. tostring(boolValue))
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">function getRandomNumber()
+</span><span class="line">	return  math.random(100)
+</span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>当我在另一个文件B.lua里面<code>require("A")</code>的时候，我们可以直接调用<code>getRandomNumber</code>和上面定义的常量。因此我们可以任务require就是将另一个文件注册到全局表_G中。这样我们就可以在全局范围内的使用A文件中定义的函数和变量。</p>
+
+<p>我们讲require”A”的结果打印出来如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">retA = require("A")
+</span><span class="line">dump(retA)</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>结果如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">"require之后的结果" = true</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>但是如果A文件不是上面的样子，而是如下的样子：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local A = {}
+</span><span class="line">A.userName = "hello"
+</span><span class="line">function A.doAction()
+</span><span class="line">	print("doAction")
+</span><span class="line">end
+</span><span class="line">return A</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此时我们require(A.lua)之后，是否可以也直接调用doAction呢？且慢。仔细看下面有一个<code>return</code>, 这表示这个lua文件如果被require进来，返回的是A，就是一个完整的模块table。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">retA = require("A")
+</span><span class="line">dump(retA,"require之后的结果")</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>打印的结果如下：</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">"require之后的结果" = {
+</span><span class="line">    "doAction" = function: 0x7fcc024dddb0
+</span><span class="line">    "userName" = "hello"
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>你看她返回的结果是一个table，打印了A的结构。此时我们就可以通过<code>retA.doAction()</code>的形式去调用。<br />
+retA就是类似一个对象，但是又不完全是对象，它更像是一个命名空间。规定了函数和变量的上下文环境是在A这个空间内。如果外面想要访问userName，需要在前面加上命名空间的限定。<br />
+如果A被我们require多次结果会不会不同呢？比如如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = require("A")
+</span><span class="line">a2 = require("A")
+</span><span class="line">print(a == a2)</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>结果是怎么样的呢？答案就是true，是的，a和a2是一个地址。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">print(a)
+</span><span class="line">table: 0x7fac50500ad0
+</span><span class="line">print(a2)
+</span><span class="line">table: 0x7fac50500ad0</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>那么这样看来你require多次和require一次的结果是一样的。那么require到底做了什么？<br />
+我们来看lua中对require函数的实现：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">static int ll_require (lua_State *L) {
+</span><span class="line">  const char *name = luaL_checkstring(L, 1);
+</span><span class="line">  int i;
+</span><span class="line">  lua_settop(L, 1);  /* _LOADED table will be at index 2 */
+</span><span class="line">  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
+</span><span class="line">  lua_getfield(L, 2, name);
+</span><span class="line">  if (lua_toboolean(L, -1)) {  /* is it there? */
+</span><span class="line">    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
+</span><span class="line">      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
+</span><span class="line">    return 1;  /* package is already loaded */
+</span><span class="line">  }
+</span><span class="line">  /* else must load it; iterate over available loaders */
+</span><span class="line">  lua_getfield(L, LUA_ENVIRONINDEX, "loaders");
+</span><span class="line">  if (!lua_istable(L, -1))
+</span><span class="line">    luaL_error(L, LUA_QL("package.loaders") " must be a table");
+</span><span class="line">  lua_pushliteral(L, "");  /* error message accumulator */
+</span><span class="line">  for (i=1; ; i++) {
+</span><span class="line">    lua_rawgeti(L, -2, i);  /* get a loader */
+</span><span class="line">    if (lua_isnil(L, -1))
+</span><span class="line">      luaL_error(L, "module " LUA_QS " not found:%s",
+</span><span class="line">                    name, lua_tostring(L, -2));
+</span><span class="line">    lua_pushstring(L, name);
+</span><span class="line">    lua_call(L, 1, 1);  /* call it */
+</span><span class="line">    if (lua_isfunction(L, -1))  /* did it find module? */
+</span><span class="line">      break;  /* module loaded successfully */
+</span><span class="line">    else if (lua_isstring(L, -1))  /* loader returned error message? */
+</span><span class="line">      lua_concat(L, 2);  /* accumulate it */
+</span><span class="line">    else
+</span><span class="line">      lua_pop(L, 1);
+</span><span class="line">  }
+</span><span class="line">  lua_pushlightuserdata(L, sentinel);
+</span><span class="line">  lua_setfield(L, 2, name);  /* _LOADED[name] = sentinel */
+</span><span class="line">  lua_pushstring(L, name);  /* pass name as argument to module */
+</span><span class="line">  lua_call(L, 1, 1);  /* run loaded module */
+</span><span class="line">  if (!lua_isnil(L, -1))  /* non-nil return? */
+</span><span class="line">    lua_setfield(L, 2, name);  /* _LOADED[name] = returned value */
+</span><span class="line">  lua_getfield(L, 2, name);
+</span><span class="line">  if (lua_touserdata(L, -1) == sentinel) {   /* module did not set a value? */
+</span><span class="line">    lua_pushboolean(L, 1);  /* use true as result */
+</span><span class="line">    lua_pushvalue(L, -1);  /* extra copy to be returned */
+</span><span class="line">    lua_setfield(L, 2, name);  /* _LOADED[name] = true */
+</span><span class="line">  }
+</span><span class="line">  return 1;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这个函数并不复杂，但是对于初学者来说可能看到之后会被吓到，大部分都是出栈入栈的操作。我们先看前几行</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">lua_settop(L, 1);  /* _LOADED table will be at index 2 */
+</span><span class="line">  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
+</span><span class="line">  lua_getfield(L, 2, name);
+</span><span class="line">  if (lua_toboolean(L, -1)) {  /* is it there? */
+</span><span class="line">    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
+</span><span class="line">      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
+</span><span class="line">    return 1;  /* package is already loaded */
+</span><span class="line">  }</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>不用看函数，且看注释，他的意思就是先将栈指针移到第一个位置，由于lua所以从1开始，移到1即意味着要讲栈里面的元素清空，然后将LUA_REGISTRYINDEX执行的表数据里面名字是“_LOADED” 这个数据放到第2个位置，接下来讲在第2位的数据里面，名字叫做name的数据放到第三位。那么在第二位的不正是loaded的数据嘛！<br />
+接下来，lua检查栈顶元素是否是bool类型，那么栈顶元素是哪一个呢?不正是第三步放进来的数据嘛！<br />
+检查这个数据是否是boolean类型，只要存在，也就是加载过这个name模块，那么就任务已经被加载过了。就直接返回无需再次加载。</p>
+
+<p>而如果没有数据，那么就需要检查是否能够正确地加载。</p>
+
+<p>这就解释了为什么多次require其实并没有什么意义。</p>
+
+<p>接下来代码会寻找一个有效地loader加载器加载lua模块然后讲模块加载的结果放到了_LOADED中。因此我们在require之后，可以通过打印package.loaded来检查。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> "package.loaded" = {
+</span><span class="line">     "A" = {
+</span><span class="line">         "doAction" = function: 0x7f88fec5c2d0
+</span><span class="line">         "userName" = "hello"
+</span><span class="line">     }
+</span><span class="line">     "B" = true
+</span><span class="line">    }</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>看到这里，各位同学应该已经了解这个reuqire之后，其实并未创建新的对象，而是将lua文件运行之后的结果返回来了。那么这个已经被放到了loaded的“A”更像是一个类文件的模板。而不是对象。</p>
+
+<p>那么这对于我们习惯面向对象开发的同学来说，如何用lua来实现面向对象的开发呢？<br />
+别急，请看下一篇文章。</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Lua脚本在C++下的舞步（三）]]></title>
@@ -1649,7 +2856,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Function, Closures, up values ]]></title>
+    <title type="html"><![CDATA[Function, Closures, Up Values]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/11/function-closure-upvalue"/>
     <updated>2015-11-11T19:01:05+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/11/function-closure-upvalue</id>
@@ -1749,7 +2956,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[通关The Last of US的感悟]]></title>
+    <title type="html"><![CDATA[通关the Last of US的感悟]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi"/>
     <updated>2015-11-01T19:31:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi</id>
@@ -1824,7 +3031,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lua基础知识-语法]]></title>
+    <title type="html"><![CDATA[Lua基础知识-语法]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/01/lua-basic"/>
     <updated>2015-11-01T16:51:31+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/01/lua-basic</id>
@@ -2233,7 +3440,7 @@ table.remove(a,3)<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[ls命令行排序]]></title>
+    <title type="html"><![CDATA[Ls命令行排序]]></title>
     <link href="http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu"/>
     <updated>2015-10-17T22:26:44+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu</id>
@@ -2266,7 +3473,7 @@ table.remove(a,3)<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[vim使用-颜色]]></title>
+    <title type="html"><![CDATA[Vim使用-颜色]]></title>
     <link href="http://www.newtomato.me/blog/2015/10/17/vimshi-yong-yan-se"/>
     <updated>2015-10-17T22:19:24+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/10/17/vimshi-yong-yan-se</id>
@@ -2296,95 +3503,6 @@ table.remove(a,3)<br />
 
 <p>**有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色 **</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[项目管理心得]]></title>
-    <link href="http://www.newtomato.me/blog/2015/10/17/xiang-mu-guan-li-xin-de"/>
-    <updated>2015-10-17T22:14:06+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/10/17/xiang-mu-guan-li-xin-de</id>
-    <content type="html"><![CDATA[<p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
-
-<p>谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性，因为我自己估算了时间怎么会完不成呢？可是，你是否也会想过这样是否这个srcum就真的没有问题了呢？他是否是适合所有的团队？对于我们这样有些松散的，开发经验并不足够的小团队而言，并且开发任务也很繁重，是否也是适合的呢？<br />
-<!--more--><br />
-我不否定scrum的作用和他给某些团队带来的便利性，但是我在运用他的时候，往往心有力而力不足，譬如我们有一批任务，这些任务并不涉及太多的技术，有的仅仅是怎么去替换一下本地化的语言。起初我并没有分下去，而是让团队自己去领取任务。然后对任务做好预估的时间。这样一devday结束之后，自己做了多少任务是有数的。我也欢天喜地的认为我们很快就会讲这些小问题解决掉，但事实并不如此。</p>
-
-<p>任务池中的任务下降的速度远不如我的预期。我们在一个周期内解决的问题并不多。在验收产品的时候，我们已经resolve的任务又会被打开。有些又要重回任务池。这样下一个循环开始，周而复始我们的效率也没有提高，而团队里面反而出现了松散的现象，本来很重的任务，其他人好像都感受不深。压力都攒在了我这里。</p>
-
-<p>于是我改变了策略，从每天让他们领任务到现在我给他们发任务并且规定每天完成的数量，可以完不成，但是需要说明什么阻碍了你。我会尽力去为他们清理阻碍。如此坚持几个周期，开发效率提升不小，尽管任务很多，但是合理的安排和计划时间便可以达到在规定的时间内做完，有的时候我们甚至会提前完成。</p>
-
-<p>从此事中，可以看出不是所有的团队，所有的阶段都要组固定的套路，我们应该灵活的变通自己的思路，scrum仅仅是一个工具，工具不顺手，我们应该考虑换别的工具，项目按时完成才是我们最终的目标。不可为此做耽误。待以后团队成熟之后，或者可以在考虑使用scrum。</p>
-
-<p>另一个问题便是对产品的需求的敲定，尤其是那些模糊和待讨论的需求，在初期，开发上手之前，应该让需求方和开发坐在一起，讨论一下这个需求会涉及到什么东西，比如最为简单的问题，文字字体颜色变化，必然在金币“足够”的时候是一种字体，在“不足”的时候，显示另一种颜色，那么这个需求是仅仅放在这一处，还是所有用到金币的体的地方，足够是怎样的量级限定呢？换哪种颜色的字体？如果使用嵌入字体，就需要提供字体。我举的这个例子已经很细节，可是开发中我们往往面对的都是这些细节，如果不敲定这些问题，开发出来总是不对的。</p>
-
-<p>我想每一个前端工程师都曾觉得美术或者UX或者产品经理他们不可理喻，设计出来一个拖拉机的图纸，却希望开发出来卡迪拉克！每当如此，鸡同鸭讲。互相都是不理解的。来来回回无处次修改，有的需求修改甚至可以推到以前的设计，这让以严谨著称的程序员么简直要抓狂，代码是可以灵活多变的，是可以独立的，是可以有各种设计模式帮助我们做出更好的系统，但是每每此刻你会知道哪些东西在需求变化了之后什么都是不重要了，再修身养性的程序员都看破红尘了！</p>
-
-<p>说及以上，大家可以理解讲需求敲定下来是多么重要的啊！因此每当开功能开发的kick off的时候，我们都会讲讲自己的对这个功能的理解，有问题及时拿出来讨论，然后落实到邮件里，便于后面查询。而且最好master能够在程序动手之前让策划美术讲相关的资料先做出来，至少有一个时间节点，做好他们的甘特图才能够做好程序的甘特图。</p>
-
-<p>团队管理不仅仅只有上述两条，还有团队文化，团队默契培养，团队奖罚制度等,剩下的问题待以后遇到在做体会，再拿出来和大家分享。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Git命令行总结-rebase]]></title>
-    <link href="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase"/>
-    <updated>2015-10-17T22:11:24+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase</id>
-    <content type="html"><![CDATA[<p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
-
-<p>使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
-
-<p>rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。</p>
-
-<p>##rebase的命令格式如下:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="o">|</span> <span class="o">--</span><span class="n">interactive</span><span class="p">]</span> <span class="p">[</span><span class="n">options</span><span class="p">][</span><span class="o">--</span><span class="k">exec</span> <span class="o">&lt;</span><span class="n">cmd</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">onto</span> <span class="o">&lt;</span><span class="n">newbase</span><span class="o">&gt;</span><span class="p">][</span><span class="o">&lt;</span><span class="n">upstream</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">branch</span><span class="o">&gt;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code><br />
-它的工作原理：从dev_branch和master的共同祖先开始，后续所有在dev_branch上面的提交都将以master当前最新的提交为新的基准点再次挨个提交。这是重新生成新的提交而非做合并。你会发现在dev_branch上的同样的commit在master上的SHA1校验码是不一样的。</p>
-
-<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？<br />
-我们用到的命令就是｀git rebase –onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[git命令行总结-log]]></title>
-    <link href="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log"/>
-    <updated>2015-10-17T22:08:49+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log</id>
-    <content type="html"><![CDATA[<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">only</span> <span class="o">--</span><span class="n">oneline</span> <span class="mi">8692</span><span class="n">a53f1</span><span class="o">..</span><span class="n">HEAD</span><span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s">&#39;.{7} &#39;</span>  <span class="o">|</span> <span class="n">uniq</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##格式化文件输出</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">graph</span> <span class="o">--</span><span class="n">pretty</span><span class="o">=</span><span class="n">format</span><span class="p">:</span><span class="s">&#39;%Cred</span><span class="si">%h%</span><span class="s">Creset -%C(yellow)</span><span class="si">%d</span><span class="s">%Creset </span><span class="si">%s</span><span class="s"> %Cgreen(</span><span class="si">%c</span><span class="s">r)%Creset&#39;</span> <span class="o">--</span><span class="n">abbrev</span><span class="o">-</span><span class="n">commit</span> <span class="o">--</span><span class="n">date</span><span class="o">=</span><span class="n">relative</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">status</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##将某一个commit之后的提交做成patch</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">-</span><span class="n">M</span> <span class="n">HEAD</span><span class="o">~</span><span class="mi">1</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##将patch打到我们的开发分支</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="n">xxx</span><span class="o">.</span><span class="n">patch</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##vim中格式化json</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="p">:</span><span class="o">%</span><span class="err">!</span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">json</span><span class="o">.</span><span class="n">tool</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
 ]]></content>
   </entry>
   
