@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2</loc>
+    <lastmod>2015-11-29T20:10:15+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1</loc>
+    <lastmod>2015-11-29T20:04:52+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/29/the-last-of-us-story</loc>
+    <lastmod>2015-11-29T18:08:09+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/22/git-remove-branch-remotely</loc>
+    <lastmod>2015-11-22T17:45:01+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang</loc>
+    <lastmod>2015-11-22T17:33:52+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/18/lua-setfenv</loc>
+    <lastmod>2015-11-18T00:39:31+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/15/serpent-for-lua</loc>
+    <lastmod>2015-11-15T21:32:34+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/15/lua-object</loc>
+    <lastmod>2015-11-15T20:48:08+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/15/lua-require</loc>
+    <lastmod>2015-11-15T20:47:27+08:00</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>http://www.newtomato.me/blog/2015/11/12/lua-deep-3</loc>
     <lastmod>2015-11-12T21:48:47+08:00</lastmod>
     <priority>0.8</priority>
@@ -72,25 +117,25 @@
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/archives/</loc>
-    <lastmod>2015-11-14T11:09:33+08:00</lastmod>
+    <lastmod>2015-12-07T11:03:49+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/archives/</loc>
-    <lastmod>2015-11-14T11:09:33+08:00</lastmod>
+    <lastmod>2015-12-07T11:03:49+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/</loc>
-    <lastmod>2015-11-14T11:09:33+08:00</lastmod>
+    <lastmod>2015-12-07T11:03:49+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/</loc>
-    <lastmod>2015-11-14T11:09:33+08:00</lastmod>
+    <lastmod>2015-12-07T11:03:49+08:00</lastmod>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
   </url>

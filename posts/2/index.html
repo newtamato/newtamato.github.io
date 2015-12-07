@@ -5,16 +5,11 @@
 	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
 	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
 	<meta charset="utf-8">
-	<title>A blogging framework for hackers.  | 番茄手册</title>
+	<title>西红柿炒鸡蛋  | 番茄手册</title>
 
 <meta name="author" content="newtomato"> 
 
-<meta name="description" content="首先将Solarized的配色库download下来 1
-git clone git://github.com/altercation/solarized.git 将solarized.vim文件copy 到 ~/.vim/colors/ 文件夹下面 配置.vimrc 1
-2
-3
-4
-5 &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂， &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -68,7 +63,7 @@ $(document).ready(
 
 <body>
 	<header id="header" class="inner"><h1><a href="/">番茄手册</a></h1>
-<h4>A blogging framework for hackers.</h4>
+<h4>西红柿炒鸡蛋</h4>
 <nav id="main-nav"><ul>
 	<li><a href="/">Blog</a></li>
 	<li><a href="/about">About</a></li>
@@ -102,6 +97,444 @@ $(document).ready(
 </header>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/12/lua-deep-2">
+		
+			Lua脚本在C++下的舞步（二）</a>
+	</h2>
+	<div class="entry-content">
+		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂，就不会有人使用了。 <br />
+下面，我要强调一下，Lua的栈的一些概念，因为这个确实很重要，你会经常用到。熟练使用Lua，最重要的就是要时刻知道什么时候栈里面的数据是什么顺序，都是什么。如果你能熟练知道这些，实际你已经是Lua运用的高手了。</p>
+
+
+		
+		<a href="/blog/2015/11/12/lua-deep-2" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-12T21:47:58+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/12/lua-deep">
+		
+			Lua脚本在C++下的舞步(入门指引)（转）</a>
+	</h2>
+	<div class="entry-content">
+		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>现在，越来越多的C++服务器和客户端融入了脚本的支持，尤其在网游领域，脚本语言已经渗透到了方方面面，比如你可以在你的客户端增加一个脚本，这个脚本将会帮你在界面上显示新的数据，亦或帮你完成某些任务，亦或帮你查看别的玩家或者NPC的状态。。。如此等等。</p>
+
+<p>但是我觉得，其实脚本语言与C++的结合，远远比你在游戏中看到的特效要来的迅猛。它可以运用到方方面面的领域，比如你最常见的应用领域。比如，你可以用文本编辑器，写一个脚本语言，然后用你的程序加载一下，就会产生出很绚丽的界面。亦或一两句文本语言，就会让你的程序发送数据给服务器，是不是很酷呢？</p>
+
+
+		
+		<a href="/blog/2015/11/12/lua-deep" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-12T21:46:51+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/11/function-closure-upvalue">
+		
+			Function, Closures, Up Values</a>
+	</h2>
+	<div class="entry-content">
+		<p>未找到原文出处，从网络博客<a href="http://blog.chinaunix.net/uid-52437-id-2108789.html">天道酬勤,重剑无锋</a>上转载。</p>
+
+<p>Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)，所以在函数体中仍然可以定义函数。<br />
+
+		
+		<a href="/blog/2015/11/11/function-closure-upvalue" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-11T19:01:05+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/01/the-last-of-us-you-xi">
+		
+			通关the Last of US的感悟</a>
+	</h2>
+	<div class="entry-content">
+		<p><img src="/images/1446377446064.jpg" alt="Alt text" /></p>
+
+<p>今年年初的时候，在同事那里听说了the last of us的这款游戏，同事说的眉飞色舞，吹捧拔高至此毫不吝啬，甚至不惜把他家里的PS3拿给我让我玩。当时的我甚至没有买过一台PS3，或者一张游戏碟片。<br />
+自然一点想玩的想法都没有，婉言谢绝了同事的好意。</p>
+
+
+		
+		<a href="/blog/2015/11/01/the-last-of-us-you-xi" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-01T19:31:52+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/you-xi/'>游戏</a>
+
+</div>
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/01/you-zhou-si-shi-qing-yin-fa-de-si-kao">
+		
+			由周四事情引发的思考</a>
+	</h2>
+	<div class="entry-content">
+		<p>周四和团队中的一人有些小摩擦，当时被他一下子噎着了，不知道怎么说才好。事后为此郁闷满怀。心情大坏，甚至将此负能量传染给了周围的人。</p>
+
+<p>此事的起因说到本质，便是我想让他能够讲责任负起来，做事能有效率有些，而他却并不以为意。当时的语气急躁了一些，语气便也急冲了起来，尤其当时看到他散漫不负责任的态度，让我更加有些急火攻心。类似这样的冲突发生了不止一次。可能大家也会遇到这样的情况，尤其是在创业团队，为了一个功能具体的细节的争吵，操作不当就会出现这样的情况。</p>
+
+
+		
+		<a href="/blog/2015/11/01/you-zhou-si-shi-qing-yin-fa-de-si-kao" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-01T17:06:47+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/guan-li-,gou-tong/'>管理，沟通</a>
+
+</div>
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/01/lua-basic">
+		
+			Lua基础知识-语法</a>
+	</h2>
+	<div class="entry-content">
+		<p>lua是一门脚本语言，他是以c语言的标准编写而成，因此天生能够和c语言无缝合作。并且在所有的脚本引擎中，lua是速度最快的。</p>
+
+<p>lua语言非常的简单，可能你看完这一篇文章，就可以自己编写自己的lua文件了。基本用不了30分钟<br />
+
+		
+		<a href="/blog/2015/11/01/lua-basic" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-01T16:51:31+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/basic/'>basic</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/30/git-basic">
+		
+			GIT常用方法</a>
+	</h2>
+	<div class="entry-content">
+		<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
+简单地介绍一下GIT的工作流程<br />
+
+		
+		<a href="/blog/2015/10/30/git-basic" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-30T10:58:35+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/basic/'>basic</a>, <a class='category' href='/blog/categories/git/'>git</a>
+
+</div>
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/genymotionde-an-zhuang">
+		
+			GenyMotion的安装</a>
+	</h2>
+	<div class="entry-content">
+		<ol>
+  <li>先安装虚拟机<a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
+  <li>在下载  <a href="http://www.genymotion.cn/#theme=download">GenyMotion</a>,但是他还需要注册，才能继续使用</li>
+  <li>主界面的 Settings 按钮，可以用来设置 VirtualBox 及 ADB 路径等信息。</li>
+  <li>虚拟机的配置<a href="http://pan.baidu.com/s/1o68yMGM">下载</a></li>
+  <li>打上ARM–&gt;x86补丁：只要将Genymotion-ARM-Translation_v1.1.zip拖入安卓虚拟机即可。此时会提示“File Transfer in Progress”，在弹出的窗口中点击【OK】以完成更新。</li>
+  <li><img src="/images/1428929730092.png" alt="Alt text" /></li>
+  <li>
+    <p>重启虚拟机（关闭窗口，然后再次启动运行就好）</p>
+  </li>
+  <li>VirtualBox：<a href="https://www.virtualbox.org/wiki/Downloads">官網下載</a></li>
+  <li>Genymotion：<a href="https://cloud.genymotion.com/page/launchpad/download/">註冊&amp;下載</a></li>
+  <li>Android SDK：<a href="https://cloud.genymotion.com/page/launchpad/download/">官網下載</a></li>
+  <li>ARM Translation Installer：v1.1<a href="http://forum.xda-developers.com/showthread.php?t=2528952">下載</a><br />
+5	.Google Play：4.3版 | <a href="http://wiki.rootzwiki.com/Google_Apps#Universal_Packages_2">所有版本</a></li>
+</ol>
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-17T22:28:11+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/androidkai-fa/'>android开发</a>
+
+</div>
+
+
+	
+</div></article>
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/lsming-ling-xing-pai-xu">
+		
+			Ls命令行排序</a>
+	</h2>
+	<div class="entry-content">
+		<p>按文件大小降序排列</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> ls -lSr </span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>查看当前电脑上硬盘的使用情况</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">df -lh</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这是按兆（M）来排序</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * |sort -rm</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在前面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">du -sh * | sort -rm | head</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在后面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * | sort -rm | tail</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-17T22:26:44+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/ming-ling-xing/'>命令行</a>
+
+</div>
+
+
+	
+</div></article>
 
 
     <article class="post">
@@ -168,195 +601,14 @@ $(document).ready(
 
 
 	
-	
-      | <a href="/blog/2015/10/17/vimshi-yong-yan-se#comments">Comments</a>
-     
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de">
-		
-			项目管理心得</a>
-	</h2>
-	<div class="entry-content">
-		<p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
-
-<p>谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性，因为我自己估算了时间怎么会完不成呢？可是，你是否也会想过这样是否这个srcum就真的没有问题了呢？他是否是适合所有的团队？对于我们这样有些松散的，开发经验并不足够的小团队而言，并且开发任务也很繁重，是否也是适合的呢？<br />
-
-		
-		<a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de" class="more-link">阅读全文&rarr;</a>
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:14:06+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/guan-li-zong-jie/'>管理总结</a>
-
-</div>
-
-
-	
-	
-      | <a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de#comments">Comments</a>
-     
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase">
-		
-			Git命令行总结-rebase</a>
-	</h2>
-	<div class="entry-content">
-		<p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
-
-<p>使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
-
-<p>rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。</p>
-
-<p>##rebase的命令格式如下:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="o">|</span> <span class="o">--</span><span class="n">interactive</span><span class="p">]</span> <span class="p">[</span><span class="n">options</span><span class="p">][</span><span class="o">--</span><span class="k">exec</span> <span class="o">&lt;</span><span class="n">cmd</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">onto</span> <span class="o">&lt;</span><span class="n">newbase</span><span class="o">&gt;</span><span class="p">][</span><span class="o">&lt;</span><span class="n">upstream</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">branch</span><span class="o">&gt;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code><br />
-它的工作原理：从dev_branch和master的共同祖先开始，后续所有在dev_branch上面的提交都将以master当前最新的提交为新的基准点再次挨个提交。这是重新生成新的提交而非做合并。你会发现在dev_branch上的同样的commit在master上的SHA1校验码是不一样的。</p>
-
-<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？<br />
-我们用到的命令就是｀git rebase –onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:11:24+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/rebase/'>rebase</a>
-
-</div>
-
-
-	
-	
-      | <a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase#comments">Comments</a>
-     
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log">
-		
-			Git命令行总结-log</a>
-	</h2>
-	<div class="entry-content">
-		<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">only</span> <span class="o">--</span><span class="n">oneline</span> <span class="mi">8692</span><span class="n">a53f1</span><span class="o">..</span><span class="n">HEAD</span><span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s">&#39;.{7} &#39;</span>  <span class="o">|</span> <span class="n">uniq</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##格式化文件输出</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">graph</span> <span class="o">--</span><span class="n">pretty</span><span class="o">=</span><span class="n">format</span><span class="p">:</span><span class="s">&#39;%Cred</span><span class="si">%h%</span><span class="s">Creset -%C(yellow)</span><span class="si">%d</span><span class="s">%Creset </span><span class="si">%s</span><span class="s"> %Cgreen(</span><span class="si">%c</span><span class="s">r)%Creset&#39;</span> <span class="o">--</span><span class="n">abbrev</span><span class="o">-</span><span class="n">commit</span> <span class="o">--</span><span class="n">date</span><span class="o">=</span><span class="n">relative</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">status</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##将某一个commit之后的提交做成patch</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">-</span><span class="n">M</span> <span class="n">HEAD</span><span class="o">~</span><span class="mi">1</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##将patch打到我们的开发分支</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="n">xxx</span><span class="o">.</span><span class="n">patch</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##vim中格式化json</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="p">:</span><span class="o">%</span><span class="err">!</span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">json</span><span class="o">.</span><span class="n">tool</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:08:49+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/log/'>log</a>
-
-</div>
-
-
-	
-	
-      | <a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log#comments">Comments</a>
-     
 </div></article>
 
 <nav id="pagenavi">
     
         <a href="1" class="prev">Prev</a>
     
+    
+        <a href="3" class="next">Next</a>
     
     <div class="center"><a href="/archives">Blog Archives</a></div>
 </nav></div>
@@ -365,15 +617,6 @@ $(document).ready(
     newtomato
 
 <br>
-<script>
-var _hmt = _hmt || [];
-(function() {
-  var hm = document.createElement("script");
-  hm.src = "//hm.baidu.com/hm.js?2f3d67c0e0f8d61385db7afc2ef79bbd";
-  var s = document.getElementsByTagName("script")[0]; 
-  s.parentNode.insertBefore(hm, s);
-})();
-</script>
 Powered by Octopress.
 </footer>
 	<script src="/javascripts/slash.js"></script>
