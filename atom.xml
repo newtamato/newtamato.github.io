@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-12-25T12:43:19+08:00</updated>
+  <updated>2015-12-25T12:49:12+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[certificate与provision profiles 2]]></title>
+    <title type="html"><![CDATA[Certificate与provision Profiles 2]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2"/>
     <updated>2015-11-29T20:10:15+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2</id>
@@ -191,7 +191,7 @@ CSR自动包含了公钥，然后我们将这个CSR文件提交给苹果的membe
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Certificate与provision profiles]]></title>
+    <title type="html"><![CDATA[Certificate与provision Profiles]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1"/>
     <updated>2015-11-29T20:04:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1</id>
@@ -335,7 +335,7 @@ CSR自动包含了公钥，然后我们将这个CSR文件提交给苹果的membe
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[git如何在本地和远端都删除相关的分支]]></title>
+    <title type="html"><![CDATA[Git如何在本地和远端都删除相关的分支]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/22/git-remove-branch-remotely"/>
     <updated>2015-11-22T17:45:01+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/22/git-remove-branch-remotely</id>
@@ -374,7 +374,7 @@ which was added in Git v1.5.0 &#8220;to delete a remote branch or a tag.&#8221;<
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[cocos2dx如果实现骨骼动画的换装]]></title>
+    <title type="html"><![CDATA[Cocos2dx如果实现骨骼动画的换装]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang"/>
     <updated>2015-11-22T17:33:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang</id>
@@ -592,7 +592,7 @@ addSpriteFrameFromFile则是根据plist中的配置去切割png图片。</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[setfenv有何用？]]></title>
+    <title type="html"><![CDATA[Setfenv有何用？]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/18/lua-setfenv"/>
     <updated>2015-11-18T00:39:31+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/18/lua-setfenv</id>
@@ -878,7 +878,7 @@ print(serpent.dump(a, {name = ‘a’}))</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lua一份模板创建多个对象]]></title>
+    <title type="html"><![CDATA[Lua一份模板创建多个对象]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/15/lua-object"/>
     <updated>2015-11-15T20:48:08+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/15/lua-object</id>
@@ -981,7 +981,7 @@ A.lua 的结构如下：</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lua中require到底做了什么事情？]]></title>
+    <title type="html"><![CDATA[Lua中require到底做了什么事情？]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/15/lua-require"/>
     <updated>2015-11-15T20:47:27+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/15/lua-require</id>
@@ -2856,7 +2856,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Function, Closures, up values ]]></title>
+    <title type="html"><![CDATA[Function, Closures, Up Values]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/11/function-closure-upvalue"/>
     <updated>2015-11-11T19:01:05+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/11/function-closure-upvalue</id>
@@ -2956,7 +2956,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[通关The Last of US的感悟]]></title>
+    <title type="html"><![CDATA[通关the Last of US的感悟]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi"/>
     <updated>2015-11-01T19:31:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi</id>
@@ -3031,7 +3031,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lua基础知识-语法]]></title>
+    <title type="html"><![CDATA[Lua基础知识-语法]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/01/lua-basic"/>
     <updated>2015-11-01T16:51:31+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/01/lua-basic</id>
@@ -3440,7 +3440,7 @@ table.remove(a,3)<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[ls命令行排序]]></title>
+    <title type="html"><![CDATA[Ls命令行排序]]></title>
     <link href="http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu"/>
     <updated>2015-10-17T22:26:44+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu</id>
@@ -3473,7 +3473,7 @@ table.remove(a,3)<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[vim使用-颜色]]></title>
+    <title type="html"><![CDATA[Vim使用-颜色]]></title>
     <link href="http://www.newtomato.me/blog/2015/10/17/vimshi-yong-yan-se"/>
     <updated>2015-10-17T22:19:24+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/10/17/vimshi-yong-yan-se</id>
