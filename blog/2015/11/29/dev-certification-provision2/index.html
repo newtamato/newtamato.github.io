@@ -1,0 +1,460 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Certificate与provision Profiles 2 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="我们在创建Certificate的时候，要求先自己生成一个CSR文件。 生成的这个CSR文件，用sublime打开之后，里面的样子如下： 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+-----BEGIN CERTIFICATE REQUEST----- &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href='https://fonts.googleapis.com/css?family=Noto+Serif:400,700' rel='stylesheet' type='text/css'>
+<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+
+  
+  <script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-70121917-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+  </script>
+
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
+  
+    <h2>西红柿炒鸡蛋</h2>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  
+  
+</ul>
+
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Certificate与provision Profiles 2</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2015-11-29T20:10:15+08:00" pubdate data-updated="true">2015 年11 月29 日</time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>我们在创建Certificate的时候，要求先自己生成一个CSR文件。<br />
+<img src="/images/1448076369836.png" alt="Alt text" /><br />
+<!--more--><br />
+生成的这个CSR文件，用sublime打开之后，里面的样子如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">-----BEGIN CERTIFICATE REQUEST-----
+</span><span class="line">MIIByjCCATMCAQAwgYkxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+</span><span class="line">MRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRMwEQYDVQQKEwpHb29nbGUgSW5jMR8w
+</span><span class="line">HQYDVQQLExZJbmZvcm1hdGlvbiBUZWNobm9sb2d5MRcwFQYDVQQDEw53d3cuZ29v
+</span><span class="line">Z2xlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEApZtYJCHJ4VpVXHfV
+</span><span class="line">IlstQTlO4qC03hjX+ZkPyvdYd1Q4+qbAeTwXmCUKYHThVRd5aXSqlPzyIBwieMZr
+</span><span class="line">WFlRQddZ1IzXAlVRDWwAo60KecqeAXnnUK+5fXoTI/UgWshre8tJ+x/TMHaQKR/J
+</span><span class="line">cIWPhqaQhsJuzZbvAdGA80BLxdMCAwEAAaAAMA0GCSqGSIb3DQEBBQUAA4GBAIhl
+</span><span class="line">4PvFq+e7ipARgI5ZM+GZx6mpCz44DTo0JkwfRDf+BtrsaC0q68eTf2XhYOsq4fkH
+</span><span class="line">Q0uA0aVog3f5iJxCa3Hp5gxbJQ6zV6kJ0TEsuaaOhEko9sdpCoPOnRBm2i/XRD2D
+</span><span class="line">6iNh8f8z0ShGsFqjDgFHyF3o+lUyj+UC6H1QW7bn
+</span><span class="line">-----END CERTIFICATE REQUEST-----</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这里面包含了什么信息呢 ？<br />
+<img src="/images/1448076787997.png" alt="Alt text" /><br />
+<a href="https://www.sslshopper.com/what-is-a-csr-certificate-signing-request.html">来源</a></p>
+
+<p>从上面的表格，我们可以看到这里面包含了我们生成它的时候填写的信息还有一个关键的就是public key。<br />
+也就是说我们在生成CSR文件的时候，还声称了一个public key。因此我们可以在keychain中检查以下是否真的有这个public key。<br />
+<img src="/images/1448076932966.png" alt="Alt text" /><br />
+果然，在keychain中有一个钥匙对，私钥和公钥。<br />
+CSR自动包含了公钥，然后我们将这个CSR文件提交给苹果的member center。<br />
+<img src="/images/1448077003733.png" alt="Alt text" /><br />
+此时会生成.cer文件。将此文件下载下来，双击安装。此时在keychain当中就会将我们的私钥和这个certificate绑定起来。<br />
+<img src="/images/1448077535385.png" alt="Alt text" /></p>
+
+<p>这个certificate就是验证开发者身份。</p>
+
+<p>接下来的mobileprovision则是验证开发者权限的。<br />
+我们将自己生成的开发版mobileprovision打开看看。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;key&gt;Entitlements&lt;/key&gt;
+</span><span class="line">  &lt;dict&gt;
+</span><span class="line">    &lt;key&gt;keychain-access-groups&lt;/key&gt;
+</span><span class="line">      &lt;array&gt;
+</span><span class="line">          &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
+</span><span class="line">      &lt;/array&gt;
+</span><span class="line">      &lt;key&gt;get-task-allow&lt;/key&gt;
+</span><span class="line">      &lt;true/&gt;
+</span><span class="line">      &lt;key&gt;application-identifier&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
+</span><span class="line">      &lt;key&gt;com.apple.developer.team-identifier&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;L23FMABA6X&lt;/string&gt;
+</span><span class="line">      &lt;key&gt;aps-environment&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;development&lt;/string&gt;
+</span><span class="line">  
+</span><span class="line">  &lt;/dict&gt;
+</span><span class="line">	
+</span><span class="line">	...
+</span><span class="line">
+</span><span class="line">  &lt;key&gt;ProvisionedDevices&lt;/key&gt;
+</span><span class="line">  &lt;array&gt;
+</span><span class="line">      &lt;string&gt;11f30c7340e54187e93e1d085f85574570206cd9&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;0545f62295c9f117e2d6c19131df55444b0b8444&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8bcbf9be5476b09969fa597bf38f3949ed9b6e7d&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;57a453b5e5f39618c4e09d6399efff2e2d0b59a4&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;eff3c07516897e04c5d2aefaf91c2cf05e13a933&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;5256d0acb2218cef2748641582c4993c0f193ed9&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;030662def7e5fc03311f20891f0944f2b7f73251&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;a3216d9f5e611dd1f76e45858432d9c5e945d73c&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;cdd59a0a353c66a75a86a8419598a83a4db98e7c&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;7001583678ac38d05b18928d049098329531d3e3&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8bd9c88be11675b7ef71de1d6122ba95292a3472&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;bd63797509b861368e5a293717537b909d58c846&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;89f4b347703111b0067b79d7d4226684d6efe6a3&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;01798a0796437ae7eff5dddb3a442912ae57d50e&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;6a7cf9c50f068ddcca529f589e3d70141c8f85de&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;3c6e42454f9c551abc1738836ebf7a9513a90afa&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;cad8d51523e6fdb4d96fc33df65376545a9a683e&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;7b3a694a86e1d54e942ae1cbe6498eba4b2e68c6&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c&lt;/string&gt;
+</span><span class="line">  &lt;/array&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>里面明确的告诉了我们aps-environment和相关的设备序列号。以及keychain-access-groups，在这里他告诉我们要使用keychain当中一个L23FMABA6X的文件。这是什么呢？可以打开keychain到Certificate当中检查一下，这就是我们刚才上面生成的! 如此一来mobileprovision就和我们的Certificate绑定在一起了。</p>
+
+<p>因此一个开发版的mobileprovision包含的内容有，appID, 开发设备，以及Certificate等内容<br />
+如果我们生成的是Production版本的证书又该是什么样子呢？这个大家可以去试试看。</p>
+
+<p>最后，<a href="http://0xc010d.net/mobileprovision-files-structure-and-reading/">iDev blog</a>的作者提供了一个工具，用于检测证书的类型。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f &lt;fileName&gt; [-o &lt;option&gt;]</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>例：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision
+</span><span class="line">
+</span><span class="line">debug</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision -o devices
+</span><span class="line">
+</span><span class="line">11f30c7340e54187e93e1d085f85574570206cd9
+</span><span class="line">0545f62295c9f117e2d6c19131df55444b0b8444
+</span><span class="line">...
+</span><span class="line">8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec
+</span><span class="line">a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这样也能够方便的知晓证书的基本信息。</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+
+<time datetime="2015-11-29T20:10:15+08:00" pubdate data-updated="true">2015 年11 月29 日</time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/profiles/'>profiles</a>, <a class='category' href='/blog/categories/provision/'>provision</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2" data-via="" data-counturl="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/11/29/dev-certification-provision1" title="Previous Post: Certificate与provision profiles">&laquo; Certificate与provision profiles</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+  <aside class="sidebar">
+   
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/dev-certification-provision2">Certificate与provision Profiles 2</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/dev-certification-provision1">Certificate与provision Profiles</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/29/the-last-of-us-story">The Last of Us 故事板</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/22/git-remove-branch-remotely">Git如何在本地和远端都删除相关的分支</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang">Cocos2dx如果实现骨骼动画的换装</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (7)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2015 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+<script>
+  $(document).ready(function() {  
+    var stickyNavTop = $('nav').offset().top;  
+      
+    var stickyNav = function(){  
+      var scrollTop = $(window).scrollTop(); 
+      var navHasClassSticky = $('nav').hasClass('sticky');
+
+      if (scrollTop > stickyNavTop && navHasClassSticky) {   
+        return true;
+      } else if (scrollTop > stickyNavTop) {
+        $('nav').hide();
+        $('nav').addClass('sticky');
+        $('nav').fadeIn('2000');
+      } else {  
+        $('nav').removeClass('sticky');   
+      }  
+    };  
+      
+    stickyNav();  
+      
+    $(window).scroll(function() {  
+      stickyNav();  
+    });  
+  });  
+</script>
+
+
+</body>
+</html>

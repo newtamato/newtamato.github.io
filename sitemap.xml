@@ -1,132 +1,161 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
+    <loc>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2</loc>
+    <lastmod>2015-11-29T20:10:15+08:00</lastmod>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1</loc>
+    <lastmod>2015-11-29T20:04:52+08:00</lastmod>
+  </url>
+  <url>
     <loc>http://www.newtomato.me/blog/2015/11/29/the-last-of-us-story</loc>
     <lastmod>2015-11-29T18:08:09+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/22/git-remove-branch-remotely</loc>
     <lastmod>2015-11-22T17:45:01+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang</loc>
     <lastmod>2015-11-22T17:33:52+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/18/lua-setfenv</loc>
     <lastmod>2015-11-18T00:39:31+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/15/serpent-for-lua</loc>
     <lastmod>2015-11-15T21:32:34+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/15/lua-object</loc>
     <lastmod>2015-11-15T20:48:08+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/15/lua-require</loc>
     <lastmod>2015-11-15T20:47:27+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/12/lua-deep-3</loc>
     <lastmod>2015-11-12T21:48:47+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/12/lua-deep-2</loc>
     <lastmod>2015-11-12T21:47:58+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/12/lua-deep</loc>
     <lastmod>2015-11-12T21:46:51+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/11/function-closure-upvalue</loc>
     <lastmod>2015-11-11T19:01:05+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi</loc>
     <lastmod>2015-11-01T19:31:52+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/01/you-zhou-si-shi-qing-yin-fa-de-si-kao</loc>
     <lastmod>2015-11-01T17:06:47+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/11/01/lua-basic</loc>
     <lastmod>2015-11-01T16:51:31+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/10/30/git-basic</loc>
     <lastmod>2015-10-30T10:58:35+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/10/17/genymotionde-an-zhuang</loc>
     <lastmod>2015-10-17T22:28:11+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu</loc>
     <lastmod>2015-10-17T22:26:44+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/10/17/vimshi-yong-yan-se</loc>
     <lastmod>2015-10-17T22:19:24+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/10/17/xiang-mu-guan-li-xin-de</loc>
     <lastmod>2015-10-17T22:14:06+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase</loc>
     <lastmod>2015-10-17T22:11:24+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log</loc>
     <lastmod>2015-10-17T22:08:49+08:00</lastmod>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/archives/</loc>
-    <lastmod>2015-11-29T19:19:42+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/archives/</loc>
-    <lastmod>2015-11-29T19:19:42+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/blog/</loc>
-    <lastmod>2015-11-29T19:19:42+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
   <url>
     <loc>http://www.newtomato.me/</loc>
-    <lastmod>2015-11-29T19:19:42+08:00</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>1.0</priority>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/git/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/log/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/rebase/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/guan-li-zong-jie/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/vim/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/ming-ling-xing/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/androidkai-fa/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/basic/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/lua/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/guan-li-,gou-tong/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/you-xi/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/c-plus-plus/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/serpent/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/cocos2dxgu-ge-dong-hua-huan-zhuang/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/provision/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/blog/categories/profiles/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/posts/2/</loc>
+  </url>
+  <url>
+    <loc>http://www.newtomato.me/posts/3/</loc>
   </url>
 </urlset>

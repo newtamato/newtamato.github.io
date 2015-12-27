@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2015-11-29T19:19:42+08:00</updated>
+  <updated>2015-12-25T13:01:42+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,220 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Certificate与provision Profiles 2]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2"/>
+    <updated>2015-11-29T20:10:15+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2</id>
+    <content type="html"><![CDATA[<p>我们在创建Certificate的时候，要求先自己生成一个CSR文件。<br />
+<img src="http://www.newtomato.me/images/1448076369836.png" alt="Alt text" /><br />
+<!--more--><br />
+生成的这个CSR文件，用sublime打开之后，里面的样子如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">-----BEGIN CERTIFICATE REQUEST-----
+</span><span class="line">MIIByjCCATMCAQAwgYkxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+</span><span class="line">MRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRMwEQYDVQQKEwpHb29nbGUgSW5jMR8w
+</span><span class="line">HQYDVQQLExZJbmZvcm1hdGlvbiBUZWNobm9sb2d5MRcwFQYDVQQDEw53d3cuZ29v
+</span><span class="line">Z2xlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEApZtYJCHJ4VpVXHfV
+</span><span class="line">IlstQTlO4qC03hjX+ZkPyvdYd1Q4+qbAeTwXmCUKYHThVRd5aXSqlPzyIBwieMZr
+</span><span class="line">WFlRQddZ1IzXAlVRDWwAo60KecqeAXnnUK+5fXoTI/UgWshre8tJ+x/TMHaQKR/J
+</span><span class="line">cIWPhqaQhsJuzZbvAdGA80BLxdMCAwEAAaAAMA0GCSqGSIb3DQEBBQUAA4GBAIhl
+</span><span class="line">4PvFq+e7ipARgI5ZM+GZx6mpCz44DTo0JkwfRDf+BtrsaC0q68eTf2XhYOsq4fkH
+</span><span class="line">Q0uA0aVog3f5iJxCa3Hp5gxbJQ6zV6kJ0TEsuaaOhEko9sdpCoPOnRBm2i/XRD2D
+</span><span class="line">6iNh8f8z0ShGsFqjDgFHyF3o+lUyj+UC6H1QW7bn
+</span><span class="line">-----END CERTIFICATE REQUEST-----</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这里面包含了什么信息呢 ？<br />
+<img src="http://www.newtomato.me/images/1448076787997.png" alt="Alt text" /><br />
+<a href="https://www.sslshopper.com/what-is-a-csr-certificate-signing-request.html">来源</a></p>
+
+<p>从上面的表格，我们可以看到这里面包含了我们生成它的时候填写的信息还有一个关键的就是public key。<br />
+也就是说我们在生成CSR文件的时候，还声称了一个public key。因此我们可以在keychain中检查以下是否真的有这个public key。<br />
+<img src="http://www.newtomato.me/images/1448076932966.png" alt="Alt text" /><br />
+果然，在keychain中有一个钥匙对，私钥和公钥。<br />
+CSR自动包含了公钥，然后我们将这个CSR文件提交给苹果的member center。<br />
+<img src="http://www.newtomato.me/images/1448077003733.png" alt="Alt text" /><br />
+此时会生成.cer文件。将此文件下载下来，双击安装。此时在keychain当中就会将我们的私钥和这个certificate绑定起来。<br />
+<img src="http://www.newtomato.me/images/1448077535385.png" alt="Alt text" /></p>
+
+<p>这个certificate就是验证开发者身份。</p>
+
+<p>接下来的mobileprovision则是验证开发者权限的。<br />
+我们将自己生成的开发版mobileprovision打开看看。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;key&gt;Entitlements&lt;/key&gt;
+</span><span class="line">  &lt;dict&gt;
+</span><span class="line">    &lt;key&gt;keychain-access-groups&lt;/key&gt;
+</span><span class="line">      &lt;array&gt;
+</span><span class="line">          &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
+</span><span class="line">      &lt;/array&gt;
+</span><span class="line">      &lt;key&gt;get-task-allow&lt;/key&gt;
+</span><span class="line">      &lt;true/&gt;
+</span><span class="line">      &lt;key&gt;application-identifier&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
+</span><span class="line">      &lt;key&gt;com.apple.developer.team-identifier&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;L23FMABA6X&lt;/string&gt;
+</span><span class="line">      &lt;key&gt;aps-environment&lt;/key&gt;
+</span><span class="line">      &lt;string&gt;development&lt;/string&gt;
+</span><span class="line">  
+</span><span class="line">  &lt;/dict&gt;
+</span><span class="line">	
+</span><span class="line">	...
+</span><span class="line">
+</span><span class="line">  &lt;key&gt;ProvisionedDevices&lt;/key&gt;
+</span><span class="line">  &lt;array&gt;
+</span><span class="line">      &lt;string&gt;11f30c7340e54187e93e1d085f85574570206cd9&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;0545f62295c9f117e2d6c19131df55444b0b8444&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8bcbf9be5476b09969fa597bf38f3949ed9b6e7d&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;57a453b5e5f39618c4e09d6399efff2e2d0b59a4&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;eff3c07516897e04c5d2aefaf91c2cf05e13a933&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;5256d0acb2218cef2748641582c4993c0f193ed9&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;030662def7e5fc03311f20891f0944f2b7f73251&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;a3216d9f5e611dd1f76e45858432d9c5e945d73c&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;cdd59a0a353c66a75a86a8419598a83a4db98e7c&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;7001583678ac38d05b18928d049098329531d3e3&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8bd9c88be11675b7ef71de1d6122ba95292a3472&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;bd63797509b861368e5a293717537b909d58c846&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;89f4b347703111b0067b79d7d4226684d6efe6a3&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;01798a0796437ae7eff5dddb3a442912ae57d50e&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;6a7cf9c50f068ddcca529f589e3d70141c8f85de&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;3c6e42454f9c551abc1738836ebf7a9513a90afa&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;cad8d51523e6fdb4d96fc33df65376545a9a683e&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;7b3a694a86e1d54e942ae1cbe6498eba4b2e68c6&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec&lt;/string&gt;
+</span><span class="line">      &lt;string&gt;a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c&lt;/string&gt;
+</span><span class="line">  &lt;/array&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>里面明确的告诉了我们aps-environment和相关的设备序列号。以及keychain-access-groups，在这里他告诉我们要使用keychain当中一个L23FMABA6X的文件。这是什么呢？可以打开keychain到Certificate当中检查一下，这就是我们刚才上面生成的! 如此一来mobileprovision就和我们的Certificate绑定在一起了。</p>
+
+<p>因此一个开发版的mobileprovision包含的内容有，appID, 开发设备，以及Certificate等内容<br />
+如果我们生成的是Production版本的证书又该是什么样子呢？这个大家可以去试试看。</p>
+
+<p>最后，<a href="http://0xc010d.net/mobileprovision-files-structure-and-reading/">iDev blog</a>的作者提供了一个工具，用于检测证书的类型。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f &lt;fileName&gt; [-o &lt;option&gt;]</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>例：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision
+</span><span class="line">
+</span><span class="line">debug</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision -o devices
+</span><span class="line">
+</span><span class="line">11f30c7340e54187e93e1d085f85574570206cd9
+</span><span class="line">0545f62295c9f117e2d6c19131df55444b0b8444
+</span><span class="line">...
+</span><span class="line">8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec
+</span><span class="line">a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这样也能够方便的知晓证书的基本信息。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Certificate与provision Profiles]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1"/>
+    <updated>2015-11-29T20:04:52+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1</id>
+    <content type="html"><![CDATA[<p>作为需要将应用上传到App Store的开发者，我们肯定会遇到一个有意思的问题，那就是申请AppId和开发者证书。</p>
+
+<p>开发者证书主要有两种类型。Developer Program 和Enterprise Program 。前一种就是99美金的开发者证书，而后一种就是299美金的开发者证书，具体的区别请参看下图：<br />
+<img src="http://www.newtomato.me/images/iOS.png" alt="Alt text" /><br />
+<!--more--></p>
+
+<p>其中有一个AdHoc的发布方式，认为可以将应用发布到100个设备上面，但是必须将这100个设备的UUID也放到证书当中，否则设备是无法运行应用的。<br />
+而In House的发布方式，则非常的简单，可以不需要uuid就可以装在设备上。<br />
+申请开发者证书 步骤如下：<br />
+1. 通过自己的开发者账号进入到个人后台，前提是你已经购买了99美金或者299美金的开发者资格。<br />
+2. 进入申请证书界面。<br />
+3. 选择Certificates<br />
+<img src="http://www.newtomato.me/images/1447855210829.png" alt="Alt text" />。<br />
+下面会要求你上传一个签名，此签名作用非常的大，后面我们在说。生成签名的方式也很简单，因为只要你用苹果电脑开发，就会在keychain中申请一个签名。<br />
+4. 提交了自己生产的CSR( Certificate Signing Request )文件。就会生成一个p12文件。需要将其下载下来。<br />
+5. 接下来生成mobileprovision文件。<br />
+<img src="http://www.newtomato.me/images/1447987845690.png" alt="Alt text" /><br />
+上面我们看到有identifier和Devices，暂时可以不用设置，我们生成mobileprovision的时候会要求我们设置的。<br />
+按照苹果的要求填写，最后会生成一个mobileprovision文件。同样也要下载下来。</p>
+
+<p>接下来就要将其和我们的xcode结合在一起。<br />
+1. 双击p12文件安装。他会自动安装到mac电脑的keychain中。用于验证我们的身份。<br />
+2. 双击mobileprovision文件。他会自动的安装到~/Library/MobileDevice/Provisioning\ Profiles下面。<br />
+也可以通过xcode的账户同步功能，将开发者账号下面的mobileprovision同步下来。<br />
+<img src="http://www.newtomato.me/images/1447988460200.png" alt="Alt text" /></p>
+
+<p>这样做了之后，我们点击自己工程的的build setting，在其下面的code signing就可以看到mobileprovision<br />
+<img src="http://www.newtomato.me/images/1447988655673.png" alt="Alt text" /><br />
+点击选择我们自己的mobileprovision即可！</p>
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[The Last of Us 故事板]]></title>
@@ -121,7 +335,7 @@
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[git如何在本地和远端都删除相关的分支]]></title>
+    <title type="html"><![CDATA[Git如何在本地和远端都删除相关的分支]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/22/git-remove-branch-remotely"/>
     <updated>2015-11-22T17:45:01+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/22/git-remove-branch-remotely</id>
@@ -160,7 +374,7 @@ which was added in Git v1.5.0 &#8220;to delete a remote branch or a tag.&#8221;<
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[cocos2dx如果实现骨骼动画的换装]]></title>
+    <title type="html"><![CDATA[Cocos2dx如果实现骨骼动画的换装]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang"/>
     <updated>2015-11-22T17:33:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang</id>
@@ -378,7 +592,7 @@ addSpriteFrameFromFile则是根据plist中的配置去切割png图片。</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[setfenv有何用？]]></title>
+    <title type="html"><![CDATA[Setfenv有何用？]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/18/lua-setfenv"/>
     <updated>2015-11-18T00:39:31+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/18/lua-setfenv</id>
@@ -664,7 +878,7 @@ print(serpent.dump(a, {name = ‘a’}))</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lua一份模板创建多个对象]]></title>
+    <title type="html"><![CDATA[Lua一份模板创建多个对象]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/15/lua-object"/>
     <updated>2015-11-15T20:48:08+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/15/lua-object</id>
@@ -767,7 +981,7 @@ A.lua 的结构如下：</p>
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lua中require到底做了什么事情？]]></title>
+    <title type="html"><![CDATA[Lua中require到底做了什么事情？]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/15/lua-require"/>
     <updated>2015-11-15T20:47:27+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/15/lua-require</id>
@@ -2642,7 +2856,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Function, Closures, up values ]]></title>
+    <title type="html"><![CDATA[Function, Closures, Up Values]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/11/function-closure-upvalue"/>
     <updated>2015-11-11T19:01:05+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/11/function-closure-upvalue</id>
@@ -2742,7 +2956,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[通关The Last of US的感悟]]></title>
+    <title type="html"><![CDATA[通关the Last of US的感悟]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi"/>
     <updated>2015-11-01T19:31:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/01/the-last-of-us-you-xi</id>
@@ -2817,7 +3031,7 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[lua基础知识-语法]]></title>
+    <title type="html"><![CDATA[Lua基础知识-语法]]></title>
     <link href="http://www.newtomato.me/blog/2015/11/01/lua-basic"/>
     <updated>2015-11-01T16:51:31+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/11/01/lua-basic</id>
@@ -3226,7 +3440,7 @@ table.remove(a,3)<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[ls命令行排序]]></title>
+    <title type="html"><![CDATA[Ls命令行排序]]></title>
     <link href="http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu"/>
     <updated>2015-10-17T22:26:44+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu</id>
@@ -3259,7 +3473,7 @@ table.remove(a,3)<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[vim使用-颜色]]></title>
+    <title type="html"><![CDATA[Vim使用-颜色]]></title>
     <link href="http://www.newtomato.me/blog/2015/10/17/vimshi-yong-yan-se"/>
     <updated>2015-10-17T22:19:24+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/10/17/vimshi-yong-yan-se</id>
@@ -3288,60 +3502,6 @@ table.remove(a,3)<br />
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>**有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色 **</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[项目管理心得]]></title>
-    <link href="http://www.newtomato.me/blog/2015/10/17/xiang-mu-guan-li-xin-de"/>
-    <updated>2015-10-17T22:14:06+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/10/17/xiang-mu-guan-li-xin-de</id>
-    <content type="html"><![CDATA[<p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
-
-<p>谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性，因为我自己估算了时间怎么会完不成呢？可是，你是否也会想过这样是否这个srcum就真的没有问题了呢？他是否是适合所有的团队？对于我们这样有些松散的，开发经验并不足够的小团队而言，并且开发任务也很繁重，是否也是适合的呢？<br />
-<!--more--><br />
-我不否定scrum的作用和他给某些团队带来的便利性，但是我在运用他的时候，往往心有力而力不足，譬如我们有一批任务，这些任务并不涉及太多的技术，有的仅仅是怎么去替换一下本地化的语言。起初我并没有分下去，而是让团队自己去领取任务。然后对任务做好预估的时间。这样一devday结束之后，自己做了多少任务是有数的。我也欢天喜地的认为我们很快就会讲这些小问题解决掉，但事实并不如此。</p>
-
-<p>任务池中的任务下降的速度远不如我的预期。我们在一个周期内解决的问题并不多。在验收产品的时候，我们已经resolve的任务又会被打开。有些又要重回任务池。这样下一个循环开始，周而复始我们的效率也没有提高，而团队里面反而出现了松散的现象，本来很重的任务，其他人好像都感受不深。压力都攒在了我这里。</p>
-
-<p>于是我改变了策略，从每天让他们领任务到现在我给他们发任务并且规定每天完成的数量，可以完不成，但是需要说明什么阻碍了你。我会尽力去为他们清理阻碍。如此坚持几个周期，开发效率提升不小，尽管任务很多，但是合理的安排和计划时间便可以达到在规定的时间内做完，有的时候我们甚至会提前完成。</p>
-
-<p>从此事中，可以看出不是所有的团队，所有的阶段都要组固定的套路，我们应该灵活的变通自己的思路，scrum仅仅是一个工具，工具不顺手，我们应该考虑换别的工具，项目按时完成才是我们最终的目标。不可为此做耽误。待以后团队成熟之后，或者可以在考虑使用scrum。</p>
-
-<p>另一个问题便是对产品的需求的敲定，尤其是那些模糊和待讨论的需求，在初期，开发上手之前，应该让需求方和开发坐在一起，讨论一下这个需求会涉及到什么东西，比如最为简单的问题，文字字体颜色变化，必然在金币“足够”的时候是一种字体，在“不足”的时候，显示另一种颜色，那么这个需求是仅仅放在这一处，还是所有用到金币的体的地方，足够是怎样的量级限定呢？换哪种颜色的字体？如果使用嵌入字体，就需要提供字体。我举的这个例子已经很细节，可是开发中我们往往面对的都是这些细节，如果不敲定这些问题，开发出来总是不对的。</p>
-
-<p>我想每一个前端工程师都曾觉得美术或者UX或者产品经理他们不可理喻，设计出来一个拖拉机的图纸，却希望开发出来卡迪拉克！每当如此，鸡同鸭讲。互相都是不理解的。来来回回无处次修改，有的需求修改甚至可以推到以前的设计，这让以严谨著称的程序员么简直要抓狂，代码是可以灵活多变的，是可以独立的，是可以有各种设计模式帮助我们做出更好的系统，但是每每此刻你会知道哪些东西在需求变化了之后什么都是不重要了，再修身养性的程序员都看破红尘了！</p>
-
-<p>说及以上，大家可以理解讲需求敲定下来是多么重要的啊！因此每当开功能开发的kick off的时候，我们都会讲讲自己的对这个功能的理解，有问题及时拿出来讨论，然后落实到邮件里，便于后面查询。而且最好master能够在程序动手之前让策划美术讲相关的资料先做出来，至少有一个时间节点，做好他们的甘特图才能够做好程序的甘特图。</p>
-
-<p>团队管理不仅仅只有上述两条，还有团队文化，团队默契培养，团队奖罚制度等,剩下的问题待以后遇到在做体会，再拿出来和大家分享。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Git命令行总结-rebase]]></title>
-    <link href="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase"/>
-    <updated>2015-10-17T22:11:24+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase</id>
-    <content type="html"><![CDATA[<p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
-
-<p>使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
-
-<p>rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。</p>
-
-<p>##rebase的命令格式如下:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="o">|</span> <span class="o">--</span><span class="n">interactive</span><span class="p">]</span> <span class="p">[</span><span class="n">options</span><span class="p">][</span><span class="o">--</span><span class="k">exec</span> <span class="o">&lt;</span><span class="n">cmd</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">onto</span> <span class="o">&lt;</span><span class="n">newbase</span><span class="o">&gt;</span><span class="p">][</span><span class="o">&lt;</span><span class="n">upstream</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">branch</span><span class="o">&gt;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code><br />
-它的工作原理：从dev_branch和master的共同祖先开始，后续所有在dev_branch上面的提交都将以master当前最新的提交为新的基准点再次挨个提交。这是重新生成新的提交而非做合并。你会发现在dev_branch上的同样的commit在master上的SHA1校验码是不一样的。</p>
-
-<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？<br />
-我们用到的命令就是｀git rebase –onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
 
 ]]></content>
   </entry>
