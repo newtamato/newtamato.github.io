@@ -1,0 +1,155 @@
+---
+layout: post
+title: "quick cocos2dx 导出Android包记录过程"
+date: 2015-12-27 11:23:39 +0800
+comments: true
+categories: 
+---
+
+###认识proj.android工程
+
+使用quick cocos2dx的项目可以新建工程，可以看到他已经为我们准备了两个工程一个是ios一个是Android的。
+
+```
+$QUICK_COCOS2DX_ROOT/bin/create_project.sh -p com.newtomato.test
+```
+
+新建的工程结构如下：
+![Alt text](./1450598436105.png)
+<!--more-->
+由于我们主要目标是将项目打包Android，因此只需关注Android文件夹下面的东西即可。
+![Alt text](./1450598547259.png)
+
+AndroidManifest.xml是一个描述文件，关于此应用的包名`package="com.newtomato.test"`权限，相关的Activity，以及一些自定义的东西。最重要的是我们看到她定义了一个启动的Activity，`.Test`。
+接下来还有一个clean.sh和build_native.sh文件。
+build_native.sh文件负责将quick cocos2dx工程打包成为.so文件。放在`libs`目录下面。
+clean.sh则负责清理libs目录下面的文件，一般希望重新生成so文件的时候就会执行这个命令。
+
+还有一个project.properties文件。这是一个eclipse工程需要的文件。后面我会提到这个文件是怎么变化的。
+生成的这个工程，是可以直接导入到eclipse的。
+打开Eclipse，点击Project->Import->Existing Android Code Into Workspace.
+同样地方式将Quick也导入进来。
+
+```
+$QUICK_COCOS2DX_ROOT/lib/cocos2d-x/cocos2dx/platform/android/java
+```
+然后右单击我们的Test工程，选择Property->Android。
+将Quick的工程作为library引入进来。
+![Alt text](./1450599581363.png)
+
+这个时候，我们再次打开project.properties文件，看，里面是不是多了quick工程的描述。
+同时如果在上面的界面上在此改变我们的Android sdk，在project文件中target就会发生变化。
+
+###运行工程的方法
+
+到此我们就可以将Android工程导出我们的设备或者模拟器上进行测试了。
+但是Eclipse自带的Android的模拟器非常的麻烦。启动起来很慢不说，操作起来也很卡顿。因此在搜素无数次之后，也算是找到了几种方式。现在分别分享给大家。
+1. 第一个神器那就是[genymotion](http://www.genymotion.net/question/details/Info_2.shtml)，并且有详细的中文帮助教程，安装起来也很方便。但是前提就是需要先注册才能够使用。由于他可以和Eclipse绑定，因此在Eclipse上点击运行就可以将工程在genymotion上运行起来。
+2. 第二个神奇就是Ant。ant可以用于编译打包一体化的处理！非常的强大。如何使用呢？ant运行需要在当前目录下面有一个build.xml文件。但是我们的quick 工程下面并没有呢？没有我们可以生成！命令如下
+
+```
+andriod update project -p .
+```
+执行这个命令之后，我们的Test/proj.android目录下面就会有一个build.xml文件。但是我们还有个一java工程，就是quick那个，他也需要被ant编译。这个工程下面也用同样地方式生成build.xml即可。
+然后回到我们自己的Test/proj.android目录下面执行
+
+```
+ant clean
+ant release
+```
+console下面在输出一大堆得数据之后，我们会看到在bin下面终于生成了我们需要的apk文件！
+然后使用adb install bin/Test-Release.apk就可以将这个apk安装到当前连接的设备上。可以是genymotion也可以是自己的设备。
+
+###使用ant进行多渠道的打包
+
+ant的更大的好处不是在于帮助我们的调试，而是在于可以方便我们打包。尤其是我们需要打包多个平台的apk的时候，这个时候ant的优势就明显的体现出来。
+
+使用ant自动打包多个平台的功能，有很多工具可以实现，比如友盟，美团还有360打包服务都已经提供了。大家可以去下载可以使用的工具。我这里将我们用到的方式分享给大家。基本的原理是相似的。
+我们首先在AndroidManifest.xml里面使用ANDROID_CHANNEL_SETTING这个自定义的变量代表要替换的字串。然后再build.xml中使用正则表达式替换成真正的变量。
+
+AndroidManifest.xml里面的配置
+
+```
+  <meta-data android:name="dksdk_channel" android:value="ANDROID_CHANNEL_SETTING" />
+```
+
+build.xml里面的设置
+
+```
+ <property file="ant.properties" />
+ 
+ <target name="deploy" >
+    <foreach
+	    delimiter=","
+        list="${market_channels}"
+        param="channel"
+        target="modify_manifest" >
+    </foreach>
+ </target>
+ <target name="modify_manifest" >
+    <replaceregexp file="AndroidManifest.xml"  
+	  match='ANDROID_CHANNEL_SETTING'  
+	  replace='${android_channel}'
+	  encoding="utf-8"/>  
+	  
+     <property
+         name="out.final.file"
+         location="${apk.dir}/game_${channel}.apk" />
+     <antcall target="clean" />
+     <antcall target="release" />
+ </target>
+    
+```
+
+上面需要注意的就是market_channels这个变量，他是在何处定义的呢？
+就是在 ant.properties这个文件中定义的。
+
+```
+market_channels=baidu,360,xiaomi
+```
+
+在命令行下调用
+
+```
+ant clean
+ant deploy
+```
+
+然后我们就在bin下面看见已经生成了3个apk文件了！
+
+关于多渠道打包，知道了原理，就想如果能够有现成的工具使用该多好。刚好在github上搜索，果然有不少高人讲自己的成果分享出来。[AntDem](https://github.com/sinkcup/AntDemo)是我个人觉得还不错的工具。工具的开发者已经将我们能想到的需求都集成在了自己的工具里面。包括修改包名，修改渠道号，修改生成的apk名称。以及重新签名等。
+
+####遗漏的内容
+上面ant打包，需要用到一个签名文件。而anroid得签名生成。既可以通过Eclipse来做。也可以通过命令行的方式。
+
+```
+/* -genkey 产生密钥
+   -alias game.keystore 别名
+   -keyalg RSA 使用RSA算法对签名加密
+   -validity 1000 有效期限1000天
+   -keystore game.keystore 
+*/
+keytool -genkey -alias game -keyalg RSA -validity 1000 -keystore game.keystore
+
+```
+在命令行中敲入这个命令，则会出现很多问题，比如签名作者，密码，地址，城市等。然后就会在当前目录下生成一个game.keystore的文件和一个ant.properties文件
+
+```
+  key.store=game.keystore
+  #这个名字就是在生成keystore时那个alias字段的值
+  key.alias=game
+   
+  key.store.password=xxxxxx
+  key.alias.password=xxxxxx
+```
+
+这样当我们调用ant命令的时候，ant会自动读入ant.properties文件。然后对生成的apk文件签名。
+
+
+
+
+
+
+
+
+
