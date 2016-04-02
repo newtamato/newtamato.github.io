@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:自动更新 | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/zi-dong-geng-xin/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-04-02T14:35:16+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[自动更新的一些思考]]></title>
+    <link href="http://www.newtomato.me/blog/2016/04/02/zi-dong-geng-xin-de"/>
+    <updated>2016-04-02T14:06:28+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/04/02/zi-dong-geng-xin-de</id>
+    <content type="html"><![CDATA[<p>自动更新，也称作热更新，是现在手机游戏最常用的一种做法。类似于当年的页游。打开游戏就能看到最新的游戏。<br />
+<!--more--></p>
+
+<p>之所以使用热更新是因为，现在我们提交apk或者ipa给平台，需要的审核期非常的长。有的时候需要长达2周才能通过，这对于我们紧急修复一个bug来说成本太高了。<br />
+因此热更新就显得非常必要。</p>
+
+<p>热更新的基本原理是，将此次更新的资源打包。部署到cdn上。游戏启动的时候，带上自己的version参数和服务器通讯。服务器判定版本过低就会把更新包的地址发过来，再由游戏客户端自己去下载处理。<br />
+下载完成自后，代码生效。玩家看到的自然就是最新的内容了。</p>
+
+<p>但是最近我们遇到了另一个问题，当时头疼了很长时间，但后来一想这不是一件困难的事情啊，只是没有突破固有的思维导致的固步不前。<br />
+问题是这样的，我们每次发完cdn之后，一般再次之前会经过很多的测试，基本问题都会一条条的过。但是发布cdn之后，总是又会发现新的问题。这个时候肯定是要修改的。但是在已经熬夜通宵到第二天早上的时候，每个人都是精疲力尽。都希望能够有更简单，成本更低的方法。<br />
+于是乎，在经历过几次熬夜通宵之后，我们开始痛定思痛，找到解决方案。<br />
+这种东西不是更新，不需要展示给用户，不需要cdn部署，只能通过服务器发来数据。而服务器能发现来的就是字符串。而刚好，lua有能力通过字符串转换成lua对象，loadstring既可以做到。<br />
+但是不是每次服务器都发过来一大堆的字符串吧？因此我们需要把它写到设备的缓存目录中。</p>
+
+<pre><code>local name  = serverData.name
+local content  = serverData.content
+io.wirte(name,content)
+name是一个目录结构
+name = string.gsub(name,"/",".")
+_G[name] = nil --这样设置之后，原先的代码不在生效，取而代之的是新的lua代码。
+</code></pre>
+
+<p>而不是所有的lua文件都是需要这样处理的。有些仅仅是常量。可以直接</p>
+
+<pre><code>_G["name"] = content
+</code></pre>
+<p>就可直接替换lua的常量。</p>
+
+<p>那么怎么替换json文件呢？<br />
+当玩家已经打开游戏，势必有些json文件已经被读入进来了。要修改这些文件，其实就是替换内存中的json对象。和后端服务器约定好一些协议，按照一定的结构直接替换内存的数据就可以了。</p>
+
+<p>这种方法可以在一定的程度上直接更新游戏，节省部署和测试时间。</p>
+
+<p>这种方式非常适合hotfix。紧急要修复的问题。</p>
+
+<p>这种方法并不难，只是在一开始我们都没有想到这里，我们太依赖于以前的自动更新的内容，对于其他的方式从未有过想法。</p>
+
+<p>而这种解决方法从本质上说和已有的自动更新是一码事。正如同在脚边的一颗宝石，而我们只需要弯腰就能捡起来。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

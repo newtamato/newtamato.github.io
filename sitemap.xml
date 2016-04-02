@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/04/02/missing-ios-distribution</loc>
+<lastmod>2016-04-02T14:25:05+08:00</lastmod>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/2016/04/02/zi-dong-geng-xin-de</loc>
+<lastmod>2016-04-02T14:06:28+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/02/28/gong-zuo-ji-shi</loc>
 <lastmod>2016-02-28T17:13:23+08:00</lastmod>
 </url>
@@ -175,9 +183,15 @@
 <loc>http://www.newtomato.me/blog/categories/gong-zuo/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/2/</loc>
+<loc>http://www.newtomato.me/blog/categories/zi-dong-geng-xin/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/3/</loc>
+<loc>http://www.newtomato.me/blog/categories/si-wei-fa-san/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/xcode/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/wwdr/</loc>
 </url>
 </urlset>

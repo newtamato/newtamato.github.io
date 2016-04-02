@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-04-02T13:14:18+08:00</updated>
+  <updated>2016-04-02T14:35:16+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,84 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Xcode 7 error: “Missing iOS Distribution signing identity for …”]]></title>
+    <link href="http://www.newtomato.me/blog/2016/04/02/missing-ios-distribution"/>
+    <updated>2016-04-02T14:25:05+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/04/02/missing-ios-distribution</id>
+    <content type="html"><![CDATA[<p>最近准备重新打包一次我们的游戏，提交苹果，但是却遇到如下的问题。<br />
+<img src="http://www.newtomato.me/images/error.png" alt="Alt text" /><br />
+这是个怎么回事？难道我的证书出问题了。<br />
+<!--more--><br />
+于是到开发者member center去检查证书的过期时间。没问题啊。并且在xcode里面证书和签名文件都是能够对应的上的。keychain中文件也都是存在的。<br />
+这就奇怪了？</p>
+
+<p>然后赶紧Google一下。没想到手气好到爆，在stack overflow上立马知道了答案。<br />
+<img src="http://www.newtomato.me/images/answer.png" alt="Alt text" /><br />
+附上<a href="http://stackoverflow.com/questions/32821189/xcode-7-error-missing-ios-distribution-signing-identity-for">地址 </a>，请笑纳。<br />
+翻译一下就是WWDR这个中间第三方的证书文件已经过期了，我们要做的就是把它下载下来，然后重新安装，他会自动放到keychain中。但是原先keychain中的文件需要删掉。怎么删掉呢？就是打开keychain-&gt;System, 在View里面选择Show Expired Certificates,找到那个已经过期的证书，删掉它即可。</p>
+
+<p>这样之后，我们就需要重新编译ipa。不能使用已经编译过的。</p>
+
+<p>那么这个WWDR是做什么用的呢？<br />
+因为我们在创建自己开发者证书的时候，一般需要先上传一个自己的Cetefication。这个证书的有效性是谁保证的呢？就是这个WWDR来做的。所以说他相当于验证了我们的身份。因此非常的重要。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[自动更新的一些思考]]></title>
+    <link href="http://www.newtomato.me/blog/2016/04/02/zi-dong-geng-xin-de"/>
+    <updated>2016-04-02T14:06:28+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/04/02/zi-dong-geng-xin-de</id>
+    <content type="html"><![CDATA[<p>自动更新，也称作热更新，是现在手机游戏最常用的一种做法。类似于当年的页游。打开游戏就能看到最新的游戏。<br />
+<!--more--></p>
+
+<p>之所以使用热更新是因为，现在我们提交apk或者ipa给平台，需要的审核期非常的长。有的时候需要长达2周才能通过，这对于我们紧急修复一个bug来说成本太高了。<br />
+因此热更新就显得非常必要。</p>
+
+<p>热更新的基本原理是，将此次更新的资源打包。部署到cdn上。游戏启动的时候，带上自己的version参数和服务器通讯。服务器判定版本过低就会把更新包的地址发过来，再由游戏客户端自己去下载处理。<br />
+下载完成自后，代码生效。玩家看到的自然就是最新的内容了。</p>
+
+<p>但是最近我们遇到了另一个问题，当时头疼了很长时间，但后来一想这不是一件困难的事情啊，只是没有突破固有的思维导致的固步不前。<br />
+问题是这样的，我们每次发完cdn之后，一般再次之前会经过很多的测试，基本问题都会一条条的过。但是发布cdn之后，总是又会发现新的问题。这个时候肯定是要修改的。但是在已经熬夜通宵到第二天早上的时候，每个人都是精疲力尽。都希望能够有更简单，成本更低的方法。<br />
+于是乎，在经历过几次熬夜通宵之后，我们开始痛定思痛，找到解决方案。<br />
+这种东西不是更新，不需要展示给用户，不需要cdn部署，只能通过服务器发来数据。而服务器能发现来的就是字符串。而刚好，lua有能力通过字符串转换成lua对象，loadstring既可以做到。<br />
+但是不是每次服务器都发过来一大堆的字符串吧？因此我们需要把它写到设备的缓存目录中。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local name  = serverData.name
+</span><span class="line">local content  = serverData.content
+</span><span class="line">io.wirte(name,content)
+</span><span class="line">name是一个目录结构
+</span><span class="line">name = string.gsub(name,"/",".")
+</span><span class="line">_G[name] = nil --这样设置之后，原先的代码不在生效，取而代之的是新的lua代码。</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>而不是所有的lua文件都是需要这样处理的。有些仅仅是常量。可以直接</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">_G["name"] = content</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>就可直接替换lua的常量。</p>
+
+<p>那么怎么替换json文件呢？<br />
+当玩家已经打开游戏，势必有些json文件已经被读入进来了。要修改这些文件，其实就是替换内存中的json对象。和后端服务器约定好一些协议，按照一定的结构直接替换内存的数据就可以了。</p>
+
+<p>这种方法可以在一定的程度上直接更新游戏，节省部署和测试时间。</p>
+
+<p>这种方式非常适合hotfix。紧急要修复的问题。</p>
+
+<p>这种方法并不难，只是在一开始我们都没有想到这里，我们太依赖于以前的自动更新的内容，对于其他的方式从未有过想法。</p>
+
+<p>而这种解决方法从本质上说和已有的自动更新是一码事。正如同在脚边的一颗宝石，而我们只需要弯腰就能捡起来。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[工作记事]]></title>
@@ -3387,216 +3465,6 @@ lua_pushnumber()是一个压入数字，lua_pushstring()是压入一个字符串
 <p>至少他们会在水坝安静的呆上一段日子。</p>
 
 <p><img src="http://www.newtomato.me/images/1446377484270.jpg" alt="Alt text" /></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[由周四事情引发的思考]]></title>
-    <link href="http://www.newtomato.me/blog/2015/11/01/you-zhou-si-shi-qing-yin-fa-de-si-kao"/>
-    <updated>2015-11-01T17:06:47+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/11/01/you-zhou-si-shi-qing-yin-fa-de-si-kao</id>
-    <content type="html"><![CDATA[<p>周四和团队中的一人有些小摩擦，当时被他一下子噎着了，不知道怎么说才好。事后为此郁闷满怀。心情大坏，甚至将此负能量传染给了周围的人。</p>
-
-<p>此事的起因说到本质，便是我想让他能够讲责任负起来，做事能有效率有些，而他却并不以为意。当时的语气急躁了一些，语气便也急冲了起来，尤其当时看到他散漫不负责任的态度，让我更加有些急火攻心。类似这样的冲突发生了不止一次。可能大家也会遇到这样的情况，尤其是在创业团队，为了一个功能具体的细节的争吵，操作不当就会出现这样的情况。</p>
-
-<!--more-->
-
-<p>现在冷静下来想想，当时真是没有必要要那么冲动，什么问题不能够解决呢？自己当时那么做反而是最最下策的。在此我为这件事情做一个总结，也算是从以往那些争吵中学到些经验，促进自己的成长。</p>
-
-<p>与人沟通什么最重要呢，能够让彼此都理解和明白怎么去解决问题？是目的最重要吗，直接了当的说了自己的需求和对方的需求，就可以了？还是聊天时候的态度最重要，如春风般温暖的微笑就能够让对方理解你的想法么？我试过前者，也用过后者，但是毕竟自己是个性子急躁的人，做得这些像是束缚了自己的想法，也像是在哄着别人，时间久了自己也觉得辛苦。找到合适自己的沟通方法才是最重要的.尤其是在团队里面，若能稍微培养一些察言观色的本事，那自然再好不过了，知道说什么，该做什么，与人沟通无非就是一个心理交流，如果能够让对方心悦诚服的和你合作，且合作愉快，那才是沟通的最高境界。可是如果这种本事没有培养起来的时候，怎么办呢？那就记住一条，我们沟通的目的是解决问题，不是将问题升级化。所以以此为念，态度自然便朝着解决问题的方向去了。</p>
-
-<p>其次如果到时真的不可避免的争吵起来了，那么切记要给对方留有空间余地，切不要把争吵带到死胡同中，否则彼此都会拼命反击，会生出更多问题出来。适可而止的争吵既可以发泄当时的怒火又不会伤及彼此的感情。待下次大家都冷静了再找时间沟通便可。</p>
-
-<p>再者，如果有些问题是自己出错了就不要强撑着自己不认错。总会有人在某处比你更厉害，看的更深，研究的更认真，那就应该向这样的人学习。自己愚蠢些没有关系，整个团队能够向前走并且和谐融洽才是最为重要的。</p>
-
-<p>曾经有个出租车司机和我讲过一个道理，他说不要小瞧了这个世界，付出总会有回报，你付出的越多得到的也会越多。你选择了这份工作，可以不去热爱它，但是你要为他负责，不仅仅要知道它能够给你带来好处，快乐，用处，还会给你带来痛苦，折磨，压抑，不公。所有的东西都有两面性，这样想来，一切都便释怀了。什么事情都不是问题。只要记得自己当初创业的热情和期许，这之间总会遇到不同的人，总会发生不满的事情，总会有超出预期的问题，但是不忘初心放得始终，不遭此磨难便用不知道自己能否真的成才。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[lua基础知识-语法]]></title>
-    <link href="http://www.newtomato.me/blog/2015/11/01/lua-basic"/>
-    <updated>2015-11-01T16:51:31+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/11/01/lua-basic</id>
-    <content type="html"><![CDATA[<p>lua是一门脚本语言，他是以c语言的标准编写而成，因此天生能够和c语言无缝合作。并且在所有的脚本引擎中，lua是速度最快的。</p>
-
-<p>lua语言非常的简单，可能你看完这一篇文章，就可以自己编写自己的lua文件了。基本用不了30分钟<br />
-<!--more--><br />
-首先我们讲到运行。怎么运行lua文件呢? 但是的运行一个lua文件，需要一个编译器。请到lua的<a href="http://www.lua.org/download.html">官方网站</a>下载最新的lua编译器.<br />
-下载之后是一个zip文件，解压缩之后，里面有一个doc文档目录，src源码目录还有一个ReadME文件和makefile文件。makefile是用来执行make命令。<br />
-为了安装我们可以查看他的帮助文档，在doc/readme.html<br />
-或者直接在命令行中输入<code>make</code>，他们将支持的平台显示出来给你看。我使用的是苹果电脑。所以我在命令行中输入<code>make macosx</code>，之后make就开始工作，安装lua，并且把他放到了我们的环境变量下，这样我们在命令行中可以直接输入<code>lua</code>来调用lua。</p>
-
-<p>在命令行中输入lua，会出现如下的样子<br />
-<img src="http://www.newtomato.me/images/1446367451271.png" alt="Alt text" /></p>
-
-<p>是不是和python或者metlab有点像呢？</p>
-
-<p>此时在lua命令行模式下面，我们输入<code>print("abc")</code> ,看它能够很快的给我一个反馈<br />
-<img src="http://www.newtomato.me/images/1446367541807.png" alt="Alt text" /></p>
-
-<p>或者我们不安装lua, 那么可以通过官方提供的一个<a href="http://www.lua.org/cgi-bin/demo">简单的demo</a>来运行我们想要的结果.</p>
-
-<p>此处还提供了一个默认的打印函数，可以打印复杂的数据结构</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="kd">local</span> <span class="n">seen</span><span class="o">=</span><span class="p">{}</span>
-</span><span class="line">
-</span><span class="line"><span class="k">function</span> <span class="nf">dump</span><span class="p">(</span><span class="n">t</span><span class="p">,</span><span class="n">i</span><span class="p">)</span>
-</span><span class="line">	<span class="n">seen</span><span class="p">[</span><span class="n">t</span><span class="p">]</span><span class="o">=</span><span class="kc">true</span>
-</span><span class="line">	<span class="kd">local</span> <span class="n">s</span><span class="o">=</span><span class="p">{}</span>
-</span><span class="line">	<span class="kd">local</span> <span class="n">n</span><span class="o">=</span><span class="mi">0</span>
-</span><span class="line">	<span class="k">for</span> <span class="n">k</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">t</span><span class="p">)</span> <span class="k">do</span>
-</span><span class="line">		<span class="n">n</span><span class="o">=</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span> <span class="n">s</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">=</span><span class="n">k</span>
-</span><span class="line">	<span class="k">end</span>
-</span><span class="line">	<span class="nb">table.sort</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
-</span><span class="line">	<span class="k">for</span> <span class="n">k</span><span class="p">,</span><span class="n">v</span> <span class="k">in</span> <span class="nb">ipairs</span><span class="p">(</span><span class="n">s</span><span class="p">)</span> <span class="k">do</span>
-</span><span class="line">		<span class="nb">print</span><span class="p">(</span><span class="n">i</span><span class="p">,</span><span class="n">v</span><span class="p">)</span>
-</span><span class="line">		<span class="n">v</span><span class="o">=</span><span class="n">t</span><span class="p">[</span><span class="n">v</span><span class="p">]</span>
-</span><span class="line">		<span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span class="n">v</span><span class="p">)</span><span class="o">==</span><span class="s2">&quot;</span><span class="s">table&quot;</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">seen</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="k">then</span>
-</span><span class="line">			<span class="n">dump</span><span class="p">(</span><span class="n">v</span><span class="p">,</span><span class="n">i</span><span class="o">..</span><span class="s2">&quot;</span><span class="se">\t</span><span class="s">&quot;</span><span class="p">)</span>
-</span><span class="line">		<span class="k">end</span>
-</span><span class="line">	<span class="k">end</span>
-</span><span class="line"><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>我们在输入框中接着输入</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="kd">local</span> <span class="n">userData</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="s">nick&quot;</span><span class="p">,</span> <span class="n">age</span> <span class="o">=</span> <span class="mi">20</span><span class="p">}</span>
-</span><span class="line"><span class="n">dump</span><span class="p">(</span><span class="n">userData</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>运行之后即可以看到这个userData的数据结构。</p>
-
-<p>和dump相比起来，print就是最轻量级别的。<br />
-我们可以用print来打印最基本的数据结构，比如字串，数字等。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">i am a developer &quot;</span><span class="p">)</span>
-</span><span class="line"><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">this is a number &quot;</span> <span class="o">..</span> <span class="mi">30</span><span class="p">)</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>看，对于此处打印这样是不是非常的简单？只有两个函数就可以搞定所有的一切。那么为什么lua这么简单呢？<br />
-这是因为lua的数据结构就非常的简单，他没有其他语言那么多的东西，他可以完全的把所有的东西都打印给你看。所有的一切你都可以看成是一张表格。或者说是字典。我称之为万能的table。</p>
-
-<p>至此，安装lua就已经完成。如果你顺利走到这一步，那么就离成功就差一点点的距离了。</p>
-
-<p>接下来我们简单的介绍一下lua的基本数据结构。和其他语言一样，lua自身也支持基本的数据结构。主要number， boolean,,string,nil, userdata, function, thread, table。</p>
-
-<ol>
-  <li>number。是的，就是浮点数。它没有int类型，用浮点的number可以帮助我们处理一切与数字相关的操作。</li>
-  <li>bool类型，true or false。唯一需要注意的就是在lua里面0为真。只有nil和false才为假。</li>
-  <li>String类型，即字串。字串有不少API可以使用。字串的查找，替换，比较，分割。长度，大小写转换等，与字串相关的就是格式化输出某些字串。比如输出i am %{张三}，i am from %{北京} 。 如果是字符串拼接，就是如下的操作<br />
-str = “i am “..张三 .. “,i am from” .. 北京<br />
-但是如果使用格式化输出，就显得很好看，易懂 。<br />
-str = string.format(i am %s,i am from %s, 张三,北京)</li>
-</ol>
-
-<p>看这样，是不是方便了很多？</p>
-
-<ol>
-  <li>Nil类型，用来检测一个变量是否可以用。比如一边量声明了后，但是没有赋值，那么此变量在使用的时候就要慎重。</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="k">if</span> <span class="p">(</span><span class="n">a</span> <span class="o">==</span> <span class="kc">nil</span><span class="p">)</span> <span class="k">then</span>
-</span><span class="line">	<span class="k">return</span>
-</span><span class="line"><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<ol>
-  <li>table类型。在lua中table是一个非常普遍的要使用的结构，他的语法如下<br />
-local a = {}<br />
-a[“name”] = “aaaa”<br />
-a[“age”] = 11<br />
-这和java语言中的字典数据结构很像，但是有不同，在lua中table可以当成数组使用，比如上面的a可以是一个数组进行for循环。</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="k">for</span> <span class="n">key</span><span class="p">,</span><span class="n">value</span> <span class="k">in</span> <span class="nb">pairs</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="k">do</span>
-</span><span class="line">	<span class="nb">print</span><span class="p">(</span><span class="nb">string.format</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">key is %s,vaue is %s&quot;</span><span class="p">,</span><span class="n">key</span><span class="p">,</span><span class="n">value</span><span class="p">))</span>
-</span><span class="line"><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>可以删除table的某一个key，语法 <code>a["age"] = nil</code> , 这样就非常方便的将一个键置空，此变量就不存在了。</p>
-
-<p>上面的a并非一个标准的table，标准的table即他们key不是string类型而是number类型，且number保持连续。<br />
-local a = {}<br />
-a[1] = “xxx”<br />
-a[2] = “xxx”<br />
-a[3] = “xxx”<br />
-table.insert(a, “bbbb”)<br />
-table.insert(a,1,”ccc”)<br />
-table.remove(a,3)<br />
-这样我们可以简单的向a插入数据，像一个正常的数组那样去操作a。lua还提供了另一个for循环使用的api专门给予这样标准的table，即ipairs。他的功能和上面的pairs一样。但是必须是标准的table。</p>
-
-<p>table可以嵌套。table中有table，可以理解成多维数组。</p>
-
-<ol>
-  <li>Function类型。即函数类型。<br />
-函数可以当成一个变量来使用。也可以作为参数传递给别的函数调用。<br />
-简单的函数结构如下</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="kd">local</span> <span class="n">myfunc</span> <span class="o">=</span> <span class="k">function</span><span class="p">()</span>
-</span><span class="line">	<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="s">i am function&quot;</span><span class="p">)</span>
-</span><span class="line"><span class="k">end</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>此处的定义就是一个局域函数，即只能够在定义他的范围域内使用。不能作为全局函数使用，那么怎么才能作为全局函数呢？<br />
-注意到他前面的local了没？我上面定义的变量也有这一个修饰词，有他就表示后面定义的都是局部的，不作为全局。去掉，那么就是全局的函数了。</p>
-
-<ol>
-  <li>userdata类型，顾名思义就是用户的数据结构，最常用的情况就是我们将lua和c进行绑定，可以使用c定义的很多数据结构，那些c定义的数据结构怎么告诉lua呢？让lua来调用，就是将他们转换成了userdata类型。lua才能够顺利的调用他们。具体是怎么转换的呢？那就涉及到lua运行时候的绑定，具体的函数如下</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class="lua"><span class="line"><span class="n">LUA_API</span> <span class="n">void</span> <span class="n">lua_pushlightuserdata</span> <span class="p">(</span><span class="n">lua_State</span> <span class="o">*</span><span class="n">L</span><span class="p">,</span> <span class="n">void</span> <span class="o">*</span><span class="n">p</span><span class="p">)</span> <span class="p">{</span>
-</span><span class="line">  <span class="n">lua_lock</span><span class="p">(</span><span class="n">L</span><span class="p">);</span>
-</span><span class="line">  <span class="n">setpvalue</span><span class="p">(</span><span class="n">L</span><span class="o">-&gt;</span><span class="n">top</span><span class="p">,</span> <span class="n">p</span><span class="p">);</span>
-</span><span class="line">  <span class="n">api_incr_top</span><span class="p">(</span><span class="n">L</span><span class="p">);</span>
-</span><span class="line">  <span class="n">lua_unlock</span><span class="p">(</span><span class="n">L</span><span class="p">);</span>
-</span><span class="line"><span class="p">}</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>此段涉及到比较深的内容，以后我们在深入细讲。</p>
-
-<ol>
-  <li>Thread 类型， 即线程。lua的线程不是真正的线程。关于线程开发使用也是比较复杂的部分。可以放到以后在单开一张。</li>
-</ol>
-
-<p>我们平时用到的最后就是前6种类型。<br />
-此时你是否觉得lua很简单? 是的，就是这么简单。尤其是在游戏开发过程中，为了达到能够自动更新的目的，大部分的项目都是使用lua，他简单灵活的语法和较少的限制对于我们的开发简直就是格外的贴心。剩下的就是他提供的集中API，比如如何操作table，如何将字串和数字进行转换。这些都是具体的API，用得到的时候查看帮助文档就能够很快查阅得到。</p>
 
 ]]></content>
   </entry>
