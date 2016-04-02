@@ -1,15 +1,15 @@
 
-<!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<!DOCTYPE HTML>
+<html>
 <head>
-  <meta charset="utf-8">
-  <title>Cocos2dx如果实现骨骼动画的换装 - 番茄手册</title>
-  <meta name="author" content="newtomato">
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>cocos2dx如果实现骨骼动画的换装  | 番茄手册</title>
 
-  
-  <meta name="description" content="我的工作环境是:
+<meta name="author" content="newtomato"> 
+
+<meta name="description" content="我的工作环境是:
 quick cocos2dx 2.2.6
 flash IDE dragbone官方的插件 首先我们要知道如何创建一个骨骼动画，主要涉及到两个部分，一部分是做加载资源，一部分是根据刚刚加载的资源创建骨骼动画。 1
 2
@@ -25,95 +25,96 @@ flash IDE dragbone官方的插件 首先我们要知道如何创建一个骨骼�
 12
 13
 14
-15 &hellip;">
-  
+15 &hellip;"> <meta name="keywords" content="">
 
-  <!-- http://t.co/dKP3o1e -->
-  <meta name="HandheldFriendly" content="True">
-  <meta name="MobileOptimized" content="320">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
-  
-  <link rel="canonical" href="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
-  <script>!window.jQuery && document.write(unescape('%3Cscript src="./javascripts/libs/jquery.min.js"%3E%3C/script%3E'))</script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href='https://fonts.googleapis.com/css?family=Noto+Serif:400,700' rel='stylesheet' type='text/css'>
-<link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
 
-  
-  <script type="text/javascript">
-    var _gaq = _gaq || [];
-    _gaq.push(['_setAccount', 'UA-70121917-1']);
-    _gaq.push(['_trackPageview']);
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
 
-    (function() {
-      var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-      ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-      var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-    })();
-  </script>
+          if (id) {
+            el = $('#' + id);
 
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
 
+	
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">番茄手册</a></h1>
-  
-    <h2>西红柿炒鸡蛋</h2>
-  
-</hgroup>
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">番茄手册</a></h1>
+<h4>西红柿炒鸡蛋</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:www.newtomato.me">
+			</form>
+		</div>
+	</div>
+</nav>
+
 
 </header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  
-  
-</ul>
 
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div>
-<article class="hentry" role="article">
-  
-  <header>
-    
-      <h1 class="entry-title">Cocos2dx如果实现骨骼动画的换装</h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-
-<time datetime="2015-11-22T17:33:52+08:00" pubdate data-updated="true">2015 年11 月22 日</time>
-        
-      </p>
-    
-  </header>
-
-
-<div class="entry-content"><p>我的工作环境是:<br />
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Cocos2dx如果实现骨骼动画的换装</h2>
+	<div class="entry-content"><p>我的工作环境是:<br />
 quick cocos2dx 2.2.6<br />
 flash IDE dragbone官方的插件</p>
 
@@ -326,14 +327,8 @@ addSpriteFrameFromFile则是根据plist中的配置去切割png图片。</p>
 </div>
 
 
-  <footer>
-    <p class="meta">
-      
-  
-
-<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
-
-      
+<div class="meta">
+	<div class="date">
 
 
 
@@ -345,162 +340,64 @@ addSpriteFrameFromFile则是根据plist中的配置去切割png图片。</p>
   
 
 
+<time datetime="2015-11-22T17:33:52+08:00" pubdate data-updated="true"></time></div>
+	
 
-<time datetime="2015-11-22T17:33:52+08:00" pubdate data-updated="true">2015 年11 月22 日</time>
-      
+<div class="tags">
 
-<span class="categories">
-  
-    <a class='category' href='/blog/categories/cocos2dxgu-ge-dong-hua-huan-zhuang/'>cocos2dx骨骼动画换装</a>
-  
-</span>
-
-
-    </p>
-    
-      <div class="sharing">
-  
-  <a href="//twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang" data-via="" data-counturl="http://www.newtomato.me/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang" >Tweet</a>
-  
-  
-  
-</div>
-
-    
-    <p class="meta">
-      
-        <a class="basic-alignment left" href="/blog/2015/11/18/lua-setfenv" title="Previous Post: setfenv有何用？">&laquo; setfenv有何用？</a>
-      
-      
-        <a class="basic-alignment right" href="/blog/2015/11/22/git-remove-branch-remotely" title="Next Post: git如何在本地和远端都删除相关的分支">git如何在本地和远端都删除相关的分支 &raquo;</a>
-      
-    </p>
-  </footer>
-</article>
+	<a class='category' href='/blog/categories/cocos2dxgu-ge-dong-hua-huan-zhuang/'>cocos2dx骨骼动画换装</a>
 
 </div>
 
-  <aside class="sidebar">
-   
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.newtomato.me" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2015/11/29/dev-certification-provision2">Certificate与provision Profiles 2</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/29/dev-certification-provision1">Certificate与provision Profiles</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/29/the-last-of-us-story">The Last of Us 故事板</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/22/git-remove-branch-remotely">Git如何在本地和远端都删除相关的分支</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang">Cocos2dx如果实现骨骼动画的换装</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
- <h1>Categories</h1>
- <ul id="categories">
-  <li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
-<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
-<li class='category'><a href='/blog/categories/c-/'>c++ (3)</a></li>
-<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
-<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
-<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
-<li class='category'><a href='/blog/categories/lua/'>lua (7)</a></li>
-<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
-<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
-<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
-<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
-<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
-<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
-<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
-<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
 
- </ul>
-</section>
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> &#8212;>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
 
 
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2016
 
+    newtomato
 
-  
-</aside>
-
-
-
-    </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2015 - newtomato -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
-</p>
-
+<br>
+Powered by Octopress.
 </footer>
-  
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
 
 
 
 
-
-
-
-  <script type="text/javascript">
-    (function(){
-      var twitterWidgets = document.createElement('script');
-      twitterWidgets.type = 'text/javascript';
-      twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
-      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
-    })();
-  </script>
-
-
-
+<!-- Google Analytics -->
 <script>
-  $(document).ready(function() {  
-    var stickyNavTop = $('nav').offset().top;  
-      
-    var stickyNav = function(){  
-      var scrollTop = $(window).scrollTop(); 
-      var navHasClassSticky = $('nav').hasClass('sticky');
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-      if (scrollTop > stickyNavTop && navHasClassSticky) {   
-        return true;
-      } else if (scrollTop > stickyNavTop) {
-        $('nav').hide();
-        $('nav').addClass('sticky');
-        $('nav').fadeIn('2000');
-      } else {  
-        $('nav').removeClass('sticky');   
-      }  
-    };  
-      
-    stickyNav();  
-      
-    $(window).scroll(function() {  
-      stickyNav();  
-    });  
-  });  
+ga('create', 'UA-70121917-1');
+ga('send', 'pageview');
+
 </script>
+<!-- End Google Analytics -->
+
 
 
 </body>
