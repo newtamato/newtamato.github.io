@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:xcode | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/xcode/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-05-02T20:34:39+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Xcode 7 error: “Missing iOS Distribution signing identity for …”]]></title>
+    <link href="http://www.newtomato.me/blog/2016/04/02/missing-ios-distribution"/>
+    <updated>2016-04-02T14:25:05+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/04/02/missing-ios-distribution</id>
+    <content type="html"><![CDATA[<p>最近准备重新打包一次我们的游戏，提交苹果，但是却遇到如下的问题。<br />
+<img src="/images/error.png" alt="Alt text" /><br />
+这是个怎么回事？难道我的证书出问题了。<br />
+<!--more--><br />
+于是到开发者member center去检查证书的过期时间。没问题啊。并且在xcode里面证书和签名文件都是能够对应的上的。keychain中文件也都是存在的。<br />
+这就奇怪了？</p>
+
+<p>然后赶紧Google一下。没想到手气好到爆，在stack overflow上立马知道了答案。<br />
+<img src="/images/answer.png" alt="Alt text" /><br />
+附上<a href="http://stackoverflow.com/questions/32821189/xcode-7-error-missing-ios-distribution-signing-identity-for">地址 </a>，请笑纳。<br />
+翻译一下就是WWDR这个中间第三方的证书文件已经过期了，我们要做的就是把它下载下来，然后重新安装，他会自动放到keychain中。但是原先keychain中的文件需要删掉。怎么删掉呢？就是打开keychain-&gt;System, 在View里面选择Show Expired Certificates,找到那个已经过期的证书，删掉它即可。</p>
+
+<p>这样之后，我们就需要重新编译ipa。不能使用已经编译过的。</p>
+
+<p>那么这个WWDR是做什么用的呢？<br />
+因为我们在创建自己开发者证书的时候，一般需要先上传一个自己的Cetefication。这个证书的有效性是谁保证的呢？就是这个WWDR来做的。所以说他相当于验证了我们的身份。因此非常的重要。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

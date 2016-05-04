@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:profiles | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/profiles/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-05-02T20:34:39+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[certificate与provision profiles 2]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2"/>
+    <updated>2015-11-29T20:10:15+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2</id>
+    <content type="html"><![CDATA[<p>我们在创建Certificate的时候，要求先自己生成一个CSR文件。<br />
+<img src="/images/1448076369836.png" alt="Alt text" /><br />
+<!--more--><br />
+生成的这个CSR文件，用sublime打开之后，里面的样子如下：</p>
+
+<pre><code>-----BEGIN CERTIFICATE REQUEST-----
+MIIByjCCATMCAQAwgYkxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
+MRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRMwEQYDVQQKEwpHb29nbGUgSW5jMR8w
+HQYDVQQLExZJbmZvcm1hdGlvbiBUZWNobm9sb2d5MRcwFQYDVQQDEw53d3cuZ29v
+Z2xlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEApZtYJCHJ4VpVXHfV
+IlstQTlO4qC03hjX+ZkPyvdYd1Q4+qbAeTwXmCUKYHThVRd5aXSqlPzyIBwieMZr
+WFlRQddZ1IzXAlVRDWwAo60KecqeAXnnUK+5fXoTI/UgWshre8tJ+x/TMHaQKR/J
+cIWPhqaQhsJuzZbvAdGA80BLxdMCAwEAAaAAMA0GCSqGSIb3DQEBBQUAA4GBAIhl
+4PvFq+e7ipARgI5ZM+GZx6mpCz44DTo0JkwfRDf+BtrsaC0q68eTf2XhYOsq4fkH
+Q0uA0aVog3f5iJxCa3Hp5gxbJQ6zV6kJ0TEsuaaOhEko9sdpCoPOnRBm2i/XRD2D
+6iNh8f8z0ShGsFqjDgFHyF3o+lUyj+UC6H1QW7bn
+-----END CERTIFICATE REQUEST-----
+</code></pre>
+
+<p>这里面包含了什么信息呢 ？<br />
+<img src="/images/1448076787997.png" alt="Alt text" /><br />
+<a href="https://www.sslshopper.com/what-is-a-csr-certificate-signing-request.html">来源</a></p>
+
+<p>从上面的表格，我们可以看到这里面包含了我们生成它的时候填写的信息还有一个关键的就是public key。<br />
+也就是说我们在生成CSR文件的时候，还声称了一个public key。因此我们可以在keychain中检查以下是否真的有这个public key。<br />
+<img src="/images/1448076932966.png" alt="Alt text" /><br />
+果然，在keychain中有一个钥匙对，私钥和公钥。<br />
+CSR自动包含了公钥，然后我们将这个CSR文件提交给苹果的member center。<br />
+<img src="/images/1448077003733.png" alt="Alt text" /><br />
+此时会生成.cer文件。将此文件下载下来，双击安装。此时在keychain当中就会将我们的私钥和这个certificate绑定起来。<br />
+<img src="/images/1448077535385.png" alt="Alt text" /></p>
+
+<p>这个certificate就是验证开发者身份。</p>
+
+<p>接下来的mobileprovision则是验证开发者权限的。<br />
+我们将自己生成的开发版mobileprovision打开看看。</p>
+
+<pre><code>&lt;key&gt;Entitlements&lt;/key&gt;
+  &lt;dict&gt;
+    &lt;key&gt;keychain-access-groups&lt;/key&gt;
+      &lt;array&gt;
+          &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
+      &lt;/array&gt;
+      &lt;key&gt;get-task-allow&lt;/key&gt;
+      &lt;true/&gt;
+      &lt;key&gt;application-identifier&lt;/key&gt;
+      &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
+      &lt;key&gt;com.apple.developer.team-identifier&lt;/key&gt;
+      &lt;string&gt;L23FMABA6X&lt;/string&gt;
+      &lt;key&gt;aps-environment&lt;/key&gt;
+      &lt;string&gt;development&lt;/string&gt;
+  
+  &lt;/dict&gt;
+	
+	...
+
+  &lt;key&gt;ProvisionedDevices&lt;/key&gt;
+  &lt;array&gt;
+      &lt;string&gt;11f30c7340e54187e93e1d085f85574570206cd9&lt;/string&gt;
+      &lt;string&gt;0545f62295c9f117e2d6c19131df55444b0b8444&lt;/string&gt;
+      &lt;string&gt;8bcbf9be5476b09969fa597bf38f3949ed9b6e7d&lt;/string&gt;
+      &lt;string&gt;57a453b5e5f39618c4e09d6399efff2e2d0b59a4&lt;/string&gt;
+      &lt;string&gt;eff3c07516897e04c5d2aefaf91c2cf05e13a933&lt;/string&gt;
+      &lt;string&gt;5256d0acb2218cef2748641582c4993c0f193ed9&lt;/string&gt;
+      &lt;string&gt;030662def7e5fc03311f20891f0944f2b7f73251&lt;/string&gt;
+      &lt;string&gt;a3216d9f5e611dd1f76e45858432d9c5e945d73c&lt;/string&gt;
+      &lt;string&gt;cdd59a0a353c66a75a86a8419598a83a4db98e7c&lt;/string&gt;
+      &lt;string&gt;7001583678ac38d05b18928d049098329531d3e3&lt;/string&gt;
+      &lt;string&gt;8bd9c88be11675b7ef71de1d6122ba95292a3472&lt;/string&gt;
+      &lt;string&gt;bd63797509b861368e5a293717537b909d58c846&lt;/string&gt;
+      &lt;string&gt;89f4b347703111b0067b79d7d4226684d6efe6a3&lt;/string&gt;
+      &lt;string&gt;01798a0796437ae7eff5dddb3a442912ae57d50e&lt;/string&gt;
+      &lt;string&gt;6a7cf9c50f068ddcca529f589e3d70141c8f85de&lt;/string&gt;
+      &lt;string&gt;3c6e42454f9c551abc1738836ebf7a9513a90afa&lt;/string&gt;
+      &lt;string&gt;cad8d51523e6fdb4d96fc33df65376545a9a683e&lt;/string&gt;
+      &lt;string&gt;7b3a694a86e1d54e942ae1cbe6498eba4b2e68c6&lt;/string&gt;
+      &lt;string&gt;8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec&lt;/string&gt;
+      &lt;string&gt;a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c&lt;/string&gt;
+  &lt;/array&gt;
+</code></pre>
+
+<p>里面明确的告诉了我们aps-environment和相关的设备序列号。以及keychain-access-groups，在这里他告诉我们要使用keychain当中一个L23FMABA6X的文件。这是什么呢？可以打开keychain到Certificate当中检查一下，这就是我们刚才上面生成的! 如此一来mobileprovision就和我们的Certificate绑定在一起了。</p>
+
+<p>因此一个开发版的mobileprovision包含的内容有，appID, 开发设备，以及Certificate等内容<br />
+如果我们生成的是Production版本的证书又该是什么样子呢？这个大家可以去试试看。</p>
+
+<p>最后，<a href="http://0xc010d.net/mobileprovision-files-structure-and-reading/">iDev blog</a>的作者提供了一个工具，用于检测证书的类型。</p>
+
+<pre><code>mobileprovisionParser -f &lt;fileName&gt; [-o &lt;option&gt;]
+</code></pre>
+
+<p>例：</p>
+
+<pre><code>mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision
+
+debug
+</code></pre>
+
+<pre><code>mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision -o devices
+
+11f30c7340e54187e93e1d085f85574570206cd9
+0545f62295c9f117e2d6c19131df55444b0b8444
+...
+8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec
+a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c
+</code></pre>
+
+<p>这样也能够方便的知晓证书的基本信息。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Certificate与provision profiles]]></title>
+    <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1"/>
+    <updated>2015-11-29T20:04:52+08:00</updated>
+    <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision1</id>
+    <content type="html"><![CDATA[<p>作为需要将应用上传到App Store的开发者，我们肯定会遇到一个有意思的问题，那就是申请AppId和开发者证书。</p>
+
+<p>开发者证书主要有两种类型。Developer Program 和Enterprise Program 。前一种就是99美金的开发者证书，而后一种就是299美金的开发者证书，具体的区别请参看下图：<br />
+<img src="/images/iOS.png" alt="Alt text" /><br />
+<!--more--></p>
+
+<p>其中有一个AdHoc的发布方式，认为可以将应用发布到100个设备上面，但是必须将这100个设备的UUID也放到证书当中，否则设备是无法运行应用的。<br />
+而In House的发布方式，则非常的简单，可以不需要uuid就可以装在设备上。<br />
+申请开发者证书 步骤如下：<br />
+1. 通过自己的开发者账号进入到个人后台，前提是你已经购买了99美金或者299美金的开发者资格。<br />
+2. 进入申请证书界面。<br />
+3. 选择Certificates<br />
+<img src="/images/1447855210829.png" alt="Alt text" />。<br />
+下面会要求你上传一个签名，此签名作用非常的大，后面我们在说。生成签名的方式也很简单，因为只要你用苹果电脑开发，就会在keychain中申请一个签名。<br />
+4. 提交了自己生产的CSR( Certificate Signing Request )文件。就会生成一个p12文件。需要将其下载下来。<br />
+5. 接下来生成mobileprovision文件。<br />
+<img src="/images/1447987845690.png" alt="Alt text" /><br />
+上面我们看到有identifier和Devices，暂时可以不用设置，我们生成mobileprovision的时候会要求我们设置的。<br />
+按照苹果的要求填写，最后会生成一个mobileprovision文件。同样也要下载下来。</p>
+
+<p>接下来就要将其和我们的xcode结合在一起。<br />
+1. 双击p12文件安装。他会自动安装到mac电脑的keychain中。用于验证我们的身份。<br />
+2. 双击mobileprovision文件。他会自动的安装到~/Library/MobileDevice/Provisioning\ Profiles下面。<br />
+也可以通过xcode的账户同步功能，将开发者账号下面的mobileprovision同步下来。<br />
+<img src="/images/1447988460200.png" alt="Alt text" /></p>
+
+<p>这样做了之后，我们点击自己工程的的build setting，在其下面的code signing就可以看到mobileprovision<br />
+<img src="/images/1447988655673.png" alt="Alt text" /><br />
+点击选择我们自己的mobileprovision即可！</p>
+]]></content>
+  </entry>
+  
+</feed>

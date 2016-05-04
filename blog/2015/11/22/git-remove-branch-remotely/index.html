@@ -1,0 +1,216 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
+	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta charset="utf-8">
+	<title>git如何在本地和远端都删除相关的分支  | 番茄手册</title>
+
+<meta name="author" content="newtomato"> 
+
+<meta name="description" content="1
+2
+3
+4
+git branch -r #查看本地和远端同步的分支
+origin/change_avatar_cloth
+origin/develop
+origin/master 通过命令git branch -rd branch_name，将存在自己本地的remote分支删除。 &hellip;"> <meta name="keywords" content="">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
+
+<script language="Javascript" type="text/javascript">
+$(document).ready(
+  function() {
+    (function($) {
+      $(".fancybox[data-content-id]").each(function() {
+        this.href = $(this).data('content-id');
+      });
+      $(".fancybox").fancybox({
+        beforeLoad: function() {
+          var el, 
+              id = $(this.element).data('title-id');
+
+          if (id) {
+            el = $('#' + id);
+
+            if (el.length) {
+              this.title = el.html();
+            }
+          }
+          if ($(this).data('content')) {
+            this.content = $(this).data('content');
+          }
+        },
+        helpers: {
+          title: {
+            type: 'inside'
+          }
+        }
+      });
+    })(jQuery);
+  }
+);
+</script>
+
+	
+</head>
+
+
+
+<body>
+	<header id="header" class="inner"><h1><a href="/">番茄手册</a></h1>
+<h4>西红柿炒鸡蛋</h4>
+<nav id="main-nav"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</nav>
+<nav id="mobile-nav">
+	<div class="alignleft menu">
+		<a class="button">Menu</a>
+		<div class="container"><ul>
+	<li><a href="/">Blog</a></li>
+	<li><a href="/about">About</a></li>
+	<li><a href="/portfolio">Portfolio</a></li>
+	<li><a href="/archives">Archive</a></li>
+</ul>
+</div>
+	</div>
+	<div class="alignright search">
+		<a class="button"></a>
+		<div class="container">
+			<form action="https://www.google.com/search" method="get">
+				<input type="text" name="q" results="0">
+				<input type="hidden" name="q" value="site:www.newtomato.me">
+			</form>
+		</div>
+	</div>
+</nav>
+
+
+</header>
+
+	<div id="content" class="inner"><article class="post">
+	<h2 class="title">Git如何在本地和远端都删除相关的分支</h2>
+	<div class="entry-content"><div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">git branch -r #查看本地和远端同步的分支
+</span><span class="line">origin/change_avatar_cloth
+</span><span class="line">origin/develop
+</span><span class="line">origin/master</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<!--more-->
+
+<p>通过命令<code>git branch -rd  branch_name</code>，将存在自己本地的remote分支删除。但是并没有通知远端。因此还需要如下的命令<code>git push origin: branch_name</code> 将本地的分支同步出去。<br />
+如果此时想要让别人同步服务器的分支，也就是和服务器保持一样，如果服务器的分支被删除了，本地的分支也照样删除，可以使用如下命令：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">git pull --prune</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>后来到stack overflow当中找到了高票答案</p>
+
+<blockquote>
+  <p>As of Git v1.7.0, you can delete a remote branch using<br />
+git push origin –delete <branchname>
+which is easier to remember than
+git push origin :<branchname>
+which was added in Git v1.5.0 &#8220;to delete a remote branch or a tag.&#8221;</branchname></branchname></p>
+</blockquote>
+
+<p>也就是说如果是1.7.0版本的Git，可以通过<code>git push origin --delete branch_name</code> 的方法去删除一个远端分支，而在1.5.0版本的Git重则可以直接使用<code>git push origin: branch_name</code> 的方法</p>
+
+<p>或者就是先批量通过删除本地remote的仓库，然后通过如下的方法<code>git push --prune origin</code>直接和远端和本地仓库做同步。也就是说如果本地remote分支不存在，那么远端也就删除掉。因此这个命令如同放大招，最好慎用。</p>
+
+</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-22T17:45:01+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/git/'>git</a>
+
+</div>
+
+
+	
+</div></article>
+
+	<div class="share">
+	<div class="addthis_toolbox addthis_default_style ">
+	
+	
+	<a class="addthis_button_tweet"></a>
+	
+	
+<!---	<a class="addthis_counter addthis_pill_style"></a> &#8212;>
+	</div>
+  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
+</div>
+
+
+</div>
+	<footer id="footer" class="inner">Copyright &copy; 2016
+
+    newtomato
+
+<br>
+Powered by Octopress.
+</footer>
+	<script src="/javascripts/slash.js"></script>
+<script src="/javascripts/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+(function($){
+	$('.fancybox').fancybox();
+})(jQuery);
+</script> <!-- Delete or comment this line to disable Fancybox -->
+
+
+
+
+<!-- Google Analytics -->
+<script>
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+ (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+ m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+ })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-70121917-1');
+ga('send', 'pageview');
+
+</script>
+<!-- End Google Analytics -->
+
+
+
+</body>
+</html>
