@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:加密 | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/jia-mi/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-05-07T19:07:24+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[cocos2dx中如何让sqlite3具有加密的功能]]></title>
+    <link href="http://www.newtomato.me/blog/2016/05/07/sqlite-cocos2dx"/>
+    <updated>2016-05-07T19:00:44+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/05/07/sqlite-cocos2dx</id>
+    <content type="html"><![CDATA[<p>sqlite3是一个轻量级的但同时功能完备的数据库系统。既然是数据库，那么他最基本的功能就是为我们存储一些基本的数据。<br />
+我们经常遇到能使用它的场景是这样的，比如客户端（包括浏览器，App应用，游戏），需要存储一些数据到本地，这些数据比较大，存储在本地是最合适的。<br />
+但是这样的情况下，有很多种手段我们可以使用，比如使用json,或者xml的方式。一般某些引擎都会提供一些接口给我们调用。以往的Adobe Flash就有一个shareData的数据存储。cocos2dx则使用userData，实际就是存储到UserDefault.xml中。<br />
+<!--more--><br />
+但是这样做有几个缺点:<br />
+1. 以上两种方式没有提供加密的功能。也就是我们存储的数据会被别人很容易导出来。<br />
+2. 如果数据过多，生成的文件大小势必也会变大。<br />
+3. 数据多，还会造成一点，就是系统io时间有所损失。尤其是在启动客户端的时候，不能很快将界面展示出来，就会造成用户体验的损失。</p>
+
+<p>而上面介绍的sqlite3，对于这些问题都能解决。</p>
+
+<p><strong>他首先足够小，简单易操作，且读取写入等操作较快。有自己的压缩算法，因此我们写入的数据不会占据太大的空间。且提供加密的功能，自己的数据库即使被人拿到也不会容易被破解。</strong></p>
+
+<p>在cocos2dx的2.2.6版本中，已经把sqlite3的包引入进来了。因此它的基本功能我们都能看到。</p>
+
+<p>sqlite3的接口<br />
+<img src="/images/1462613459251.png" alt="Alt text" /><br />
+database的接口<br />
+<img src="/images/1462613520932.png" alt="Alt text" /></p>
+
+<p>打开sqlite</p>
+
+<pre><code>local sqlite3 = require("lsqlite3") --创建sqlite3对象
+local db = sqlite3.open(databasefilename) -- 打开一个db
+local sql=[[
+	 		SELECT * FROM userData ;
+    		]]
+local ret = db:execute(sql) --执行上面的sql语句。他有自己的返回值。可以打印看看结果
+db:close()
+</code></pre>
+
+<p>上面的方式就是操作sqlite的一个基本模式。<br />
+所以说大部分工作，cocos2dx已经替我们实现了。我们只要使用它即可。<br />
+但是不足之处在于2.2.6版本并没有提供sqlite3加密的功能。这一部分需要我们自己做。</p>
+
+<p>还好，网上有不少同学对此已经贡献了自己的方法，我也是为此折腾了许久才搞定。所以别人的路我们拿来参考，但是真要弄明白还是需要自己去实践才可以的。</p>
+
+<p>首先，加密可以自己实现，那就需要自己编写c代码，扩展sqlite3。幸运的是，我们有<a href="http://wxcode.sourceforge.net/components/wxsqlite3/">wxSqite3</a>. 站在巨人的肩膀上我们才能看的更远。<br />
+下载wxsqlite3之后，将整个文件下放到cocos2dx的项目下面。我放到了external的下面。然后在xcode中只需要引入如下文件。其他文件不需要引用到xcode，但是也需要放在哪个目录下面。工程运行时也会调用。引用sqlite3secure.c这个文件是因为他已经include了其他的文件。（我曾尝试把其他文件也都引用进来，发现许多的报错，于是把报错的文件都挨个删掉，结果剩下这个文件不报错且可以运行）<br />
+<img src="/images/1462615862424.png" alt="Alt text" /><br />
+如果项目中有其他的相同的文件，删掉他们即可。<br />
+然后只要在我们操作数据库之前，调用一次<strong>sqlite3_key( sqlite3 *db, const void *pKey, int nKey)</strong>，这个函数就是对数据库加密.</p>
+
+<ol>
+  <li>sqlite3_key：设置秘钥</li>
+  <li>sqlite3_rekey: 重新设置秘钥，可以通过后两个参数为nil来清空数据空的秘钥</li>
+</ol>
+
+<p>这里推荐一个工具sqlitebrowser，如果我们的db没有加密，拖入到这个应用中，能够很清楚的看到我们的数据库表，但是如果一旦加密，应用就无法读取这个表。</p>
+
+<p>这样还不算结束，需要将打开它的某些宏定义，这样某些函数我们才能够正确的调用。<br />
+<img src="/images/1462616491431.png" alt="Alt text" /></p>
+
+<p>这样配置之后，在clean工程，然后重新编译运行。差不多就能够运行起来。</p>
+
+<p>下面的话，是我自己在研究wxsqlite3的时候，想到的。如果你的项目已经能够运行起来，那么下面的话可以忽略不看。<br />
+仔细看这个wxsqlite3，其实并没有在项目任何地方做设置，也没有被完全引用，但是他是如何运行起来的呢？程序运行的时序，分析下来，应该是如下的顺序：<br />
+lua_extension.c先被调用注册了了一些供lua调用的函数。<br />
+<img src="/images/1462617671136.png" alt="Alt text" /></p>
+
+<p>接下来我们调用lsqlite3之后，就按照我上面说的开始注册sqlite3的函数，然后就是db等函数。因此分析可以知道，运行时候已经就是将要wxsqlite3的函数和lsqlite3要调用的函数映射在一起。<br />
+因此我的理解是这样，项目在编译期间，由于导入了sqlite3secure.c这个文件，编译器会扫描这个文件引用的其他.h,.c文件，将.h文件转换成同名的.c文件进行编译。如果.h里面声明了一个函数，并且在.c中有相关的实现，那么就可以编译通过。编译成功之后这些函数可能挂在某些命名空间下面，也可能是全局函数，所以我们调用的时候，就能找到这个函数，和是否在同一个目录没有关系。<br />
+上面的理解，和后来搜索到的c语言编译刚好不谋而合，本人c语言的基础早在大学就已经还给了老师，毕业之后一直使用面向对象的思想使用语言。由于接触lua才开始研究c和c++，果然是一入编程深似海。惭愧惭愧啊！</p>
+
+]]></content>
+  </entry>
+  
+</feed>
