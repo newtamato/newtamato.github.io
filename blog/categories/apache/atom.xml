@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:apache | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/apache/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-05-15T22:58:44+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[MAC上面搭建PHP开发环境]]></title>
+    <link href="http://www.newtomato.me/blog/2016/05/15/mac-apache-php"/>
+    <updated>2016-05-15T22:37:05+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/05/15/mac-apache-php</id>
+    <content type="html"><![CDATA[<p>最近抽空在MAC上尝试搭建一个PHP开发环境，把从github上找到的一些开源的框架运行起来。<br />
+由于曾经做过这样的工作，以为是轻车熟路，结果自己也是踏错不少坑。现在记录总结下来，免于日后辛苦。<br />
+<!--more--><br />
+首先，我的电脑环境是10.11.4 EI Caption版本。<br />
+MAC本身自带了一个php开发环境。如何验证呢？<br />
+只要你打开命令行，输入如下命令<br />
+<img src="/images/1463305012104.png" alt="Alt text" /><br />
+能看到反馈，就证明电脑自带php，我们只需要做一些Apache的配置即可。<br />
+Apache的目录在<code>/etc/apache2</code>，我们通过命令行进入即可。<br />
+进去之后，打开http.conf文件，查找到Document这个标签，你会看到他定义的目录位置<br />
+<img src="/images/1463306474896.png" alt="Alt text" /><br />
+暂时先不要改这个地方。<br />
+我们先到<code>/Library/WebServer/Documents</code>下面看看。这个文件夹下面有什么？<br />
+<img src="/images/1463306562923.png" alt="Alt text" /><br />
+这里面有一个index.html.en文件。<br />
+ok，此时我们启动Apache<br />
+启动命令<code>sudo apachectl start</code><br />
+关闭命令<code>sudo apachectl stop</code><br />
+重启命令<code>sudo apachectl restart</code></p>
+
+<p>启动Apache之后，打开浏览器，输入<code>http://localhost</code> ，此时我们会看到 <strong>It Works!</strong>。此时Apache就已经正常的启动了。</p>
+
+<p>他的webroot就是上面提到的<code>/Library/WebServer/Documents</code><br />
+现在需求是，需要修改这个目录，将他指向到我们要的目录。<br />
+直接修改这个文件可以么？<br />
+比如我们的目录位置是<br />
+%{HOME_PATH}/app<br />
+先来尝试修改一下。</p>
+
+<pre><code>DocumentRoot "%{HOME_PATH}/app"
+&lt;Directory "%{HOME_PATH}/app"&gt;
+</code></pre>
+<p>%{HOME_PATH}换成你自己的用户目录即可。</p>
+
+<p>然后在这个目录中增加一个index.php文件。内容如下</p>
+
+<pre><code>&lt;?php
+print("hello,world");
+echo phpinfo();
+</code></pre>
+
+<p>ok，准备就绪，重启Apache即可。<br />
+然后浏览器打开 <code>http://localhost</code><br />
+看到了什么了么？<br />
+没错不在是我们上面的It Works而是如下这样的截图，他就是讲Apache的运行配置输出到浏览器中了。<br />
+<img src="/images/1463307832738.png" alt="Alt text" /></p>
+
+<p>这是修改我们目录最简单的一步。<br />
+接下来，我们可以尝试修改配置，增加虚拟主机。这个工作大部分Apache都为我们做了，我们现在配置即可。<br />
+首先打开httpd.conf,查找到httpd-vhosts这个单词，找到他对应的行，将注释去掉</p>
+
+<pre><code># Virtual hosts
+Include /private/etc/apache2/extra/httpd-vhosts.conf
+</code></pre>
+
+<p>然后到<code>/etc/apache2/extra</code>下面打开httpd-vhosts.conf这个文件。在里面按照下面这个模板增加一些配置。</p>
+
+<pre><code>&lt;VirtualHost *:80&gt;
+     DocumentRoot "%{your webdocumen name}"
+     ServerName %{your domain name}
+     ErrorLog "/private/var/log/apache2/sites-error_log"
+     CustomLog "/private/var/log/apache2/sites-access_log" common
+     &lt;Directory /&gt;
+                Options Indexes FollowSymLinks MultiViews
+                 AllowOverride None
+                 Order deny,allow
+                Allow from all
+      &lt;/Directory&gt;
+&lt;/VirtualHost&gt;
+</code></pre>
+
+<p>比如我们此处，将<code>%{your webdocumen name}</code>替换成上面的%{HOME_PAHT}/app，然后<code>%{your domain name}</code>替换成<code>myapp.com</code>。<br />
+同时讲myapp.com在<code>/etc/hosts</code>中进行如下配置</p>
+
+<pre><code>127.0.0.1 myapp.com
+</code></pre>
+
+<p>然后重启Apache。浏览器中敲入<code>http://myapp.com</code></p>
+
+<p>如果你能够看到和上面一样的hello，world的输出，那么你就大功告成了！</p>
+
+]]></content>
+  </entry>
+  
+</feed>
