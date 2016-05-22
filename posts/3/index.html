@@ -9,7 +9,7 @@
 
 <meta name="author" content="newtomato"> 
 
-<meta name="description" content="转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂， &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然， &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -95,6 +95,54 @@ $(document).ready(
 </header>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/12/lua-deep-3">
+		
+			Lua脚本在C++下的舞步（三）</a>
+	</h2>
+	<div class="entry-content">
+		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然，这些功能是为了今天这篇文章而铺路的。</p>
+
+<p>看了七猫的回帖，呵呵，确实应该说一下SWIG这个工具，说真的，我对这个工具理解不深，因为没有怎么用过，读过一些关于它的文章，似乎是帮你把C++的功能封装成一个Lua基本库的东西，但是后来研究，他可以很轻松帮你把公用函数封装成一个Lua的基本库(类似C++的dll)，但是对于我的需求而言，可能不太一样。因为我大量的是需要在C++里面进行数据传输以及变量的交互，所以为了紧贴C++，我需要很多关联数据的处理。 <br />
+我是一名C++程序员，所以在很多时候，不想过多的使用Lua的特性，因为个人感觉，Lua的语法要比C++的更加灵活。而我更希望，在函数调用的某些习惯上，遵循一些C++的规则。</p>
+
+
+		
+		<a href="/blog/2015/11/12/lua-deep-3" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-12T21:48:47+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+</div></article>
 
 
     <article class="post">
@@ -527,73 +575,6 @@ $(document).ready(
 <div class="tags">
 
 	<a class='category' href='/blog/categories/ming-ling-xing/'>命令行</a>
-
-</div>
-
-
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2015/10/17/vimshi-yong-yan-se">
-		
-			Vim使用-颜色</a>
-	</h2>
-	<div class="entry-content">
-		<ol>
-  <li>首先将Solarized的配色库download下来</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">altercation</span><span class="o">/</span><span class="n">solarized</span><span class="o">.</span><span class="n">git</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<ol>
-  <li>将solarized.vim文件copy 到 ~/.vim/colors/  文件夹下面</li>
-  <li>配置.vimrc</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">syntax</span> <span class="n">on</span>
-</span><span class="line"><span class="nb">set</span> <span class="n">t_Co</span><span class="o">=</span><span class="mi">256</span>
-</span><span class="line"><span class="n">let</span> <span class="n">g</span><span class="p">:</span><span class="n">solarized_termcolors</span><span class="o">=</span><span class="mi">256</span>
-</span><span class="line"><span class="nb">set</span> <span class="n">background</span><span class="o">=</span><span class="n">dark</span>
-</span><span class="line"><span class="n">colorscheme</span> <span class="n">solarized</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>**有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色 **</p>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:19:24+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/vim/'>vim</a>
 
 </div>
 
