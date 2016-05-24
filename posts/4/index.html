@@ -9,12 +9,9 @@
 
 <meta name="author" content="newtomato"> 
 
-<meta name="description" content="首先将Solarized的配色库download下来 1
-git clone git://github.com/altercation/solarized.git 将solarized.vim文件copy 到 ~/.vim/colors/ 文件夹下面 配置.vimrc 1
-2
-3
-4
-5 &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="按文件大小降序排列 1 ls -lSr 查看当前电脑上硬盘的使用情况 1
+df -lh 这是按兆（M）来排序 1 du -sh * |sort -rm 选出排在前面的10个 1
+du -sh * | sort -rm | head 选出排在后面的10个 1 du -sh * | sort -rm &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -100,6 +97,72 @@ $(document).ready(
 </header>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/10/17/lsming-ling-xing-pai-xu">
+		
+			Ls命令行排序</a>
+	</h2>
+	<div class="entry-content">
+		<p>按文件大小降序排列</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> ls -lSr </span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>查看当前电脑上硬盘的使用情况</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">df -lh</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这是按兆（M）来排序</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * |sort -rm</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在前面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">du -sh * | sort -rm | head</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在后面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * | sort -rm | tail</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+
+		
+		
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-17T22:26:44+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/ming-ling-xing/'>命令行</a>
+
+</div>
+
+
+	
+</div></article>
 
 
     <article class="post">

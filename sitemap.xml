@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/05/24/shen-mi-hai-yu-tong-guan-jie-tu</loc>
+<lastmod>2016-05-24T11:40:43+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/05/22/shen-mi-hai-yu-4</loc>
 <lastmod>2016-05-22T21:20:30+08:00</lastmod>
 </url>
@@ -240,6 +244,15 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/shen-mi-hai-yu-4/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/2/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/3/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/4/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

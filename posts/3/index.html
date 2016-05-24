@@ -9,7 +9,7 @@
 
 <meta name="author" content="newtomato"> 
 
-<meta name="description" content="转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然， &hellip;"> <meta name="keywords" content="">
+<meta name="description" content=" require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件 阅读全文&rarr; lua "> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -95,6 +95,48 @@ $(document).ready(
 </header>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2015/11/15/lua-require">
+		
+			Lua中require到底做了什么事情？</a>
+	</h2>
+	<div class="entry-content">
+		<p>require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件<br />
+
+		
+		<a href="/blog/2015/11/15/lua-require" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-15T20:47:27+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/lua/'>lua</a>
+
+</div>
+
+
+	
+</div></article>
 
 
     <article class="post">
@@ -509,72 +551,6 @@ $(document).ready(
 <div class="tags">
 
 	<a class='category' href='/blog/categories/androidkai-fa/'>android开发</a>
-
-</div>
-
-
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2015/10/17/lsming-ling-xing-pai-xu">
-		
-			Ls命令行排序</a>
-	</h2>
-	<div class="entry-content">
-		<p>按文件大小降序排列</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line"> ls -lSr </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>查看当前电脑上硬盘的使用情况</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">df -lh</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这是按兆（M）来排序</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * |sort -rm</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>选出排在前面的10个</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">du -sh * | sort -rm | head</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>选出排在后面的10个</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * | sort -rm | tail</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-
-		
-		
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:26:44+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/ming-ling-xing/'>命令行</a>
 
 </div>
 
