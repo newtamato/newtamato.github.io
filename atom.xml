@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-05-29T17:39:15+08:00</updated>
+  <updated>2016-06-01T12:34:29+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,82 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用Typecho搭建网站记录]]></title>
+    <link href="http://www.newtomato.me/blog/2016/06/01/da-jian-typechoji-lu"/>
+    <updated>2016-06-01T12:30:45+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/06/01/da-jian-typechoji-lu</id>
+    <content type="html"><![CDATA[<p>早在一年前，使用octpress的时候，就在网上看到过Typecho。<br />
+但是当时查找到的octpress的资料更多一些，于是就没有选择Typecho。今天无意间的看到别人的Typecho网站，真是不错。简洁，清晰。<br />
+相对于Octpress，他具有的优点如下</p>
+
+<ol>
+  <li>提供完整的网站功能。可以用户注册。</li>
+  <li>集成了许多功能，我们都不用再次配置。比如用户评论。</li>
+  <li>提供更多的主题，且很多都是国人自己写的主题。</li>
+  <li>维护Typecho的团队是中国人，因此很容易找到解决问题的方法。<br />
+<!--more--></li>
+</ol>
+
+<p>鉴于这些优点，我抽空搭建了一下一个个人网站。几乎是从零开始。经过如下的步骤</p>
+
+<ol>
+  <li>注册域名</li>
+  <li>域名映射IP，使域名生效。国内可以直接访问。</li>
+  <li>申请空间。但是我网上搜索了很多免费空间，终于找到了一个免费的虚拟主机。也算是凑合拿来用。</li>
+  <li>搭建Typecho。</li>
+  <li>更换主题，让个人网站更有意思。</li>
+</ol>
+
+<h2 id="section">域名注册</h2>
+<p>可以去Godaday上注册，但是这个一般是需要花钱的。不过钱并不多，如果网上可以找到优惠码。还可以注册免费域名。但是这里稍微好一点的，都被抢注。因此为了能够找一个自己喜欢的，我有搜索了一会儿。找到了<a href="http://www.freenom.com/en/index.html?lang=en">freenom</a>网站。这上面可以注册一些比较小众的域名。比如tk，ml等域名。</p>
+
+<h2 id="section-1">空间申请</h2>
+<p>一般为了稳定性，会申请阿里云的服务。但是这次我是为了做实验，因此我希望能够找到免费的空间。但是一分钱一分货，免费的东西找起来很费事。好不容易找到了一个<a href="https://www.hostpark.cn/">主机公园</a>。但是暂时只是找到了它3天的免费试用。并没有终身免费的虚拟主机可以试用。<br />
+不过幸运的是，网站的站长很负责，给我很多解答。<br />
+申请成功之后，会将虚拟主机的地址放到注册的邮箱里面。这个地址就是我们需要的。接下来只要将域名和IP地址绑定在一起。我们就能够顺利的访问自己的网站了！</p>
+
+<h2 id="section-2">域名映射</h2>
+<p>为了能够国内很快访问，就需要有一个做dns映射。freenom也可以做，但是不知道为什么<strong>@</strong>这样的不能够配置。所以转向国内的<a href="https://www.dnspod.cn/">DNSPod</a>。然后在它里面做设置。<br />
+只要添加<strong>www和@</strong>记录即可<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647130072408.jpg" alt="" /></p>
+
+<p>同时由于我们的域名是在freenom上申请的，也需要在freenom上将域名和dnspod做一个中介转换。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647132199295.jpg" alt="" /></p>
+
+<p>此时设置完成之后，并不表示我们就能够访问自己的网站了。但是我们可以用工具测试一下，网站域名是否生效了。</p>
+
+<p>可以使用两种方式</p>
+
+<ol>
+  <li><code>nslookup 域名</code>，这是命令行模式，程序员比较喜欢使用</li>
+  <li>使用<a href="http://tool.chinaz.com/nslookup/">站长工具</a>,输入你的域名。看是否有响应</li>
+</ol>
+
+<h2 id="typecho">Typecho搭建</h2>
+
+<p>上面如果生效，接下来，对你就很简单了。首先我们要到<a href="http://typecho.org/">Typecho</a>网站上面下载一个稳定版本。<br />
+然后我们打开上面申请的免费虚拟主机目录。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647135779055.jpg" alt="文件" /></p>
+
+<p>点开它，你会看到自己虚拟主机的结构<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647136399737.jpg" alt="结构-w300" /><br />
+我们只要将下载的typecho的zip压缩文件上传到public_html，上传完成之后，解压缩即可。<br />
+完成这些之后，在浏览器中输入<code>http://{你的域名}/build/index.php</code>,此时你会看到Typecho的安装提示。<br />
+只要走到这一步，就证明你的网站已经差不多了。已经完成了90%。</p>
+
+<h2 id="section-3">替换主题</h2>
+<p>默认安装的主题是简单大众化的。要想更有特色一点，我们只需要网上搜搜Typecho主题。然后选择一个你喜欢的主题下载zip文件。<br />
+然后将zip文件上传到上面<code>/public_html/build/usr/theme/</code>里面，解压缩之后，到后台<code>http://{你的域名}/build/admin/index.php</code>去启用此主题即可。</p>
+
+<p>正常情况下，此时刷新一下浏览器即可看见新的主题，但是有的时候也会出现宇宙射线般无法解释的现象。只要耐心等待一会儿，或者换一个浏览器试试。你会发现主题真的生效了哦。</p>
+
+<p>从头到尾花费了一下午的时光，不过终于把它搭建起来也真是开心。<br />
+希望这篇文章能够帮到你。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[关于自动化测试的一些思考]]></title>
@@ -1604,169 +1680,6 @@ A.lua</p>
 
 <p>setfenv()还有什么特别的用处？敬请等待下回分析！</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Serpent：lua序列化和pretty的输出]]></title>
-    <link href="http://www.newtomato.me/blog/2015/11/15/serpent-for-lua"/>
-    <updated>2015-11-15T21:32:34+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/11/15/serpent-for-lua</id>
-    <content type="html"><![CDATA[<p><img src="http://www.newtomato.me/images/1447594435836.png" alt="Alt text" /></p>
-
-<p>翻译自http://notebook.kulchenko.com/programming/serpent-lua-serializer-pretty-printer<br />
-本人翻译能力有限，如有不妥之处还望指正。</p>
-
-<p>为ZeroBrane Studio我一直开发Lua debugger。我意识到我需要一个table的序列化打印浮躁的结构，例如堆栈和一些在调试器组件使用的表数据。Serpent就是我开发出来的用于lua序列化和pretty的输出。<br />
-<!--more--></p>
-
-<p>因为动态变量的要求lua本身几乎不提供内置的方法去序列化table。那样需要被一个函数去处理（我们在this thread讨论过）。我第一步停在了TableSerializaiton 页面上，在处理table序列化方面它提供了几个不错的信息并且带有不少的例子。</p>
-
-<p>看了已有的模块，我发现没有个哪一个满足我的需求<br />
-1. 需要是单纯的lua（这条需求排除了类似PlutoLibrary的库）<br />
-2. 需要既能够漂亮的输出，又能够强大的序列化。（这条排除了serialize.lua）<br />
-3. 需要能够打印共享的handler和自我引用（这条排除了许多的实现）<br />
-4. 序列化不同类型的key，包括以table做key（这条排除了pretty.lua）<br />
-5. 需要剪短并且不需要太多的依赖。（这条排除了 tserialise/tpretty from lua-nucleo）</p>
-
-<p>metalua的serialize.lua很接近我的需要，但是他不能够处理全局的函数或者math.huge数。而且也不能够漂亮的输出（这个也要求很多不同的方法）；table.tostring和serialize结合起来几乎是我想要的一大半代码了。</p>
-
-<p>Penlight的pretty.lua 能够做到很漂亮的输出，但是依赖两个其他的模块，并且不能够处理boolean值和将table作为key的数据，共享表格以及自身引用。</p>
-
-<p>lua-nucleo的tserialize.lua在序列化不同类型方面做的很出色（能够很好的打印math.huge数字，而另外两个模块就不支持），但是不能够处理作为key或者value的函数。</p>
-
-<p>我更希望结果是可读性很好的，而且我能够使用loadstring得到的依然是一个有效的片段。例如，我想keys能够以数字的方式被列出，比如<code>{'a','b'}</code> 打印之后就是<code>{[1] = 'a', [2] = 'b'}</code>,<code>{1, nil, 3}</code>打印之后就是 <code>{1, [3]=3}</code>,<code>{foo = 'foo'}</code>打印之后就是<code>{['foo'] = 'foo'}.</code></p>
-
-<p>Serpent并不处理upvalues和元表;对于弱引用或者transient 对象（io.stdin和其他userdata的对象是能够通过名字序列化的），函数尽可能序列化，全队函数被他们的名字替代。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">local b = {text="ha'ns", ['co\nl or']='bl"ue', str="\"\n'\\\000"}
-</span><span class="line">local c = function() return 1 end
-</span><span class="line">local a = {
-</span><span class="line">  x=1, [true] = {b}, [not true]=2, -- boolean as key
-</span><span class="line">  ['true'] = 'some value', -- keyword as a key
-</span><span class="line">  z = c, -- function as value
-</span><span class="line">  list={'a',nil,nil, -- embedded nils
-</span><span class="line">        [9]='i','f',[5]='g',[7]={}, ['3'] = 33}, -- empty table
-</span><span class="line">  [c] = print, -- function as key, global as value
-</span><span class="line">  [io.stdin] = 3, -- global userdata as key
-</span><span class="line">  ['label 2'] = b, -- shared reference
-</span><span class="line">  [b] = 0/0, -- table as key, undefined value as value
-</span><span class="line">  [math.huge] = -math.huge, -- huge as number value
-</span><span class="line">}
-</span><span class="line">a.c = a -- self-reference
-</span><span class="line">a[a] = a -- self-reference with table as key</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>The library provides three functions – dump, line, and block – with the last two being shortcuts for the main dump function.</p>
-
-<p>这个库提供三个函数，dump,line和block，后面两个是dump函数的简易版本。</p>
-
-<p>####漂亮的多行打印</p>
-
-<hr />
-
-<p>调试的时候如果你像看到一个表套表，这个就非常有用了。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">local serpent = require("serpent")
-</span><span class="line">print(serpent.block(a))</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>输出结构：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">{
-</span><span class="line">  [1/0 --[[math.huge]]] = -1/0 --[[-math.huge]],
-</span><span class="line">  c = nil --[[ref]],
-</span><span class="line">  ["label 2"] = {
-</span><span class="line">    ["co\nl or"] = "bl\"ue",
-</span><span class="line">    str = "\"\n'\\\000",
-</span><span class="line">    text = "ha'ns"
-</span><span class="line">  } --[[table: 001752B0]],
-</span><span class="line">  list = {
-</span><span class="line">    "a",
-</span><span class="line">    nil,
-</span><span class="line">    nil,
-</span><span class="line">    "f",
-</span><span class="line">    "g",
-</span><span class="line">    nil,
-</span><span class="line">    {} --[[table: 00175350]],
-</span><span class="line">    [9] = "i",
-</span><span class="line">    ["3"] = 33
-</span><span class="line">  } --[[table: 00175328]],
-</span><span class="line">  ["true"] = "some value",
-</span><span class="line">  x = 1,
-</span><span class="line">  z = loadstring("LuaQ...",'@serialized') --[[function: 00171020]],
-</span><span class="line">  [false] = 2,
-</span><span class="line">  [io.stdin --[[file (767D0958)]]] = 3,
-</span><span class="line">  [true] = {
-</span><span class="line">    nil --[[ref]]
-</span><span class="line">  } --[[table: 00175300]]
-</span><span class="line">} --[[table: 001752D8]]</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>####单行打印</p>
-
-<hr />
-<p>这是一个更加紧凑一点的展示。一行就展示出序列化的字符串。<br />
-不是一个完全的展示，不包括自我引用，共享数据，循环引用。</p>
-
-<p>local serpent = require(“serpent”)<br />
-print(serpent.dump(a, {name = ‘a’}))</p>
-
-<p>输出结果：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">do local a={[false]=2,[true]={[1]={str="\"\n'\\\000",text="ha'ns",["co\nl or"]
-</span><span class="line">="bl\"ue"}},c=nil --[[ref]],["label 2"]=nil --[[ref]],[1/0 --[[math.huge]]]=-1/0
-</span><span class="line">--[[-math.huge]],x=1,z=loadstring("LuaQ...",'@serialized'),[io.stdin]=3,list=
-</span><span class="line">{[1]="a",[4]="f",[5]="g",[7]={},["3"]=33,[9]="i"},["true"]="some value"};
-</span><span class="line">a.c=a;a[a]=a;a["label 2"]=a[true][1];a[a[true][1]]=0/0;a[a.z]=print;return a;end</span></code></pre></td></tr></table></div></figure></notextile></div>
 ]]></content>
   </entry>
   

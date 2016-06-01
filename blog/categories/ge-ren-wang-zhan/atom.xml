@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:个人网站 | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/ge-ren-wang-zhan/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-06-01T12:34:29+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用Typecho搭建网站记录]]></title>
+    <link href="http://www.newtomato.me/blog/2016/06/01/da-jian-typechoji-lu"/>
+    <updated>2016-06-01T12:30:45+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/06/01/da-jian-typechoji-lu</id>
+    <content type="html"><![CDATA[<p>早在一年前，使用octpress的时候，就在网上看到过Typecho。<br />
+但是当时查找到的octpress的资料更多一些，于是就没有选择Typecho。今天无意间的看到别人的Typecho网站，真是不错。简洁，清晰。<br />
+相对于Octpress，他具有的优点如下</p>
+
+<ol>
+  <li>提供完整的网站功能。可以用户注册。</li>
+  <li>集成了许多功能，我们都不用再次配置。比如用户评论。</li>
+  <li>提供更多的主题，且很多都是国人自己写的主题。</li>
+  <li>维护Typecho的团队是中国人，因此很容易找到解决问题的方法。<br />
+<!--more--></li>
+</ol>
+
+<p>鉴于这些优点，我抽空搭建了一下一个个人网站。几乎是从零开始。经过如下的步骤</p>
+
+<ol>
+  <li>注册域名</li>
+  <li>域名映射IP，使域名生效。国内可以直接访问。</li>
+  <li>申请空间。但是我网上搜索了很多免费空间，终于找到了一个免费的虚拟主机。也算是凑合拿来用。</li>
+  <li>搭建Typecho。</li>
+  <li>更换主题，让个人网站更有意思。</li>
+</ol>
+
+<h2 id="section">域名注册</h2>
+<p>可以去Godaday上注册，但是这个一般是需要花钱的。不过钱并不多，如果网上可以找到优惠码。还可以注册免费域名。但是这里稍微好一点的，都被抢注。因此为了能够找一个自己喜欢的，我有搜索了一会儿。找到了<a href="http://www.freenom.com/en/index.html?lang=en">freenom</a>网站。这上面可以注册一些比较小众的域名。比如tk，ml等域名。</p>
+
+<h2 id="section-1">空间申请</h2>
+<p>一般为了稳定性，会申请阿里云的服务。但是这次我是为了做实验，因此我希望能够找到免费的空间。但是一分钱一分货，免费的东西找起来很费事。好不容易找到了一个<a href="https://www.hostpark.cn/">主机公园</a>。但是暂时只是找到了它3天的免费试用。并没有终身免费的虚拟主机可以试用。<br />
+不过幸运的是，网站的站长很负责，给我很多解答。<br />
+申请成功之后，会将虚拟主机的地址放到注册的邮箱里面。这个地址就是我们需要的。接下来只要将域名和IP地址绑定在一起。我们就能够顺利的访问自己的网站了！</p>
+
+<h2 id="section-2">域名映射</h2>
+<p>为了能够国内很快访问，就需要有一个做dns映射。freenom也可以做，但是不知道为什么<strong>@</strong>这样的不能够配置。所以转向国内的<a href="https://www.dnspod.cn/">DNSPod</a>。然后在它里面做设置。<br />
+只要添加<strong>www和@</strong>记录即可<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647130072408.jpg" alt="" /></p>
+
+<p>同时由于我们的域名是在freenom上申请的，也需要在freenom上将域名和dnspod做一个中介转换。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647132199295.jpg" alt="" /></p>
+
+<p>此时设置完成之后，并不表示我们就能够访问自己的网站了。但是我们可以用工具测试一下，网站域名是否生效了。</p>
+
+<p>可以使用两种方式</p>
+
+<ol>
+  <li><code>nslookup 域名</code>，这是命令行模式，程序员比较喜欢使用</li>
+  <li>使用<a href="http://tool.chinaz.com/nslookup/">站长工具</a>,输入你的域名。看是否有响应</li>
+</ol>
+
+<h2 id="typecho">Typecho搭建</h2>
+
+<p>上面如果生效，接下来，对你就很简单了。首先我们要到<a href="http://typecho.org/">Typecho</a>网站上面下载一个稳定版本。<br />
+然后我们打开上面申请的免费虚拟主机目录。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647135779055.jpg" alt="文件" /></p>
+
+<p>点开它，你会看到自己虚拟主机的结构<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647136399737.jpg" alt="结构-w300" /><br />
+我们只要将下载的typecho的zip压缩文件上传到public_html，上传完成之后，解压缩即可。<br />
+完成这些之后，在浏览器中输入<code>http://{你的域名}/build/index.php</code>,此时你会看到Typecho的安装提示。<br />
+只要走到这一步，就证明你的网站已经差不多了。已经完成了90%。</p>
+
+<h2 id="section-3">替换主题</h2>
+<p>默认安装的主题是简单大众化的。要想更有特色一点，我们只需要网上搜搜Typecho主题。然后选择一个你喜欢的主题下载zip文件。<br />
+然后将zip文件上传到上面<code>/public_html/build/usr/theme/</code>里面，解压缩之后，到后台<code>http://{你的域名}/build/admin/index.php</code>去启用此主题即可。</p>
+
+<p>正常情况下，此时刷新一下浏览器即可看见新的主题，但是有的时候也会出现宇宙射线般无法解释的现象。只要耐心等待一会儿，或者换一个浏览器试试。你会发现主题真的生效了哦。</p>
+
+<p>从头到尾花费了一下午的时光，不过终于把它搭建起来也真是开心。<br />
+希望这篇文章能够帮到你。</p>
+
+]]></content>
+  </entry>
+  
+</feed>
