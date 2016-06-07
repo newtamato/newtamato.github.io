@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:table | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/table/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-06-07T20:36:08+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[记录Lua中排序的一种坑]]></title>
+    <link href="http://www.newtomato.me/blog/2016/06/07/lua-tablede-keng"/>
+    <updated>2016-06-07T20:26:28+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/06/07/lua-tablede-keng</id>
+    <content type="html"><![CDATA[<p>最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。<br />
+算法都是没有问题的，但是计算出来的结果却总是出现问题。这让我们一点摸不着头脑。<br />
+后来经过严格的多双眼睛的考察，发现，原来是打印出来的配置欺骗了我们。</p>
+
+<p>伪代码如下：</p>
+
+<pre><code>for _,itemConfig in pairs(config) do
+	--算法逻辑(itemConfig)
+end
+</code></pre>
+<!--more-->
+
+<p>json配置如下</p>
+
+<pre><code>"cells": {
+		"1_6": "A",
+		"1_7": "B",
+		"1_8": "C",
+		"1_11": "A",
+		"1_12": "A",
+		"1_13": "B",
+		"2_4": "C"
+ }
+ 
+</code></pre>
+
+<p>使用如下的lua函数打印这个结构。<code>dump(config)</code>,输出了如下的结果:</p>
+
+<pre><code> 
+	"cells": {
+			"1_11": "A",
+			"1_12": "A",
+			"1_13": "B",
+			"1_6": "A",
+			"1_7": "B",
+			"1_8": "C",
+			"2_4": "C"
+ 	}
+ 	
+</code></pre>
+
+<p>这个打印的规律就是将key的每一位按照Ascii码做比较，Ascii中排在前面，数字就排在前面。</p>
+
+<p>按照打印的顺序计算出来的结果不正确，那程序到底是用什么顺序呢？于是在for循环里面加入<code>print</code>打印，挨个输出看看是否有正确？<br />
+结果发现果然和dump出来的不一样。<br />
+dump欺我也！<br />
+而打印出来的数据和配置也不同，且配置发生了变化也会影响到打印。且没有规律可循！<br />
+我们的使用json读出，但是在<code>io.readfile()</code>是没有问题的，但是json转换之后出现了问题。这里分成两部分。一份不是cjson转成json，另一部分是json对象转换成table。我对后一部分的疑问很大。<br />
+于是对lua的table的结构进行了再次研究，知道我看到云风大侠的这篇<a href="http://blog.codingnow.com/2005/10/lua_table.html">文章</a>。</p>
+
+<p><strong>有点醍醐灌顶，简而言之，我们看到的table结构背后有一套自己的结构，这样能够保证对数据做快速的查询操作。他对key做hash处理。往里面增加数据，他会根据数据的key hash之后找一个位置。因此这里json对象在parase之后，往table中插入数据是不会按照我的json里面的格式。</strong></p>
+
+<p>如果一定要求table的结构是我们要求的顺序，就需要做sort排序处理。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

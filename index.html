@@ -9,8 +9,12 @@
 
 <meta name="author" content="newtomato"> 
 
-<meta name="description" content="这是个什么东西？ 首先，这是我很早就想到的一个想法。只是前期项目工期紧张，只是专注于功能的实现，虽然有想法，但是没有付出实现。
-现在回头来想，大部分功能都有相似的地方，就是数值物品获得和展示的地方，这种地方是完全可以抽象出来做成一个通用的模块。 奖励如果占据背包格子，需要给予提示，或者根据条件（ &hellip;"> <meta name="keywords" content="">
+<meta name="description" content="最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。
+算法都是没有问题的，但是计算出来的结果却总是出现问题。这让我们一点摸不着头脑。
+后来经过严格的多双眼睛的考察，发现，原来是打印出来的配置欺骗了我们。 伪代码如下： 1
+2
+3
+for _,itemConfig in pairs &hellip;"> <meta name="keywords" content="">
 
 	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
@@ -96,6 +100,59 @@ $(document).ready(
 </header>
 
 	<div id="content" class="inner">
+
+
+    <article class="post">
+	<h2 class="title">
+		
+		<a href="/blog/2016/06/07/lua-tablede-keng">
+		
+			记录Lua中排序的一种坑</a>
+	</h2>
+	<div class="entry-content">
+		<p>最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。<br />
+算法都是没有问题的，但是计算出来的结果却总是出现问题。这让我们一点摸不着头脑。<br />
+后来经过严格的多双眼睛的考察，发现，原来是打印出来的配置欺骗了我们。</p>
+
+<p>伪代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">for _,itemConfig in pairs(config) do
+</span><span class="line">	--算法逻辑(itemConfig)
+</span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+		
+		<a href="/blog/2016/06/07/lua-tablede-keng" class="more-link">阅读全文&rarr;</a>
+	</div>
+
+
+<div class="meta">
+	<div class="date">
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-06-07T20:26:28+08:00" pubdate data-updated="true"></time></div>
+	
+
+<div class="tags">
+
+	<a class='category' href='/blog/categories/lua/'>lua</a>, <a class='category' href='/blog/categories/table/'>table</a>
+
+</div>
+
+
+	
+</div></article>
 
 
     <article class="post">
@@ -512,50 +569,6 @@ $(document).ready(
 <div class="tags">
 
 	<a class='category' href='/blog/categories/gong-zuo/'>工作</a>
-
-</div>
-
-
-	
-</div></article>
-
-
-    <article class="post">
-	<h2 class="title">
-		
-		<a href="/blog/2016/04/02/missing-ios-distribution">
-		
-			Xcode 7 Error: “Missing iOS Distribution Signing Identity for …”</a>
-	</h2>
-	<div class="entry-content">
-		<p>最近准备重新打包一次我们的游戏，提交苹果，但是却遇到如下的问题。<br />
-<img src="/images/error.png" alt="Alt text" /><br />
-这是个怎么回事？难道我的证书出问题了。<br />
-
-		
-		<a href="/blog/2016/04/02/missing-ios-distribution" class="more-link">阅读全文&rarr;</a>
-	</div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-04-02T14:25:05+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/wwdr/'>wwdr</a>, <a class='category' href='/blog/categories/xcode/'>xcode</a>
 
 </div>
 

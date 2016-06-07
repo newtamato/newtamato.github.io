@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/06/07/lua-tablede-keng</loc>
+<lastmod>2016-06-07T20:26:28+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/06/06/zu-jian-hua-guan-li-shu-ju-he-xiang-guan-zhan-shi</loc>
 <lastmod>2016-06-06T00:28:50+08:00</lastmod>
 </url>
@@ -274,6 +278,9 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/mo-kuai-hua/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/table/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/posts/2/</loc>
