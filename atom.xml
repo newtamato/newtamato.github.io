@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-06-07T21:12:10+08:00</updated>
+  <updated>2016-06-07T21:27:04+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -838,8 +838,9 @@ lua_extension.c先被调用注册了了一些供lua调用的函数。<br />
     <content type="html"><![CDATA[<p>将项目从0做到1说简单也简单，说复杂也复杂。这里面的变量不多，但是每一个变化都会影响很多东西。<br />
 我将这个过程总结成一个公式，</p>
 
-<pre><code>（需求沟通+进度控制+执行操作）X n = 期望的产品
-</code></pre>
+<blockquote>
+  <p>（需求沟通+进度控制+执行操作）X n = 期望的产品</p>
+</blockquote>
 
 <p>所谓的n，就是n次迭代。<br />
 <!--more--><br />
@@ -860,11 +861,12 @@ lua_extension.c先被调用注册了了一些供lua调用的函数。<br />
 <p>问题很多事是出现沟通上面的。尤其是一对多的情况下。美术程序测试都对需求有不同的理解，更糟糕的是，需求提出方并没有将自己的改正需求通知给所有负责人，而是只告诉某一方，而其他人还在按照以前的需求闷头继续做。做完发现不对，可是时间成本已经浪费掉了！真是要了命的变化！而我们总是在犯这样的错误。<br />
 再者，每个人都希望能做成好的优秀的完美的产品，因此需求方会提出很多东西，不仅要一个完整的功能还有不少细节。他们说这样可以提升用户体验！或者开发这边做出许多不在需求列表上的功能，他们可能解释说，他们觉得这样很好，玩家用户需要这样的功能。还有美术部分，想到很炫酷的东西，坚持一定要这么做！或者这么说大家会认为这样也是正确的，每个人都对项目有自己的想法，是好的。但是仔细想想，这就是一种迷失，对于一个从0到1的初期demo来说，为什么不能一切从简，从重呢？只要枝干，去掉旁支杂叶！甚至是一个功能，一个活动。都是可以先做出来一个大概的样子，然后再去替换资源也好，优化界面也罢，改善体验都可。</p>
 
-<pre><code>不识庐山真面目，只缘身在此山中！
-</code></pre>
+<p><strong>不识庐山真面目，只缘身在此山中！</strong></p>
 
-<p>只有被需求虐过无数遍，踏过无数的坑，熬过无数的夜，我们才懂得如何做找到一个项目的脉搏。祝各位也在坑中受虐的同学们能及早认清问题所在，争吵和指责都是没有意义的，只会消耗大家的心情，只有让事情按照一定的规律动起来，朝着目标的方向进行着，我们才能自信的掌握节奏，不会被工作所累。<br />
-PS:做事不要只闷头看自己的那方寸之间的事情，要把眼光放得远一些。</p>
+<p>只有被需求虐过无数遍，踏过无数的坑，熬过无数的夜，我们才懂得如何做找到一个项目的脉搏。祝各位也在坑中受虐的同学们能及早认清问题所在，争吵和指责都是没有意义的，只会消耗大家的心情，只有让事情按照一定的规律动起来，朝着目标的方向进行着，我们才能自信的掌握节奏，不会被工作所累。</p>
+
+<p><strong>PS:做事不要只闷头看自己的那方寸之间的事情，要把眼光放得远一些。</strong></p>
+
 ]]></content>
   </entry>
   
@@ -873,10 +875,13 @@ PS:做事不要只闷头看自己的那方寸之间的事情，要把眼光放�
     <link href="http://www.newtomato.me/blog/2015/12/27/android-2"/>
     <updated>2015-12-27T11:25:19+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/12/27/android-2</id>
-    <content type="html"><![CDATA[<p>此篇文章涉及到的工具<br />
-1. <a href="http://www.softpedia.com/get/Programming/Debuggers-Decompilers-Dissasemblers/ApkTool.shtml#download">apktool</a><br />
-2. <a href="http://sourceforge.net/projects/dex2jar/">dex2jar</a><br />
-3. <a href="http://jd.benow.ca/">jd-GUI</a></p>
+    <content type="html"><![CDATA[<p>此篇文章涉及到的工具</p>
+
+<ol>
+  <li><a href="http://www.softpedia.com/get/Programming/Debuggers-Decompilers-Dissasemblers/ApkTool.shtml#download">apktool</a></li>
+  <li><a href="http://sourceforge.net/projects/dex2jar/">dex2jar</a></li>
+  <li><a href="http://jd.benow.ca/">jd-GUI</a></li>
+</ol>
 
 <p>所谓道高一尺魔高一丈，做开发需要有职业道德，我们破解apk只是为了研究和学习而不是为了以此盗取别人的劳动成果用以牟利。<br />
 只有知道了apk是怎么被破解的才知道怎么最好防范。才知道我们自己做的加密是否有效。<br />
@@ -899,6 +904,7 @@ res则是Android工程需要用到的资源文件，比如闪屏图片。</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class=""><span class="line">apktool d xxxx.apk </span></code></pre></td></tr></table></div></figure></notextile></div>
+
 <p>用这种方式就能够apk破解式的解压缩，直接就可以看到AndroidManifest文件里面的全部内容。<br />
 <img src="./38ccc90747d8eb7bb7863e12c397356d" alt="Alt text" /></p>
 
@@ -1026,10 +1032,10 @@ res则是Android工程需要用到的资源文件，比如闪屏图片。</p>
 </pre></td><td class="code"><pre><code class=""><span class="line">$QUICK_COCOS2DX_ROOT/bin/create_project.sh -p com.newtomato.test</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>新建的工程结构如下：<br />
-<img src="./1450598436105.png" alt="Alt text" /><br />
+<img src="http://www.newtomato.me/images/1450598436105.png" alt="Alt text" /><br />
 <!--more--><br />
 由于我们主要目标是将项目打包Android，因此只需关注Android文件夹下面的东西即可。<br />
-<img src="./1450598547259.png" alt="Alt text" /></p>
+<img src="http://www.newtomato.me/images/1450598547259.png" alt="Alt text" /></p>
 
 <p>AndroidManifest.xml是一个描述文件，关于此应用的包名<code>package="com.newtomato.test"</code>权限，相关的Activity，以及一些自定义的东西。最重要的是我们看到她定义了一个启动的Activity，<code>.Test</code>。<br />
 接下来还有一个clean.sh和build_native.sh文件。<br />
@@ -1045,7 +1051,7 @@ clean.sh则负责清理libs目录下面的文件，一般希望重新生成so文
 </pre></td><td class="code"><pre><code class=""><span class="line">$QUICK_COCOS2DX_ROOT/lib/cocos2d-x/cocos2dx/platform/android/java</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>然后右单击我们的Test工程，选择Property-&gt;Android。<br />
 将Quick的工程作为library引入进来。<br />
-<img src="./1450599581363.png" alt="Alt text" /></p>
+<img src="http://www.newtomato.me/images/1450599581363.png" alt="Alt text" /></p>
 
 <p>这个时候，我们再次打开project.properties文件，看，里面是不是多了quick工程的描述。<br />
 同时如果在上面的界面上在此改变我们的Android sdk，在project文件中target就会发生变化。</p>
