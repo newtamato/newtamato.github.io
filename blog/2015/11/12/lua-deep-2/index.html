@@ -2,101 +2,40 @@
 <!DOCTYPE HTML>
 <html>
 <head>
-	<script data-cfasync="false" type="text/javascript" src="//use.typekit.net/axj3cfp.js"></script>
-	<script data-cfasync="false" type="text/javascript">try{Typekit.load();}catch(e){}</script>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 	<meta charset="utf-8">
-	<title>Lua脚本在C++下的舞步（二）  | 番茄手册</title>
+	<title>Lua脚本在C++下的舞步（二） | 番茄手册</title>
 
-<meta name="author" content="newtomato"> 
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 12 Nov 2015 Lua脚本在C++下的舞步（二） 转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的， &hellip;">
 
-<meta name="description" content="转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂， &hellip;"> <meta name="keywords" content="">
-
-	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
 	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
 	<link rel="canonical" href="">
 	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
 	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link href="/stylesheets/font-awesome.min.css" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
 	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-	<script type="text/javascript" src="/javascripts/jquery.fancybox.pack.js"></script>
-
-<script language="Javascript" type="text/javascript">
-$(document).ready(
-  function() {
-    (function($) {
-      $(".fancybox[data-content-id]").each(function() {
-        this.href = $(this).data('content-id');
-      });
-      $(".fancybox").fancybox({
-        beforeLoad: function() {
-          var el, 
-              id = $(this.element).data('title-id');
-
-          if (id) {
-            el = $('#' + id);
-
-            if (el.length) {
-              this.title = el.html();
-            }
-          }
-          if ($(this).data('content')) {
-            this.content = $(this).data('content');
-          }
-        },
-        helpers: {
-          title: {
-            type: 'inside'
-          }
-        }
-      });
-    })(jQuery);
-  }
-);
-</script>
-
-	
 </head>
 
 
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">12 Nov 2015</span>
+	<h1 class="post-title">Lua脚本在C++下的舞步（二）</h1>
 
-<body>
-	<header id="header" class="inner"><h1><a href="/">番茄手册</a></h1>
-<h4></h4>
-<nav id="main-nav"><ul>
-	<li><a href="/">Blog</a></li>
-	<li><a href="/archives">Archive</a></li>
-	<li><a href="/about">About</a></li>
-</ul>
-</nav>
-<nav id="mobile-nav">
-	<div class="alignleft menu">
-		<a class="button">Menu</a>
-		<div class="container"><ul>
-	<li><a href="/">Blog</a></li>
-	<li><a href="/archives">Archive</a></li>
-	<li><a href="/about">About</a></li>
-</ul>
-</div>
-	</div>
-	<div class="alignright search">
-		<a class="button"></a>
-		<div class="container">
-			<form action="https://www.google.com/search" method="get">
-				<input type="text" name="q" results="0">
-				<input type="hidden" name="q" value="site:www.newtomato.me">
-			</form>
-		</div>
-	</div>
-</nav>
-
-
-</header>
-
-	<div id="content" class="inner"><article class="post">
-	<h2 class="title">Lua脚本在C++下的舞步（二）</h2>
-	<div class="entry-content"><p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+	<section class="post-content">
+		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
 
 <p>上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂，就不会有人使用了。 <br />
 下面，我要强调一下，Lua的栈的一些概念，因为这个确实很重要，你会经常用到。熟练使用Lua，最重要的就是要时刻知道什么时候栈里面的数据是什么顺序，都是什么。如果你能熟练知道这些，实际你已经是Lua运用的高手了。</p>
@@ -869,88 +808,73 @@ lua_settop(m_pState, -1-ParamOut.GetCount());这句话是不是有些意思，�
 <p>弹出一个参数并赋值。pParam-&gt;SetData(tolua_tousertype(m_pState, nIndex, NULL), -1);这句话同样，我在下一讲中详细介绍。 <br />
 呵呵，好了，我们又进了一步，我们可以用这个函数绑定任意一个Lua函数格式。而代码不用多写，懒蛋的目的达到了。 <br />
 呵呵，这一讲主要是介绍了一些基本知识，或许有点多余，但是我觉得是必要的，在下一讲中，我讲开始详细介绍如何绑定一个C++对象给Lua，并让Lua对其修改。然后返回结果。休息一下，休息一下先。</p>
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=Lua脚本在C++下的舞步（二）&amp;url=http://www.newtomato.me/blog/2015/11/12/lua-deep-2" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2015/11/12/lua-deep-2" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2015/11/12/lua-deep-2" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
 </div>
-
-
-<div class="meta">
-	<div class="date">
-
-
-
-
-
-
-
 
   
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
 
 
-<time datetime="2015-11-12T21:47:58+08:00" pubdate data-updated="true"></time></div>
-	
-
-<div class="tags">
-
-	<a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
-
-</div>
+<div class="inner">
 
 
-	
-</div></article>
 
-	<div class="share">
-	<div class="addthis_toolbox addthis_default_style ">
-	
-	
-	<a class="addthis_button_tweet"></a>
-	
-	
-	<!-- JiaThis Button -->
-	
-	   <!-- UY BEGIN -->
-<div id="uyan_frame"></div>
-<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
-<!-- UY END -->
 
-	
-	</div>
-  <script type="text/javascript" src="http://s7.addthis.com/js/250/addthis_widget.js#pubid="></script>
-</div>
 
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
 
 </div>
-	<footer id="footer" class="inner">Copyright &copy; 2016
-
-    newtomato
-
-<br>
-Powered by Octopress.
-
-<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script></footer>
-	<script src="/javascripts/slash.js"></script>
-<script src="/javascripts/jquery.fancybox.pack.js"></script>
-<script type="text/javascript">
-(function($){
-	$('.fancybox').fancybox();
-})(jQuery);
-</script> <!-- Delete or comment this line to disable Fancybox -->
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
 
 
 
 
-<!-- Google Analytics -->
-<script>
-(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
- (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
- m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
- })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
 
-ga('create', 'UA-70121917-1');
-ga('send', 'pageview');
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-70121917-1']);
+		_gaq.push(['_trackPageview']);
 
-</script>
-<!-- End Google Analytics -->
-
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
 
 
 </body>
