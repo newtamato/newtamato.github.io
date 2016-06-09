@@ -1,0 +1,170 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>在海马模拟器上运行并测试游戏 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 08 Jun 2016 在海马模拟器上运行并测试游戏 海马模拟器是我现阶段用过的比较快速稳定的模拟器了。
+且能够满足我们日常的开发需求 快速安装并启动游戏。便于我们测试。 取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。 首先如果要查看文件在手机里面的内容， &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">08 Jun 2016</span>
+	<h1 class="post-title">在海马模拟器上运行并测试游戏</h1>
+
+	<section class="post-content">
+		<p>海马模拟器是我现阶段用过的比较快速稳定的模拟器了。<br />
+且能够满足我们日常的开发需求</p>
+
+<ol>
+  <li>快速安装并启动游戏。便于我们测试。</li>
+  <li>取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。</li>
+</ol>
+
+<!--more-->
+<p>首先如果要查看文件在手机里面的内容，就要将手机设为root模式。</p>
+
+<ol>
+  <li>打开文件管理器-&gt;设置(右上角)-&gt;常规设置-&gt;高级选项。在此处设置为超级用户访问模式。</li>
+  <li>设置共享文件夹。<br />
+ 打开设备上面设置<br />
+ <img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-08-14653734292772.jpg" alt="" /><br />
+ 然后在弹出的面板上选择<strong>共享文件夹</strong>，在电脑上选择一个与他同步的文件夹。<br />
+ 此时设置好之后，模拟器会跳转到如下文件夹中<br />
+ <code>/mnt/sdcard/droid4xshare/</code></li>
+  <li>
+    <p>开始选择一个游戏，能够自动更新最好。自动更新之后的文件一般会存在如下的位置<br />
+ <code>/data/data/com.xxx.xxx.xxx/files</code>下面。</p>
+
+    <p>好了，是不是非常简单？</p>
+
+    <p>如果使用Genymotion的时候，可以同adb devices和adb shell的方式访问模拟器的内容。<br />
+ 但是海马模拟器似乎并不可以。<br />
+ 为了能够有更好的逼格，所以我搜索了一下，查找到如下的解决方案<br />
+ 在命令行中输入</p>
+  </li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&gt; adb connect 192.168.56.101
+</span><span class="line">already connected to 192.168.56.101:5555
+</span><span class="line">&gt; adb devices
+</span><span class="line">List of devices attached
+</span><span class="line">192.168.56.101:5555	device
+</span><span class="line">&gt; adb shell</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>然后此时我们就能够用命令的方式访问了！</p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=在海马模拟器上运行并测试游戏&amp;url=http://www.newtomato.me/blog/2016/06/08/hai-ma-mo-ni-qi" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/06/08/hai-ma-mo-ni-qi" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/06/08/hai-ma-mo-ni-qi" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-70121917-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+</body>
+</html>

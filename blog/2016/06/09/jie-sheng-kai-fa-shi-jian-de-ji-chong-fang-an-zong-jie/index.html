@@ -1,0 +1,157 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>节省开发时间的几种方案总结 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 09 Jun 2016 节省开发时间的几种方案总结 我们框架使用的是cocos2d-x。它支持ios和Android的开发。传统的开发，肯定是ios使用xcode，Android使用eclipse。eclipse同时还要配置一些模拟器。如果环境搭配的好，并且配置的电脑性能高， &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">09 Jun 2016</span>
+	<h1 class="post-title">节省开发时间的几种方案总结</h1>
+
+	<section class="post-content">
+		<p>我们框架使用的是cocos2d-x。它支持ios和Android的开发。传统的开发，肯定是ios使用xcode，Android使用eclipse。eclipse同时还要配置一些模拟器。如果环境搭配的好，并且配置的电脑性能高，运行起来是可以接受的。但是我们的环境略微艰苦一点。使用Mac Mini，启动xcode很慢，更别提启动eclipse了。更是慢上加慢。为此浪费了我们不少时间。并且一直在想怎么样能够缩减开发时间。最后功夫不负有心人吧。找到了几种方法。分享出来给大家，希望也能解决你遇到这个问题。<br />
+<!--more--></p>
+
+<blockquote>
+  <p>使用触控官方提供的Player模拟器。</p>
+</blockquote>
+
+<p><strong>优点：</strong><br />
+配置简单。只要配置Quick的环境变量，就可以运行，然后设置我们的工程目录，就可以运行我们的项目了。而且这个运行起来相对于ios的模拟器还快一些。并且能够调整屏幕分辨率。</p>
+
+<p><strong>缺点：</strong><br />
+展示解决了ios模拟器的问题，Android模拟器还是需要在eclipse上测试。<br />
+自从mac升级到10.11之后，player就不能够正常运行了。即使用源码重新编译也是无法运行。</p>
+
+<blockquote>
+  <p>由于lua的特性，我们在平时开发中就采用这种更新机制。讲修改的代码文件拷贝到更新文件夹下面。</p>
+</blockquote>
+
+<p><strong>优点：</strong><br />
+不用每次都重新启动模拟器。在我们游戏中，重新加载新代码的时机是用户某一次面板切换。因此copy完之后，切换一次面板就ok。<br />
+这样省去了一次项目启动的时间。不管是ios还是Android</p>
+
+<p><strong>缺点：</strong><br />
+这样做，需要开发同学手动拷贝代码，在ios上面的更新文件夹，有的时候是变化的。不小心在模拟器上卸载之后，或者切换模拟器之后，文件夹位置就变了。踩这个坑也是让人心酸哦。</p>
+
+<blockquote>
+  <p>直接在Android模拟器上做测试。我此处推荐的是海马模拟器。安装海马模拟器是我见过最简单的过程。比Genymotion简单许多。安装了他之后，可以设置一个共享文件夹。就是这个共享文件夹让我灵光一闪。将我们项目做成共享文件夹。然后在海马模拟器上找到更新文件夹，将assets做成共享文件夹的一个软链。代码也做成共享文件夹的一个软链接。这样只要项目变化了，能直接变化更新文件。在海马上启动我们的模拟器</p>
+</blockquote>
+
+<p><strong>优点：</strong><br />
+启动快，不用拷贝代码，节省时间。且直接在Android模拟器上测试。开发完成之后，直接就可以上发布给QA同学测试了。</p>
+
+<p><strong>缺点：</strong><br />
+暂时没有发现，如果有，我后续更新！</p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=节省开发时间的几种方案总结&amp;url=http://www.newtomato.me/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-70121917-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+</body>
+</html>

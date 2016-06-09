@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:shell | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/shell/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-06-09T15:36:41+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[在海马模拟器上运行并测试游戏]]></title>
+    <link href="http://www.newtomato.me/blog/2016/06/08/hai-ma-mo-ni-qi"/>
+    <updated>2016-06-08T16:34:12+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/06/08/hai-ma-mo-ni-qi</id>
+    <content type="html"><![CDATA[<p>海马模拟器是我现阶段用过的比较快速稳定的模拟器了。<br />
+且能够满足我们日常的开发需求</p>
+
+<ol>
+  <li>快速安装并启动游戏。便于我们测试。</li>
+  <li>取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。</li>
+</ol>
+
+<!--more-->
+<p>首先如果要查看文件在手机里面的内容，就要将手机设为root模式。</p>
+
+<ol>
+  <li>打开文件管理器-&gt;设置(右上角)-&gt;常规设置-&gt;高级选项。在此处设置为超级用户访问模式。</li>
+  <li>设置共享文件夹。<br />
+ 打开设备上面设置<br />
+ <img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-08-14653734292772.jpg" alt="" /><br />
+ 然后在弹出的面板上选择<strong>共享文件夹</strong>，在电脑上选择一个与他同步的文件夹。<br />
+ 此时设置好之后，模拟器会跳转到如下文件夹中<br />
+ <code>/mnt/sdcard/droid4xshare/</code></li>
+  <li>
+    <p>开始选择一个游戏，能够自动更新最好。自动更新之后的文件一般会存在如下的位置<br />
+ <code>/data/data/com.xxx.xxx.xxx/files</code>下面。</p>
+
+    <p>好了，是不是非常简单？</p>
+
+    <p>如果使用Genymotion的时候，可以同adb devices和adb shell的方式访问模拟器的内容。<br />
+ 但是海马模拟器似乎并不可以。<br />
+ 为了能够有更好的逼格，所以我搜索了一下，查找到如下的解决方案<br />
+ 在命令行中输入</p>
+  </li>
+</ol>
+
+<pre><code>	&gt; adb connect 192.168.56.101
+	already connected to 192.168.56.101:5555
+	&gt; adb devices
+	List of devices attached
+	192.168.56.101:5555	device
+	&gt; adb shell
+</code></pre>
+
+<p>然后此时我们就能够用命令的方式访问了！</p>
+
+]]></content>
+  </entry>
+  
+</feed>

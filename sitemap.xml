@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie</loc>
+<lastmod>2016-06-09T14:31:39+08:00</lastmod>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/2016/06/08/hai-ma-mo-ni-qi</loc>
+<lastmod>2016-06-08T16:34:12+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/06/07/lua-tablede-keng</loc>
 <lastmod>2016-06-07T20:26:28+08:00</lastmod>
 </url>
@@ -283,13 +291,19 @@
 <loc>http://www.newtomato.me/blog/categories/table/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/2/</loc>
+<loc>http://www.newtomato.me/blog/categories/android/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/3/</loc>
+<loc>http://www.newtomato.me/blog/categories/mo-ni-qi/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/4/</loc>
+<loc>http://www.newtomato.me/blog/categories/shell/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/ios/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/cocos2d-x/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>
