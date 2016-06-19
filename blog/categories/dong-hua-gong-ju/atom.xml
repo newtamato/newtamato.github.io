@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:动画工具 | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/dong-hua-gong-ju/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-06-19T20:45:20+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[cocos2dx动画制作的方式总结整理]]></title>
+    <link href="http://www.newtomato.me/blog/2016/06/19/dong-hua-gong-ju-zong-jie"/>
+    <updated>2016-06-19T20:38:04+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/06/19/dong-hua-gong-ju-zong-jie</id>
+    <content type="html"><![CDATA[<h1 id="fhttp7xuepccom1z0glbclouddncom2016-06-19-fljpg"><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-19-fl.jpg" alt="f" /></h1>
+
+<p>制作动画是一个前端工程师的基本功，并且有的时候需要通过代码的编写来实现一些比较复杂的展示。那么是否有一个更好一点的方式，最好能够让更擅长的人完成这样的工作，比如美术工作者。让工程师只负责逻辑就行了呢？我相信是有的。但是在达到这条路之前，我们先将自己常用的方式先列举一下。<br />
+<!--more--> <br />
+1. 使用CCAction，编写代码，按照需求，自己编写适合的动画，最大的痛苦在于需要花费更多的时间，并且需要按照像素级的挑战自己的眼睛。<br />
+2. 使用cocos builder或者cocos studio的动画工具。至少不需要程序员编写动画代码。美术工程师自己将动画编写完成，然后移交给开发同学即可。优点很明显，节省了时间，但是也是有一定的确定，这样的工具并不支持所有的动画。<br />
+3. 使用序列帧或者骨骼做动画（Spine或者DragonBone）。<br />
+ <br />
+这些做动画的方法，互相结合，才能实现复杂的动画。<br />
+但是做动画最好的工具（暂时）是flash，设计师将这个设计图做成flash，如果能够直接将他们的动画信息导出来，然后通过解析直接在cocos2d-x中能够运行，那么我们就省下许多时间呢。正好，已经有过这样的工具<a href="http://gafmedia.com/">GAF</a>。他能够支持大部分flash prof制作出来的动画。并且还能够提供c++解析库，将GAF生成的动画信息文件解析成动画组件。不过他是收费的。且我们的版本是2.2.6，而对这个版本的支持还有些问题。<br />
+ <br />
+因此，为了能够适应我们的项目，我们需要自己写一套解析fla或者swf的工具。有两个思路：<br />
+ <br />
+1. flash制作完成之后，通过jsfl脚本对fla文件进行解析，记录动画信息文件。<br />
+2. flash生成swf，此时需要解析swf的结构，对它里面的TAG信息分类处理，然后记录这些信息。<br />
+ <br />
+动画信息的结构如下,记录关键帧里面每个元件的信息。<br />
+ <br />
+<code>
+{
+  "kf1": [
+    {
+      "id": "imgA",
+      "pos": [
+        10,
+        10
+      ],
+      "rotation": 10,
+      "scaleX": 1,
+      "scaleY": 1,
+      "alpha": 1
+    },
+    {
+      "id": "btnA",
+      "pos": [
+        10,
+        10
+      ],
+      "rotation": 10,
+      "scaleX": 1,
+      "scaleY": 1,
+      "alpha": 1
+    },
+    ...
+  ],
+  ...
+}
+</code><br />
+ <br />
+然后在解析上面的结构即可！<br />
+ <br />
+这个工具我们还在开发中。会有更多问题等着我们。但是改变我们的以后的工作方式，想想就有点小激动哦！你们呢？有好的方式可以推荐给我们么？</p>
+
+]]></content>
+  </entry>
+  
+</feed>
