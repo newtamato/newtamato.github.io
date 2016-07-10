@@ -1,0 +1,245 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>排序算法总结 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 10 Jul 2016 排序算法总结 排序算法对开发同学而言是一个基本的技能，看似简单，但是不简单。许多成熟的精炼算法都凝聚了前人的智慧。早期工作的时候，对之不明所以。随着工作经验的累积发觉这种基础的打磨确实是不可缺少的。因此整理一下对自己掌握和常用的算法，避免之后忘记。以后常常阅读， &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">10 Jul 2016</span>
+	<h1 class="post-title">排序算法总结</h1>
+
+	<section class="post-content">
+		<p>排序算法对开发同学而言是一个基本的技能，看似简单，但是不简单。许多成熟的精炼算法都凝聚了前人的智慧。早期工作的时候，对之不明所以。随着工作经验的累积发觉这种基础的打磨确实是不可缺少的。因此整理一下对自己掌握和常用的算法，避免之后忘记。以后常常阅读，温习知新。</p>
+
+<!--more-->
+<p>### 冒泡算法<br />
+冒泡算法是最为常见的一种，也是面试中场被问到的算法之一，所以我们从它开始说起。<br />
+排序逻辑是，N个数据，通过比较前后两个的数值大小，选择大的数值放在后面，这样走到最后，较大者就会排在最后，那么同样的方法在对剩下的N-1个元素进行比较，次大者就放到N-1的位置上面。<br />
+所以有两层循环，外层循环控制排序次数，内层循环选择出较大者。<br />
+因此他的时间复杂度是O(n^2),稳定性方面需要考虑他是否破坏将原先相同的两个数字的前后关系，冒泡排序中如果相同理应是不会交换位置的，因此也不会破坏，是稳定的排序。</p>
+
+<h3 id="section">选择排序</h3>
+<p>选择排序，名字太过简单，以致于我总是不能够很形象的去理解这个排序。他和冒泡相对应的是，他选择最小的放在前面，而冒泡是选择最大的放在后面。选择排序即不需要不停的交换，又能巧妙地借用遍历次数来决定和那个位置上的数值交换，节省内存开销。<br />
+他的算法逻辑是，从待排数组中找到最小数值和对应顺序位置上的数字交换。有点拗口，举个例子就是<br />
+<code>[7,2,3,5,7,1,4]</code><br />
+第一遍循环从上面找到最小的，是1，让后和第一个位置的3进行交换。<br />
+<code>[1,2,3,5,7,7,4]</code><br />
+第二遍循环再从剩下的待排数中找到最小的，是2，刚好第二个位置是2，就不用交换，继续。<br />
+<code>[1,2,3,5,7,7,4]</code><br />
+第三遍循环再从剩下的待排数中找到最小的，是3，刚好第三个位置是3，就不用交换，继续。<br />
+<code>[1,2,3,5,7,7,4]</code><br />
+第四遍循环再从剩下的待排数中找到最小的，是4，第四个位置是5，交换，继续。<br />
+如下循环直到结束。</p>
+
+<p>时间复杂度是O(n^2),稳定可以从上面看的出来，原先7，7的顺序在第一次交换之后，发生了变化，因此是破坏了稳定性。</p>
+
+<h3 id="section-1">插入排序</h3>
+<p>顾名思义就是将一个数插入到一个数组中。因此他的算法逻辑是，将待排序的数组分成两个部分，一部分有序，一部分无序，从无序中取出数据插入到有序数组，结果必然有序。直到无序为空，排序结束。</p>
+
+<p>例如：<br />
+<code>[7,2,3,5,7,1,4]</code><br />
+我们默认认为第一个元素7是有序的，从二个元素开始，往有序中插入。</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">[2,7,3,5,7,1,4]
+</span><span class="line">[2,3,7,5,7,1,4]
+</span><span class="line">[2,3,5,7,7,1,4]
+</span><span class="line">[1,2,3,5,7,7,4]
+</span><span class="line">[1,2,3,4,5,7,7]</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>插入排序也是双重排序，外层控制遍历此处，内层为当前遍历次数对应位置的数据在前面有序数据中位置。因此时间复杂度是O(n^2),从上面的例子也可以看出，相同的7，前后没有发生变化，因此他是稳定的。</p>
+
+<h3 id="section-2">快速排序</h3>
+<p>快速排序算法是,找到一个基准，然后以此为准，从待排序数组的头和尾都同时开始寻找比其大和小的数据，小的放在左侧，大的放在右侧。<br />
+比如如下的队列<br />
+<code>3，7，8，5，2，1，9，5，4</code><br />
+头i=0,尾j=8，基准是3<br />
+先从右侧j开始（j–）查找比基准3小的数值，找到即可和3交换位置。（j=5）<br />
+<code>1，7，8，5，2，3，9，5，4</code><br />
+在从头i=0开始（i++）查找比基准3大的数值，找到即交换位置。（i=1）<br />
+<code>1，3，8，5，2，7，9，5，4</code></p>
+
+<p>然后继续</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">1，2，8，5，3，7，9，5，4 （j=4）
+</span><span class="line">1，2，3，5，8，7，9，5，4 (i=3)</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>j=3和i=3，相同，此次以3为基准的查找结束。所有比3小的排在左侧，比3大的排在了右侧。然后分别将左侧和右侧数据以上面的算法继续排序，直到分出的序列为1为止。</p>
+
+<p>快速排序正因为从头和尾一起查找交换，才是快速的原因。<br />
+他将待排序数据，一分为二，所以最优情况下，是O(N*log(N)), 但是他是个不稳定的算法。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-10-Sorting_quicksort_anim.gif" alt="" /></p>
+
+<h3 id="section-3">希尔排序</h3>
+<p>他是插入排序的一个更好的变种，他增加了步长，步长初始大小是队列长度/2,然后每次循环继续除以2，直到为步长为1，排序结束。</p>
+
+<p>比如<br />
+<code>3，7，8，5，2，1，9，5，4</code><br />
+初次步长为9/2 = 4</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">3和2比较,2，7，8，5，3，1，9，5，4
+</span><span class="line">7和1比较,2，1，8，5，3，7，9，5，4
+</span><span class="line">8和9比较,2，7，8，5，3，1，9，5，4
+</span><span class="line">5和5比较,2，7，8，5，3，1，9，5，4
+</span><span class="line">3和4比较,2，7，8，5，3，1，9，5，4`</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>结束<br />
+第二次步长为4/2 = 2</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">2和8，2，7，8，5，3，1，9，5，4
+</span><span class="line">7和5，2，5，8，7，3，1，9，5，4
+</span><span class="line">8和3，2，7，3，5，8，1，9，5，4
+</span><span class="line">5和1，2，7，8，1，3，5，9，5，4
+</span><span class="line">3和9，2，7，8，1，3，5，9，5，4
+</span><span class="line">5和5，2，7，8，1，3，5，9，5，4
+</span><span class="line">9和4，2，7，8，1，3，5，4，5，9</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>第三次步长是2/2=1</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">2和7，2，7，8，5，3，1，9，5，4
+</span><span class="line">7和8，2，7，8，5，3，1，9，5，4
+</span><span class="line">8和5，2，5，7，8，3，1，9，5，4
+</span><span class="line">8和3，2，3，5，7，8，1，9，5，4
+</span><span class="line">8和1，1，2，3，5，7，8，9，5，4
+</span><span class="line">8和9，1，2，3，5，7，8，9，5，4
+</span><span class="line">9和5，1，2，3，5，5，7，8，9，4
+</span><span class="line">9和4，1，2，3，4，5，5，7，8，9</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>最后一次排序即是进行插入排序。</p>
+
+<p>希尔排序的时间复杂度O(N*log(N))，不是稳定性的排序。</p>
+
+<p>参考文档<br />
+1. <a href="http://www.cnblogs.com/nannanITeye/archive/2013/04/11/3013737.html">常用排序算法稳定性、时间复杂度分析(转)</a><br />
+2. <a href="http://algo-visualizer.jasonpark.me">算法可视化工具</a></p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=排序算法总结&amp;url=http://www.newtomato.me/blog/2016/07/10/array-sort" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/07/10/array-sort" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/07/10/array-sort" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-70121917-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+</body>
+</html>

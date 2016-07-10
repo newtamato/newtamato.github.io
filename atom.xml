@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-06-19T20:45:20+08:00</updated>
+  <updated>2016-07-10T22:19:14+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,137 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[排序算法总结]]></title>
+    <link href="http://www.newtomato.me/blog/2016/07/10/array-sort"/>
+    <updated>2016-07-10T22:06:13+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/07/10/array-sort</id>
+    <content type="html"><![CDATA[<p>排序算法对开发同学而言是一个基本的技能，看似简单，但是不简单。许多成熟的精炼算法都凝聚了前人的智慧。早期工作的时候，对之不明所以。随着工作经验的累积发觉这种基础的打磨确实是不可缺少的。因此整理一下对自己掌握和常用的算法，避免之后忘记。以后常常阅读，温习知新。</p>
+
+<!--more-->
+<p>### 冒泡算法<br />
+冒泡算法是最为常见的一种，也是面试中场被问到的算法之一，所以我们从它开始说起。<br />
+排序逻辑是，N个数据，通过比较前后两个的数值大小，选择大的数值放在后面，这样走到最后，较大者就会排在最后，那么同样的方法在对剩下的N-1个元素进行比较，次大者就放到N-1的位置上面。<br />
+所以有两层循环，外层循环控制排序次数，内层循环选择出较大者。<br />
+因此他的时间复杂度是O(n^2),稳定性方面需要考虑他是否破坏将原先相同的两个数字的前后关系，冒泡排序中如果相同理应是不会交换位置的，因此也不会破坏，是稳定的排序。</p>
+
+<h3 id="section">选择排序</h3>
+<p>选择排序，名字太过简单，以致于我总是不能够很形象的去理解这个排序。他和冒泡相对应的是，他选择最小的放在前面，而冒泡是选择最大的放在后面。选择排序即不需要不停的交换，又能巧妙地借用遍历次数来决定和那个位置上的数值交换，节省内存开销。<br />
+他的算法逻辑是，从待排数组中找到最小数值和对应顺序位置上的数字交换。有点拗口，举个例子就是<br />
+<code>[7,2,3,5,7,1,4]</code><br />
+第一遍循环从上面找到最小的，是1，让后和第一个位置的3进行交换。<br />
+<code>[1,2,3,5,7,7,4]</code><br />
+第二遍循环再从剩下的待排数中找到最小的，是2，刚好第二个位置是2，就不用交换，继续。<br />
+<code>[1,2,3,5,7,7,4]</code><br />
+第三遍循环再从剩下的待排数中找到最小的，是3，刚好第三个位置是3，就不用交换，继续。<br />
+<code>[1,2,3,5,7,7,4]</code><br />
+第四遍循环再从剩下的待排数中找到最小的，是4，第四个位置是5，交换，继续。<br />
+如下循环直到结束。</p>
+
+<p>时间复杂度是O(n^2),稳定可以从上面看的出来，原先7，7的顺序在第一次交换之后，发生了变化，因此是破坏了稳定性。</p>
+
+<h3 id="section-1">插入排序</h3>
+<p>顾名思义就是将一个数插入到一个数组中。因此他的算法逻辑是，将待排序的数组分成两个部分，一部分有序，一部分无序，从无序中取出数据插入到有序数组，结果必然有序。直到无序为空，排序结束。</p>
+
+<p>例如：<br />
+<code>[7,2,3,5,7,1,4]</code><br />
+我们默认认为第一个元素7是有序的，从二个元素开始，往有序中插入。</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">[2,7,3,5,7,1,4]
+</span><span class="line">[2,3,7,5,7,1,4]
+</span><span class="line">[2,3,5,7,7,1,4]
+</span><span class="line">[1,2,3,5,7,7,4]
+</span><span class="line">[1,2,3,4,5,7,7]</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>插入排序也是双重排序，外层控制遍历此处，内层为当前遍历次数对应位置的数据在前面有序数据中位置。因此时间复杂度是O(n^2),从上面的例子也可以看出，相同的7，前后没有发生变化，因此他是稳定的。</p>
+
+<h3 id="section-2">快速排序</h3>
+<p>快速排序算法是,找到一个基准，然后以此为准，从待排序数组的头和尾都同时开始寻找比其大和小的数据，小的放在左侧，大的放在右侧。<br />
+比如如下的队列<br />
+<code>3，7，8，5，2，1，9，5，4</code><br />
+头i=0,尾j=8，基准是3<br />
+先从右侧j开始（j–）查找比基准3小的数值，找到即可和3交换位置。（j=5）<br />
+<code>1，7，8，5，2，3，9，5，4</code><br />
+在从头i=0开始（i++）查找比基准3大的数值，找到即交换位置。（i=1）<br />
+<code>1，3，8，5，2，7，9，5，4</code></p>
+
+<p>然后继续</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">1，2，8，5，3，7，9，5，4 （j=4）
+</span><span class="line">1，2，3，5，8，7，9，5，4 (i=3)</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>j=3和i=3，相同，此次以3为基准的查找结束。所有比3小的排在左侧，比3大的排在了右侧。然后分别将左侧和右侧数据以上面的算法继续排序，直到分出的序列为1为止。</p>
+
+<p>快速排序正因为从头和尾一起查找交换，才是快速的原因。<br />
+他将待排序数据，一分为二，所以最优情况下，是O(N*log(N)), 但是他是个不稳定的算法。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-10-Sorting_quicksort_anim.gif" alt="" /></p>
+
+<h3 id="section-3">希尔排序</h3>
+<p>他是插入排序的一个更好的变种，他增加了步长，步长初始大小是队列长度/2,然后每次循环继续除以2，直到为步长为1，排序结束。</p>
+
+<p>比如<br />
+<code>3，7，8，5，2，1，9，5，4</code><br />
+初次步长为9/2 = 4</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">3和2比较,2，7，8，5，3，1，9，5，4
+</span><span class="line">7和1比较,2，1，8，5，3，7，9，5，4
+</span><span class="line">8和9比较,2，7，8，5，3，1，9，5，4
+</span><span class="line">5和5比较,2，7，8，5，3，1，9，5，4
+</span><span class="line">3和4比较,2，7，8，5，3，1，9，5，4`</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>结束<br />
+第二次步长为4/2 = 2</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">2和8，2，7，8，5，3，1，9，5，4
+</span><span class="line">7和5，2，5，8，7，3，1，9，5，4
+</span><span class="line">8和3，2，7，3，5，8，1，9，5，4
+</span><span class="line">5和1，2，7，8，1，3，5，9，5，4
+</span><span class="line">3和9，2，7，8，1，3，5，9，5，4
+</span><span class="line">5和5，2，7，8，1，3，5，9，5，4
+</span><span class="line">9和4，2，7，8，1，3，5，4，5，9</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>第三次步长是2/2=1</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">2和7，2，7，8，5，3，1，9，5，4
+</span><span class="line">7和8，2，7，8，5，3，1，9，5，4
+</span><span class="line">8和5，2，5，7，8，3，1，9，5，4
+</span><span class="line">8和3，2，3，5，7，8，1，9，5，4
+</span><span class="line">8和1，1，2，3，5，7，8，9，5，4
+</span><span class="line">8和9，1，2，3，5，7，8，9，5，4
+</span><span class="line">9和5，1，2，3，5，5，7，8，9，4
+</span><span class="line">9和4，1，2，3，4，5，5，7，8，9</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>最后一次排序即是进行插入排序。</p>
+
+<p>希尔排序的时间复杂度O(N*log(N))，不是稳定性的排序。</p>
+
+<p>参考文档<br />
+1. <a href="http://www.cnblogs.com/nannanITeye/archive/2013/04/11/3013737.html">常用排序算法稳定性、时间复杂度分析(转)</a><br />
+2. <a href="http://algo-visualizer.jasonpark.me">算法可视化工具</a></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[cocos2dx动画制作的方式总结整理]]></title>
@@ -1372,183 +1503,6 @@ clean.sh则负责清理libs目录下面的文件，一般希望重新生成so文
 </span><span class="line">  key.alias.password=xxxxxx</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>这样当我们调用ant命令的时候，ant会自动读入ant.properties文件。然后对生成的apk文件签名。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[certificate与provision profiles 2]]></title>
-    <link href="http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2"/>
-    <updated>2015-11-29T20:10:15+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/11/29/dev-certification-provision2</id>
-    <content type="html"><![CDATA[<p>我们在创建Certificate的时候，要求先自己生成一个CSR文件。<br />
-<img src="http://www.newtomato.me/images/1448076369836.png" alt="Alt text" /><br />
-<!--more--><br />
-生成的这个CSR文件，用sublime打开之后，里面的样子如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">-----BEGIN CERTIFICATE REQUEST-----
-</span><span class="line">MIIByjCCATMCAQAwgYkxCzAJBgNVBAYTAlVTMRMwEQYDVQQIEwpDYWxpZm9ybmlh
-</span><span class="line">MRYwFAYDVQQHEw1Nb3VudGFpbiBWaWV3MRMwEQYDVQQKEwpHb29nbGUgSW5jMR8w
-</span><span class="line">HQYDVQQLExZJbmZvcm1hdGlvbiBUZWNobm9sb2d5MRcwFQYDVQQDEw53d3cuZ29v
-</span><span class="line">Z2xlLmNvbTCBnzANBgkqhkiG9w0BAQEFAAOBjQAwgYkCgYEApZtYJCHJ4VpVXHfV
-</span><span class="line">IlstQTlO4qC03hjX+ZkPyvdYd1Q4+qbAeTwXmCUKYHThVRd5aXSqlPzyIBwieMZr
-</span><span class="line">WFlRQddZ1IzXAlVRDWwAo60KecqeAXnnUK+5fXoTI/UgWshre8tJ+x/TMHaQKR/J
-</span><span class="line">cIWPhqaQhsJuzZbvAdGA80BLxdMCAwEAAaAAMA0GCSqGSIb3DQEBBQUAA4GBAIhl
-</span><span class="line">4PvFq+e7ipARgI5ZM+GZx6mpCz44DTo0JkwfRDf+BtrsaC0q68eTf2XhYOsq4fkH
-</span><span class="line">Q0uA0aVog3f5iJxCa3Hp5gxbJQ6zV6kJ0TEsuaaOhEko9sdpCoPOnRBm2i/XRD2D
-</span><span class="line">6iNh8f8z0ShGsFqjDgFHyF3o+lUyj+UC6H1QW7bn
-</span><span class="line">-----END CERTIFICATE REQUEST-----</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这里面包含了什么信息呢 ？<br />
-<img src="http://www.newtomato.me/images/1448076787997.png" alt="Alt text" /><br />
-<a href="https://www.sslshopper.com/what-is-a-csr-certificate-signing-request.html">来源</a></p>
-
-<p>从上面的表格，我们可以看到这里面包含了我们生成它的时候填写的信息还有一个关键的就是public key。<br />
-也就是说我们在生成CSR文件的时候，还声称了一个public key。因此我们可以在keychain中检查以下是否真的有这个public key。<br />
-<img src="http://www.newtomato.me/images/1448076932966.png" alt="Alt text" /><br />
-果然，在keychain中有一个钥匙对，私钥和公钥。<br />
-CSR自动包含了公钥，然后我们将这个CSR文件提交给苹果的member center。<br />
-<img src="http://www.newtomato.me/images/1448077003733.png" alt="Alt text" /><br />
-此时会生成.cer文件。将此文件下载下来，双击安装。此时在keychain当中就会将我们的私钥和这个certificate绑定起来。<br />
-<img src="http://www.newtomato.me/images/1448077535385.png" alt="Alt text" /></p>
-
-<p>这个certificate就是验证开发者身份。</p>
-
-<p>接下来的mobileprovision则是验证开发者权限的。<br />
-我们将自己生成的开发版mobileprovision打开看看。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-<span class="line-number">42</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">&lt;key&gt;Entitlements&lt;/key&gt;
-</span><span class="line">  &lt;dict&gt;
-</span><span class="line">    &lt;key&gt;keychain-access-groups&lt;/key&gt;
-</span><span class="line">      &lt;array&gt;
-</span><span class="line">          &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
-</span><span class="line">      &lt;/array&gt;
-</span><span class="line">      &lt;key&gt;get-task-allow&lt;/key&gt;
-</span><span class="line">      &lt;true/&gt;
-</span><span class="line">      &lt;key&gt;application-identifier&lt;/key&gt;
-</span><span class="line">      &lt;string&gt;L23FMABA6X.*&lt;/string&gt;
-</span><span class="line">      &lt;key&gt;com.apple.developer.team-identifier&lt;/key&gt;
-</span><span class="line">      &lt;string&gt;L23FMABA6X&lt;/string&gt;
-</span><span class="line">      &lt;key&gt;aps-environment&lt;/key&gt;
-</span><span class="line">      &lt;string&gt;development&lt;/string&gt;
-</span><span class="line">  
-</span><span class="line">  &lt;/dict&gt;
-</span><span class="line">	
-</span><span class="line">	...
-</span><span class="line">
-</span><span class="line">  &lt;key&gt;ProvisionedDevices&lt;/key&gt;
-</span><span class="line">  &lt;array&gt;
-</span><span class="line">      &lt;string&gt;11f30c7340e54187e93e1d085f85574570206cd9&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;0545f62295c9f117e2d6c19131df55444b0b8444&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;8bcbf9be5476b09969fa597bf38f3949ed9b6e7d&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;57a453b5e5f39618c4e09d6399efff2e2d0b59a4&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;eff3c07516897e04c5d2aefaf91c2cf05e13a933&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;5256d0acb2218cef2748641582c4993c0f193ed9&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;030662def7e5fc03311f20891f0944f2b7f73251&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;a3216d9f5e611dd1f76e45858432d9c5e945d73c&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;cdd59a0a353c66a75a86a8419598a83a4db98e7c&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;7001583678ac38d05b18928d049098329531d3e3&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;8bd9c88be11675b7ef71de1d6122ba95292a3472&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;bd63797509b861368e5a293717537b909d58c846&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;89f4b347703111b0067b79d7d4226684d6efe6a3&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;01798a0796437ae7eff5dddb3a442912ae57d50e&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;6a7cf9c50f068ddcca529f589e3d70141c8f85de&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;3c6e42454f9c551abc1738836ebf7a9513a90afa&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;cad8d51523e6fdb4d96fc33df65376545a9a683e&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;7b3a694a86e1d54e942ae1cbe6498eba4b2e68c6&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec&lt;/string&gt;
-</span><span class="line">      &lt;string&gt;a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c&lt;/string&gt;
-</span><span class="line">  &lt;/array&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>里面明确的告诉了我们aps-environment和相关的设备序列号。以及keychain-access-groups，在这里他告诉我们要使用keychain当中一个L23FMABA6X的文件。这是什么呢？可以打开keychain到Certificate当中检查一下，这就是我们刚才上面生成的! 如此一来mobileprovision就和我们的Certificate绑定在一起了。</p>
-
-<p>因此一个开发版的mobileprovision包含的内容有，appID, 开发设备，以及Certificate等内容<br />
-如果我们生成的是Production版本的证书又该是什么样子呢？这个大家可以去试试看。</p>
-
-<p>最后，<a href="http://0xc010d.net/mobileprovision-files-structure-and-reading/">iDev blog</a>的作者提供了一个工具，用于检测证书的类型。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f &lt;fileName&gt; [-o &lt;option&gt;]</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>例：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision
-</span><span class="line">
-</span><span class="line">debug</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">mobileprovisionParser -f ~/Library/MobileDevice/Provisioning\ Profiles/a7f9bef8-f6b1-46e1-a463-2690b5781a61.mobileprovision -o devices
-</span><span class="line">
-</span><span class="line">11f30c7340e54187e93e1d085f85574570206cd9
-</span><span class="line">0545f62295c9f117e2d6c19131df55444b0b8444
-</span><span class="line">...
-</span><span class="line">8da8d3dd98ed8a0f928003baaa79e8e0aaf432ec
-</span><span class="line">a262e990b8eec70ebe6bfe94e57b7a4f13ef8e9c</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这样也能够方便的知晓证书的基本信息。</p>
 
 ]]></content>
   </entry>
