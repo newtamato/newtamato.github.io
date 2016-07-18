@@ -9,7 +9,8 @@
 
 	<meta name="author" content="newtomato">
 	
-	<meta name="description" content="17 Oct 2015 项目管理心得 项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。 谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品， &hellip;">
+	<meta name="description" content="17 Oct 2015 Vim使用-颜色 首先将Solarized的配色库download下来 1
+git clone git://github.com/altercation/solarized.git 将solarized.vim文件copy 到 ~/.vim/colors/ 文件夹下面 &hellip;">
 
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="MobileOptimized" content="320" />
@@ -44,6 +45,51 @@
       
 	
 		
+	
+	<header class="post-header">
+		<span class="post-meta">17 Oct 2015</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2015/10/17/vimshi-yong-yan-se">
+			
+				Vim使用-颜色</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<ol>
+  <li>首先将Solarized的配色库download下来</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">altercation</span><span class="o">/</span><span class="n">solarized</span><span class="o">.</span><span class="n">git</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<ol>
+  <li>将solarized.vim文件copy 到 ~/.vim/colors/  文件夹下面</li>
+  <li>配置.vimrc</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">syntax</span> <span class="n">on</span>
+</span><span class="line"><span class="nb">set</span> <span class="n">t_Co</span><span class="o">=</span><span class="mi">256</span>
+</span><span class="line"><span class="n">let</span> <span class="n">g</span><span class="p">:</span><span class="n">solarized_termcolors</span><span class="o">=</span><span class="mi">256</span>
+</span><span class="line"><span class="nb">set</span> <span class="n">background</span><span class="o">=</span><span class="n">dark</span>
+</span><span class="line"><span class="n">colorscheme</span> <span class="n">solarized</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>**有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色 **</p>
+
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
 	
 	<header class="post-header">
 		<span class="post-meta">17 Oct 2015</span>

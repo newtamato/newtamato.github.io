@@ -9,7 +9,8 @@
 
 	<meta name="author" content="newtomato">
 	
-	<meta name="description" content="29 Nov 2015 Certificate与provision Profiles 2 我们在创建Certificate的时候，要求先自己生成一个CSR文件。 29 Nov 2015 Certificate与provision Profiles 作为需要将应用上传到App Store的开发者， &hellip;">
+	<meta name="description" content="27 Dec 2015 Quick Cocos2dx 导出Android包记录过程 ###认识proj.android工程 使用quick cocos2dx的项目可以新建工程，可以看到他已经为我们准备了两个工程一个是ios一个是Android的。 1
+$QUICK_COCOS2DX_ROOT/ &hellip;">
 
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="MobileOptimized" content="320" />
@@ -44,6 +45,34 @@
       
 	
 		
+	
+	<header class="post-header">
+		<span class="post-meta">27 Dec 2015</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2015/12/27/android-1">
+			
+				Quick Cocos2dx 导出Android包记录过程</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p>###认识proj.android工程</p>
+
+<p>使用quick cocos2dx的项目可以新建工程，可以看到他已经为我们准备了两个工程一个是ios一个是Android的。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">$QUICK_COCOS2DX_ROOT/bin/create_project.sh -p com.newtomato.test</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>新建的工程结构如下：<br />
+<img src="/images/1450598436105.png" alt="Alt text" /><br />
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
 	
 	<header class="post-header">
 		<span class="post-meta">29 Nov 2015</span>
@@ -246,32 +275,6 @@ flash IDE dragbone官方的插件</p>
 	</header>
 	<section class="post-excerpt">
 		<p>require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件<br />
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">12 Nov 2015</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2015/11/12/lua-deep-3">
-			
-				Lua脚本在C++下的舞步（三）</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
-
-<p>上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然，这些功能是为了今天这篇文章而铺路的。</p>
-
-<p>看了七猫的回帖，呵呵，确实应该说一下SWIG这个工具，说真的，我对这个工具理解不深，因为没有怎么用过，读过一些关于它的文章，似乎是帮你把C++的功能封装成一个Lua基本库的东西，但是后来研究，他可以很轻松帮你把公用函数封装成一个Lua的基本库(类似C++的dll)，但是对于我的需求而言，可能不太一样。因为我大量的是需要在C++里面进行数据传输以及变量的交互，所以为了紧贴C++，我需要很多关联数据的处理。 <br />
-我是一名C++程序员，所以在很多时候，不想过多的使用Lua的特性，因为个人感觉，Lua的语法要比C++的更加灵活。而我更希望，在函数调用的某些习惯上，遵循一些C++的规则。</p>
-
 
 	</section>
 

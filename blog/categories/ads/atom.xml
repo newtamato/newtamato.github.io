@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:ads | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/ads/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-07-18T22:32:32+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[cocos2dx 增加Google移动广告]]></title>
+    <link href="http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads"/>
+    <updated>2016-07-18T22:13:43+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads</id>
+    <content type="html"><![CDATA[<p>Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-any.jpeg" alt="any" /></p>
+
+<p>但是AnySDK是一个大而全的东西，而我们只需要广告接入这一小块儿的东西。同时，我们的cocos2dx的版本是2.2.6，相对于触控的3.18，已经有很大差别。</p>
+
+<p>于是我们需要自己在重新造一遍轮子，幸运的是网上有不少这样的材料。</p>
+
+<ol>
+  <li>Firebase提供的文档刚好有与cocos2x相关的资料，<a href="https://firebase.google.com/docs/admob/android/games?hl=zh-cn">移步至此</a>,</li>
+  <li>还有热心的同学贴出了更详细的步骤<a href="http://www.cnblogs.com/qianyuming/p/5023018.html">cocos2dx-3.9 集成admob</a>。</li>
+  <li>
+    <p><a href="https://firebase.google.com/docs/admob/ios/quick-start?hl=zh-cn">入门基础指导</a><br />
+<!--more--><br />
+参考了上面的资料，我还是遇到了不少问题。</p>
+  </li>
+  <li>
+    <p>首当其冲的就是<strong>安装CocoaPods</strong> ，可以参考下面两篇文章。</p>
+
+    <ol>
+      <li><a href="http://blog.csdn.net/wuquan0625/article/details/47401235">pod install速度慢的终极解决方案</a>。</li>
+      <li><a href="http://www.cnblogs.com/qianyuming/p/5012578.html">cocoapod安装过程中的幺蛾子</a></li>
+    </ol>
+  </li>
+  <li>一定要下载最新的googlemobilesdk版本，<a href="https://firebase.google.com/docs/admob/ios/download?hl=zh-cn">地址在此处</a>,我当前用的是v7.9.0。</li>
+  <li>我们的项目不仅仅会依赖上面的<code>GoogleMobileAds.framework</code>，还依赖一下的framework，请在target-&gt; build phase -&gt; frameworks中找出来。此处我也是被坑到了，总是提示类似<code>"_OBJC_CLASS_$_SFSafariViewController", referenced from: "_CMTimeMakeWithSeconds", referenced from: l3880 in GoogleMobileAds(flat-arm64)"</code>这样的错误，究其原因就是没有找到对应的framework。</li>
+</ol>
+
+<pre><code>CoreMideia.framework,SafariServices.framework,
+CoreBluetooth.framework,MessageUI.framework,
+AdSupport.framework,EventKit.framework,EventKitUI.framework,
+AudioToolbox.framework,MediaPlayer.framework,
+StoreKit.framework,SystemConfiguration.framework,
+CoreTelephony.framework,CoreGraphics.framework,
+AVFoundation.framework
+</code></pre>
+
+<ol>
+  <li>clean-&gt;build project</li>
+  <li>在模拟器上运行，Google Ads会自动加载测试的广告。但是如果要在真机上测试，需要打开真机上关闭广告跟踪的功能。在手机的设置-&gt;隐私-&gt;广告里面。关闭即可。</li>
+  <li>运行项目从输出控制台先拿到测试设备号。然后填写到下面的位置。再次运行。</li>
+</ol>
+
+<pre><code>GADRequest *request = [GADRequest request];
+request.testDevices = @[@"测试设备号"];
+</code></pre>
+<ol>
+  <li>设备上测试，还要考虑装一个VPN。</li>
+  <li>如果首次没有显示出来，并且控制台也没有报错，估计就是网络响应慢导致的问题。可以多次尝试即可。</li>
+  <li>Google 提供了一个example工程。<a href="git@github.com:googleads/googleads-mobile-ios-examples.git">地址</a>,可以先调通这个工程，那么整合到cocos2dx中也就不是什么事儿了！</li>
+</ol>
+
+<p>上述是我花费了大半天的时间，踩了不少坑，才将这套流程走通。并且仅仅是展示了Banner广告。<br />
+先看一下效果吧。接下来的计划就是调通控制广告播时长的接口。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-IMG_0511.png" alt="IMG_0511" /></p>
+
+]]></content>
+  </entry>
+  
+</feed>

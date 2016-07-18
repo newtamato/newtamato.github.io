@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads</loc>
+<lastmod>2016-07-18T22:13:43+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/07/10/array-sort</loc>
 <lastmod>2016-07-10T22:06:13+08:00</lastmod>
 </url>
@@ -336,6 +340,15 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/cha-ru/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/google/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/mobile/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/ads/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

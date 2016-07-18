@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-07-10T22:19:14+08:00</updated>
+  <updated>2016-07-18T22:32:32+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,77 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[cocos2dx 增加Google移动广告]]></title>
+    <link href="http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads"/>
+    <updated>2016-07-18T22:13:43+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads</id>
+    <content type="html"><![CDATA[<p>Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-any.jpeg" alt="any" /></p>
+
+<p>但是AnySDK是一个大而全的东西，而我们只需要广告接入这一小块儿的东西。同时，我们的cocos2dx的版本是2.2.6，相对于触控的3.18，已经有很大差别。</p>
+
+<p>于是我们需要自己在重新造一遍轮子，幸运的是网上有不少这样的材料。</p>
+
+<ol>
+  <li>Firebase提供的文档刚好有与cocos2x相关的资料，<a href="https://firebase.google.com/docs/admob/android/games?hl=zh-cn">移步至此</a>,</li>
+  <li>还有热心的同学贴出了更详细的步骤<a href="http://www.cnblogs.com/qianyuming/p/5023018.html">cocos2dx-3.9 集成admob</a>。</li>
+  <li>
+    <p><a href="https://firebase.google.com/docs/admob/ios/quick-start?hl=zh-cn">入门基础指导</a><br />
+<!--more--><br />
+参考了上面的资料，我还是遇到了不少问题。</p>
+  </li>
+  <li>
+    <p>首当其冲的就是<strong>安装CocoaPods</strong> ，可以参考下面两篇文章。</p>
+
+    <ol>
+      <li><a href="http://blog.csdn.net/wuquan0625/article/details/47401235">pod install速度慢的终极解决方案</a>。</li>
+      <li><a href="http://www.cnblogs.com/qianyuming/p/5012578.html">cocoapod安装过程中的幺蛾子</a></li>
+    </ol>
+  </li>
+  <li>一定要下载最新的googlemobilesdk版本，<a href="https://firebase.google.com/docs/admob/ios/download?hl=zh-cn">地址在此处</a>,我当前用的是v7.9.0。</li>
+  <li>我们的项目不仅仅会依赖上面的<code>GoogleMobileAds.framework</code>，还依赖一下的framework，请在target-&gt; build phase -&gt; frameworks中找出来。此处我也是被坑到了，总是提示类似<code>"_OBJC_CLASS_$_SFSafariViewController", referenced from: "_CMTimeMakeWithSeconds", referenced from: l3880 in GoogleMobileAds(flat-arm64)"</code>这样的错误，究其原因就是没有找到对应的framework。</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">CoreMideia.framework,SafariServices.framework,
+</span><span class="line">CoreBluetooth.framework,MessageUI.framework,
+</span><span class="line">AdSupport.framework,EventKit.framework,EventKitUI.framework,
+</span><span class="line">AudioToolbox.framework,MediaPlayer.framework,
+</span><span class="line">StoreKit.framework,SystemConfiguration.framework,
+</span><span class="line">CoreTelephony.framework,CoreGraphics.framework,
+</span><span class="line">AVFoundation.framework</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<ol>
+  <li>clean-&gt;build project</li>
+  <li>在模拟器上运行，Google Ads会自动加载测试的广告。但是如果要在真机上测试，需要打开真机上关闭广告跟踪的功能。在手机的设置-&gt;隐私-&gt;广告里面。关闭即可。</li>
+  <li>运行项目从输出控制台先拿到测试设备号。然后填写到下面的位置。再次运行。</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GADRequest *request = [GADRequest request];
+</span><span class="line">request.testDevices = @[@"测试设备号"];</span></code></pre></td></tr></table></div></figure></notextile></div>
+<ol>
+  <li>设备上测试，还要考虑装一个VPN。</li>
+  <li>如果首次没有显示出来，并且控制台也没有报错，估计就是网络响应慢导致的问题。可以多次尝试即可。</li>
+  <li>Google 提供了一个example工程。<a href="git@github.com:googleads/googleads-mobile-ios-examples.git">地址</a>,可以先调通这个工程，那么整合到cocos2dx中也就不是什么事儿了！</li>
+</ol>
+
+<p>上述是我花费了大半天的时间，踩了不少坑，才将这套流程走通。并且仅仅是展示了Banner广告。<br />
+先看一下效果吧。接下来的计划就是调通控制广告播时长的接口。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-IMG_0511.png" alt="IMG_0511" /></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[排序算法总结]]></title>
@@ -1331,178 +1402,6 @@ res则是Android工程需要用到的资源文件，比如闪屏图片。</p>
 2. 第三方的类库不要去混淆，容易发生问题，导致无法正确调用，原因也是第一条引发的。</p>
 
 <p>使用混淆之后，重新编译我们的项目，在用上面的方法破解，查看我们的代码，发现不少代码都混淆成了一些abc这样的名字。但是这样的混淆方法并不是唯一的。只是最常用的方法。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[quick cocos2dx 导出Android包记录过程]]></title>
-    <link href="http://www.newtomato.me/blog/2015/12/27/android-1"/>
-    <updated>2015-12-27T11:23:39+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/12/27/android-1</id>
-    <content type="html"><![CDATA[<p>###认识proj.android工程</p>
-
-<p>使用quick cocos2dx的项目可以新建工程，可以看到他已经为我们准备了两个工程一个是ios一个是Android的。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">$QUICK_COCOS2DX_ROOT/bin/create_project.sh -p com.newtomato.test</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>新建的工程结构如下：<br />
-<img src="http://www.newtomato.me/images/1450598436105.png" alt="Alt text" /><br />
-<!--more--><br />
-由于我们主要目标是将项目打包Android，因此只需关注Android文件夹下面的东西即可。<br />
-<img src="http://www.newtomato.me/images/1450598547259.png" alt="Alt text" /></p>
-
-<p>AndroidManifest.xml是一个描述文件，关于此应用的包名<code>package="com.newtomato.test"</code>权限，相关的Activity，以及一些自定义的东西。最重要的是我们看到她定义了一个启动的Activity，<code>.Test</code>。<br />
-接下来还有一个clean.sh和build_native.sh文件。<br />
-build_native.sh文件负责将quick cocos2dx工程打包成为.so文件。放在<code>libs</code>目录下面。<br />
-clean.sh则负责清理libs目录下面的文件，一般希望重新生成so文件的时候就会执行这个命令。</p>
-
-<p>还有一个project.properties文件。这是一个eclipse工程需要的文件。后面我会提到这个文件是怎么变化的。<br />
-生成的这个工程，是可以直接导入到eclipse的。<br />
-打开Eclipse，点击Project-&gt;Import-&gt;Existing Android Code Into Workspace.<br />
-同样地方式将Quick也导入进来。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">$QUICK_COCOS2DX_ROOT/lib/cocos2d-x/cocos2dx/platform/android/java</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>然后右单击我们的Test工程，选择Property-&gt;Android。<br />
-将Quick的工程作为library引入进来。<br />
-<img src="http://www.newtomato.me/images/1450599581363.png" alt="Alt text" /></p>
-
-<p>这个时候，我们再次打开project.properties文件，看，里面是不是多了quick工程的描述。<br />
-同时如果在上面的界面上在此改变我们的Android sdk，在project文件中target就会发生变化。</p>
-
-<p>###运行工程的方法</p>
-
-<p>到此我们就可以将Android工程导出我们的设备或者模拟器上进行测试了。<br />
-但是Eclipse自带的Android的模拟器非常的麻烦。启动起来很慢不说，操作起来也很卡顿。因此在搜素无数次之后，也算是找到了几种方式。现在分别分享给大家。<br />
-1. 第一个神器那就是<a href="http://www.genymotion.net/question/details/Info_2.shtml">genymotion</a>，并且有详细的中文帮助教程，安装起来也很方便。但是前提就是需要先注册才能够使用。由于他可以和Eclipse绑定，因此在Eclipse上点击运行就可以将工程在genymotion上运行起来。<br />
-2. 第二个神奇就是Ant。ant可以用于编译打包一体化的处理！非常的强大。如何使用呢？ant运行需要在当前目录下面有一个build.xml文件。但是我们的quick 工程下面并没有呢？没有我们可以生成！命令如下</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">andriod update project -p .</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>执行这个命令之后，我们的Test/proj.android目录下面就会有一个build.xml文件。但是我们还有个一java工程，就是quick那个，他也需要被ant编译。这个工程下面也用同样地方式生成build.xml即可。<br />
-然后回到我们自己的Test/proj.android目录下面执行</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">ant clean
-</span><span class="line">ant release</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>console下面在输出一大堆得数据之后，我们会看到在bin下面终于生成了我们需要的apk文件！<br />
-然后使用adb install bin/Test-Release.apk就可以将这个apk安装到当前连接的设备上。可以是genymotion也可以是自己的设备。</p>
-
-<p>###使用ant进行多渠道的打包</p>
-
-<p>ant的更大的好处不是在于帮助我们的调试，而是在于可以方便我们打包。尤其是我们需要打包多个平台的apk的时候，这个时候ant的优势就明显的体现出来。</p>
-
-<p>使用ant自动打包多个平台的功能，有很多工具可以实现，比如友盟，美团还有360打包服务都已经提供了。大家可以去下载可以使用的工具。我这里将我们用到的方式分享给大家。基本的原理是相似的。<br />
-我们首先在AndroidManifest.xml里面使用ANDROID_CHANNEL_SETTING这个自定义的变量代表要替换的字串。然后再build.xml中使用正则表达式替换成真正的变量。</p>
-
-<p>AndroidManifest.xml里面的配置</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">  &lt;meta-data android:name="dksdk_channel" android:value="ANDROID_CHANNEL_SETTING" /&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>build.xml里面的设置</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-</pre></td><td class="code"><pre><code class=""><span class="line"> &lt;property file="ant.properties" /&gt;
-</span><span class="line"> 
-</span><span class="line"> &lt;target name="deploy" &gt;
-</span><span class="line">    &lt;foreach
-</span><span class="line">	    delimiter=","
-</span><span class="line">        list="${market_channels}"
-</span><span class="line">        param="channel"
-</span><span class="line">        target="modify_manifest" &gt;
-</span><span class="line">    &lt;/foreach&gt;
-</span><span class="line"> &lt;/target&gt;
-</span><span class="line"> &lt;target name="modify_manifest" &gt;
-</span><span class="line">    &lt;replaceregexp file="AndroidManifest.xml"  
-</span><span class="line">	  match='ANDROID_CHANNEL_SETTING'  
-</span><span class="line">	  replace='${android_channel}'
-</span><span class="line">	  encoding="utf-8"/&gt;  
-</span><span class="line">	  
-</span><span class="line">     &lt;property
-</span><span class="line">         name="out.final.file"
-</span><span class="line">         location="${apk.dir}/game_${channel}.apk" /&gt;
-</span><span class="line">     &lt;antcall target="clean" /&gt;
-</span><span class="line">     &lt;antcall target="release" /&gt;
-</span><span class="line"> &lt;/target&gt;
-</span><span class="line">    </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>上面需要注意的就是market_channels这个变量，他是在何处定义的呢？<br />
-就是在 ant.properties这个文件中定义的。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">market_channels=baidu,360,xiaomi</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>在命令行下调用</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">ant clean
-</span><span class="line">ant deploy</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>然后我们就在bin下面看见已经生成了3个apk文件了！</p>
-
-<p>关于多渠道打包，知道了原理，就想如果能够有现成的工具使用该多好。刚好在github上搜索，果然有不少高人讲自己的成果分享出来。<a href="https://github.com/sinkcup/AntDemo">AntDem</a>是我个人觉得还不错的工具。工具的开发者已经将我们能想到的需求都集成在了自己的工具里面。包括修改包名，修改渠道号，修改生成的apk名称。以及重新签名等。</p>
-
-<p>####遗漏的内容<br />
-上面ant打包，需要用到一个签名文件。而anroid得签名生成。既可以通过Eclipse来做。也可以通过命令行的方式。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">/* -genkey 产生密钥
-</span><span class="line">   -alias game.keystore 别名
-</span><span class="line">   -keyalg RSA 使用RSA算法对签名加密
-</span><span class="line">   -validity 1000 有效期限1000天
-</span><span class="line">   -keystore game.keystore 
-</span><span class="line">*/
-</span><span class="line">keytool -genkey -alias game -keyalg RSA -validity 1000 -keystore game.keystore
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>在命令行中敲入这个命令，则会出现很多问题，比如签名作者，密码，地址，城市等。然后就会在当前目录下生成一个game.keystore的文件和一个ant.properties文件</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">  key.store=game.keystore
-</span><span class="line">  #这个名字就是在生成keystore时那个alias字段的值
-</span><span class="line">  key.alias=game
-</span><span class="line">   
-</span><span class="line">  key.store.password=xxxxxx
-</span><span class="line">  key.alias.password=xxxxxx</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这样当我们调用ant命令的时候，ant会自动读入ant.properties文件。然后对生成的apk文件签名。</p>
 
 ]]></content>
   </entry>

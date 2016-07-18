@@ -1,0 +1,185 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>cocos2dx 增加Google移动广告 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 18 Jul 2016 Cocos2dx 增加Google移动广告 Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。 但是AnySDK是一个大而全的东西， &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">18 Jul 2016</span>
+	<h1 class="post-title">Cocos2dx 增加Google移动广告</h1>
+
+	<section class="post-content">
+		<p>Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-any.jpeg" alt="any" /></p>
+
+<p>但是AnySDK是一个大而全的东西，而我们只需要广告接入这一小块儿的东西。同时，我们的cocos2dx的版本是2.2.6，相对于触控的3.18，已经有很大差别。</p>
+
+<p>于是我们需要自己在重新造一遍轮子，幸运的是网上有不少这样的材料。</p>
+
+<ol>
+  <li>Firebase提供的文档刚好有与cocos2x相关的资料，<a href="https://firebase.google.com/docs/admob/android/games?hl=zh-cn">移步至此</a>,</li>
+  <li>还有热心的同学贴出了更详细的步骤<a href="http://www.cnblogs.com/qianyuming/p/5023018.html">cocos2dx-3.9 集成admob</a>。</li>
+  <li>
+    <p><a href="https://firebase.google.com/docs/admob/ios/quick-start?hl=zh-cn">入门基础指导</a><br />
+<!--more--><br />
+参考了上面的资料，我还是遇到了不少问题。</p>
+  </li>
+  <li>
+    <p>首当其冲的就是<strong>安装CocoaPods</strong> ，可以参考下面两篇文章。</p>
+
+    <ol>
+      <li><a href="http://blog.csdn.net/wuquan0625/article/details/47401235">pod install速度慢的终极解决方案</a>。</li>
+      <li><a href="http://www.cnblogs.com/qianyuming/p/5012578.html">cocoapod安装过程中的幺蛾子</a></li>
+    </ol>
+  </li>
+  <li>一定要下载最新的googlemobilesdk版本，<a href="https://firebase.google.com/docs/admob/ios/download?hl=zh-cn">地址在此处</a>,我当前用的是v7.9.0。</li>
+  <li>我们的项目不仅仅会依赖上面的<code>GoogleMobileAds.framework</code>，还依赖一下的framework，请在target-&gt; build phase -&gt; frameworks中找出来。此处我也是被坑到了，总是提示类似<code>"_OBJC_CLASS_$_SFSafariViewController", referenced from: "_CMTimeMakeWithSeconds", referenced from: l3880 in GoogleMobileAds(flat-arm64)"</code>这样的错误，究其原因就是没有找到对应的framework。</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">CoreMideia.framework,SafariServices.framework,
+</span><span class="line">CoreBluetooth.framework,MessageUI.framework,
+</span><span class="line">AdSupport.framework,EventKit.framework,EventKitUI.framework,
+</span><span class="line">AudioToolbox.framework,MediaPlayer.framework,
+</span><span class="line">StoreKit.framework,SystemConfiguration.framework,
+</span><span class="line">CoreTelephony.framework,CoreGraphics.framework,
+</span><span class="line">AVFoundation.framework</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<ol>
+  <li>clean-&gt;build project</li>
+  <li>在模拟器上运行，Google Ads会自动加载测试的广告。但是如果要在真机上测试，需要打开真机上关闭广告跟踪的功能。在手机的设置-&gt;隐私-&gt;广告里面。关闭即可。</li>
+  <li>运行项目从输出控制台先拿到测试设备号。然后填写到下面的位置。再次运行。</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GADRequest *request = [GADRequest request];
+</span><span class="line">request.testDevices = @[@"测试设备号"];</span></code></pre></td></tr></table></div></figure></notextile></div>
+<ol>
+  <li>设备上测试，还要考虑装一个VPN。</li>
+  <li>如果首次没有显示出来，并且控制台也没有报错，估计就是网络响应慢导致的问题。可以多次尝试即可。</li>
+  <li>Google 提供了一个example工程。<a href="git@github.com:googleads/googleads-mobile-ios-examples.git">地址</a>,可以先调通这个工程，那么整合到cocos2dx中也就不是什么事儿了！</li>
+</ol>
+
+<p>上述是我花费了大半天的时间，踩了不少坑，才将这套流程走通。并且仅仅是展示了Banner广告。<br />
+先看一下效果吧。接下来的计划就是调通控制广告播时长的接口。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-IMG_0511.png" alt="IMG_0511" /></p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=cocos2dx 增加Google移动广告&amp;url=http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-70121917-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+</body>
+</html>
