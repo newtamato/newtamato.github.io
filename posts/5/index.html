@@ -9,8 +9,9 @@
 
 	<meta name="author" content="newtomato">
 	
-	<meta name="description" content="17 Oct 2015 Vim使用-颜色 首先将Solarized的配色库download下来 1
-git clone git://github.com/altercation/solarized.git 将solarized.vim文件copy 到 ~/.vim/colors/ 文件夹下面 &hellip;">
+	<meta name="description" content="17 Oct 2015 Ls命令行排序 按文件大小降序排列 1 ls -lSr 查看当前电脑上硬盘的使用情况 1
+df -lh 这是按兆（M）来排序 1 du -sh * |sort -rm 选出排在前面的10个 1
+du -sh * | sort -rm | head 选出排在后面的10个 1 &hellip;">
 
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="MobileOptimized" content="320" />
@@ -45,6 +46,50 @@ git clone git://github.com/altercation/solarized.git 将solarized.vim文件copy 
       
 	
 		
+	
+	<header class="post-header">
+		<span class="post-meta">17 Oct 2015</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2015/10/17/lsming-ling-xing-pai-xu">
+			
+				Ls命令行排序</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p>按文件大小降序排列</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> ls -lSr </span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>查看当前电脑上硬盘的使用情况</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">df -lh</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这是按兆（M）来排序</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * |sort -rm</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在前面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">du -sh * | sort -rm | head</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>选出排在后面的10个</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line"> du -sh * | sort -rm | tail</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
 	
 	<header class="post-header">
 		<span class="post-meta">17 Oct 2015</span>

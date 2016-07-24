@@ -1,0 +1,272 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>整合FB广告总结 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 24 Jul 2016 整合FB广告总结 上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。 当然，使用FB的SDK，同样也需要翻墙。 首先我们先到FB的官方网站上面注册自己的应用。
+然后找到Facebook Audience Network的入口。 &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">24 Jul 2016</span>
+	<h1 class="post-title">整合FB广告总结</h1>
+
+	<section class="post-content">
+		<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-24-a.png" alt="" /><br />
+上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。</p>
+
+<p>当然，使用FB的SDK，同样也需要翻墙。</p>
+
+<p>首先我们先到FB的官方网站上面注册自己的应用。<br />
+然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。<br />
+最后能够得到一个placementId，这个是我们最终需要用到的东西。<br />
+然后开始集成 Facebook Audience Network 的SDK。</p>
+
+<!--more-->
+
+<p>###整合到ios<br />
+Facebook提供了两种方案实现。<br />
+<strong>一种方案是使用POD方式</strong>，<strong>一种方案是自行下载FBAudienceNetwork的SDK</strong>，然后解压缩，将framework拖拽到项目库中。我个人比较推荐使用pod方式，如果依赖的库升级了，使用<code>pod update</code>就可以及时更新。省事省力省心。</p>
+
+<ol>
+  <li>使用pod 方式。首先在自己的项目目录下面，新建一个<strong>podfile</strong>文件。写入<code>pod 'FBAudienceNetwork'</code>。</li>
+  <li>在项目目录下面，输入如下命令行<code>pod install</code>，pod命令会自行检查相关依赖库，然后将其下载下来。并且重新生成一个新的工程文件<code>xxx.xworkspace</code>。</li>
+  <li>打开xworkspace的工程文件。在UIViewController的继承子类中修改代码如下</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">class GameViewController: UIViewController ,FBAdViewDelegate {
+</span><span class="line">	override func viewDidLoad() {
+</span><span class="line">        super.viewDidLoad()
+</span><span class="line">        let adView:FBAdView = FBAdView.init(placementID: "221630757971535_844119255722679",
+</span><span class="line">        adSize: kFBAdSizeHeight50Banner, rootViewController: self)
+</span><span class="line">        adView.delegate = self;
+</span><span class="line">        adView.loadAd();
+</span><span class="line">        self.view.addSubview(adView);
+</span><span class="line">    }
+</span><span class="line">    ...</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<ol>
+  <li>然后运行代码即可。成功之后你会在屏幕顶端看到FB的广告。</li>
+</ol>
+
+<p>###整合到Android<br />
+Facebook同样也是提供了两种方案实现。<br />
+如果使用的是Android Studio，那么就可以使用<strong>gradle</strong>的方式，类似pod,也是写入配置，然后交由Android Studio来自行下载库。<br />
+或者开发者自行下载sdk，解压缩之后将里面的AndienceNetwork.jar包拖到项目的libs文件夹下面。</p>
+
+<p>接下来修改<strong>AndroidManifest</strong>文件，因为他需要有网络权限。因此需要增加如下两句权限配置</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+</span><span class="line">&lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>然后在我们的MainActivity修改成如下代码</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">public class MainActivity extends AppCompatActivity {
+</span><span class="line">
+</span><span class="line">    private AdView adView;
+</span><span class="line">    @Override
+</span><span class="line">    protected void onCreate(Bundle savedInstanceState) {
+</span><span class="line">        super.onCreate(savedInstanceState);
+</span><span class="line">        setContentView(R.layout.activity_main);
+</span><span class="line">        // Instantiate an AdView view
+</span><span class="line">        adView = new AdView(this, "${从facebook申请到的placementId}", AdSize.BANNER_HEIGHT_50);
+</span><span class="line">
+</span><span class="line">        System.out.print("R.layout.content_main");
+</span><span class="line">        // Find the main layout of your activity
+</span><span class="line">        RelativeLayout layout = (RelativeLayout)findViewById(R.id.content);
+</span><span class="line">
+</span><span class="line">        // Add the ad view to your activity layout
+</span><span class="line">        layout.addView(adView);
+</span><span class="line">        adView.setAdListener(new AdListener() {
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onError(Ad ad, AdError error) {
+</span><span class="line">                System.out.print("on error to show ");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onAdLoaded(Ad ad) {
+</span><span class="line">                System.out.print("onAdLoaded ");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onAdClicked(Ad ad) {
+</span><span class="line">               
+</span><span class="line">                System.out.print("onAdClicked");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">        });
+</span><span class="line">			//第一次运行会在控制台输出此设备id，第二运行才会出现广告
+</span><span class="line">        AdSettings.addTestDevice("%{设备id}");
+</span><span class="line">
+</span><span class="line">        // Request to load an ad
+</span><span class="line">        adView.loadAd();
+</span><span class="line">    }</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此时在运行Android Studio，就可以在设备或者模拟器上看到广告了。文档里面说模拟器是不需要设备id的，但是我没有设备id，在模拟器上是看不到的。加上设备id，就可以看得到了。</p>
+
+<p>至此FB广告整合就结束了，是不是非常简单？但是在实际操作中总会遇到其他各色的问题。但是请放心，只要翻墙翻得好，问题都会好！<br />
+能够看到这里，真是对我极好的鼓励。我在推荐一篇文章<a href="http://leotse90.com/2016/03/22/Mobile-AD-Admob-Integration/">移动广告之广告平台选择（Admob&amp;Facebook）</a>,刚好这两种广告的接入方式我都在博客中讲到了，如果能帮到你真是莫大荣幸。</p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=整合FB广告总结&amp;url=http://www.newtomato.me/blog/2016/07/24/zheng-he-fbyan-gao-zong-jie" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/07/24/zheng-he-fbyan-gao-zong-jie" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/07/24/zheng-he-fbyan-gao-zong-jie" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+	<script type="text/javascript">
+		var _gaq = _gaq || [];
+		_gaq.push(['_setAccount', 'UA-70121917-1']);
+		_gaq.push(['_trackPageview']);
+
+		(function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		})();
+	</script>
+
+
+</body>
+</html>

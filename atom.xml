@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-07-18T22:32:32+08:00</updated>
+  <updated>2016-07-24T12:45:02+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,163 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[整合FB广告总结]]></title>
+    <link href="http://www.newtomato.me/blog/2016/07/24/zheng-he-fbyan-gao-zong-jie"/>
+    <updated>2016-07-24T12:29:05+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/07/24/zheng-he-fbyan-gao-zong-jie</id>
+    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-24-a.png" alt="" /><br />
+上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。</p>
+
+<p>当然，使用FB的SDK，同样也需要翻墙。</p>
+
+<p>首先我们先到FB的官方网站上面注册自己的应用。<br />
+然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。<br />
+最后能够得到一个placementId，这个是我们最终需要用到的东西。<br />
+然后开始集成 Facebook Audience Network 的SDK。</p>
+
+<!--more-->
+
+<p>###整合到ios<br />
+Facebook提供了两种方案实现。<br />
+<strong>一种方案是使用POD方式</strong>，<strong>一种方案是自行下载FBAudienceNetwork的SDK</strong>，然后解压缩，将framework拖拽到项目库中。我个人比较推荐使用pod方式，如果依赖的库升级了，使用<code>pod update</code>就可以及时更新。省事省力省心。</p>
+
+<ol>
+  <li>使用pod 方式。首先在自己的项目目录下面，新建一个<strong>podfile</strong>文件。写入<code>pod 'FBAudienceNetwork'</code>。</li>
+  <li>在项目目录下面，输入如下命令行<code>pod install</code>，pod命令会自行检查相关依赖库，然后将其下载下来。并且重新生成一个新的工程文件<code>xxx.xworkspace</code>。</li>
+  <li>打开xworkspace的工程文件。在UIViewController的继承子类中修改代码如下</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">class GameViewController: UIViewController ,FBAdViewDelegate {
+</span><span class="line">	override func viewDidLoad() {
+</span><span class="line">        super.viewDidLoad()
+</span><span class="line">        let adView:FBAdView = FBAdView.init(placementID: "221630757971535_844119255722679",
+</span><span class="line">        adSize: kFBAdSizeHeight50Banner, rootViewController: self)
+</span><span class="line">        adView.delegate = self;
+</span><span class="line">        adView.loadAd();
+</span><span class="line">        self.view.addSubview(adView);
+</span><span class="line">    }
+</span><span class="line">    ...</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<ol>
+  <li>然后运行代码即可。成功之后你会在屏幕顶端看到FB的广告。</li>
+</ol>
+
+<p>###整合到Android<br />
+Facebook同样也是提供了两种方案实现。<br />
+如果使用的是Android Studio，那么就可以使用<strong>gradle</strong>的方式，类似pod,也是写入配置，然后交由Android Studio来自行下载库。<br />
+或者开发者自行下载sdk，解压缩之后将里面的AndienceNetwork.jar包拖到项目的libs文件夹下面。</p>
+
+<p>接下来修改<strong>AndroidManifest</strong>文件，因为他需要有网络权限。因此需要增加如下两句权限配置</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+</span><span class="line">&lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>然后在我们的MainActivity修改成如下代码</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">public class MainActivity extends AppCompatActivity {
+</span><span class="line">
+</span><span class="line">    private AdView adView;
+</span><span class="line">    @Override
+</span><span class="line">    protected void onCreate(Bundle savedInstanceState) {
+</span><span class="line">        super.onCreate(savedInstanceState);
+</span><span class="line">        setContentView(R.layout.activity_main);
+</span><span class="line">        // Instantiate an AdView view
+</span><span class="line">        adView = new AdView(this, "${从facebook申请到的placementId}", AdSize.BANNER_HEIGHT_50);
+</span><span class="line">
+</span><span class="line">        System.out.print("R.layout.content_main");
+</span><span class="line">        // Find the main layout of your activity
+</span><span class="line">        RelativeLayout layout = (RelativeLayout)findViewById(R.id.content);
+</span><span class="line">
+</span><span class="line">        // Add the ad view to your activity layout
+</span><span class="line">        layout.addView(adView);
+</span><span class="line">        adView.setAdListener(new AdListener() {
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onError(Ad ad, AdError error) {
+</span><span class="line">                System.out.print("on error to show ");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onAdLoaded(Ad ad) {
+</span><span class="line">                System.out.print("onAdLoaded ");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onAdClicked(Ad ad) {
+</span><span class="line">               
+</span><span class="line">                System.out.print("onAdClicked");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">        });
+</span><span class="line">			//第一次运行会在控制台输出此设备id，第二运行才会出现广告
+</span><span class="line">        AdSettings.addTestDevice("%{设备id}");
+</span><span class="line">
+</span><span class="line">        // Request to load an ad
+</span><span class="line">        adView.loadAd();
+</span><span class="line">    }</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此时在运行Android Studio，就可以在设备或者模拟器上看到广告了。文档里面说模拟器是不需要设备id的，但是我没有设备id，在模拟器上是看不到的。加上设备id，就可以看得到了。</p>
+
+<p>至此FB广告整合就结束了，是不是非常简单？但是在实际操作中总会遇到其他各色的问题。但是请放心，只要翻墙翻得好，问题都会好！<br />
+能够看到这里，真是对我极好的鼓励。我在推荐一篇文章<a href="http://leotse90.com/2016/03/22/Mobile-AD-Admob-Integration/">移动广告之广告平台选择（Admob&amp;Facebook）</a>,刚好这两种广告的接入方式我都在博客中讲到了，如果能帮到你真是莫大荣幸。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[cocos2dx 增加Google移动广告]]></title>
@@ -1253,155 +1410,6 @@ lua_extension.c先被调用注册了了一些供lua调用的函数。<br />
 <p>只有被需求虐过无数遍，踏过无数的坑，熬过无数的夜，我们才懂得如何做找到一个项目的脉搏。祝各位也在坑中受虐的同学们能及早认清问题所在，争吵和指责都是没有意义的，只会消耗大家的心情，只有让事情按照一定的规律动起来，朝着目标的方向进行着，我们才能自信的掌握节奏，不会被工作所累。</p>
 
 <p><strong>PS:做事不要只闷头看自己的那方寸之间的事情，要把眼光放得远一些。</strong></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[破解apk文件]]></title>
-    <link href="http://www.newtomato.me/blog/2015/12/27/android-2"/>
-    <updated>2015-12-27T11:25:19+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/12/27/android-2</id>
-    <content type="html"><![CDATA[<p>此篇文章涉及到的工具</p>
-
-<ol>
-  <li><a href="http://www.softpedia.com/get/Programming/Debuggers-Decompilers-Dissasemblers/ApkTool.shtml#download">apktool</a></li>
-  <li><a href="http://sourceforge.net/projects/dex2jar/">dex2jar</a></li>
-  <li><a href="http://jd.benow.ca/">jd-GUI</a></li>
-</ol>
-
-<p>所谓道高一尺魔高一丈，做开发需要有职业道德，我们破解apk只是为了研究和学习而不是为了以此盗取别人的劳动成果用以牟利。<br />
-只有知道了apk是怎么被破解的才知道怎么最好防范。才知道我们自己做的加密是否有效。<br />
-<!--more--><br />
-###查看APK里面的内容<br />
-上一篇文章我们提到了如何生成apk文件。但是apk文件里面包含了什么呢？如何查看？</p>
-
-<p>首先，apk也即是一种压缩文件的格式。因此我们可以通过解压缩的方式讲文件先打开。（如果打不开，可以现将apk扩展名改为zip然后再解压缩）<br />
-打开之后，我们能够看到的文件内容如下：<br />
-<img src="./1450615912267.png" alt="Alt text" /><br />
-AndroidManifest是看不到东西的，里面乱码一片。<br />
-assets是游戏里面的资源文件夹。c<br />
-lasses.dex则是源码压缩文件。同样也是无法打开。lib则是一些依赖的库。比如我们上一张提到的quickcocos2dx.so文件。<br />
-res则是Android工程需要用到的资源文件，比如闪屏图片。</p>
-
-<p>因此单纯地通过解压缩是看不出的什么有用的东西的。AndroidManifest是一个工程的描述文件，怎么才能够看得到呢？</p>
-
-<p>###解压缩APK<br />
-这个时候就用到了我上面提到的apktool文件！</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">apktool d xxxx.apk </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>用这种方式就能够apk破解式的解压缩，直接就可以看到AndroidManifest文件里面的全部内容。<br />
-<img src="./38ccc90747d8eb7bb7863e12c397356d" alt="Alt text" /></p>
-
-<p>除了能够看到AndroidManifest文件，还可以看到源代码，但是这种方式查看源代码还是不够直观。因此打开之后看到的源码虽不是乱码但是不够直观。</p>
-
-<p>那么还有什么办法呢？<br />
-当然有，还记得上面出现的class.dex文件么？我们可以用的dex2jar命令将这个dex转成jar包，然后使用jd-GUI的工具查看源码即可。<br />
-<img src="./a.jpeg" alt="Alt text" /></p>
-
-<p>这样一看，就能够看到我们的java代码并没有被加密。那么接下来就是要去加密！</p>
-
-<p>###加密加密加密</p>
-
-<p>重要的事情说三遍。</p>
-
-<p>Android的加密一般使用ProGuard来进行混淆打包。在混淆过后，可以在工程目录的proguard中的mapping.txt看到混淆后的类名，方法名，变量名和混淆前的类名，方法名，变量名。<br />
-<img src="./1" alt="Alt text" /></p>
-
-<p>我们要做的就是在我们proj.android下面的proguard.txt文件里面定义我们自己的混淆规则。同时在project.properties里面写<code>proguard.config=proguard.txt</code></p>
-
-<p>混淆的文件的规则如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">-include {filename}    从给定的文件中读取配置参数   
-</span><span class="line">-basedirectory {directoryname}    指定基础目录为以后相对的档案名称   
-</span><span class="line">-injars {class_path}    指定要处理的应用程序jar,war,ear和目录   
-</span><span class="line">-outjars {class_path}    指定处理完后要输出的jar,war,ear和目录的名称   
-</span><span class="line">-libraryjars {classpath}    指定要处理的应用程序jar,war,ear和目录所需要的程序库文件   
-</span><span class="line">-dontskipnonpubliclibraryclasses    指定不去忽略非公共的库类。   
-</span><span class="line">-dontskipnonpubliclibraryclassmembers    指定不去忽略包可见的库类的成员。  
-</span><span class="line">  
-</span><span class="line">保留选项   
-</span><span class="line">-keep {Modifier} {class_specification}    保护指定的类文件和类的成员   
-</span><span class="line">-keepclassmembers {modifier} {class_specification}    保护指定类的成员，如果此类受到保护他们会保护的更好  
-</span><span class="line">-keepclasseswithmembers {class_specification}    保护指定的类和类的成员，但条件是所有指定的类和类成员是要存在。   
-</span><span class="line">-keepnames {class_specification}    保护指定的类和类的成员的名称（如果他们不会压缩步骤中删除）   
-</span><span class="line">-keepclassmembernames {class_specification}    保护指定的类的成员的名称（如果他们不会压缩步骤中删除）   
-</span><span class="line">-keepclasseswithmembernames {class_specification}    保护指定的类和类的成员的名称，如果所有指定的类成员出席（在压缩步骤之后）   
-</span><span class="line">-printseeds {filename}    列出类和类的成员-keep选项的清单，标准输出到给定的文件   
-</span><span class="line">  
-</span><span class="line">压缩   
-</span><span class="line">-dontshrink    不压缩输入的类文件   
-</span><span class="line">-printusage {filename}   
-</span><span class="line">-whyareyoukeeping {class_specification}       
-</span><span class="line">  
-</span><span class="line">优化   
-</span><span class="line">-dontoptimize    不优化输入的类文件   
-</span><span class="line">-assumenosideeffects {class_specification}    优化时假设指定的方法，没有任何副作用   
-</span><span class="line">-allowaccessmodification    优化时允许访问并修改有修饰符的类和类的成员   
-</span><span class="line">  
-</span><span class="line">混淆   
-</span><span class="line">-dontobfuscate    不混淆输入的类文件   
-</span><span class="line">-printmapping {filename}   
-</span><span class="line">-applymapping {filename}    重用映射增加混淆   
-</span><span class="line">-obfuscationdictionary {filename}    使用给定文件中的关键字作为要混淆方法的名称   
-</span><span class="line">-overloadaggressively    混淆时应用侵入式重载   
-</span><span class="line">-useuniqueclassmembernames    确定统一的混淆类的成员名称来增加混淆   
-</span><span class="line">-flattenpackagehierarchy {package_name}    重新包装所有重命名的包并放在给定的单一包中   
-</span><span class="line">-repackageclass {package_name}    重新包装所有重命名的类文件中放在给定的单一包中   
-</span><span class="line">-dontusemixedcaseclassnames    混淆时不会产生形形色色的类名   
-</span><span class="line">-keepattributes {attribute_name,...}    保护给定的可选属性，例如LineNumberTable, LocalVariableTable, SourceFile, Deprecated, Synthetic, Signature, and   
-</span><span class="line">  
-</span><span class="line">InnerClasses.   
-</span><span class="line">-renamesourcefileattribute {string}    设置源文件中给定的字符串常量  </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>使用混淆经常会遇到以下的问题：<br />
-1. 混淆之后，类名和函数名发生变化，在lua中无法真确调用。<br />
-2. 第三方的类库不要去混淆，容易发生问题，导致无法正确调用，原因也是第一条引发的。</p>
-
-<p>使用混淆之后，重新编译我们的项目，在用上面的方法破解，查看我们的代码，发现不少代码都混淆成了一些abc这样的名字。但是这样的混淆方法并不是唯一的。只是最常用的方法。</p>
 
 ]]></content>
   </entry>
