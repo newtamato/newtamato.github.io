@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:restapi | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/restapi/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-07-27T21:02:17+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[调用漫威开发API]]></title>
+    <link href="http://www.newtomato.me/blog/2016/07/27/diao-yong-man-wei-kai-fa-api"/>
+    <updated>2016-07-27T16:03:31+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/07/27/diao-yong-man-wei-kai-fa-api</id>
+    <content type="html"><![CDATA[<p>无意间看到漫威原来也提供了开放API接口。真是让我惊喜意外。<br />
+简单了看了一下他们的文档，看样子很简单就能够调用。不需要额外的登录和授权。<br />
+API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
+请求结构文档<a href="http://developer.marvel.com/documentation/generalinfo">在此</a></p>
+
+<p>因此要调用他们接口，需要提供如下三个参数即可<br />
+<!--more--></p>
+
+<pre><code>Params: 
+{   	"apikey": "your api key",   
+		"ts": "a timestamp",   
+		"hash": "your hash" 
+}
+</code></pre>
+
+<p>第一个参数<strong>apikey</strong>是我们申请漫威开发者账号的时候，由他提供的一个<code>publick key</code>，（对应还有一个<code>private key</code>），第二个<strong>ts</strong>是一个时间戳，第三个hash是通过如下算法计算出来的</p>
+
+<pre><code>	md5(ts+privateKey+publicKey)
+</code></pre>
+
+<p>例如，ts是1，public key是1234,private key是abcd，那么这个数字就是<code>md5(1abcd1234)</code></p>
+
+<p>按照他的这个规则，我用Python写了一个简单的调用demo，代码下载下来，直接可用。</p>
+
+<pre><code>import httplib
+import urllib
+import json
+import datetime
+import time
+from md5 import md5
+
+APIKEY = "1e8b043610d5ae2f4294eaf94dede6db"
+PRIVATE_KEY = "32360edc7f06e025819a974ade95e513994761b1"
+class BaseHttpRequest :
+def __init__(self,action,param):
+   self.mAction = action
+   self.mParams = param
+
+def execute(self):
+strRequest = "gateway.marvel.com" 
+    	
+headers = {"Accept":"application/json","Content-Type" : "application/json"}
+
+params = {}
+params["apikey"] = APIKEY
+    	
+ts = time.time()
+ts = int(ts)
+params["ts"] = ts
+strKey = "%s%s%s" % (ts,PRIVATE_KEY,APIKEY)
+params["hash"] = md5(strKey).hexdigest()
+params["limit"] = 1
+params["offset"] = 1
+params = urllib.urlencode(params)
+strUrl = "/v1/public/%s?%s" % (self.mAction,params)
+conn = httplib.HTTPSConnection(strRequest)
+conn.request("GET",strUrl,None,headers) #params,headers
+res = conn.getresponse()
+    	
+data = res.read()
+jsonResult = json.loads(data)
+   
+</code></pre>
+<pre><code>if __name__ == "__main__":
+	#characters,comics,creators,events,stories
+	request = BaseHttpRequest("stories",None)
+	request.execute()
+</code></pre>
+<p>调用结果如下<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-27-14696064871563.jpg" alt="" /></p>
+
+]]></content>
+  </entry>
+  
+</feed>

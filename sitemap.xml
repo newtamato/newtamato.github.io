@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
-<loc>http://www.newtomato.me/blog/2016/07/24/zheng-he-fbyan-gao-zong-jie</loc>
-<lastmod>2016-07-24T12:29:05+08:00</lastmod>
+<loc>http://www.newtomato.me/blog/2016/07/27/diao-yong-man-wei-kai-fa-api</loc>
+<lastmod>2016-07-27T16:03:31+08:00</lastmod>
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads</loc>
@@ -353,6 +353,15 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/ads/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/python/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/restapi/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/man-wei/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/posts/2/</loc>

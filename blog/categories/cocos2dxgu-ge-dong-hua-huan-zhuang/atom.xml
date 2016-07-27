@@ -4,7 +4,7 @@
   <title><![CDATA[分类:cocos2dx骨骼动画换装 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/cocos2dxgu-ge-dong-hua-huan-zhuang/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-07-25T11:46:30+08:00</updated>
+  <updated>2016-07-27T21:02:17+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -83,7 +83,7 @@ flash IDE dragbone官方的插件</p>
 &lt;/skeleton&gt;
 </code></pre>
 
-<p>这是一个简单地骨骼动画文件。它分为三个部分，第一个部分是<armatures></armatures>，表示有几个骨骼小人，他的名字就是我们要创建骨骼小人是用到的参数,第二个部分就是<animations></animations>他表示上面对应骨骼小人的动画，位置，缩放，关键帧事件等信息，它里面每一个mov表示小人能做的动作，比如walk，表示小人能播放走路的动画。第三个部分<textureatlas></textureatlas>表示对应的骨骼小人用到的图片资源。</p>
+<p>这是一个简单地骨骼动画文件。它分为三个部分，第一个部分是<armatures></armatures>，表示有几个骨骼小人，他的名字就是我们要创建骨骼小人是用到的参数,第二个部分就是<animations></animations>他表示上面对应骨骼小人的动画，位置，缩放，关键帧事件等信息，它里面每一个mov表示小人能做的动作，比如walk，表示小人能播放走路的动画。第三个部分<TextureAtlas></TextureAtlas>表示对应的骨骼小人用到的图片资源。</p>
 
 <p>然后，我们将生成的素材资源放到xcode的工程的Resource目录下面，通过上面提供的函数和方法就可以创建出来一个简单的骨骼小人了。</p>
 

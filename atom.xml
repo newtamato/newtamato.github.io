@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-07-25T11:46:30+08:00</updated>
+  <updated>2016-07-27T21:02:17+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,70 +14,37 @@
 
   
   <entry>
-    <title type="html"><![CDATA[整合FB广告总结]]></title>
-    <link href="http://www.newtomato.me/blog/2016/07/24/zheng-he-fbyan-gao-zong-jie"/>
-    <updated>2016-07-24T12:29:05+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/07/24/zheng-he-fbyan-gao-zong-jie</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-24-a.png" alt="" /><br />
-上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。</p>
+    <title type="html"><![CDATA[调用漫威开发API]]></title>
+    <link href="http://www.newtomato.me/blog/2016/07/27/diao-yong-man-wei-kai-fa-api"/>
+    <updated>2016-07-27T16:03:31+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/07/27/diao-yong-man-wei-kai-fa-api</id>
+    <content type="html"><![CDATA[<p>无意间看到漫威原来也提供了开放API接口。真是让我惊喜意外。<br />
+简单了看了一下他们的文档，看样子很简单就能够调用。不需要额外的登录和授权。<br />
+API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
+请求结构文档<a href="http://developer.marvel.com/documentation/generalinfo">在此</a></p>
 
-<p>当然，使用FB的SDK，同样也需要翻墙。</p>
-
-<p>首先我们先到FB的官方网站上面注册自己的应用。<br />
-然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。<br />
-最后能够得到一个placementId，这个是我们最终需要用到的东西。<br />
-然后开始集成 Facebook Audience Network 的SDK。</p>
-
-<!--more-->
-
-<p>###整合到ios<br />
-Facebook提供了两种方案实现。<br />
-<strong>一种方案是使用POD方式</strong>，<strong>一种方案是自行下载FBAudienceNetwork的SDK</strong>，然后解压缩，将framework拖拽到项目库中。我个人比较推荐使用pod方式，如果依赖的库升级了，使用<code>pod update</code>就可以及时更新。省事省力省心。</p>
-
-<ol>
-  <li>使用pod 方式。首先在自己的项目目录下面，新建一个<strong>podfile</strong>文件。写入<code>pod 'FBAudienceNetwork'</code>。</li>
-  <li>在项目目录下面，输入如下命令行<code>pod install</code>，pod命令会自行检查相关依赖库，然后将其下载下来。并且重新生成一个新的工程文件<code>xxx.xworkspace</code>。</li>
-  <li>打开xworkspace的工程文件。在UIViewController的继承子类中修改代码如下</li>
-</ol>
+<p>因此要调用他们接口，需要提供如下三个参数即可<br />
+<!--more--></p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
 <span class="line-number">3</span>
 <span class="line-number">4</span>
 <span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">class GameViewController: UIViewController ,FBAdViewDelegate {
-</span><span class="line">	override func viewDidLoad() {
-</span><span class="line">        super.viewDidLoad()
-</span><span class="line">        let adView:FBAdView = FBAdView.init(placementID: "221630757971535_844119255722679",
-</span><span class="line">        adSize: kFBAdSizeHeight50Banner, rootViewController: self)
-</span><span class="line">        adView.delegate = self;
-</span><span class="line">        adView.loadAd();
-</span><span class="line">        self.view.addSubview(adView);
-</span><span class="line">    }
-</span><span class="line">    ...</span></code></pre></td></tr></table></div></figure></notextile></div>
+</pre></td><td class="code"><pre><code class=""><span class="line">Params: 
+</span><span class="line">{   	"apikey": "your api key",   
+</span><span class="line">		"ts": "a timestamp",   
+</span><span class="line">		"hash": "your hash" 
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<ol>
-  <li>然后运行代码即可。成功之后你会在屏幕顶端看到FB的广告。</li>
-</ol>
+<p>第一个参数<strong>apikey</strong>是我们申请漫威开发者账号的时候，由他提供的一个<code>publick key</code>，（对应还有一个<code>private key</code>），第二个<strong>ts</strong>是一个时间戳，第三个hash是通过如下算法计算出来的</p>
 
-<p>###整合到Android<br />
-Facebook同样也是提供了两种方案实现。<br />
-如果使用的是Android Studio，那么就可以使用<strong>gradle</strong>的方式，类似pod,也是写入配置，然后交由Android Studio来自行下载库。<br />
-或者开发者自行下载sdk，解压缩之后将里面的AndienceNetwork.jar包拖到项目的libs文件夹下面。</p>
+<pre><code>	md5(ts+privateKey+publicKey)
+</code></pre>
 
-<p>接下来修改<strong>AndroidManifest</strong>文件，因为他需要有网络权限。因此需要增加如下两句权限配置</p>
+<p>例如，ts是1，public key是1234,private key是abcd，那么这个数字就是<code>md5(1abcd1234)</code></p>
 
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">&lt;uses-permission android:name="android.permission.INTERNET"/&gt;
-</span><span class="line">&lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>然后在我们的MainActivity修改成如下代码</p>
+<p>按照他的这个规则，我用Python写了一个简单的调用demo，代码下载下来，直接可用。</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
@@ -117,55 +84,54 @@ Facebook同样也是提供了两种方案实现。<br />
 <span class="line-number">36</span>
 <span class="line-number">37</span>
 <span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">public class MainActivity extends AppCompatActivity {
+</pre></td><td class="code"><pre><code class=""><span class="line">import httplib
+</span><span class="line">import urllib
+</span><span class="line">import json
+</span><span class="line">import datetime
+</span><span class="line">import time
+</span><span class="line">from md5 import md5
 </span><span class="line">
-</span><span class="line">    private AdView adView;
-</span><span class="line">    @Override
-</span><span class="line">    protected void onCreate(Bundle savedInstanceState) {
-</span><span class="line">        super.onCreate(savedInstanceState);
-</span><span class="line">        setContentView(R.layout.activity_main);
-</span><span class="line">        // Instantiate an AdView view
-</span><span class="line">        adView = new AdView(this, "${从facebook申请到的placementId}", AdSize.BANNER_HEIGHT_50);
+</span><span class="line">APIKEY = "1e8b043610d5ae2f4294eaf94dede6db"
+</span><span class="line">PRIVATE_KEY = "32360edc7f06e025819a974ade95e513994761b1"
+</span><span class="line">class BaseHttpRequest :
+</span><span class="line">def __init__(self,action,param):
+</span><span class="line">   self.mAction = action
+</span><span class="line">   self.mParams = param
 </span><span class="line">
-</span><span class="line">        System.out.print("R.layout.content_main");
-</span><span class="line">        // Find the main layout of your activity
-</span><span class="line">        RelativeLayout layout = (RelativeLayout)findViewById(R.id.content);
+</span><span class="line">def execute(self):
+</span><span class="line">strRequest = "gateway.marvel.com" 
+</span><span class="line">    	
+</span><span class="line">headers = {"Accept":"application/json","Content-Type" : "application/json"}
 </span><span class="line">
-</span><span class="line">        // Add the ad view to your activity layout
-</span><span class="line">        layout.addView(adView);
-</span><span class="line">        adView.setAdListener(new AdListener() {
-</span><span class="line">
-</span><span class="line">            @Override
-</span><span class="line">            public void onError(Ad ad, AdError error) {
-</span><span class="line">                System.out.print("on error to show ");
-</span><span class="line">            }
-</span><span class="line">
-</span><span class="line">            @Override
-</span><span class="line">            public void onAdLoaded(Ad ad) {
-</span><span class="line">                System.out.print("onAdLoaded ");
-</span><span class="line">            }
-</span><span class="line">
-</span><span class="line">            @Override
-</span><span class="line">            public void onAdClicked(Ad ad) {
-</span><span class="line">               
-</span><span class="line">                System.out.print("onAdClicked");
-</span><span class="line">            }
-</span><span class="line">
-</span><span class="line">        });
-</span><span class="line">			//第一次运行会在控制台输出此设备id，第二运行才会出现广告
-</span><span class="line">        AdSettings.addTestDevice("%{设备id}");
-</span><span class="line">
-</span><span class="line">        // Request to load an ad
-</span><span class="line">        adView.loadAd();
-</span><span class="line">    }</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>此时在运行Android Studio，就可以在设备或者模拟器上看到广告了。文档里面说模拟器是不需要设备id的，但是我没有设备id，在模拟器上是看不到的。加上设备id，就可以看得到了。</p>
-
-<p>至此FB广告整合就结束了，是不是非常简单？但是在实际操作中总会遇到其他各色的问题。但是请放心，只要翻墙翻得好，问题都会好！<br />
-能够看到这里，真是对我极好的鼓励。我在推荐一篇文章<a href="http://leotse90.com/2016/03/22/Mobile-AD-Admob-Integration/">移动广告之广告平台选择（Admob&amp;Facebook）</a>,刚好这两种广告的接入方式我都在博客中讲到了，如果能帮到你真是莫大荣幸。</p>
+</span><span class="line">params = {}
+</span><span class="line">params["apikey"] = APIKEY
+</span><span class="line">    	
+</span><span class="line">ts = time.time()
+</span><span class="line">ts = int(ts)
+</span><span class="line">params["ts"] = ts
+</span><span class="line">strKey = "%s%s%s" % (ts,PRIVATE_KEY,APIKEY)
+</span><span class="line">params["hash"] = md5(strKey).hexdigest()
+</span><span class="line">params["limit"] = 1
+</span><span class="line">params["offset"] = 1
+</span><span class="line">params = urllib.urlencode(params)
+</span><span class="line">strUrl = "/v1/public/%s?%s" % (self.mAction,params)
+</span><span class="line">conn = httplib.HTTPSConnection(strRequest)
+</span><span class="line">conn.request("GET",strUrl,None,headers) #params,headers
+</span><span class="line">res = conn.getresponse()
+</span><span class="line">    	
+</span><span class="line">data = res.read()
+</span><span class="line">jsonResult = json.loads(data)
+</span><span class="line">   </span></code></pre></td></tr></table></div></figure></notextile></div>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">if __name__ == "__main__":
+</span><span class="line">	#characters,comics,creators,events,stories
+</span><span class="line">	request = BaseHttpRequest("stories",None)
+</span><span class="line">	request.execute()</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>调用结果如下<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-27-14696064871563.jpg" alt="" /></p>
 
 ]]></content>
   </entry>
