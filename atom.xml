@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-07-28T11:21:34+08:00</updated>
+  <updated>2016-07-30T12:17:23+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,162 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[整合FB广告步骤总结]]></title>
+    <link href="http://www.newtomato.me/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie"/>
+    <updated>2016-07-30T12:09:50+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie</id>
+    <content type="html"><![CDATA[<p>上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。</p>
+
+<p>当然，使用FB的SDK，同样也需要翻墙。</p>
+
+<p>首先我们先到FB的官方网站上面注册自己的应用。<br />
+然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。<br />
+最后能够得到一个placementId，这个是我们最终需要用到的东西。<br />
+然后开始集成 Facebook Audience Network 的SDK。<br />
+<!--more--></p>
+
+<h3 id="ios">整合到ios</h3>
+
+<p>Facebook提供了两种方案实现。<br />
+<strong>一种方案是使用POD方式</strong>，<strong>一种方案是自行下载FBAudienceNetwork的SDK</strong>，然后解压缩，将framework拖拽到项目库中。我个人比较推荐使用pod方式，如果依赖的库升级了，使用<code>pod update</code>就可以及时更新。省事省力省心。</p>
+
+<ol>
+  <li>使用pod 方式。首先在自己的项目目录下面，新建一个<strong>podfile</strong>文件。写入<code>pod 'FBAudienceNetwork'</code>。</li>
+  <li>在项目目录下面，输入如下命令行<code>pod install</code>，pod命令会自行检查相关依赖库，然后将其下载下来。并且重新生成一个新的工程文件<code>xxx.xworkspace</code>。</li>
+  <li>打开xworkspace的工程文件。在UIViewController的继承子类中修改代码如下</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">class GameViewController: UIViewController ,FBAdViewDelegate {
+</span><span class="line">	override func viewDidLoad() {
+</span><span class="line">        super.viewDidLoad()
+</span><span class="line">        let adView:FBAdView = FBAdView.init(placementID: "221630757971535_844119255722679",
+</span><span class="line">        adSize: kFBAdSizeHeight50Banner, rootViewController: self)
+</span><span class="line">        adView.delegate = self;
+</span><span class="line">        adView.loadAd();
+</span><span class="line">        self.view.addSubview(adView);
+</span><span class="line">    }
+</span><span class="line">    ...</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<ol>
+  <li>然后运行代码即可。成功之后你会在屏幕顶端看到FB的广告。</li>
+</ol>
+
+<h3 id="android">整合到Android</h3>
+
+<p>Facebook同样也是提供了两种方案实现。<br />
+如果使用的是Android Studio，那么就可以使用<strong>gradle</strong>的方式，类似pod,也是写入配置，然后交由Android Studio来自行下载库。<br />
+或者开发者自行下载sdk，解压缩之后将里面的AndienceNetwork.jar包拖到项目的libs文件夹下面。</p>
+
+<p>接下来修改<strong>AndroidManifest</strong>文件，因为他需要有网络权限。因此需要增加如下两句权限配置</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;uses-permission android:name="android.permission.INTERNET"/&gt;
+</span><span class="line">&lt;uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/&gt;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>然后在我们的MainActivity修改成如下代码</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">public class MainActivity extends AppCompatActivity {
+</span><span class="line">
+</span><span class="line">    private AdView adView;
+</span><span class="line">    @Override
+</span><span class="line">    protected void onCreate(Bundle savedInstanceState) {
+</span><span class="line">        super.onCreate(savedInstanceState);
+</span><span class="line">        setContentView(R.layout.activity_main);
+</span><span class="line">        // Instantiate an AdView view
+</span><span class="line">        adView = new AdView(this, "${从facebook申请到的placementId}", AdSize.BANNER_HEIGHT_50);
+</span><span class="line">
+</span><span class="line">        System.out.print("R.layout.content_main");
+</span><span class="line">        // Find the main layout of your activity
+</span><span class="line">        RelativeLayout layout = (RelativeLayout)findViewById(R.id.content);
+</span><span class="line">
+</span><span class="line">        // Add the ad view to your activity layout
+</span><span class="line">        layout.addView(adView);
+</span><span class="line">        adView.setAdListener(new AdListener() {
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onError(Ad ad, AdError error) {
+</span><span class="line">                System.out.print("on error to show ");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onAdLoaded(Ad ad) {
+</span><span class="line">                System.out.print("onAdLoaded ");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">            @Override
+</span><span class="line">            public void onAdClicked(Ad ad) {
+</span><span class="line">               
+</span><span class="line">                System.out.print("onAdClicked");
+</span><span class="line">            }
+</span><span class="line">
+</span><span class="line">        });
+</span><span class="line">			//第一次运行会在控制台输出此设备id，第二运行才会出现广告
+</span><span class="line">        AdSettings.addTestDevice("%{设备id}");
+</span><span class="line">
+</span><span class="line">        // Request to load an ad
+</span><span class="line">        adView.loadAd();
+</span><span class="line">    }</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此时在运行Android Studio，就可以在设备或者模拟器上看到广告了。文档里面说模拟器是不需要设备id的，但是我没有设备id，在模拟器上是看不到的。加上设备id，就可以看得到了。</p>
+
+<p>至此FB广告整合就结束了，是不是非常简单？但是在实际操作中总会遇到其他各色的问题。但是请放心，只要翻墙翻得好，问题都会好！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[调用漫威开发API]]></title>
@@ -1333,46 +1489,6 @@ lua_extension.c先被调用注册了了一些供lua调用的函数。<br />
 初期创造一个相对开心，被需要，有梦想共筑的环境才成为留住人才的主要手段。但是创业周期一旦拉长，光靠梦想是不现实的。适当的增加薪水也是手段之一。缩减工作时间，适当保证工作和生活的平衡性。找到一个工作的节奏。不让疲惫袭击团队。不然负能量满满，四处都是抱怨的声音。但是这样的时间也不能够太长，没有希望和前途的闷头干下去是很辛苦的。</p>
 
 <p>而这门课我们还在继续，直到创业成功。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[项目进度的几点想法]]></title>
-    <link href="http://www.newtomato.me/blog/2016/02/25/xiang-mu-jin-du-de-ji-dian-xiang-fa"/>
-    <updated>2016-02-25T12:26:58+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/02/25/xiang-mu-jin-du-de-ji-dian-xiang-fa</id>
-    <content type="html"><![CDATA[<p>将项目从0做到1说简单也简单，说复杂也复杂。这里面的变量不多，但是每一个变化都会影响很多东西。<br />
-我将这个过程总结成一个公式，</p>
-
-<blockquote>
-  <p>（需求沟通+进度控制+执行操作）X n = 期望的产品</p>
-</blockquote>
-
-<p>所谓的n，就是n次迭代。<br />
-<!--more--><br />
-产品做得怎么样就看我们怎么控制这几个变量。你想团队都能理解在这里做什么，做到那种细致的程度，那么多和他们沟通，每一个环节的负责人不仅仅知道自己做的，还要了解其他环节的负责的东西，比如简单的来说，就是程序需要知道自己做的功能有哪些，还要知道美术方面需要提供什么资源过来，测试环节做了多少，是否有必要跟进。<br />
-沟通是最费劲的也是最基础的事情，把一件事传达给其他人，除有详尽的文档之外，还要需要面对面的将需求说明一番，在scrum中这个环节称之为kick off。此时需求的实施方如果有任何问题都是可以直接问。前期对功能尽量有一个完善的考虑。整理出一份甘特图，这就为后面的<strong>进度控制</strong>开始做准备。</p>
-
-<p>需求讲解的明白清楚，就能够划分的细致到位。方便与施工方开始分配时间。<br />
-时间对于一个项目来说，就是金钱。越早把demo做出来，就能越早的发现问题改善问题。一拖再拖的习惯势必增加项目失败的风险。有了甘特图，我们就能知道项目进行到了哪一步，有什么现在阻碍了我们。但是总有意外。比如在开发过程中必然还会遇到其他没有周全的地方，或者需求方想要临时增加需求。这些额外插入进来的问题，分大小和严重程度，与需求方沟通，在保证一个功能完整的情况下，可以将锦上添花的细节，甚至某些优化体验的功能降级处理。保证不要影响项目的进度。</p>
-
-<p>在流程规范，做事严谨的大公司看来上面的事情似乎是顺利成章的。但是在小公司，创业公司。我们往往对需求方提过来的需求没有能力说<strong>不</strong>，只是一味的接受，在已经计划好的时间内增加新的需求。进而为了达到deadline的时间，只好加班通宵来解决问题。（这只是我经历的公司的一些问题，不代表其他公司也是这样的）</p>
-
-<p>无论是什么样的公司，需求沟通之后，总是要制定计划。进而开始<strong>执行开发</strong>。各部门分工协作，将需求分块，指定owner。美术按照程序的要求出资源。程序就如同泥瓦工一般把各个资源用代码粘合起来，联调测试，在交付测试同学。这里面也有很多的规范，比如美术提交资源的命名规范，使用的工具，和资源有效性的测试。程序的代码管理，code reviewer等。</p>
-
-<p>如此一个周期下来，一个功能就能够完成，甚至也可以做好一个demo。就看需要重复多少次n。</p>
-
-<p>上面的步骤如此简单。但是执行起来我们往往会迷失在其中，辨不清方向。</p>
-
-<p>问题很多事是出现沟通上面的。尤其是一对多的情况下。美术程序测试都对需求有不同的理解，更糟糕的是，需求提出方并没有将自己的改正需求通知给所有负责人，而是只告诉某一方，而其他人还在按照以前的需求闷头继续做。做完发现不对，可是时间成本已经浪费掉了！真是要了命的变化！而我们总是在犯这样的错误。<br />
-再者，每个人都希望能做成好的优秀的完美的产品，因此需求方会提出很多东西，不仅要一个完整的功能还有不少细节。他们说这样可以提升用户体验！或者开发这边做出许多不在需求列表上的功能，他们可能解释说，他们觉得这样很好，玩家用户需要这样的功能。还有美术部分，想到很炫酷的东西，坚持一定要这么做！或者这么说大家会认为这样也是正确的，每个人都对项目有自己的想法，是好的。但是仔细想想，这就是一种迷失，对于一个从0到1的初期demo来说，为什么不能一切从简，从重呢？只要枝干，去掉旁支杂叶！甚至是一个功能，一个活动。都是可以先做出来一个大概的样子，然后再去替换资源也好，优化界面也罢，改善体验都可。</p>
-
-<p><strong>不识庐山真面目，只缘身在此山中！</strong></p>
-
-<p>只有被需求虐过无数遍，踏过无数的坑，熬过无数的夜，我们才懂得如何做找到一个项目的脉搏。祝各位也在坑中受虐的同学们能及早认清问题所在，争吵和指责都是没有意义的，只会消耗大家的心情，只有让事情按照一定的规律动起来，朝着目标的方向进行着，我们才能自信的掌握节奏，不会被工作所累。</p>
-
-<p><strong>PS:做事不要只闷头看自己的那方寸之间的事情，要把眼光放得远一些。</strong></p>
 
 ]]></content>
   </entry>
