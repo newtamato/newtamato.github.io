@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-07-30T12:17:23+08:00</updated>
+  <updated>2016-08-28T19:31:17+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,41 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[游戏引擎记录 - GameMaker]]></title>
+    <link href="http://www.newtomato.me/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker"/>
+    <updated>2016-08-28T19:17:58+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker</id>
+    <content type="html"><![CDATA[<p>GameMaker是一款制作2D游戏的引擎，支持跨平台发布游戏，Android，IOS，Win，Xbox，PS等。现在已经支持直接将游戏发布导出html5格式。1999 年 11 月发布了首个公开版本。早期是免费，4.3版本之后成为收费版本。</p>
+
+<p>它提供自己的开发编辑器 Game Maker Studio和开发语言GML，语法简单。有1000个函数左右，能够满足所有的游戏需求。官方网站提供了几个简单的游戏demo，每个不过百行代码。极其简单，易于上手。<br />
+<!--more--></p>
+
+<p>游戏基于事件，通过拖拽控件到room中(就是场景)然后，在控件上写代码，检查控件位置，移动，和是否接受Input事件，以及是否和other物体碰撞，来判定控件的行动和改变控件的显示。比如切换控件的图片，sprite_index = 2即可。比如切换到其他房间go_to_room，或者设定计时器alarm。</p>
+
+<p>此游戏引擎在做2d的闯关冒险游戏，射击有很大的优势。游戏流畅自如，比如下面两款游戏：</p>
+
+<p><a href="http://www.yoyogames.com/showcase/2/defenders-of-ekron">defenders of ekron</a></p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-14_feature.png" alt="14_feature" /></p>
+
+<p><a href="http://www.cybernate.com/">SUPER MUTANT ALIEN ASSAULT</a><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-1033_feature.png" alt="1033_feature" /></p>
+
+<p>游戏工具开发整体感受是-简单易用，语法相对于其他游戏语言简直不能太简单。且游戏打包之后体积相对于unity真的惊人的小。且国内不少这方面的开发者，在<a href="http://www.gamemaker.cn/">Game Maker开发者之家</a>里面很多人提供了一些源码工程。真心学习的话，一两个星期就可以上手了。且受益于前人的贡献，gamemaker的文档已被翻译成中文，<a href="http://f1.gamemake.org/gm/">地址</a>,<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-14723833105217.jpg" alt="" /></p>
+
+<p>不过也有不足之处，首先游戏UI需要自己手写代码，和早期unity的GUI相似，暂时没有找到一些第三方比较好的UI编辑器。</p>
+
+<p>其次，在Mac上的编辑器不如Windows好用，很多工程打不开。正如编译ios包，最好弄一台mac一样，使用这个引擎最好也能弄个Windows系统才可以。</p>
+
+<p>再次，对于团队合作的项目，这个引擎是否合适？如果多人写作编辑同一个room之后，是如何解决冲突的？如果不能，是否是需要通过将功能划分，然后团队各负责一块儿的方式来协作？所以可能不适合大的团队，但是小团队，甚至个人开发者来说，这就不是问题了。</p>
+
+<p>不得不说，这个引擎在快速出原型demo还是很不错的。个人认为甚至快于Unity。Unity自有他的好处。下次再说。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[整合FB广告步骤总结]]></title>
@@ -1460,35 +1495,6 @@ lua_extension.c先被调用注册了了一些供lua调用的函数。<br />
 <p>这种方法并不难，只是在一开始我们都没有想到这里，我们太依赖于以前的自动更新的内容，对于其他的方式从未有过想法。</p>
 
 <p>而这种解决方法从本质上说和已有的自动更新是一码事。正如同在脚边的一颗宝石，而我们只需要弯腰就能捡起来。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[工作记事]]></title>
-    <link href="http://www.newtomato.me/blog/2016/02/28/gong-zuo-ji-shi"/>
-    <updated>2016-02-28T17:13:23+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/02/28/gong-zuo-ji-shi</id>
-    <content type="html"><![CDATA[<p>年后回来，我们为了一次活动更新，又搞到了后半夜才完成了上线。这件事成为了A同事离职的导火索，他对我们这种工作节奏已经忍无可忍。于是第二周上班的时候就此提出了离职。<br />
-<!--more--><br />
-他的离职在我意料之中也在意料之外。意料之外是我们已经在一起有一年多了。期间摩擦都已经磨合的差不多了，许多烦心的事情到最后都差不多在嘻哈玩笑中解决，并不会影响到团队的情绪。况且差不多要到项目收获的时机了。此时离开，当真为他可惜。但是他还很年轻，有的时候无法控制自己的情绪，有些冲动。特别容易受别人的影响，而且有些固执。</p>
-
-<p>我想尽量挽留他，给他点出此时离职的利弊，但是谈话并不顺利，他仍是坚持要离职。对于理由也只是轻描淡写，似乎另有隐情。<br />
-如何劝他留下的，用未来的希望和个人的魅力？在一个人失望至此的情况下，说的都很苍白。情怀已经成了最后一个稻草，但提及情怀，反而让固执的心更加冷漠。</p>
-
-<p><strong>人和人真的不一样，何况他和我们查了一代隔阂。我想将自己的经历讲给他听，做事情要有目标，有了目标就要去坚持。不要被外面的诱惑和流言左右自己的方向。冲动迷失的时候不要做决定。先等等，等上两天自己就会想明白的。<br />
-这些话都是我自己生活总结。是跌过跟头，犯过错误总结下来的。讲给他听，换来的是他木然的眼神。</strong></p>
-
-<p>我想他对我们已经是失望之极了吧！<br />
-人的缘分很奇妙，能呆一起辛苦一年多，已属不易。分开便是阳关道与独木桥。</p>
-
-<p>谈话完毕之后，我有很多想和他说，但是想想都很没有力量。马云说，员工离职，无非两个原因一个是待遇不好，一个是受委屈了。我想我们现在差的就是待遇了。项目尚未有收益，任何保证都有一些望梅止渴。而我们，暂时无能为力。真是实在抱歉！</p>
-
-<p>在我们创业过程中，离开的员工，我想来都觉得很抱歉。在这样的环境中，你们承担的东西肯定是要比其他正规公司要多，但收益未必多。创业团队也最忌讳团队的不稳定，来来去去，不仅让团队里面的人感到不安，更重要的是让别人看来你们很不靠谱。<br />
-这也是我们创业要学的一门必修课，如何保证团队的稳定性和激情活力？<br />
-初期创造一个相对开心，被需要，有梦想共筑的环境才成为留住人才的主要手段。但是创业周期一旦拉长，光靠梦想是不现实的。适当的增加薪水也是手段之一。缩减工作时间，适当保证工作和生活的平衡性。找到一个工作的节奏。不让疲惫袭击团队。不然负能量满满，四处都是抱怨的声音。但是这样的时间也不能够太长，没有希望和前途的闷头干下去是很辛苦的。</p>
-
-<p>而这门课我们还在继续，直到创业成功。</p>
 
 ]]></content>
   </entry>

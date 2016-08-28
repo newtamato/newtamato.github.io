@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker</loc>
+<lastmod>2016-08-28T19:17:58+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie</loc>
 <lastmod>2016-07-30T12:09:50+08:00</lastmod>
 </url>
@@ -369,6 +373,12 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/di-san-fang-jie-ru/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/you-xi-yin-qing/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/2d/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>
