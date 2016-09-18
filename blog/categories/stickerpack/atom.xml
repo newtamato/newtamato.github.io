@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:stickerpack | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/stickerpack/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-09-18T16:16:23+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Stack Pack制作]]></title>
+    <link href="http://www.newtomato.me/blog/2016/09/17/stack-packzhi-zuo"/>
+    <updated>2016-09-17T21:49:19+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/09/17/stack-packzhi-zuo</id>
+    <content type="html"><![CDATA[<h3 id="section">创建方法</h3>
+
+<p>IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。</p>
+
+<p>首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码，称之为sticker pack，另外一种可以编写代码，调用一些类似支付的接口的API，称之为iMessage app，他们都可以作为应用的扩展，也可以独立成为一个应用。因此有两种不同的创建方式。如下图所示：<br />
+<!--more--><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-a.jpeg" alt="创建应用" /></p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-b.jpeg" alt="创建应用扩展" /></p>
+
+<h3 id="sticker-pack">Sticker pack</h3>
+
+<p>Sticker pack的制作很简单，准备好一些图片（png,jpg,gif），大小在500k之内即可。将资源直接拖拽到stacker packer的xcassets里面。在右侧属性栏可以调节大，中，小三种显示模式。<br />
+然后xcode选择最新的ios10的模拟器，运行。<br />
+在模拟器的iMessage中测试互发消息即可看见我们的表情包了。</p>
+
+<p>现在一个简单的表情应用算是搞定了，如果你有开发者账号，可以直接提交给苹果审核了。</p>
+
+<p>而我们遇到了另一个问题，就是需要和应用挂钩，也就是表情包需要成为我们应用的扩展，这样应用在被用户安装到设备上的时候，表情包自然而然的就会出现在用户的iMessage里面。因此，我们用图二扩展的形式在应用下面创建表情包。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-c.jpeg" alt="" /></p>
+
+<p>此时他下面出现一个Info.plist的文件，他也需要一个唯一id的，而且这个id是有强制规则的，<strong>以container app的id为前缀，后面再增加自己的名字。前缀一定要和container app的id保持一致</strong>。</p>
+
+<p>然后模拟器和真机运行测试。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-IMG_0585.png" alt="IMG_0585" /></p>
+
+<p>在苹果未正式发布ios10的时候，真机需要安装ios10的GM版，需要到苹果官方网站下载一个文件（<code>iOS_10_beta_Configuration_Profile.mobileconfig</code>）,这是一个OTA证书，安装了之后即可以更新最新的ios10开发版。不过现在已经用不到了。</p>
+
+<p><strong>iMessage App</strong>需要有一些Swift的基础，大家有需要可以移步至此<a href="http://www.jianshu.com/p/be79b8729bf8">趁热来一波，WWDC 2016 iMessage App开发</a></p>
+
+]]></content>
+  </entry>
+  
+</feed>

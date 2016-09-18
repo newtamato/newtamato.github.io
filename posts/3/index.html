@@ -9,7 +9,9 @@
 
 	<meta name="author" content="newtomato">
 	
-	<meta name="description" content="28 Feb 2016 工作记事 年后回来，我们为了一次活动更新，又搞到了后半夜才完成了上线。这件事成为了A同事离职的导火索，他对我们这种工作节奏已经忍无可忍。于是第二周上班的时候就此提出了离职。 25 Feb 2016 项目进度的几点想法 将项目从0做到1说简单也简单，说复杂也复杂。 &hellip;">
+	<meta name="description" content="18 Apr 2016 问题不断的被reopen怎么办？ 工作中你是否遇到过这样的情况？
+分到自己头上的ticket，刚刚被关闭掉，经过QA同学的测试又给reopen了。而且不止一次的reopen。真是恼火啊！
+开发同学的工作是修改代码之后，经过自己的开发测试之后，提交到功能分支， &hellip;">
 
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="MobileOptimized" content="320" />
@@ -44,6 +46,70 @@
       
 	
 		
+	
+	<header class="post-header">
+		<span class="post-meta">18 Apr 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/04/18/problem-reopen">
+			
+				问题不断的被reopen怎么办？</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p>工作中你是否遇到过这样的情况？<br />
+分到自己头上的ticket，刚刚被关闭掉，经过QA同学的测试又给reopen了。而且不止一次的reopen。真是恼火啊！<br />
+开发同学的工作是修改代码之后，经过自己的开发测试之后，提交到功能分支，QA同学复查的时候往往会找到意外的情况。这种情况我仔细想了一下，总结出能发生这种问题的如下几种情况。<br />
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
+	
+	<header class="post-header">
+		<span class="post-meta">02 Apr 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/04/02/missing-ios-distribution">
+			
+				Xcode 7 Error: “Missing iOS Distribution Signing Identity for …”</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p>最近准备重新打包一次我们的游戏，提交苹果，但是却遇到如下的问题。<br />
+<img src="/images/error.png" alt="Alt text" /><br />
+这是个怎么回事？难道我的证书出问题了。<br />
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
+	
+	<header class="post-header">
+		<span class="post-meta">02 Apr 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/04/02/zi-dong-geng-xin-de">
+			
+				自动更新的一些思考</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p>自动更新，也称作热更新，是现在手机游戏最常用的一种做法。类似于当年的页游。打开游戏就能看到最新的游戏。<br />
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
 	
 	<header class="post-header">
 		<span class="post-meta">28 Feb 2016</span>
@@ -214,80 +280,6 @@
 
     </article>
 
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">22 Nov 2015</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2015/11/22/git-remove-branch-remotely">
-			
-				Git如何在本地和远端都删除相关的分支</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git branch -r #查看本地和远端同步的分支
-</span><span class="line">origin/change_avatar_cloth
-</span><span class="line">origin/develop
-</span><span class="line">origin/master</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">22 Nov 2015</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2015/11/22/cocos2dx-dragebones-huan-zhuang">
-			
-				Cocos2dx如果实现骨骼动画的换装</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>我的工作环境是:<br />
-quick cocos2dx 2.2.6<br />
-flash IDE dragbone官方的插件</p>
-
-<p>首先我们要知道如何创建一个骨骼动画，主要涉及到两个部分，一部分是做加载资源，一部分是根据刚刚加载的资源创建骨骼动画。</p>
-
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">18 Nov 2015</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2015/11/18/lua-setfenv">
-			
-				Setfenv有何用？</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>上一章，我们提到了模块里面的函数，使用点语法的方式定义函数和变量。点之前的名字类似一个命名空间。比如<code>function A.function() end</code>,此处A就相当于一个命名空间，那么我们能不能有更好地方法不用写这个命名空间呢？当然是可以的。lua提供这样的方式。</p>
-
-
-	</section>
-
-    </article>
-
 
 <nav class="pagination" role="pagination">
   
@@ -344,18 +336,6 @@ flash IDE dragbone官方的插件</p>
 
 
 
-
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-70121917-1']);
-		_gaq.push(['_trackPageview']);
-
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
 
 
 </body>

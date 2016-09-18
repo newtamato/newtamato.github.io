@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/09/17/stack-packzhi-zuo</loc>
+<lastmod>2016-09-17T21:49:19+08:00</lastmod>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/2016/09/11/pythonji-ben-shi-yong</loc>
+<lastmod>2016-09-11T19:15:05+08:00</lastmod>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie</loc>
+<lastmod>2016-08-31T16:28:48+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker</loc>
 <lastmod>2016-08-28T19:17:58+08:00</lastmod>
 </url>
@@ -379,6 +391,12 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/2d/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/iap/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/stickerpack/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

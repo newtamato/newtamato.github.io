@@ -4,7 +4,7 @@
   <title><![CDATA[分类:google | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/google/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-08-28T19:31:17+08:00</updated>
+  <updated>2016-09-18T16:16:23+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,76 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Android In-app-billing 接入- 问题总结]]></title>
+    <link href="http://www.newtomato.me/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie"/>
+    <updated>2016-08-31T16:28:48+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie</id>
+    <content type="html"><![CDATA[<h2 id="section">准备过程</h2>
+<p>接入Google支付之前，你要预先准备如下几件事情。</p>
+
+<ol>
+  <li>准备一个google开发者账号，绑定信用卡，在花费20美金。否则进入不了Google Play Developer Console。</li>
+  <li>接下来，如果你身在大陆地区，那就你要学会翻墙。同时找一个没被阉割的android手机，这比较难，那就在已有的手机里面安装Google play store和Google Play Service。百度出来的不靠谱，因此最好能够先翻墙，然后google搜索上面两个安装包，安装即可。Android上的翻墙软件，推荐影梭，<a href="http://gjsq.me/1438224">GreenVPN</a>,<a href="http://itxs.co/s/14ff19gw">土行孙</a>。翻墙就祝各位好运了。<br />
+<!--more--></li>
+  <li>文档准备，看到全是英文Google支付接入文档，不少同学估计会头疼，此处刚好有一份<a href="http://www.baijingapp.com/question/6745">中文流程图</a>，大家可以参考借鉴一下，但最好还是能够通读一下他的开发文档。通过文档大概了解google支付的基本流程和几个概念。<strong>从文档中，我们可以看出Google支付和其他平台的支付最不一样的地方，那就是他需要先上传APK到后台，做成Alpha或者beta测试。然后把我们的小伙伴添加到测试名单中才能够发起支付。如果不发布应用，是无法测试的。PS：发布一个应用，不是瞬间完成的事情，至少等上2个小时，我创建了2个应用做测试，一个等了2个小时，一个等了一晚上。应用通过了，我们接下来才能测试。</strong>可是如果按照上述要求，我们如果修改了应用，是不是还要上传到后台呢？答案是不用，只要是下载过一次测试应用，接下来，我们只需要用相同的签名再次打包，直接覆盖安装到自己手机上即可测试。</li>
+  <li>参考如下资料：
+    <ol>
+      <li><a href="http://leenjewel.github.io/blog/2014/11/21/google-play-in-app-billing-cai-guo-de-na-xie-keng/">Google Play In-app Billing 踩过的那些坑</a></li>
+      <li><a href="http://www.jianshu.com/p/cff0f2333db6">Google In-app Billing 支付接入小结</a></li>
+    </ol>
+  </li>
+  <li>下载Android Studio,尽早地熟悉使用它。google提供的Example就是这种工具做的工程。</li>
+</ol>
+
+<p>看到这里，基本工作是OK了。<br />
+现在假设我们已经通过了成功创建了商品，发布了Alpha测试应用。测试支付，可以先将google的Example工程先做一下修改，然后打包扔上去就可以了。我们需要做的事情有<br />
+## 打包<br />
+1. 将申请应用的base64publicKey替换成自己的。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-14726312121126.jpg" alt="" /><br />
+2. 修改包名。原先是com.example换成你们想要的就行。然后清理工程重新编译。<br />
+3. 修改配置文件中的包名和applicationId。<br />
+其他保持不变，直接签名打包。提交上去等待审核通过吧。提交要提交到Alpha测试那里。而不是Production.</p>
+
+<h2 id="section-1">测试购买</h2>
+<p>接下来，讲讲怎么测试。<br />
+开发者创建一个Google group或者google plus的社区，将测试同学的google邮箱添加进来。<br />
+应用发布之后，会出现一个测试连接。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-14726296504218.jpg" alt="-w=400" /><br />
+将这个链接发给测试同学。此时他们打开这个链接才能成为有效的Tester。而不是加入到社区就可以了。<br />
+然后在此链接的页面上有一个下载链接，此时就能够下载测试应用了。<br />
+下载完成之后，接下来，我们开始测试支付。<br />
+问题才刚刚开始哦！</p>
+
+<ol>
+  <li>
+    <p>此版本的应用未配置通过Google Play结算。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-30-15-04-45.jpeg" alt="-w200" /><br />
+解决方法：检查版本号和Google Play上设置的是否一致。检查签名等。Google那边基本认为这个应用不是一个有效的测试应用。</p>
+  </li>
+  <li>
+    <p>需要验证身份，您需要登录自己的Google账户。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-31-15-55-46.jpeg" alt="-w200" /><br />
+解决方法：打开手机设置-&gt;账户-&gt;删除Google账户。然后在应用管理中，找到Google Play Store，Google Play Service分别清理缓存数据。然后在打开Google Play商店。此时要求你账户登录。重新登录一遍。在杀死我们的测试应用，重新登录游戏。测试一下。这套方法能成功最好，如果不行，请换一个google账号再试一下。<br />
+或者检查一下购买的商品Id在配置中是否一样。</p>
+  </li>
+  <li>
+    <p>无法购买您要买的商品<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-30-16-48-47.jpeg" alt="-w200" /><br />
+解决方法：1. 检查是否自己的账号是不是测试账号，一定要是测试账号，不是开发者账号。怎么成为Tester，上面已经说过了。2. 商品的Id是否配置的正确。</p>
+  </li>
+</ol>
+
+<p>遇到的所有的坑，总结下来就是：<br />
+<strong>提交的包名，版本号，商品号，public key，签名等一定要和Google Play上面一致。<br />
+Google Play Store是否正常，可以自己上去下载一个其他应用测试一下，如果这个应用能够打开支付，那么Google支付就是正常的。<br />
+开发者账号和测试者账号要分开，猜想是Google Play服务后面有一些缓存的问题。</strong></p>
+
+<p>运气好的话，一遍就能通过，如果不好，那就两遍。祝你好运吧。我花费了2天时间，才跑通了一个测试支付。希望你能比我运气好一些。不必这么痛苦。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[cocos2dx 增加Google移动广告]]></title>

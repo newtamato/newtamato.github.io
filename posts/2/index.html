@@ -9,9 +9,8 @@
 
 	<meta name="author" content="newtomato">
 	
-	<meta name="description" content="01 Jun 2016 使用Typecho搭建网站记录 早在一年前，使用octpress的时候，就在网上看到过Typecho。
-但是当时查找到的octpress的资料更多一些，于是就没有选择Typecho。今天无意间的看到别人的Typecho网站，真是不错。简洁，清晰。
-相对于Octpress， &hellip;">
+	<meta name="description" content="08 Jun 2016 在海马模拟器上运行并测试游戏 海马模拟器是我现阶段用过的比较快速稳定的模拟器了。
+且能够满足我们日常的开发需求 快速安装并启动游戏。便于我们测试。 取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。 07 Jun 2016 记录Lua中排序的一种坑 &hellip;">
 
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="MobileOptimized" content="320" />
@@ -46,6 +45,94 @@
       
 	
 		
+	
+	<header class="post-header">
+		<span class="post-meta">08 Jun 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/06/08/hai-ma-mo-ni-qi">
+			
+				在海马模拟器上运行并测试游戏</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p>海马模拟器是我现阶段用过的比较快速稳定的模拟器了。<br />
+且能够满足我们日常的开发需求</p>
+
+<ol>
+  <li>快速安装并启动游戏。便于我们测试。</li>
+  <li>取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。</li>
+</ol>
+
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
+	
+	<header class="post-header">
+		<span class="post-meta">07 Jun 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/06/07/lua-tablede-keng">
+			
+				记录Lua中排序的一种坑</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p>最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。<br />
+算法都是没有问题的，但是计算出来的结果却总是出现问题。这让我们一点摸不着头脑。<br />
+后来经过严格的多双眼睛的考察，发现，原来是打印出来的配置欺骗了我们。</p>
+
+<p>伪代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">for _,itemConfig in pairs(config) do
+</span><span class="line">	--算法逻辑(itemConfig)
+</span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
+	
+	<header class="post-header">
+		<span class="post-meta">06 Jun 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/06/06/zu-jian-hua-guan-li-shu-ju-he-xiang-guan-zhan-shi">
+			
+				组件化管理数据和相关的展示</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<h2 id="section">这是个什么东西？</h2>
+
+<p>首先，这是我很早就想到的一个想法。只是前期项目工期紧张，只是专注于功能的实现，虽然有想法，但是没有付出实现。<br />
+现在回头来想，大部分功能都有相似的地方，就是数值物品获得和展示的地方，这种地方是完全可以抽象出来做成一个通用的模块。</p>
+
+<p>奖励如果占据背包格子，需要给予提示，或者根据条件（即参数）决定是否要清理背包。或者得到数据达到了上限，是否要弹出提示等等。如果顺利得到物品或者数值，就要播放相关的动画。<br />
+比如物品获得，默认有一套自己的动画，除非有特殊需求（即参数）来播放其他动画。<br />
+比如数值获得，默认也是有自己的动画。<br />
+这些基本的东西，在早期的时候，应该是有策划产品那边就已经有了一些定论的。</p>
+
+<p>而这个模块就是解决上述需求。可想而知，一旦完成这个功能，不论多少功能，都只需要调用它即可。省时省力。低碳环保！<br />
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
 	
 	<header class="post-header">
 		<span class="post-meta">01 Jun 2016</span>
@@ -221,70 +308,6 @@
 
     </article>
 
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">18 Apr 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/04/18/problem-reopen">
-			
-				问题不断的被reopen怎么办？</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>工作中你是否遇到过这样的情况？<br />
-分到自己头上的ticket，刚刚被关闭掉，经过QA同学的测试又给reopen了。而且不止一次的reopen。真是恼火啊！<br />
-开发同学的工作是修改代码之后，经过自己的开发测试之后，提交到功能分支，QA同学复查的时候往往会找到意外的情况。这种情况我仔细想了一下，总结出能发生这种问题的如下几种情况。<br />
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">02 Apr 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/04/02/missing-ios-distribution">
-			
-				Xcode 7 Error: “Missing iOS Distribution Signing Identity for …”</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>最近准备重新打包一次我们的游戏，提交苹果，但是却遇到如下的问题。<br />
-<img src="/images/error.png" alt="Alt text" /><br />
-这是个怎么回事？难道我的证书出问题了。<br />
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">02 Apr 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/04/02/zi-dong-geng-xin-de">
-			
-				自动更新的一些思考</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>自动更新，也称作热更新，是现在手机游戏最常用的一种做法。类似于当年的页游。打开游戏就能看到最新的游戏。<br />
-
-	</section>
-
-    </article>
-
 
 <nav class="pagination" role="pagination">
   
@@ -343,18 +366,6 @@
 
 
 
-
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-70121917-1']);
-		_gaq.push(['_trackPageview']);
-
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
 
 
 </body>

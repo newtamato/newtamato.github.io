@@ -1,0 +1,279 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>Python基本使用 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 11 Sep 2016 Python基本使用 Python是一门很容易掌握的语言，简单的语法强大的功能，在很多地方都视他为最高效的语言，尤其是在处理数据和文本上面，真的是帮了我们大忙。比如讲产品经理那里过来的文案导出成localizaiton文件， &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">11 Sep 2016</span>
+	<h1 class="post-title">Python基本使用</h1>
+
+	<section class="post-content">
+		<p><strong>Python</strong>是一门很容易掌握的语言，简单的语法强大的功能，在很多地方都视他为最高效的语言，尤其是在处理数据和文本上面，真的是帮了我们大忙。比如讲产品经理那里过来的文案导出成localizaiton文件，或者将他们的Excel表格导出成json，xml等配置文件，再将我们的数据信息导成他们看的懂得excel表格。<br />
+如下的部分是我在团队内部（针对有部分编程语言基础的同学）做的关于Python的分享，也算是对自己使用Python做一个总结吧。</p>
+
+<!--more-->
+<p><strong>首先，如何安装Python。</strong><br />
+MAC的同学，直接在命令行中敲入<code>python --version</code>，输出版本号就好了。如果没有请安装<code>brew install python</code>，或者到Python的官网按照平台去下载即可。<br />
+Window的安装，和上面相似，如果没有安装也请到官网上下载。<br />
+<strong>其次，基本的语法。</strong><br />
+Python是动态语言，因此他和java已经c语言等静态语言最大的不一样的地方就是，他的一切皆可以不需要先定义类型。例如<br />
+在java中，变量的声明是<code>String name= ""</code>,但是在python中属性可以不用声明类型。在使用的时候，赋值是什么类型，变量就是什么类型。<br />
+同时函数也有这种特性，java中对象实例化之后，以class为准，class有什么函数，对象就会有，对象不能增加函数，但是python可以，a1,a2均是实例化A，但是a1对象，可以在运行时自己给自己增加一个函数。a2不受影响，并没有这个函数。<br />
+所以，秉着这个基本原则，来看Python的语法就简单多了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">a = 123
+</span><span class="line">b = "hello,world"
+</span><span class="line">def func():
+</span><span class="line">	pass</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><strong>第三，常用的Python的基本数据结构</strong></p>
+
+<h2 id="string">String字符串</h2>
+<p>在Python中<code>‘’</code>和<code>“”</code>都表示是str类型。不做区分。他最长用的函数：拼接，替换，查找，格式化输出，切片还有令人头疼的中文编码<br />
+	拼接字符串，使用的是<code>+</code>，<code>"你好啊，" + b + "世界！"</code>，这样虽然达到效果然后，不够美观和易读，所以用到了格式化，<code>"你好哇，%s世界"</code>，这和其他语言一样，%s表示字符串，%d表示数值，%02d表示保留两位，不足两位用0补齐。<br />
+	查找和替换，最常用的还是和正则表达式一起使用。<br />
+	比如<code>msg = "你要花费%{itemName}和%{itemName2}来做这件事情么？"</code>，这里面我们要做的是讲%{itmName}和%{itemCount}替换成空白字符。那么怎么做好呢？<br />
+	简单的方法就是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">msg = msg.repleace("%{itemName}","")
+</span><span class="line">msg = msg.repleace("%{itemName2}","")</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>还有一种更好的方法，那就是使用正则表达式，表达式匹配<code>%{}</code>里面的任何字符，这样更加灵活。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">import re #导入包
+</span><span class="line">msg = re.sub(r'%{.+}','',msg)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>接下来说说，中文编码的问题。<br />
+中文编码之所以出问题，是因为Python的默认编码是Ascii码，所以输出中文便有问题。我们需要将中文编码成Unicode输出。有的情况下，我们在py文件中增加中文注释，下次再打开文件，文件已成乱码，这是为何呢？原因就是操作系统在我们写注释的时候，是以utf的编码展示中文的，但是存成了文件之后，文件的编码就以utf8的格式存储，再次打开的时候，py文件就以默认的Ascii码读取文件，自然就是乱码了。因此为了避免这种问题，我们在py文件的开头增加<code># -*- coding:utf-8 -*-</code>就可以解决这个问题，这是告诉系统以utf-8的格式打开这个文件。<br />
+因为知道了这个问题，我们在读取中文的时候，尽量告诉系统我们要的编码方式，比如从文件中读取内容。讲内容读进来之后，直接用utf-8解码。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">f = file.open(fileName,"r")
+</span><span class="line">content = f.read()
+</span><span class="line">content.decode("utf-8")</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>另一种情况是：我们print打印出来的中文是正常的，但是写入到文件中，就会报错。<br />
+例如：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">s = u"我是中文"
+</span><span class="line">f = file.open("test.txt","w")
+</span><span class="line">f.write(s)
+</span><span class="line">f.close()</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这种情况报错是因为s此时的类型是unicode，而f.write(s)参数要求是str类型，因此从unicode到str类型有一层转换，此时没有指定编码，py会默认使用Ascii，自然就报错了，因此我们需要在写入前，手动做一次转换就好了</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">s = s.encode("utf-8")</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>通过<code>type(s)</code>的方法我们得知此时<code>s</code>就是<code>str</code>类型了。<br />
+此处是py2才会有的编码问题，在py3已经不再这么麻烦了。如果我们继续使用py2，推荐大家使用codecs模块。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">with codecs.open('test.txt', 'w', encoding='utf-8') as f:
+</span><span class="line">   f.write(s)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="listdict">list，dict数据类型使用</h2>
+
+<p>这两种类型相信很多同学都很熟悉，list类似数组，dict就是字典。<br />
+常用的方法，添加，删除，查找，切片。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">list.append(value)
+</span><span class="line">dict["key"] = value
+</span><span class="line">list.remove(value) #如果value不存在会报错
+</span><span class="line">del dict["key"]  
+</span><span class="line">print(dict[key]) #如果key不存在会报错，在访问前，建议用dict.get(key)来做检查。
+</span><span class="line">print(list[:3])</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>还有常用的生成列表的方法</p>
+
+<p>range(1,N) #生成1，N自然数列表<br />
+<code>[x *2 for x in range(1,N)] # 偶数列表</code></p>
+
+<p>list和dict都有for in 循环，同时dict还有for key，value in 循环。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">for item in list:
+</span><span class="line">for item in dict.itervalues():
+</span><span class="line">for k,v in dict.iteritems():</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="section">文件操作</h2>
+
+<p>文件常用的操作就是读写，创建，删除等。<br />
+写文件，上面讲到<code>codecs</code>，他也可以用来读取。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">import codecs
+</span><span class="line">with codecs.open('test.txt', 'r', 'utf-8') as f:
+</span><span class="line">  		f.read()</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>读取文件的时候，假设这里有个需求是对A目录下面所有的json文件都读进来，组合成一个大的文件放到另一个目录文件中。<br />
+那么我们首先要遍历这个文件，A里面有二级三级目录，都要读进来。<br />
+因此可以使用如下方法</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">  	for root,dirs,files in os.walk(A):
+</span><span class="line">		for file in files:
+</span><span class="line">			fileBaseName,extention = os.path.splitext(file)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这样通过extention是否等于json来判断是否是json文件了。<code>os.path.walk</code>也可以达到上述的效果。只是函数的调用方式不同。	我们写入文件是指定一个文件，如果该文件的目录不存在，这么写入是会爆粗的。因此在写入之前，要检查文件是否存在，不存在需要创建。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">if io.path.exists(dirName) == False:
+</span><span class="line">	os.makedirs(dirName) #可以创建多级目录</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>与文件相关的函数，请访问os.path模块。相信有更多惊喜等着你哦！</p>
+
+<h2 id="section-1">模块导入</h2>
+
+<p>上面的例子中用到了import中，正如我们在php中看到的include，java中的import，swift中的import都一样，是导入其他的模块到当前py中，他的语法有以下几种：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">import A # 导入A模块
+</span><span class="line">from A import B #导入A模块中的B，B可能是一个class，也可能是一个函数
+</span><span class="line">import A as a #导入A模块，换个别名a
+</span><span class="line">try:
+</span><span class="line">	import A as a 
+</span><span class="line">catch :
+</span><span class="line">	import CA as a</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>最后一个try catch保证了优先导入A，如果没有A模块，在导入CA。但是都是别名a，这样我们py文件就不用任何修改。</p>
+
+<p>模块导入的搜索路径：<code> sys.path</code><br />
+也可以添加自己指定的搜索目录：sys.path.append(‘dirName’)和修改PYTHONPATH</p>
+
+<p>接下来的分享还要类的使用和py调用外部命令等。放到下一章。</p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=Python基本使用&amp;url=http://www.newtomato.me/blog/2016/09/11/pythonji-ben-shi-yong" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/09/11/pythonji-ben-shi-yong" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/09/11/pythonji-ben-shi-yong" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+
+</body>
+</html>

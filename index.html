@@ -9,7 +9,7 @@
 
 	<meta name="author" content="newtomato">
 	
-	<meta name="description" content="28 Aug 2016 游戏引擎记录 - GameMaker GameMaker是一款制作2D游戏的引擎，支持跨平台发布游戏，Android，IOS，Win，Xbox，PS等。现在已经支持直接将游戏发布导出html5格式。1999 年 11 月发布了首个公开版本。早期是免费，4. &hellip;">
+	<meta name="description" content="17 Sep 2016 Stack Pack制作 创建方法 IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。 首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码， &hellip;">
 
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="MobileOptimized" content="320" />
@@ -44,6 +44,77 @@
       
 	
 		
+	
+	<header class="post-header">
+		<span class="post-meta">17 Sep 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/09/17/stack-packzhi-zuo">
+			
+				Stack Pack制作</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<h3 id="section">创建方法</h3>
+
+<p>IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。</p>
+
+<p>首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码，称之为sticker pack，另外一种可以编写代码，调用一些类似支付的接口的API，称之为iMessage app，他们都可以作为应用的扩展，也可以独立成为一个应用。因此有两种不同的创建方式。如下图所示：<br />
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
+	
+	<header class="post-header">
+		<span class="post-meta">11 Sep 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/09/11/pythonji-ben-shi-yong">
+			
+				Python基本使用</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p><strong>Python</strong>是一门很容易掌握的语言，简单的语法强大的功能，在很多地方都视他为最高效的语言，尤其是在处理数据和文本上面，真的是帮了我们大忙。比如讲产品经理那里过来的文案导出成localizaiton文件，或者将他们的Excel表格导出成json，xml等配置文件，再将我们的数据信息导成他们看的懂得excel表格。<br />
+如下的部分是我在团队内部（针对有部分编程语言基础的同学）做的关于Python的分享，也算是对自己使用Python做一个总结吧。</p>
+
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
+	
+	<header class="post-header">
+		<span class="post-meta">31 Aug 2016</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">
+			
+				Android In-app-billing 接入- 问题总结</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<h2 id="section">准备过程</h2>
+<p>接入Google支付之前，你要预先准备如下几件事情。</p>
+
+<ol>
+  <li>准备一个google开发者账号，绑定信用卡，在花费20美金。否则进入不了Google Play Developer Console。</li>
+  <li>接下来，如果你身在大陆地区，那就你要学会翻墙。同时找一个没被阉割的android手机，这比较难，那就在已有的手机里面安装Google play store和Google Play Service。百度出来的不靠谱，因此最好能够先翻墙，然后google搜索上面两个安装包，安装即可。Android上的翻墙软件，推荐影梭，<a href="http://gjsq.me/1438224">GreenVPN</a>,<a href="http://itxs.co/s/14ff19gw">土行孙</a>。翻墙就祝各位好运了。<br />
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
 	
 	<header class="post-header">
 		<span class="post-meta">28 Aug 2016</span>
@@ -209,92 +280,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 
     </article>
 
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">08 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/08/hai-ma-mo-ni-qi">
-			
-				在海马模拟器上运行并测试游戏</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>海马模拟器是我现阶段用过的比较快速稳定的模拟器了。<br />
-且能够满足我们日常的开发需求</p>
-
-<ol>
-  <li>快速安装并启动游戏。便于我们测试。</li>
-  <li>取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。</li>
-</ol>
-
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">07 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/07/lua-tablede-keng">
-			
-				记录Lua中排序的一种坑</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。<br />
-算法都是没有问题的，但是计算出来的结果却总是出现问题。这让我们一点摸不着头脑。<br />
-后来经过严格的多双眼睛的考察，发现，原来是打印出来的配置欺骗了我们。</p>
-
-<p>伪代码如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">for _,itemConfig in pairs(config) do
-</span><span class="line">	--算法逻辑(itemConfig)
-</span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">06 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/06/zu-jian-hua-guan-li-shu-ju-he-xiang-guan-zhan-shi">
-			
-				组件化管理数据和相关的展示</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>这是我很早就想到的一个想法。前期项目工期紧张，只是专注于功能的实现，有想法，但是没有付出实现。<br />
-现在回头来想，大部分功能都有相似的地方，例如数值物品获得和展示的地方，这种地方是完全可以抽象出来做成一个通用的模块。</p>
-
-<p>奖励如果占据背包格子，需要给予提示，或者根据条件（即参数）决定是否要清理背包。或者得到数据达到了上限，是否要弹出提示等等。如果顺利得到物品或者数值，就要播放相关的动画。<br />
-比如物品获得，默认有一套自己的动画，除非有特殊需求（即参数）来播放其他动画。<br />
-比如数值获得，默认也是有自己的动画。<br />
-这些基本的东西，在早期的时候，应该是有策划产品那边就已经有了一些定论的。</p>
-
-<p>而这个模块就是解决上述需求。一旦完成这个功能，不论多少功能，都只需要调用它即可。省时省力。低碳环保！<br />
-
-	</section>
-
-    </article>
-
 
 <nav class="pagination" role="pagination">
   
@@ -345,18 +330,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 
 
 
-
-	<script type="text/javascript">
-		var _gaq = _gaq || [];
-		_gaq.push(['_setAccount', 'UA-70121917-1']);
-		_gaq.push(['_trackPageview']);
-
-		(function() {
-			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
-			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
-			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
-		})();
-	</script>
 
 
 </body>
