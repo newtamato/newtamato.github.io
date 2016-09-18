@@ -1,0 +1,154 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>快速打包测试提交苹果审核的流程 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 18 Sep 2016 快速打包测试提交苹果审核的流程 天下武功，唯快不破。加快时间是制胜王道。 对于出一次大包，是一件很费时费力的事情。具体包括以下步骤： 加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同 &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">18 Sep 2016</span>
+	<h1 class="post-title">快速打包测试提交苹果审核的流程</h1>
+
+	<section class="post-content">
+		<blockquote>
+  <p>天下武功，唯快不破。加快时间是制胜王道。</p>
+</blockquote>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-1.jpg" alt="1" /></p>
+
+<p>对于出一次大包，是一件很费时费力的事情。具体包括以下步骤：</p>
+
+<ol>
+  <li>加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同，小的项目会很快，大的项目则慢的多。</li>
+  <li>打包ipa或者apk文件。此时依赖于项目的复杂度，有依赖的项目库也会重新build，不修改依赖库，也就是使用缓存的build文件会加快速度。一般需要30分钟左右。</li>
+  <li>上传ipa或者apk文件。这个过程依赖网络速度。我们网络上传速度是100~200k/s的速度，一般需要20分钟左右。<br />
+<!--more--></li>
+  <li>苹果提交到iTunes Connect，android提交到Google Developer Console后台。等待审核生效。打开测试通道。此时时间不固定，苹果审核时快时慢，我们最快半小时就可以进入内测，最慢经过了3个小时，Google会快一些。</li>
+  <li>进入内测阶段，苹果通过TestFlight开始下载。但是下载真的慢的要死哦。Google的内测则快一些。只要VPN给力即可了。</li>
+</ol>
+
+<p>以上差不多是提交大包需要经历的过程。走完一套下来，大约需要2~3个小时。</p>
+
+<p>但是这个速度非常令人头疼，提交的速度越快，问题越能提早发现。能加快时间，自然对我们是极好的。所以在上述基础上我们分析了一下，可以从以下几个方法去做优化。</p>
+
+<p>第一步和第二步是无法节省时间的。我们在一台mac电脑搭建的服务器上运行<code>jenkins</code>,已经将人力解放出来。<br />
+第三部提交和第四部审核是可以考虑别的方法。由于苹果初步审核比较慢，所以我们想到的方法就是打两个包，一个是<strong>adhoc</strong>证书，一个是<strong>app store</strong>证书。adhoc证书的ipa包提交到别的<strong>分发服务的提供商</strong>上面，及早进入内测阶段。内测的同学测试没有问题了之后，然后在将app store证书的版本提交到iTunes Connect上面。只是切换了证书，代码和资源没有做任何修改。分发服务的提供商做的事情其实和TestFlight一样。但是他们有其他优势：</p>
+
+<ol>
+  <li>服务器在国内，提交和下载的速度非常快。</li>
+  <li>没有初审状态。这个苹果有，不知道他们在审核什么。一般都是在正式提交才开始漫长的审核。</li>
+</ol>
+
+<p>至于这种类似TestFlight的第三方分发服务提供商，国内知名的有</p>
+
+<ol>
+  <li><a href="http://pre.im/">pre.im</a></li>
+  <li><a href="http://tako.im/">tako.im</a></li>
+  <li><a href="https://www.pgyer.com/">蒲公英</a></li>
+  <li><a href="http://fir.im/">fir.im</a></li>
+</ol>
+
+<p>蒲公英用的比较多，现在比较知名的是fir.im，我们现在使用的也是它。</p>
+
+<p>所以优势很明显了，能为我们省去不少等待时间。这样下来之后，我们<strong>时间缩减到30分钟~1小时</strong>。简直要欢呼雀跃了。</p>
+
+<p>可能有更好的提交的方法，还请知道的老司机同学帮帮忙，给我们提点好的意见，感激不尽！</p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=快速打包测试提交苹果审核的流程&amp;url=http://www.newtomato.me/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+
+</body>
+</html>

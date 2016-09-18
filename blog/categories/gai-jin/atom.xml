@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:改进 | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/gai-jin/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2016-09-18T17:26:21+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[快速打包测试提交苹果审核的流程]]></title>
+    <link href="http://www.newtomato.me/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng"/>
+    <updated>2016-09-18T17:22:24+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng</id>
+    <content type="html"><![CDATA[<blockquote>
+  <p>天下武功，唯快不破。加快时间是制胜王道。</p>
+</blockquote>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-1.jpg" alt="1" /></p>
+
+<p>对于出一次大包，是一件很费时费力的事情。具体包括以下步骤：</p>
+
+<ol>
+  <li>加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同，小的项目会很快，大的项目则慢的多。</li>
+  <li>打包ipa或者apk文件。此时依赖于项目的复杂度，有依赖的项目库也会重新build，不修改依赖库，也就是使用缓存的build文件会加快速度。一般需要30分钟左右。</li>
+  <li>上传ipa或者apk文件。这个过程依赖网络速度。我们网络上传速度是100~200k/s的速度，一般需要20分钟左右。<br />
+<!--more--></li>
+  <li>苹果提交到iTunes Connect，android提交到Google Developer Console后台。等待审核生效。打开测试通道。此时时间不固定，苹果审核时快时慢，我们最快半小时就可以进入内测，最慢经过了3个小时，Google会快一些。</li>
+  <li>进入内测阶段，苹果通过TestFlight开始下载。但是下载真的慢的要死哦。Google的内测则快一些。只要VPN给力即可了。</li>
+</ol>
+
+<p>以上差不多是提交大包需要经历的过程。走完一套下来，大约需要2~3个小时。</p>
+
+<p>但是这个速度非常令人头疼，提交的速度越快，问题越能提早发现。能加快时间，自然对我们是极好的。所以在上述基础上我们分析了一下，可以从以下几个方法去做优化。</p>
+
+<p>第一步和第二步是无法节省时间的。我们在一台mac电脑搭建的服务器上运行<code>jenkins</code>,已经将人力解放出来。<br />
+第三部提交和第四部审核是可以考虑别的方法。由于苹果初步审核比较慢，所以我们想到的方法就是打两个包，一个是<strong>adhoc</strong>证书，一个是<strong>app store</strong>证书。adhoc证书的ipa包提交到别的<strong>分发服务的提供商</strong>上面，及早进入内测阶段。内测的同学测试没有问题了之后，然后在将app store证书的版本提交到iTunes Connect上面。只是切换了证书，代码和资源没有做任何修改。分发服务的提供商做的事情其实和TestFlight一样。但是他们有其他优势：</p>
+
+<ol>
+  <li>服务器在国内，提交和下载的速度非常快。</li>
+  <li>没有初审状态。这个苹果有，不知道他们在审核什么。一般都是在正式提交才开始漫长的审核。</li>
+</ol>
+
+<p>至于这种类似TestFlight的第三方分发服务提供商，国内知名的有</p>
+
+<ol>
+  <li><a href="http://pre.im/">pre.im</a></li>
+  <li><a href="http://tako.im/">tako.im</a></li>
+  <li><a href="https://www.pgyer.com/">蒲公英</a></li>
+  <li><a href="http://fir.im/">fir.im</a></li>
+</ol>
+
+<p>蒲公英用的比较多，现在比较知名的是fir.im，我们现在使用的也是它。</p>
+
+<p>所以优势很明显了，能为我们省去不少等待时间。这样下来之后，我们<strong>时间缩减到30分钟~1小时</strong>。简直要欢呼雀跃了。</p>
+
+<p>可能有更好的提交的方法，还请知道的老司机同学帮帮忙，给我们提点好的意见，感激不尽！</p>
+
+]]></content>
+  </entry>
+  
+</feed>

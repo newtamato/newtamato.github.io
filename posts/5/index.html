@@ -9,8 +9,7 @@
 
 	<meta name="author" content="newtomato">
 	
-	<meta name="description" content="01 Nov 2015 通关the Last of US的感悟 今年年初的时候，在同事那里听说了the last of us的这款游戏，同事说的眉飞色舞，吹捧拔高至此毫不吝啬，甚至不惜把他家里的PS3拿给我让我玩。当时的我甚至没有买过一台PS3，或者一张游戏碟片。
-自然一点想玩的想法都没有， &hellip;">
+	<meta name="description" content="11 Nov 2015 Function, Closures, Up Values 未找到原文出处，从网络博客天道酬勤,重剑无锋上转载。 Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)， &hellip;">
 
 	<meta name="HandheldFriendly" content="True" />
 	<meta name="MobileOptimized" content="320" />
@@ -45,6 +44,28 @@
       
 	
 		
+	
+	<header class="post-header">
+		<span class="post-meta">11 Nov 2015</span>
+		<h2 class="post-title">
+			
+			<a href="/blog/2015/11/11/function-closure-upvalue">
+			
+				Function, Closures, Up Values</a>
+		</h2>
+	</header>
+	<section class="post-excerpt">
+		<p>未找到原文出处，从网络博客<a href="http://blog.chinaunix.net/uid-52437-id-2108789.html">天道酬勤,重剑无锋</a>上转载。</p>
+
+<p>Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)，所以在函数体中仍然可以定义函数。<br />
+
+	</section>
+
+    </article>
+
+  
+    <article class="post">
+      
 	
 	<header class="post-header">
 		<span class="post-meta">01 Nov 2015</span>
@@ -315,52 +336,6 @@
 
     </article>
 
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">17 Oct 2015</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log">
-			
-				Git命令行总结-log</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">only</span> <span class="o">--</span><span class="n">oneline</span> <span class="mi">8692</span><span class="n">a53f1</span><span class="o">..</span><span class="n">HEAD</span><span class="o">|</span> <span class="n">grep</span> <span class="o">-</span><span class="n">v</span> <span class="s">&#39;.{7} &#39;</span>  <span class="o">|</span> <span class="n">uniq</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##格式化文件输出</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">graph</span> <span class="o">--</span><span class="n">pretty</span><span class="o">=</span><span class="n">format</span><span class="p">:</span><span class="s">&#39;%Cred</span><span class="si">%h%</span><span class="s">Creset -%C(yellow)</span><span class="si">%d</span><span class="s">%Creset </span><span class="si">%s</span><span class="s"> %Cgreen(</span><span class="si">%c</span><span class="s">r)%Creset&#39;</span> <span class="o">--</span><span class="n">abbrev</span><span class="o">-</span><span class="n">commit</span> <span class="o">--</span><span class="n">date</span><span class="o">=</span><span class="n">relative</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">status</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##将某一个commit之后的提交做成patch</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">-</span><span class="n">M</span> <span class="n">HEAD</span><span class="o">~</span><span class="mi">1</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##将patch打到我们的开发分支</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="n">xxx</span><span class="o">.</span><span class="n">patch</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>##vim中格式化json</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="p">:</span><span class="o">%</span><span class="err">!</span><span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">json</span><span class="o">.</span><span class="n">tool</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-	</section>
-
-    </article>
-
 
 <nav class="pagination" role="pagination">
   
@@ -372,9 +347,14 @@
   
 
   <span class="page-number">
-    Page 5 of 5
+    Page 5 of 6
   </span>
 
+  
+    <a class="older-posts"
+        href="/posts/6">
+      Older Posts →
+    </a>
   
 </nav>
 
