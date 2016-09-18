@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu</loc>
+<lastmod>2016-09-18T20:15:26+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng</loc>
 <lastmod>2016-09-18T17:22:24+08:00</lastmod>
 </url>
@@ -410,6 +414,15 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/gai-jin/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/ipv6/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/dns64/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/ping-guo-shen-he-bei-ju/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

@@ -1,0 +1,166 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>搭建ipv6环境和问题记录 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 18 Sep 2016 搭建ipv6环境和问题记录 自从16年6月份开始，苹果要求提交的应用一定要支持ipv6。ipv6是做什么用呢？和ipv4有什么区别？
+其实这个教科书上已经和我们解释过了，只是这一天来得太快。
+ipv4的是32位长度，而ipv6是128位，是ipv4的4倍。 &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">18 Sep 2016</span>
+	<h1 class="post-title">搭建ipv6环境和问题记录</h1>
+
+	<section class="post-content">
+		<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742018443262.png" alt="" /><br />
+自从16年6月份开始，苹果要求提交的应用一定要支持ipv6。ipv6是做什么用呢？和ipv4有什么区别？<br />
+其实这个教科书上已经和我们解释过了，只是这一天来得太快。<br />
+ipv4的是32位长度，而ipv6是128位，是ipv4的4倍。能够大大的解决ip地址不够用的问题。<br />
+ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
+所以苹果在这个地方加入这个限制条件，就是为了推广ipv6的使用。</p>
+
+<p>而对于我们开发者要做的事情，就是搭建一个ipv6的网络地址。<br />
+同时将我们项目中那些用ipv4的网络框架改为支持两种协议。</p>
+
+<p>我分享这篇文章主要介绍怎么搭建一个ipv6的网络。我们在这个地方摔进了个大深坑。<br />
+<!--more--><br />
+有两种方式可以大家ipv6的网络，一种是使用网线的方法，一种是使用手机4G移动网络。</p>
+
+<p>这两种方法都是相似的原理，都需要用到DNS64/NAT64的转发。那么原理是什么呢？看下面的这一张图片<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-1458809-25687ab1e24f61ec.jpg" alt="1458809-25687ab1e24f61e" /></p>
+
+<p>首先要知道的是，发出任何一个请求，最终都会映射成一个地址对地址的请求。所以域名需要转换成IP，这一层是域名解析服务器做的。他很快的将查询的地址发给请求方，请求方在把地址和请求信息封装成信息报，以TCP/IP的协议发出去。</p>
+
+<p>上图中，Client就是手机设备，在我们搭建的ipv6环境中，请求先送到DNS64 Server，为啥呢？因为你搭建的是DNS64/NAT64网络。也就是说你的电脑此时也是一个域名解析服务器。他会去请求DNS服务器，服务器如果存在ipv6地址，就立即返回这个地址，然后ipv6转给DNS64 Server，然后在传给Client。如果DNS Server没有配置这个ipv6，则返回一个ipv4地址。转给DNS64 Server之后，他会将ipv4转换一个下，做成ipv6的样子，转给Client，Client拿到这个组装之后的地址在向外发请求。贴一个更详细的图<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742011971107.jpg" alt="" /></p>
+
+<p>所以我们搭建的这个环境就是一个中转站，将我们的ip地址做一下转换。</p>
+
+<p>原理既然如此，接下来说一下怎么搭建这个ipv6的环境。</p>
+
+<h3 id="ipv6">使用网线搭建ipv6网络</h3>
+
+<p>找一台MAC电脑，能够使用网线，然后拨号上网，System Preferences -&gt; Sharing (点击此处需要按住option键)，然后在弹出界面上勾选[x]Create NAT64 Network,将我们的有线网络通过Wifi的形式共享出去。在Wifi Option按钮可以不设置密码。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14741972537636.jpg" alt="" /></p>
+
+<p>然后点击左侧的<strong>互联网共享</strong>。此时弹框，点击<strong>启动</strong>即可。</p>
+
+<p>然后手机连接你搭建的这个网络，在手机的网络设置里面检查IP对应的DNS是否是ipv6格式的ip地址，以冒号分割。<br />
+走到这一步还是未必成功，那么可以看第二套方案</p>
+
+<h3 id="gipv6">使用4G网络搭建ipv6的环境</h3>
+
+<p>首先手机要关闭Wifi，连接4G。然后用数据线连接MAC电脑，使用USB的形势共享网络。<br />
+接下来就是在电脑的系统设置里面，按住option键共享网络，步骤和上面一样。将iPhone USB网络以wifi的<br />
+形式共享出去。然后再找一台iPhone手机，连接这个共享的网络。<br />
+在网络连接里面检查是否是ipv6的地址格式。</p>
+
+<h3 id="section">遇到的问题</h3>
+
+<ol>
+  <li>这两种方式，我们使用第二种成功，而第一种却没有成功。MAC电脑使用的是MAC Mini，版本是10.11.6。还没有找到根本原因。</li>
+  <li>提交版本审核的时候，被拒。理论上服务器是可以不需要支持ipv6的，但是查到的资料均指向一定要服务器配置这个呢？暂时我的猜测是，DNS64继续ipv6不成功，在请求ipv4，这期间花费了时间超时导致请求不能进入。所以为了能够快速进入最好还是让服务器也支持一下。</li>
+  <li>怎么检查自己的服务器是否支持ipv6呢，easy 方法就是在<a href="http://ipv6-test.com/validate.php">ipv6 test</a>里面输入域名，然后就知道了。百度有一个ipv6的域名，ipv6.baidu.com 。大家可以测试看看他的4A就配置了ipv6的地址。<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14741996623390.jpg" alt="" /></li>
+  <li>自己的服务器怎么配置ipv6的地址呢？只要在自己的域名解析服务商那里设置一个aaaa即可。可是如何获得ipv6呢？目前只有国内的高校网才有NAT64 + NDS64的服务如下图：<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742001654945.jpg" alt="" /><br />
+ 具体获得ipv6的方法，可以参考这个链接。里面提供了收费和免费两种方法。<a href="http://www.solve6.com/">ipv6 解决方案</a>。</li>
+</ol>
+
+<p>到此我们的问题算是解决了，如果你还是遇到更加奇怪的审核没有通过的问题。建议你<a href="https://github.com/wg689/Solve-App-Store-Review-Problem">移步至此</a>，希望能够帮得到你了。</p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=搭建ipv6环境和问题记录&amp;url=http://www.newtomato.me/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+
+</body>
+</html>
