@@ -1,0 +1,156 @@
+
+<!DOCTYPE HTML>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+	<meta charset="utf-8">
+	<title>支付宝微信接入 | 番茄手册</title>
+
+	<meta name="author" content="newtomato">
+	
+	<meta name="description" content="番茄手册 23 Oct 2016 支付宝微信接入 一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台， &hellip;">
+
+	<meta name="HandheldFriendly" content="True" />
+	<meta name="MobileOptimized" content="320" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+	<link rel="canonical" href="">
+	<link href="/favicon.png" rel="shortcut icon">
+	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
+	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
+	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+</head>
+
+
+<body class="post-template">
+  <main class="content" role="main"><article class="post">
+  
+	<header class="post-header">
+		<a id="blog-logo" href="/">番茄手册</a>
+	</header>
+	<span class="post-meta">23 Oct 2016</span>
+	<h1 class="post-title">支付宝微信接入</h1>
+
+	<section class="post-content">
+		<p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。<br />
+PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
+
+<!--more-->
+
+<h3 id="section">开始动手 - 接入微信</h3>
+
+<p>首先，需要注册一个<a href="https://open.weixin.qq.com/">微信开发者账号</a>，按照文档搭建一个应用，然后按照demo接入就可以了。但是在这中间有几个问题一定要注意。</p>
+
+<ol>
+  <li>开发者需要需要提交一些资料，申请认证的资质。这样才能够申请到支付服务。我们一开始想的简单了以为可以先尝试接入，然后上线在申请资质。结果发现不行。<strong>这一步走不通，下面即使跑通了他们的demo，也无法在自己的项目中运行。</strong></li>
+  <li>创建应用填写项目的包名和<strong>签名</strong>，此处的签名慎重，我们在这个地方也是吃过苦头。<br />
+一般android的签名，想到的就是我们项目中使用<code>keytool</code>，<code>jarsigner</code>的方式给项目签名，但是这里不是的。</li>
+</ol>
+
+<p>这里的签名是微信自己的协议，我们将项目apk安装到自己的手机，然后在安装一个<a href="https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android1f09c7.apk">微信的签名apk工具</a>，其中这个签名工具，输入自己应用的包名，即可生成一个32位签名。这个就是微信需要的签名。</p>
+
+<p>但是注意，我们平时coding的时候，一般是开发模式，debug模式，所以打包生成的apk有可能也是Debug模式，一旦换成Release模式，生成出来的这个签名又会不一样。因为为了保证Debug和Release模式签名一致。我们唯一要做的就是设置项目两种模式下面keystore是一样的。<br />
+我们使用的是Android Studio，因此只要按照如下设置即可。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-release.jpeg" alt="release" /></p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-debug.jpeg" alt="debug" /></p>
+
+<p>这样生成出来的签名前后都是一致的。</p>
+
+<ol>
+  <li>
+    <p>签名搞定之后按照他们的Demo修改我们的项目，还要注意一点的就是在支付完成之后的会调回到项目中，进入<code>WXPayEntryActivity</code>,这个我们可以完全拿过来放到自己的Project中，但是一定要注意保持他的目录结构。在AndroidManifest.xml中是如下的表示：<br />
+  <code>&lt;activity android:name=".wxapi.WXPayEntryActivity" android:exported="true" 	andorid:launchMode="singleTop"&gt;
+ &lt;/activity&gt;</code></p>
+  </li>
+  <li>测试的时候会遇到这样的情况，Demo也会遇到这种情况。就是第一次点击支付，弹出了微信的支付界面。但是第二次点击，就不会成功。然后删应用在安装，重复同样的错误。有些蒙圈不知所谓。最后Google了一大圈，才找到一个方法，<strong>删除微信的缓存</strong>。然后问题你就解决了。再也没有出现过。可能是运气好，看到别人即使用了这样的方法还是会出现问题。</li>
+  <li>玩家支付的时候，要检测是否安装了微信，否则支付失败。</li>
+  <li>问题各不相同，只要看准几条，你一定能解决他。包名，签名，应用名（微信回调的scheme）。</li>
+</ol>
+
+<h3 id="section-1">开始动手 - 接入支付宝</h3>
+
+<p>相对于微信的一个模棱两可的签名概念，支付宝的公钥私钥就简单的多了。<br />
+同样，这里也需要先申请一个开发者账号，和签约支付。<br />
+需要的注意的问题有如下几点：<br />
+1. 提交公钥。支付宝对用户的金钱往来是非常注意的。使用这种非对称式加密的方法。对用户的请求进行加密。防止被别人篡改数据。所以按照他的<a href="https://cshall.alipay.com/enterprise/knowledgeDetail.htm?knowledgeId=201602033418">文档</a>去生成公钥私钥就行。但是生成完了，得验证是否正确。在提交公钥的弹出框下面有个验证公钥链接，点进入后，将要我们用私钥生成的一个段密文粘贴进来验证。验证通过即证明我们的公钥私钥没问题。<br />
+2. 私钥加密这种一定放到后端去做。他的客户端里面的代码只是给我们看流程使用的。</p>
+
+<p>上述是我们遇到的问题，在已经有了开发者资者的情况下，总体花费了2天时间接入，比较顺利。希望遇到问题的你，不要着急，不要慌。好事多磨，多看文档和FAQ，总会解决的。</p>
+
+
+	</section>
+
+  <footer class="post-footer">
+  <section class="author">
+    <h4>newtomato</h4>
+    <p></p>
+  </section>
+  <section class="share">
+    <h4>Share this post</h4>
+    <a class="icon-twitter" href="http://twitter.com/share?text=支付宝微信接入&amp;url=http://www.newtomato.me/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+      <span class="hidden">Twitter</span>
+    </a>
+    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+      <span class="hidden">Facebook</span>
+    </a>
+    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+      <span class="hidden">Google+</span>
+    </a>
+  </section>
+</footer>
+  <hr>
+  
+    <div class="share">
+	
+	   <!-- UY BEGIN -->
+<div id="uyan_frame"></div>
+<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
+<!-- UY END -->
+
+	
+</div>
+
+  
+  
+</article></main>
+  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+
+
+<div class="inner">
+
+
+
+
+
+
+
+
+
+<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
+
+<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
+
+<p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+</p>
+
+<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
+
+</div>
+</footer>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad()</script>
+
+
+
+
+
+
+</body>
+</html>
