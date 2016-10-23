@@ -35,8 +35,7 @@
 	<h1 class="post-title">支付宝微信接入</h1>
 
 	<section class="post-content">
-		<p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。<br />
-PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
+		<p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
 
 <!--more-->
 
@@ -46,21 +45,15 @@ PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存
 
 <ol>
   <li>开发者需要需要提交一些资料，申请认证的资质。这样才能够申请到支付服务。我们一开始想的简单了以为可以先尝试接入，然后上线在申请资质。结果发现不行。<strong>这一步走不通，下面即使跑通了他们的demo，也无法在自己的项目中运行。</strong></li>
-  <li>创建应用填写项目的包名和<strong>签名</strong>，此处的签名慎重，我们在这个地方也是吃过苦头。<br />
-一般android的签名，想到的就是我们项目中使用<code>keytool</code>，<code>jarsigner</code>的方式给项目签名，但是这里不是的。</li>
-</ol>
-
-<p>这里的签名是微信自己的协议，我们将项目apk安装到自己的手机，然后在安装一个<a href="https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android1f09c7.apk">微信的签名apk工具</a>，其中这个签名工具，输入自己应用的包名，即可生成一个32位签名。这个就是微信需要的签名。</p>
-
-<p>但是注意，我们平时coding的时候，一般是开发模式，debug模式，所以打包生成的apk有可能也是Debug模式，一旦换成Release模式，生成出来的这个签名又会不一样。因为为了保证Debug和Release模式签名一致。我们唯一要做的就是设置项目两种模式下面keystore是一样的。<br />
-我们使用的是Android Studio，因此只要按照如下设置即可。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-release.jpeg" alt="release" /></p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-debug.jpeg" alt="debug" /></p>
-
-<p>这样生成出来的签名前后都是一致的。</p>
-
-<ol>
+  <li>
+    <p>创建应用填写项目的包名和<strong>签名</strong>，此处的签名慎重，我们在这个地方也是吃过苦头。<br />
+一般android的签名，想到的就是我们项目中使用<code>keytool</code>，<code>jarsigner</code>的方式给项目签名，但是这里不是的。<br />
+这里的签名是微信自己的协议，我们将项目apk安装到自己的手机，然后在安装一个<a href="https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android1f09c7.apk">微信的签名apk工具</a>，其中这个签名工具，输入自己应用的包名，即可生成一个32位签名。这个就是微信需要的签名。但是注意，我们平时coding的时候，一般是开发模式，debug模式，所以打包生成的apk有可能也是Debug模式，一旦换成Release模式，生成出来的这个签名又会不一样。<br />
+因为为了保证Debug和Release模式签名一致。我们唯一要做的就是设置项目两种模式下面keystore是一样的。我们使用的是Android Studio，因此只要按照如下设置即可。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-release.jpeg" alt="release" /><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-debug.jpeg" alt="debug" /><br />
+这样生成出来的签名前后都是一致的。</p>
+  </li>
   <li>
     <p>签名搞定之后按照他们的Demo修改我们的项目，还要注意一点的就是在支付完成之后的会调回到项目中，进入<code>WXPayEntryActivity</code>,这个我们可以完全拿过来放到自己的Project中，但是一定要注意保持他的目录结构。在AndroidManifest.xml中是如下的表示：<br />
   <code>&lt;activity android:name=".wxapi.WXPayEntryActivity" android:exported="true" 	andorid:launchMode="singleTop"&gt;
