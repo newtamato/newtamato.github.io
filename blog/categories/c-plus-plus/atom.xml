@@ -4,7 +4,7 @@
   <title><![CDATA[分类:c++ | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/c-plus-plus/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-11-20T18:26:00+08:00</updated>
+  <updated>2016-11-20T19:34:30+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,103 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[JNI,java和C++之间的桥梁]]></title>
+    <link href="http://www.newtomato.me/blog/2016/11/20/jni"/>
+    <updated>2016-11-20T19:32:36+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/11/20/jni</id>
+    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-image002.png" alt="image002" /></p>
+
+<p>阅读cocos2dx的代码，我们会发现它里面有很多看似很奇怪的代码，比如<code>cocos2dx/platform/android/jni/</code>下面的c++文件。</p>
+
+<p>里面的函数命名和一般的c++命名不一样！这是因为里面全是JNI规范的函数。</p>
+
+<p>这个JNI是怎么工作的呢？我们先说JAVA是怎么调用c++函数。我们以<code>Cocos2dxLuaJavaBridge.java</code>为例。</p>
+
+<!--more-->
+
+<pre><code>public class Cocos2dxLuaJavaBridge
+{
+    public static native int callLuaFunctionWithString(int luaFunctionId, String value);
+    public static native int callLuaGlobalFunctionWithString(String luaFunctionName, String value);
+    public static native int retainLuaFunction(int luaFunctionId);
+    public static native int releaseLuaFunction(int luaFunctionId);
+}
+</code></pre>
+
+<p>这里面的函数声明前面都有一个native，表示这写函数的定义不在java文件中，而是在native语言中（c/c++中），这样调用这些函数的时候<code>Cocos2dxLuaJavaBridge.callLuaFunctionWithString</code>的时候，就会去JNI中查找对应的c/c++函数。因此在c/c++中就要有这些函数的定义，那就是在<code>org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp</code>文件中。每一个函数都有对应的实现。</p>
+
+<p>因此我们在java中调用<code>Cocos2dxLuaJavaBridge.callLuaFunctionWithString</code>实际走的函数是<code>Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaFunctionWithString</code>，java只是一个外表，c++才是里子。</p>
+
+<p>但是这些c++函数怎么和java联系起来了呢？</p>
+
+<p>我们发现java中有如下函数：</p>
+
+<pre><code>static 
+{
+    System.loadLibrary("game");
+}
+</code></pre>
+
+<p>我们的<code>libgame.so</code>文件在编译的过程中已经将<code>org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp</code>编译进来了。</p>
+
+<pre><code>proj.android/Android.mk
+
+LOCAL_SRC_FILES := ../cocos2dx_support/CCLuaEngine.cpp \
+    ../cocos2dx_support/CCLuaStack.cpp \
+    ../cocos2dx_support/CCLuaValue.cpp \
+    ../cocos2dx_support/Cocos2dxLuaLoader.cpp \
+    ../cocos2dx_support/tolua_fix.c \
+    ../cocos2dx_support/snapshot.c \
+    ../cocos2dx_support/platform/android/CCLuaJavaBridge.cpp \
+    ../cocos2dx_support/platform/android/org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp \
+...
+</code></pre>
+
+<p>因此从java调用c++的时候，按照上面的命名规范，Java_包名_函数名，java的包名是以”.”分开，但是在native语言中”.”的有特殊用途，JNI要求将.全部换成”_“。这样调用java的native函数，java虚拟机就会对应翻译成这样的函数名，找到并调用so文件中的native函数。第一部分完成！</p>
+
+<p>那么c++是如何调用java函数的呢？我们继续往下看。</p>
+
+<p>static函数执行之后，最终在底层一系列函数之后，会调用到一个<code>jni/hellocpp/main.cpp</code>中</p>
+
+<pre><code>jint JNI_OnLoad(JavaVM *vm, void *reserved)
+{
+    JniHelper::setJavaVM(vm);
+    return JNI_VERSION_1_4;
+}
+
+</code></pre>
+
+<p>这个函数会将javaVM赋值给JniHelper做为一个成员变量存在。</p>
+
+<pre><code>void JniHelper::setJavaVM(JavaVM *javaVM)
+{
+    m_psJavaVM = javaVM;
+}
+
+</code></pre>
+
+<p>而有了<code>javaVM</code>之后就可以在c++层面想创建java对象和调用java对象的函数一样的灵活的操作了。获取java是否有某个函数，此处最重要的一个函数就是</p>
+
+<pre><code>jint ret = jvm-&gt;GetEnv((void**)&amp;m_env, JNI_VERSION_1_4);
+</code></pre>
+<p>此函数获取此时m_env，此变量在我理解是一个JAVA虚拟机的上下文环境。他可以查找java类，对象函数等。有了他我们就以调用java的函数。<br />
+例如</p>
+
+<pre><code>m_classID = m_env-&gt;FindClass(m_className.c_str());
+m_methodID = m_env-&gt;GetStaticMethodID(m_classID, m_methodName.c_str(), 					m_methodSig.c_str());
+m_env-&gt;CallStaticVoidMethod(m_classID, m_methodID);
+</code></pre>
+
+<p>m_className就是包名+类名，例如<code>com/company/util/Test</code>,m_methodName就是Test.java里面的静态函数。此处我调用的是静态函数，所以函数声明也必须是static的。</p>
+
+<p>JNI对我们是透明的，很多时候，我们会忽略掉他。但是cocos2dx做的跨平台技术是依赖到他的，资源读取，数据的存储，图片渲染等。还有很多等着我们去发现。有兴趣的同学可以移步<a href="http://wiki.jikexueyuan.com/project/deep-android-v1/jni.html">这里</a>可以学到更多东西。</p>
+
+<p>欢迎大家沟通交流！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Lua脚本在C++下的舞步（三）]]></title>

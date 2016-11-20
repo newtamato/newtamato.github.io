@@ -1,0 +1,407 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>JNI,java和C++之间的桥梁 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="阅读cocos2dx的代码，我们会发现它里面有很多看似很奇怪的代码，比如cocos2dx/platform/android/jni/下面的c++文件。 里面的函数命名和一般的c++命名不一样！这是因为里面全是JNI规范的函数。 这个JNI是怎么工作的呢？我们先说JAVA是怎么调用c++函数。 &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2016/11/20/jni">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+   <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">JNI,java和C++之间的桥梁</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-11-20T19:32:36+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-image002.png" alt="image002" /></p>
+
+<p>阅读cocos2dx的代码，我们会发现它里面有很多看似很奇怪的代码，比如<code>cocos2dx/platform/android/jni/</code>下面的c++文件。</p>
+
+<p>里面的函数命名和一般的c++命名不一样！这是因为里面全是JNI规范的函数。</p>
+
+<p>这个JNI是怎么工作的呢？我们先说JAVA是怎么调用c++函数。我们以<code>Cocos2dxLuaJavaBridge.java</code>为例。</p>
+
+<!--more-->
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">public class Cocos2dxLuaJavaBridge
+</span><span class="line">{
+</span><span class="line">    public static native int callLuaFunctionWithString(int luaFunctionId, String value);
+</span><span class="line">    public static native int callLuaGlobalFunctionWithString(String luaFunctionName, String value);
+</span><span class="line">    public static native int retainLuaFunction(int luaFunctionId);
+</span><span class="line">    public static native int releaseLuaFunction(int luaFunctionId);
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这里面的函数声明前面都有一个native，表示这写函数的定义不在java文件中，而是在native语言中（c/c++中），这样调用这些函数的时候<code>Cocos2dxLuaJavaBridge.callLuaFunctionWithString</code>的时候，就会去JNI中查找对应的c/c++函数。因此在c/c++中就要有这些函数的定义，那就是在<code>org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp</code>文件中。每一个函数都有对应的实现。</p>
+
+<p>因此我们在java中调用<code>Cocos2dxLuaJavaBridge.callLuaFunctionWithString</code>实际走的函数是<code>Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaFunctionWithString</code>，java只是一个外表，c++才是里子。</p>
+
+<p>但是这些c++函数怎么和java联系起来了呢？</p>
+
+<p>我们发现java中有如下函数：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">static 
+</span><span class="line">{
+</span><span class="line">    System.loadLibrary("game");
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>我们的<code>libgame.so</code>文件在编译的过程中已经将<code>org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp</code>编译进来了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">proj.android/Android.mk
+</span><span class="line">
+</span><span class="line">LOCAL_SRC_FILES := ../cocos2dx_support/CCLuaEngine.cpp \
+</span><span class="line">    ../cocos2dx_support/CCLuaStack.cpp \
+</span><span class="line">    ../cocos2dx_support/CCLuaValue.cpp \
+</span><span class="line">    ../cocos2dx_support/Cocos2dxLuaLoader.cpp \
+</span><span class="line">    ../cocos2dx_support/tolua_fix.c \
+</span><span class="line">    ../cocos2dx_support/snapshot.c \
+</span><span class="line">    ../cocos2dx_support/platform/android/CCLuaJavaBridge.cpp \
+</span><span class="line">    ../cocos2dx_support/platform/android/org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp \
+</span><span class="line">...</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>因此从java调用c++的时候，按照上面的命名规范，Java_包名_函数名，java的包名是以”.”分开，但是在native语言中”.”的有特殊用途，JNI要求将.全部换成”_“。这样调用java的native函数，java虚拟机就会对应翻译成这样的函数名，找到并调用so文件中的native函数。第一部分完成！</p>
+
+<p>那么c++是如何调用java函数的呢？我们继续往下看。</p>
+
+<p>static函数执行之后，最终在底层一系列函数之后，会调用到一个<code>jni/hellocpp/main.cpp</code>中</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">jint JNI_OnLoad(JavaVM *vm, void *reserved)
+</span><span class="line">{
+</span><span class="line">    JniHelper::setJavaVM(vm);
+</span><span class="line">    return JNI_VERSION_1_4;
+</span><span class="line">}
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这个函数会将javaVM赋值给JniHelper做为一个成员变量存在。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void JniHelper::setJavaVM(JavaVM *javaVM)
+</span><span class="line">{
+</span><span class="line">    m_psJavaVM = javaVM;
+</span><span class="line">}
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>而有了<code>javaVM</code>之后就可以在c++层面想创建java对象和调用java对象的函数一样的灵活的操作了。获取java是否有某个函数，此处最重要的一个函数就是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">jint ret = jvm-&gt;GetEnv((void**)&amp;m_env, JNI_VERSION_1_4);</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>此函数获取此时m_env，此变量在我理解是一个JAVA虚拟机的上下文环境。他可以查找java类，对象函数等。有了他我们就以调用java的函数。<br />
+例如</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">m_classID = m_env-&gt;FindClass(m_className.c_str());
+</span><span class="line">m_methodID = m_env-&gt;GetStaticMethodID(m_classID, m_methodName.c_str(), 					m_methodSig.c_str());
+</span><span class="line">m_env-&gt;CallStaticVoidMethod(m_classID, m_methodID);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>m_className就是包名+类名，例如<code>com/company/util/Test</code>,m_methodName就是Test.java里面的静态函数。此处我调用的是静态函数，所以函数声明也必须是static的。</p>
+
+<p>JNI对我们是透明的，很多时候，我们会忽略掉他。但是cocos2dx做的跨平台技术是依赖到他的，资源读取，数据的存储，图片渲染等。还有很多等着我们去发现。有兴趣的同学可以移步<a href="http://wiki.jikexueyuan.com/project/deep-android-v1/jni.html">这里</a>可以学到更多东西。</p>
+
+<p>欢迎大家沟通交流！</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-11-20T19:32:36+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/java/'>java</a>, <a class='category' href='/blog/categories/jni/'>jni</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2016/11/20/jni" data-via="" data-counturl="http://www.newtomato.me/blog/2016/11/20/jni" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong" title="Previous Post: Cocos2dx和OBB的结合使用">&laquo; Cocos2dx和OBB的结合使用</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/jni">JNI,java和C++之间的桥梁</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">万圣节上线纪念</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (3)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
+<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (8)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
+
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2016 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

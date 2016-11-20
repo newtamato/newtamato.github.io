@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-11-20T18:26:00+08:00</updated>
+  <updated>2016-11-20T19:34:30+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,131 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[JNI,java和C++之间的桥梁]]></title>
+    <link href="http://www.newtomato.me/blog/2016/11/20/jni"/>
+    <updated>2016-11-20T19:32:36+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/11/20/jni</id>
+    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-image002.png" alt="image002" /></p>
+
+<p>阅读cocos2dx的代码，我们会发现它里面有很多看似很奇怪的代码，比如<code>cocos2dx/platform/android/jni/</code>下面的c++文件。</p>
+
+<p>里面的函数命名和一般的c++命名不一样！这是因为里面全是JNI规范的函数。</p>
+
+<p>这个JNI是怎么工作的呢？我们先说JAVA是怎么调用c++函数。我们以<code>Cocos2dxLuaJavaBridge.java</code>为例。</p>
+
+<!--more-->
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">public class Cocos2dxLuaJavaBridge
+</span><span class="line">{
+</span><span class="line">    public static native int callLuaFunctionWithString(int luaFunctionId, String value);
+</span><span class="line">    public static native int callLuaGlobalFunctionWithString(String luaFunctionName, String value);
+</span><span class="line">    public static native int retainLuaFunction(int luaFunctionId);
+</span><span class="line">    public static native int releaseLuaFunction(int luaFunctionId);
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这里面的函数声明前面都有一个native，表示这写函数的定义不在java文件中，而是在native语言中（c/c++中），这样调用这些函数的时候<code>Cocos2dxLuaJavaBridge.callLuaFunctionWithString</code>的时候，就会去JNI中查找对应的c/c++函数。因此在c/c++中就要有这些函数的定义，那就是在<code>org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp</code>文件中。每一个函数都有对应的实现。</p>
+
+<p>因此我们在java中调用<code>Cocos2dxLuaJavaBridge.callLuaFunctionWithString</code>实际走的函数是<code>Java_org_cocos2dx_lib_Cocos2dxLuaJavaBridge_callLuaFunctionWithString</code>，java只是一个外表，c++才是里子。</p>
+
+<p>但是这些c++函数怎么和java联系起来了呢？</p>
+
+<p>我们发现java中有如下函数：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">static 
+</span><span class="line">{
+</span><span class="line">    System.loadLibrary("game");
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>我们的<code>libgame.so</code>文件在编译的过程中已经将<code>org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp</code>编译进来了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">proj.android/Android.mk
+</span><span class="line">
+</span><span class="line">LOCAL_SRC_FILES := ../cocos2dx_support/CCLuaEngine.cpp \
+</span><span class="line">    ../cocos2dx_support/CCLuaStack.cpp \
+</span><span class="line">    ../cocos2dx_support/CCLuaValue.cpp \
+</span><span class="line">    ../cocos2dx_support/Cocos2dxLuaLoader.cpp \
+</span><span class="line">    ../cocos2dx_support/tolua_fix.c \
+</span><span class="line">    ../cocos2dx_support/snapshot.c \
+</span><span class="line">    ../cocos2dx_support/platform/android/CCLuaJavaBridge.cpp \
+</span><span class="line">    ../cocos2dx_support/platform/android/org_cocos2dx_lib_Cocos2dxLuaJavaBridge.cpp \
+</span><span class="line">...</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>因此从java调用c++的时候，按照上面的命名规范，Java_包名_函数名，java的包名是以”.”分开，但是在native语言中”.”的有特殊用途，JNI要求将.全部换成”_“。这样调用java的native函数，java虚拟机就会对应翻译成这样的函数名，找到并调用so文件中的native函数。第一部分完成！</p>
+
+<p>那么c++是如何调用java函数的呢？我们继续往下看。</p>
+
+<p>static函数执行之后，最终在底层一系列函数之后，会调用到一个<code>jni/hellocpp/main.cpp</code>中</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">jint JNI_OnLoad(JavaVM *vm, void *reserved)
+</span><span class="line">{
+</span><span class="line">    JniHelper::setJavaVM(vm);
+</span><span class="line">    return JNI_VERSION_1_4;
+</span><span class="line">}
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这个函数会将javaVM赋值给JniHelper做为一个成员变量存在。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void JniHelper::setJavaVM(JavaVM *javaVM)
+</span><span class="line">{
+</span><span class="line">    m_psJavaVM = javaVM;
+</span><span class="line">}
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>而有了<code>javaVM</code>之后就可以在c++层面想创建java对象和调用java对象的函数一样的灵活的操作了。获取java是否有某个函数，此处最重要的一个函数就是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">jint ret = jvm-&gt;GetEnv((void**)&amp;m_env, JNI_VERSION_1_4);</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>此函数获取此时m_env，此变量在我理解是一个JAVA虚拟机的上下文环境。他可以查找java类，对象函数等。有了他我们就以调用java的函数。<br />
+例如</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">m_classID = m_env-&gt;FindClass(m_className.c_str());
+</span><span class="line">m_methodID = m_env-&gt;GetStaticMethodID(m_classID, m_methodName.c_str(), 					m_methodSig.c_str());
+</span><span class="line">m_env-&gt;CallStaticVoidMethod(m_classID, m_methodID);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>m_className就是包名+类名，例如<code>com/company/util/Test</code>,m_methodName就是Test.java里面的静态函数。此处我调用的是静态函数，所以函数声明也必须是static的。</p>
+
+<p>JNI对我们是透明的，很多时候，我们会忽略掉他。但是cocos2dx做的跨平台技术是依赖到他的，资源读取，数据的存储，图片渲染等。还有很多等着我们去发现。有兴趣的同学可以移步<a href="http://wiki.jikexueyuan.com/project/deep-android-v1/jni.html">这里</a>可以学到更多东西。</p>
+
+<p>欢迎大家沟通交流！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Cocos2dx和OBB的结合使用]]></title>
@@ -1639,82 +1764,6 @@ B关心英雄，那么受到这个事件之后，直接从Player身上拿到最�
 <p>以上三个问题，是我印象最深刻的问题。实际上还有部分问题是比较琐碎的。这些问题迫使我修正自己的问题。让这个模块变得更加健壮。即使以后移植到别的项目中也能很快的适应。</p>
 
 <p>写了一大长串，希望能给你带来一些思想上的改变。脱离每日的重复劳作。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用Typecho搭建网站记录]]></title>
-    <link href="http://www.newtomato.me/blog/2016/06/01/da-jian-typechoji-lu"/>
-    <updated>2016-06-01T12:30:45+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/06/01/da-jian-typechoji-lu</id>
-    <content type="html"><![CDATA[<p>早在一年前，使用octpress的时候，就在网上看到过Typecho。<br />
-但是当时查找到的octpress的资料更多一些，于是就没有选择Typecho。今天无意间的看到别人的Typecho网站，真是不错。简洁，清晰。<br />
-相对于Octpress，他具有的优点如下</p>
-
-<ol>
-  <li>提供完整的网站功能。可以用户注册。</li>
-  <li>集成了许多功能，我们都不用再次配置。比如用户评论。</li>
-  <li>提供更多的主题，且很多都是国人自己写的主题。</li>
-  <li>维护Typecho的团队是中国人，因此很容易找到解决问题的方法。<br />
-<!--more--></li>
-</ol>
-
-<p>鉴于这些优点，我抽空搭建了一下一个个人网站。几乎是从零开始。经过如下的步骤</p>
-
-<ol>
-  <li>注册域名</li>
-  <li>域名映射IP，使域名生效。国内可以直接访问。</li>
-  <li>申请空间。但是我网上搜索了很多免费空间，终于找到了一个免费的虚拟主机。也算是凑合拿来用。</li>
-  <li>搭建Typecho。</li>
-  <li>更换主题，让个人网站更有意思。</li>
-</ol>
-
-<h2 id="section">域名注册</h2>
-<p>可以去Godaday上注册，但是这个一般是需要花钱的。不过钱并不多，如果网上可以找到优惠码。还可以注册免费域名。但是这里稍微好一点的，都被抢注。因此为了能够找一个自己喜欢的，我有搜索了一会儿。找到了<a href="http://www.freenom.com/en/index.html?lang=en">freenom</a>网站。这上面可以注册一些比较小众的域名。比如tk，ml等域名。</p>
-
-<h2 id="section-1">空间申请</h2>
-<p>一般为了稳定性，会申请阿里云的服务。但是这次我是为了做实验，因此我希望能够找到免费的空间。但是一分钱一分货，免费的东西找起来很费事。好不容易找到了一个<a href="https://www.hostpark.cn/">主机公园</a>。但是暂时只是找到了它3天的免费试用。并没有终身免费的虚拟主机可以试用。<br />
-不过幸运的是，网站的站长很负责，给我很多解答。<br />
-申请成功之后，会将虚拟主机的地址放到注册的邮箱里面。这个地址就是我们需要的。接下来只要将域名和IP地址绑定在一起。我们就能够顺利的访问自己的网站了！</p>
-
-<h2 id="section-2">域名映射</h2>
-<p>为了能够国内很快访问，就需要有一个做dns映射。freenom也可以做，但是不知道为什么<strong>@</strong>这样的不能够配置。所以转向国内的<a href="https://www.dnspod.cn/">DNSPod</a>。然后在它里面做设置。<br />
-只要添加<strong>www和@</strong>记录即可<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647130072408.jpg" alt="" /></p>
-
-<p>同时由于我们的域名是在freenom上申请的，也需要在freenom上将域名和dnspod做一个中介转换。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647132199295.jpg" alt="" /></p>
-
-<p>此时设置完成之后，并不表示我们就能够访问自己的网站了。但是我们可以用工具测试一下，网站域名是否生效了。</p>
-
-<p>可以使用两种方式</p>
-
-<ol>
-  <li><code>nslookup 域名</code>，这是命令行模式，程序员比较喜欢使用</li>
-  <li>使用<a href="http://tool.chinaz.com/nslookup/">站长工具</a>,输入你的域名。看是否有响应</li>
-</ol>
-
-<h2 id="typecho">Typecho搭建</h2>
-
-<p>上面如果生效，接下来，对你就很简单了。首先我们要到<a href="http://typecho.org/">Typecho</a>网站上面下载一个稳定版本。<br />
-然后我们打开上面申请的免费虚拟主机目录。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647135779055.jpg" alt="文件" /></p>
-
-<p>点开它，你会看到自己虚拟主机的结构<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647136399737.jpg" alt="结构-w300" /><br />
-我们只要将下载的typecho的zip压缩文件上传到public_html，上传完成之后，解压缩即可。<br />
-完成这些之后，在浏览器中输入<code>http://{你的域名}/build/index.php</code>,此时你会看到Typecho的安装提示。<br />
-只要走到这一步，就证明你的网站已经差不多了。已经完成了90%。</p>
-
-<h2 id="section-3">替换主题</h2>
-<p>默认安装的主题是简单大众化的。要想更有特色一点，我们只需要网上搜搜Typecho主题。然后选择一个你喜欢的主题下载zip文件。<br />
-然后将zip文件上传到上面<code>/public_html/build/usr/theme/</code>里面，解压缩之后，到后台<code>http://{你的域名}/build/admin/index.php</code>去启用此主题即可。</p>
-
-<p>正常情况下，此时刷新一下浏览器即可看见新的主题，但是有的时候也会出现宇宙射线般无法解释的现象。只要耐心等待一会儿，或者换一个浏览器试试。你会发现主题真的生效了哦。</p>
-
-<p>从头到尾花费了一下午的时光，不过终于把它搭建起来也真是开心。<br />
-希望这篇文章能够帮到你。</p>
 
 ]]></content>
   </entry>

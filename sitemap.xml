@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/11/20/jni</loc>
+<lastmod>2016-11-20T19:32:36+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong</loc>
 <lastmod>2016-11-20T18:04:13+08:00</lastmod>
 </url>
@@ -448,6 +452,12 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/ccfileutil/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/jni/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/java/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/posts/2/</loc>
