@@ -4,7 +4,7 @@
   <title><![CDATA[分类:cocos2dx | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/cocos2dx/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-11-01T18:34:51+08:00</updated>
+  <updated>2016-11-20T18:14:47+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,108 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Cocos2dx和OBB的结合使用]]></title>
+    <link href="http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong"/>
+    <updated>2016-11-20T18:04:13+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong</id>
+    <content type="html"><![CDATA[<p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
+有两种方法可以使用OBB文件。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
+
+<h3 id="section">方法比较</h3>
+
+<ul>
+  <li>第一种方法，obb文件也是一种ZIP文件，我们可以解压缩obb文件，</li>
+  <li>第二种方法，直接读取obb文件。<code>getFileDataFromZip</code>这样的方法就可以。</li>
+</ul>
+
+<p>这两种方法各有优缺点。<br />
+第一种方法将文件解压缩到<code>getWritablePath()</code>文件夹下面。然后此路径<code>addSearchPath</code>到搜索路径中，我们不需要修改其他的代码就可以读取了。缺点是我们需要有一个解压缩的过程。尤其是obb过大的时候，解压缩耗费的时间也会很长。另外解压缩之后，请不要删除obb文件，否则下次进入，又要重新下载。另外这种方式还破坏了obb的加密性。另外这种方法是可行的，但Google并不推荐这种方式。<br />
+第二种方式则需要修改部分c++代码。</p>
+
+<p>因此我采用了第二种方法，对CCFileUtil做了一些修改。（主要说一下除了音效音乐之外的使用。）<br />
+CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAndroid.cpp文件。<br />
+<!--more--><br />
+### 方法梳理</p>
+
+<p>CCFileUtil主要功能是检查一个文件是否存在，能否读取文件的内容。而我们把部分资源文件放到了obb之中，CCFileUtil需要知道这个地方，才能够从那里读取。</p>
+
+<p>在java层，我们知道我们的obb存储的位置是在</p>
+
+<pre><code>	int versionCode = "项目的versionCode"
+	String apkName = Helpers.getExpansionAPKFileName(sContext,true,versionCode);
+	return Helpers.generateSaveFileName(sContext,apkName);
+</code></pre>
+
+<p>通过JNI，将这个路径${obbPath}传递给c++，可以参考<code>CCFileAndroid.cpp</code>里面的<code>getApkPath()</code>函数。</p>
+
+<pre><code>std::string resourcePath = getApkPath();
+s_pZipFile = new ZipFile(resourcePath, "assets/");        
+</code></pre>
+<p>类似s_pZipFile，我们也生成一个${obbZipFile}，用于文件的查找。</p>
+
+<p>然后将此路径<code>addSearchPath</code>到搜索路径中。通过阅读CCFileUtil.cpp文件我们得知检查一个文件的全路径主要是检测<code>isFileExist</code>函数。如果他证明存在此文件，就能获取到全路径。</p>
+
+<pre><code>fullPathForFilename--&gt;getPathForFilename--&gt;getFullPathForDirectoryAndFilename--&gt;isFileExist
+</code></pre>
+
+<p>因此我们修改isFileExist文件，在里面根据文件的路径检查是否在。伪代码如下：</p>
+
+<pre><code>bool CCFileUtilsAndroid::isFileExist(const std::string&amp; strFilePath)
+{
+	...
+    bool bFound = false;
+
+    if (strFilePath.find(${obbPath}) != std::string::npos)
+    {
+        if (${obbZipFile} &amp;&amp; ${obbZipFile}-&gt;fileExists(strPath))
+        {
+            bFound = true;
+        } 
+    }
+	...
+}
+</code></pre>
+
+<p>上面我们把obb文件做成了ZipFile对象，因此在doGetFileData中，就很容易得到文件的内容。伪代码如下：</p>
+
+<pre><code>unsigned char* CCFileUtilsAndroid::doGetFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize, bool forAsync)
+{
+    unsigned char * pData = 0;
+    
+...
+    string fullPath = fullPathForFilename(pszFileName);
+   
+    // 获取obb文件
+    if (${obbZipFile} &amp;&amp; fullPath.find(${obbPath}) != std::string::npos){
+        
+        if (forAsync)
+        {
+            pData = ${obbZipFile}-&gt;getFileData(fullPath.c_str(), pSize, ${obbZipFile}-&gt;_dataThread);
+        }
+        else
+        {
+            pData = ${obbZipFile}-&gt;getFileData(fullPath.c_str(), pSize);
+        }
+    }
+    ...
+  }
+
+</code></pre>
+
+<h3 id="section-1">总结语</h3>
+
+<p>至此我们就能够读取obb里面的内容了。<br />
+我的方法基于将obb看成了ZIP，模仿apk的方式去读取文件。将obb位置放到了搜索路径。ZIP对象存在且能够从里面读取文件，则表明文件存在。就可以读取他了。</p>
+
+<p>这里面设计到JNI传递数据。其实这对于我们只要仿照APK路径传递就可以了。关于JNI具体的实现，还请看下一章节内容。</p>
+
+<p>感谢你的阅读！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[cocos2dx 增加Google移动广告]]></title>

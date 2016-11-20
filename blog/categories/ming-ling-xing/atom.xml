@@ -4,7 +4,7 @@
   <title><![CDATA[分类:命令行 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/ming-ling-xing/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-11-01T18:34:51+08:00</updated>
+  <updated>2016-11-20T18:14:47+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -18,30 +18,23 @@
     <link href="http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu"/>
     <updated>2015-10-17T22:26:44+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/10/17/lsming-ling-xing-pai-xu</id>
-    <content type="html"><![CDATA[<p>按文件大小降序排列</p>
-
-<pre><code> ls -lSr 
-</code></pre>
-
-<p>查看当前电脑上硬盘的使用情况</p>
-
-<pre><code>df -lh
-</code></pre>
-
-<p>这是按兆（M）来排序</p>
-
-<pre><code> du -sh * |sort -rm
-</code></pre>
-
-<p>选出排在前面的10个</p>
-
-<pre><code>du -sh * | sort -rm | head
-</code></pre>
-
-<p>选出排在后面的10个</p>
-
-<pre><code> du -sh * | sort -rm | tail
-</code></pre>
+    <content type="html"><![CDATA[<ul>
+  <li>
+    <p>按文件大小降序排列  <code>ls -lSr </code></p>
+  </li>
+  <li>
+    <p>查看当前电脑上硬盘的使用情况 <code>df -lh</code></p>
+  </li>
+  <li>
+    <p>这是按兆（M）来排序 <code>du -sh * |sort -rm</code></p>
+  </li>
+  <li>
+    <p>选出排在前面的10个 <code>du -sh * | sort -rm | head</code></p>
+  </li>
+  <li>
+    <p>选出排在后面的10个  <code>du -sh * | sort -rm | tail</code></p>
+  </li>
+</ul>
 
 ]]></content>
   </entry>

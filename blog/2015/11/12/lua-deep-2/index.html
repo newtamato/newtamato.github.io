@@ -1,41 +1,94 @@
 
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta charset="utf-8">
-	<title>Lua脚本在C++下的舞步（二） | 番茄手册</title>
+  <meta charset="utf-8">
+  <title>Lua脚本在C++下的舞步（二） - 番茄手册</title>
+  <meta name="author" content="newtomato">
 
-	<meta name="author" content="newtomato">
-	
-	<meta name="description" content="番茄手册 12 Nov 2015 Lua脚本在C++下的舞步（二） 转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的， &hellip;">
+  
+  <meta name="description" content="转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂， &hellip;">
+  
 
-	<meta name="HandheldFriendly" content="True" />
-	<meta name="MobileOptimized" content="320" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-	<link rel="canonical" href="">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2015/11/12/lua-deep-2">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
 </head>
 
-
-<body class="post-template">
-  <main class="content" role="main"><article class="post">
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
   
-	<header class="post-header">
-		<a id="blog-logo" href="/">番茄手册</a>
-	</header>
-	<span class="post-meta">12 Nov 2015</span>
-	<h1 class="post-title">Lua脚本在C++下的舞步（二）</h1>
+</hgroup>
 
-	<section class="post-content">
-		<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Lua脚本在C++下的舞步（二）</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-12T21:47:58+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
 
 <p>上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂，就不会有人使用了。 <br />
 下面，我要强调一下，Lua的栈的一些概念，因为这个确实很重要，你会经常用到。熟练使用Lua，最重要的就是要时刻知道什么时候栈里面的数据是什么顺序，都是什么。如果你能熟练知道这些，实际你已经是Lua运用的高手了。</p>
@@ -808,72 +861,198 @@ lua_settop(m_pState, -1-ParamOut.GetCount());这句话是不是有些意思，�
 <p>弹出一个参数并赋值。pParam-&gt;SetData(tolua_tousertype(m_pState, nIndex, NULL), -1);这句话同样，我在下一讲中详细介绍。 <br />
 呵呵，好了，我们又进了一步，我们可以用这个函数绑定任意一个Lua函数格式。而代码不用多写，懒蛋的目的达到了。 <br />
 呵呵，这一讲主要是介绍了一些基本知识，或许有点多余，但是我觉得是必要的，在下一讲中，我讲开始详细介绍如何绑定一个C++对象给Lua，并让Lua对其修改。然后返回结果。休息一下，休息一下先。</p>
-
-	</section>
-
-  <footer class="post-footer">
-  <section class="author">
-    <h4>newtomato</h4>
-    <p></p>
-  </section>
-  <section class="share">
-    <h4>Share this post</h4>
-    <a class="icon-twitter" href="http://twitter.com/share?text=Lua脚本在C++下的舞步（二）&amp;url=http://www.newtomato.me/blog/2015/11/12/lua-deep-2" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-      <span class="hidden">Twitter</span>
-    </a>
-    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2015/11/12/lua-deep-2" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-      <span class="hidden">Facebook</span>
-    </a>
-    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2015/11/12/lua-deep-2" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-      <span class="hidden">Google+</span>
-    </a>
-  </section>
-</footer>
-  <hr>
-  
-    <div class="share">
-	
-	   <!-- UY BEGIN -->
-<div id="uyan_frame"></div>
-<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
-<!-- UY END -->
-
-	
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-12T21:47:58+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/c-plus-plus/'>c++</a>, <a class='category' href='/blog/categories/lua/'>lua</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2015/11/12/lua-deep-2" data-via="" data-counturl="http://www.newtomato.me/blog/2015/11/12/lua-deep-2" >Tweet</a>
   
   
-</article></main>
-  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/11/12/lua-deep" title="Previous Post: Lua脚本在C++下的舞步(入门指引)（转）">&laquo; Lua脚本在C++下的舞步(入门指引)（转）</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/11/12/lua-deep-3" title="Next Post: Lua脚本在C++下的舞步（三）">Lua脚本在C++下的舞步（三） &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">万圣节上线纪念</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">搭建ipv6环境和问题记录</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (3)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (3)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (8)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
+
+ </ul>
+</section>
 
 
-<div class="inner">
 
 
+  
+</aside>
 
 
-
-
-
-
-
-<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
-
-<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
-
-<p>
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
   Copyright &copy; 2016 - newtomato -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
-
-</div>
 </footer>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
+  
 
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
 
 
 

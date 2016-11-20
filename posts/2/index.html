@@ -1,61 +1,190 @@
 
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta charset="utf-8">
-	<title>番茄手册</title>
+  <meta charset="utf-8">
+  <title>番茄手册</title>
+  <meta name="author" content="newtomato">
 
-	<meta name="author" content="newtomato">
-	
-	<meta name="description" content="18 Jul 2016 Cocos2dx 增加Google移动广告 Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。 但是AnySDK是一个大而全的东西，而我们只需要广告接入这一小块儿的东西。同时， &hellip;">
+  
+  <meta name="description" content="上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。 当然，使用FB的SDK，同样也需要翻墙。 首先我们先到FB的官方网站上面注册自己的应用。
+然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。 &hellip;">
+  
 
-	<meta name="HandheldFriendly" content="True" />
-	<meta name="MobileOptimized" content="320" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-	<link rel="canonical" href="">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+  <link rel="canonical" href="http://www.newtomato.me/posts/2/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
 </head>
 
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
+  
+</hgroup>
 
-<body class="home-template">
-  <header id="site-head">
-  <div class="vertical">
-    <div id="site-head-content" class="inner">
-      <h1 class="blog-title"><a class="no-rollover" href="/">番茄手册</a></h1>
-      <h2 class="blog-description"></h2>
-    </div>
-  </div>
 </header>
-  <main class="content" role="main">
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
     
+      <h1 class="entry-title"><a href="/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie">整合FB广告步骤总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
 
 
 
   
-    <article class="post">
+
+
+<time datetime="2016-07-30T12:09:50+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。</p>
+
+<p>当然，使用FB的SDK，同样也需要翻墙。</p>
+
+<p>首先我们先到FB的官方网站上面注册自己的应用。<br />
+然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。<br />
+最后能够得到一个placementId，这个是我们最终需要用到的东西。<br />
+然后开始集成 Facebook Audience Network 的SDK。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
       
-	
-		
-	
-	<header class="post-header">
-		<span class="post-meta">18 Jul 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/07/18/zheng-he-google-ads">
-			
-				Cocos2dx 增加Google移动广告</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。<br />
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/07/27/diao-yong-man-wei-kai-fa-api">调用漫威开发API</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-07-27T16:03:31+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>无意间看到漫威原来也提供了开放API接口。真是让我惊喜意外。<br />
+简单了看了一下他们的文档，看样子很简单就能够调用。不需要额外的登录和授权。<br />
+API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
+请求结构文档<a href="http://developer.marvel.com/documentation/generalinfo">在此</a></p>
+
+<p>因此要调用他们接口，需要提供如下三个参数即可<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/27/diao-yong-man-wei-kai-fa-api">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/07/18/zheng-he-google-ads">Cocos2dx 增加Google移动广告</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-07-18T22:13:43+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-any.jpeg" alt="any" /></p>
 
 <p>但是AnySDK是一个大而全的东西，而我们只需要广告接入这一小块儿的东西。同时，我们的cocos2dx的版本是2.2.6，相对于触控的3.18，已经有很大差别。</p>
@@ -67,89 +196,169 @@
   <li>还有热心的同学贴出了更详细的步骤<a href="http://www.cnblogs.com/qianyuming/p/5023018.html">cocos2dx-3.9 集成admob</a>。</li>
   <li>
     <p><a href="https://firebase.google.com/docs/admob/ios/quick-start?hl=zh-cn">入门基础指导</a><br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/18/zheng-he-google-ads">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/07/10/array-sort">排序算法总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">10 Jul 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/07/10/array-sort">
-			
-				排序算法总结</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>排序算法对开发同学而言是一个基本的技能，看似简单，但是不简单。许多成熟的精炼算法都凝聚了前人的智慧。早期工作的时候，对之不明所以。随着工作经验的累积发觉这种基础的打磨确实是不可缺少的。因此整理一下对自己掌握和常用的算法，避免之后忘记。以后常常阅读，温习知新。</p>
 
 
-	</section>
+<time datetime="2016-07-10T22:06:13+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>排序算法对开发同学而言是一个基本的技能，看似简单，但是不简单。许多成熟的精炼算法都凝聚了前人的智慧。早期工作的时候，对之不明所以。随着工作经验的累积发觉这种基础的打磨确实是不可缺少的。因此整理一下对自己掌握和常用的算法，避免之后忘记。以后常常阅读，温习知新。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/10/array-sort">阅读全文&rarr;</a>
+    </footer>
+  
+
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/19/dong-hua-gong-ju-zong-jie">Cocos2dx动画制作的方式总结整理</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">19 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/19/dong-hua-gong-ju-zong-jie">
-			
-				Cocos2dx动画制作的方式总结整理</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<h1 id="fhttp7xuepccom1z0glbclouddncom2016-06-19-fljpg"><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-19-fl.jpg" alt="f" /></h1>
+
+
+<time datetime="2016-06-19T20:38:04+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h1 id="fhttp7xuepccom1z0glbclouddncom2016-06-19-fljpg"><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-19-fl.jpg" alt="f" /></h1>
 
 <p>制作动画是一个前端工程师的基本功，并且有的时候需要通过代码的编写来实现一些比较复杂的展示。那么是否有一个更好一点的方式，最好能够让更擅长的人完成这样的工作，比如美术工作者。让工程师只负责逻辑就行了呢？我相信是有的。但是在达到这条路之前，我们先将自己常用的方式先列举一下。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/19/dong-hua-gong-ju-zong-jie">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie">节省开发时间的几种方案总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">09 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie">
-			
-				节省开发时间的几种方案总结</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>我们框架使用的是cocos2d-x。它支持ios和Android的开发。传统的开发，肯定是ios使用xcode，Android使用eclipse。eclipse同时还要配置一些模拟器。如果环境搭配的好，并且配置的电脑性能高，运行起来是可以接受的。但是我们的环境略微艰苦一点。使用Mac Mini，启动xcode很慢，更别提启动eclipse了。更是慢上加慢。为此浪费了我们不少时间。并且一直在想怎么样能够缩减开发时间。最后功夫不负有心人吧。找到了几种方法。分享出来给大家，希望也能解决你遇到这个问题。<br />
 
-	</section>
+
+<time datetime="2016-06-09T14:31:39+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们框架使用的是cocos2d-x。它支持ios和Android的开发。传统的开发，肯定是ios使用xcode，Android使用eclipse。eclipse同时还要配置一些模拟器。如果环境搭配的好，并且配置的电脑性能高，运行起来是可以接受的。但是我们的环境略微艰苦一点。使用Mac Mini，启动xcode很慢，更别提启动eclipse了。更是慢上加慢。为此浪费了我们不少时间。并且一直在想怎么样能够缩减开发时间。最后功夫不负有心人吧。找到了几种方法。分享出来给大家，希望也能解决你遇到这个问题。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie">阅读全文&rarr;</a>
+    </footer>
+  
+
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/08/hai-ma-mo-ni-qi">在海马模拟器上运行并测试游戏</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">08 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/08/hai-ma-mo-ni-qi">
-			
-				在海马模拟器上运行并测试游戏</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>海马模拟器是我现阶段用过的比较快速稳定的模拟器了。<br />
+
+
+<time datetime="2016-06-08T16:34:12+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>海马模拟器是我现阶段用过的比较快速稳定的模拟器了。<br />
 且能够满足我们日常的开发需求</p>
 
 <ol>
@@ -157,26 +366,46 @@
   <li>取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。</li>
 </ol>
 
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/08/hai-ma-mo-ni-qi">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/07/lua-tablede-keng">记录Lua中排序的一种坑</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">07 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/07/lua-tablede-keng">
-			
-				记录Lua中排序的一种坑</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。<br />
+
+
+<time datetime="2016-06-07T20:26:28+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。<br />
 算法都是没有问题的，但是计算出来的结果却总是出现问题。这让我们一点摸不着头脑。<br />
 后来经过严格的多双眼睛的考察，发现，原来是打印出来的配置欺骗了我们。</p>
 
@@ -188,26 +417,46 @@
 </pre></td><td class="code"><pre><code class=""><span class="line">for _,itemConfig in pairs(config) do
 </span><span class="line">	--算法逻辑(itemConfig)
 </span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/07/lua-tablede-keng">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/06/zu-jian-hua-guan-li-shu-ju-he-xiang-guan-zhan-shi">组件化管理数据和相关的展示</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">06 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/06/zu-jian-hua-guan-li-shu-ju-he-xiang-guan-zhan-shi">
-			
-				组件化管理数据和相关的展示</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<h2 id="section">这是个什么东西？</h2>
+
+
+<time datetime="2016-06-06T00:28:50+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="section">这是个什么东西？</h2>
 
 <p>首先，这是我很早就想到的一个想法。只是前期项目工期紧张，只是专注于功能的实现，虽然有想法，但是没有付出实现。<br />
 现在回头来想，大部分功能都有相似的地方，就是数值物品获得和展示的地方，这种地方是完全可以抽象出来做成一个通用的模块。</p>
@@ -218,26 +467,46 @@
 这些基本的东西，在早期的时候，应该是有策划产品那边就已经有了一些定论的。</p>
 
 <p>而这个模块就是解决上述需求。可想而知，一旦完成这个功能，不论多少功能，都只需要调用它即可。省时省力。低碳环保！<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/06/zu-jian-hua-guan-li-shu-ju-he-xiang-guan-zhan-shi">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/06/01/da-jian-typechoji-lu">使用Typecho搭建网站记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">01 Jun 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/06/01/da-jian-typechoji-lu">
-			
-				使用Typecho搭建网站记录</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>早在一年前，使用octpress的时候，就在网上看到过Typecho。<br />
+
+
+<time datetime="2016-06-01T12:30:45+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>早在一年前，使用octpress的时候，就在网上看到过Typecho。<br />
 但是当时查找到的octpress的资料更多一些，于是就没有选择Typecho。今天无意间的看到别人的Typecho网站，真是不错。简洁，清晰。<br />
 相对于Octpress，他具有的优点如下</p>
 
@@ -246,125 +515,162 @@
   <li>集成了许多功能，我们都不用再次配置。比如用户评论。</li>
   <li>提供更多的主题，且很多都是国人自己写的主题。</li>
   <li>维护Typecho的团队是中国人，因此很容易找到解决问题的方法。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/01/da-jian-typechoji-lu">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
-
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">29 May 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/05/29/zi-dong-hua-ce-shi">
-			
-				关于自动化测试的一些思考</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-05-29-%E6%9C%BA%E5%99%A8%E4%BA%BA.jpg" alt="机器人-w300" /></p>
-
-<p>之所以想到自动化测试，是因为想要能够从技术的角度解决一些我们经常的重复性的工作。<br />
-重复性的工作特别多，如果能够有一套合适的工具，比如有一个智能一点的机器人，辅助我们，而我们只要在喝一杯咖啡的时间，回来就能够看到测试的结果，那么能够省去我们不少的精力和时间。</p>
-
-<p>对于游戏开发测试而言，我们经常要做的就是对某个功能不断的测试。比如如下的情况。</p>
-
-<blockquote>
-  <p>购买一个道具。<br />
-点击按钮触发面板弹出，触发相关动画和界面数据的相关初始化操作。此次为一个二次确认面板。<br />
-点击购买。<br />
-开始发出通讯请求。<br />
-然后响应回来。根据服务器发来的数据决定此次操作是否合法。<br />
-如果合法，则弹出相关的面板和动画。<br />
-如果不合法，则也是弹出面板提示用户。</p>
-</blockquote>
-
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">24 May 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/05/24/shen-mi-hai-yu-tong-guan-jie-tu">
-			
-				神秘海域4 通关截图纪念</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-08-a.jpg" alt="IMG_0407" /></p>
-
-<p>最后一战，和雷夫作战，大呼过瘾！</p>
-
-
-	</section>
-
-    </article>
-
-
-<nav class="pagination" role="pagination">
-  
+  <div class="pagination">
     
-
+      <a class="prev" href="3">&larr; Older</a>
     
-      
+    <a href="/blog/archives">Blog Archives</a>
     
-
-    <a class="newer-posts" href="/posts/"> ← Newer Posts </a>
+    <a class="next" href="1">Newer &rarr;</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
   
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">万圣节上线纪念</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">搭建ipv6环境和问题记录</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (3)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (3)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (8)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
 
-  <span class="page-number">
-    Page 2 of 6
-  </span>
+ </ul>
+</section>
+
+
+
 
   
-    <a class="older-posts"
-        href="/posts/3">
-      Older Posts →
-    </a>
-  
-</nav>
+</aside>
 
-  </main>
-  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
-
-
-<div class="inner">
-
-
-
-
-
-
-
-
-
-<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
-
-<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
-
-<p>
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
   Copyright &copy; 2016 - newtomato -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
-
-</div>
 </footer>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
+  
 
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
 
 
 

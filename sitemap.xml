@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong</loc>
+<lastmod>2016-11-20T18:04:13+08:00</lastmod>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong</loc>
+<lastmod>2016-11-20T16:13:41+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian</loc>
 <lastmod>2016-11-01T18:23:34+08:00</lastmod>
 </url>
@@ -431,6 +439,27 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/ping-guo-shen-he-bei-ju/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/obb/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/ccfileutil/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/2/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/3/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/4/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/5/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/6/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

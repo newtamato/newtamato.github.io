@@ -1,108 +1,285 @@
 
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta charset="utf-8">
-	<title>番茄手册</title>
+  <meta charset="utf-8">
+  <title>番茄手册</title>
+  <meta name="author" content="newtomato">
 
-	<meta name="author" content="newtomato">
-	
-	<meta name="description" content="01 Nov 2016 万圣节上线纪念 从去年万圣节开始，我们开始了第一个正式的大更新，到今天已经整整一年。
-正因为此次的紧张仓促的更新，我才发现了我们自身很多问题。这些问题由来已久，就像是我们的老朋友一样自然到我们总是忽视了他，直到他们全部暴露出来，压得我们无法喘息。 小团队就是如此无奈， &hellip;">
+  
+  <meta name="description" content="上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。
+有两种方法可以使用OBB文件。 方法比较 第一种方法，obb文件也是一种ZIP文件，我们可以解压缩obb文件， 第二种方法，直接读取obb文件。getFileDataFromZip这样的方法就可以。 &hellip;">
+  
 
-	<meta name="HandheldFriendly" content="True" />
-	<meta name="MobileOptimized" content="320" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-	<link rel="canonical" href="">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+  <link rel="canonical" href="http://www.newtomato.me/">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
 </head>
 
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
+  
+</hgroup>
 
-<body class="home-template">
-  <header id="site-head">
-  <div class="vertical">
-    <div id="site-head-content" class="inner">
-      <h1 class="blog-title"><a class="no-rollover" href="/">番茄手册</a></h1>
-      <h2 class="blog-description"></h2>
-    </div>
-  </div>
 </header>
-  <main class="content" role="main">
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
+      
+  <header>
     
+      <h1 class="entry-title"><a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
 
 
 
   
-    <article class="post">
+
+
+<time datetime="2016-11-20T18:04:13+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
+有两种方法可以使用OBB文件。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
+
+<h3 id="section">方法比较</h3>
+
+<ul>
+  <li>第一种方法，obb文件也是一种ZIP文件，我们可以解压缩obb文件，</li>
+  <li>第二种方法，直接读取obb文件。<code>getFileDataFromZip</code>这样的方法就可以。</li>
+</ul>
+
+<p>这两种方法各有优缺点。<br />
+第一种方法将文件解压缩到<code>getWritablePath()</code>文件夹下面。然后此路径<code>addSearchPath</code>到搜索路径中，我们不需要修改其他的代码就可以读取了。缺点是我们需要有一个解压缩的过程。尤其是obb过大的时候，解压缩耗费的时间也会很长。另外解压缩之后，请不要删除obb文件，否则下次进入，又要重新下载。另外这种方式还破坏了obb的加密性。另外这种方法是可行的，但Google并不推荐这种方式。<br />
+第二种方式则需要修改部分c++代码。</p>
+
+<p>因此我采用了第二种方法，对CCFileUtil做了一些修改。（主要说一下除了音效音乐之外的使用。）<br />
+CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAndroid.cpp文件。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
       
-	
-		
-	
-	<header class="post-header">
-		<span class="post-meta">01 Nov 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">
-			
-				万圣节上线纪念</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-01-1348470031_5209.jpg" alt="1348470031_5209-w395" /></p>
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-11-20T16:13:41+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
+
+<p>我们提交应用到Google Store的时候，Google要求应用的大小不能够超过100M，那么超过100M怎么办呢？<br />
+那就用到了本章将要讲的东西<strong>OBB</strong>（扩展二进制文件）。</p>
+
+<p>OBB文件，你可以看成是一个ZIP文件。我们提交母包APK的时候，在界面上也有提价扩展文件的地方。假设我们的母包APK是100M，OBB扩展是100M，用户在Google Store上看到或者下载的大小将是二者之和。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">万圣节上线纪念</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-11-01T18:23:34+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-01-1348470031_5209.jpg" alt="1348470031_5209-w395" /></p>
 
 <p>从去年万圣节开始，我们开始了第一个正式的大更新，到今天已经整整一年。<br />
 正因为此次的紧张仓促的更新，我才发现了我们自身很多问题。这些问题由来已久，就像是我们的老朋友一样自然到我们总是忽视了他，直到他们全部暴露出来，压得我们无法喘息。</p>
 
 <p>小团队就是如此无奈，顾得了这边，顾不了那边，想要靠着流程上来保证每次更新能保质保量。但实际上本质上还是需要靠人。负责任有态度的人。即使是大的公司，螺丝钉螺丝帽如果不靠谱带来的问题也是严重的。而流程能够明确职责。让彼此轻松一些。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">23 Oct 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">
-			
-				支付宝微信接入</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
 
 
-	</section>
+<time datetime="2016-10-23T14:28:52+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">阅读全文&rarr;</a>
+    </footer>
+  
+
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">搭建ipv6环境和问题记录</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">18 Sep 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">
-			
-				搭建ipv6环境和问题记录</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742018443262.png" alt="" /><br />
+
+
+<time datetime="2016-09-18T20:15:26+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742018443262.png" alt="" /><br />
 自从16年6月份开始，苹果要求提交的应用一定要支持ipv6。ipv6是做什么用呢？和ipv4有什么区别？<br />
 其实这个教科书上已经和我们解释过了，只是这一天来得太快。<br />
 ipv4的是32位长度，而ipv6是128位，是ipv4的4倍。能够大大的解决ip地址不够用的问题。<br />
@@ -113,26 +290,46 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 同时将我们项目中那些用ipv4的网络框架改为支持两种协议。</p>
 
 <p>我分享这篇文章主要介绍怎么搭建一个ipv6的网络。我们在这个地方摔进了个大深坑。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">快速打包测试提交苹果审核的流程</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">18 Sep 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">
-			
-				快速打包测试提交苹果审核的流程</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<blockquote>
+
+
+<time datetime="2016-09-18T17:22:24+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote>
   <p>天下武功，唯快不破。加快时间是制胜王道。</p>
 </blockquote>
 
@@ -144,203 +341,333 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   <li>加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同，小的项目会很快，大的项目则慢的多。</li>
   <li>打包ipa或者apk文件。此时依赖于项目的复杂度，有依赖的项目库也会重新build，不修改依赖库，也就是使用缓存的build文件会加快速度。一般需要30分钟左右。</li>
   <li>上传ipa或者apk文件。这个过程依赖网络速度。我们网络上传速度是100~200k/s的速度，一般需要20分钟左右。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/17/stack-packzhi-zuo">Stack Pack制作</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">17 Sep 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/09/17/stack-packzhi-zuo">
-			
-				Stack Pack制作</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<h3 id="section">创建方法</h3>
+
+
+<time datetime="2016-09-17T21:49:19+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3 id="section">创建方法</h3>
 
 <p>IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。</p>
 
 <p>首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码，称之为sticker pack，另外一种可以编写代码，调用一些类似支付的接口的API，称之为iMessage app，他们都可以作为应用的扩展，也可以独立成为一个应用。因此有两种不同的创建方式。如下图所示：<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/09/17/stack-packzhi-zuo">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/11/pythonji-ben-shi-yong">Python基本使用</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">11 Sep 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/09/11/pythonji-ben-shi-yong">
-			
-				Python基本使用</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p><strong>Python</strong>是一门很容易掌握的语言，简单的语法强大的功能，在很多地方都视他为最高效的语言，尤其是在处理数据和文本上面，真的是帮了我们大忙。比如讲产品经理那里过来的文案导出成localizaiton文件，或者将他们的Excel表格导出成json，xml等配置文件，再将我们的数据信息导成他们看的懂得excel表格。<br />
+
+
+<time datetime="2016-09-11T19:15:05+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><strong>Python</strong>是一门很容易掌握的语言，简单的语法强大的功能，在很多地方都视他为最高效的语言，尤其是在处理数据和文本上面，真的是帮了我们大忙。比如讲产品经理那里过来的文案导出成localizaiton文件，或者将他们的Excel表格导出成json，xml等配置文件，再将我们的数据信息导成他们看的懂得excel表格。<br />
 如下的部分是我在团队内部（针对有部分编程语言基础的同学）做的关于Python的分享，也算是对自己使用Python做一个总结吧。</p>
 
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/09/11/pythonji-ben-shi-yong">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">Android In-app-billing 接入- 问题总结</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">31 Aug 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">
-			
-				Android In-app-billing 接入- 问题总结</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<h2 id="section">准备过程</h2>
+
+
+<time datetime="2016-08-31T16:28:48+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="section">准备过程</h2>
 <p>接入Google支付之前，你要预先准备如下几件事情。</p>
 
 <ol>
   <li>准备一个google开发者账号，绑定信用卡，在花费20美金。否则进入不了Google Play Developer Console。</li>
   <li>接下来，如果你身在大陆地区，那就你要学会翻墙。同时找一个没被阉割的android手机，这比较难，那就在已有的手机里面安装Google play store和Google Play Service。百度出来的不靠谱，因此最好能够先翻墙，然后google搜索上面两个安装包，安装即可。Android上的翻墙软件，推荐影梭，<a href="http://gjsq.me/1438224">GreenVPN</a>,<a href="http://itxs.co/s/14ff19gw">土行孙</a>。翻墙就祝各位好运了。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker">游戏引擎记录 - GameMaker</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">28 Aug 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker">
-			
-				游戏引擎记录 - GameMaker</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>GameMaker是一款制作2D游戏的引擎，支持跨平台发布游戏，Android，IOS，Win，Xbox，PS等。现在已经支持直接将游戏发布导出html5格式。1999 年 11 月发布了首个公开版本。早期是免费，4.3版本之后成为收费版本。</p>
+
+
+<time datetime="2016-08-28T19:17:58+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>GameMaker是一款制作2D游戏的引擎，支持跨平台发布游戏，Android，IOS，Win，Xbox，PS等。现在已经支持直接将游戏发布导出html5格式。1999 年 11 月发布了首个公开版本。早期是免费，4.3版本之后成为收费版本。</p>
 
 <p>它提供自己的开发编辑器 Game Maker Studio和开发语言GML，语法简单。有1000个函数左右，能够满足所有的游戏需求。官方网站提供了几个简单的游戏demo，每个不过百行代码。极其简单，易于上手。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker">阅读全文&rarr;</a>
+    </footer>
+  
 
-	</section>
 
     </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="2">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+  </div>
+</div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">万圣节上线纪念</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">搭建ipv6环境和问题记录</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (3)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (3)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (8)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
+
+ </ul>
+</section>
+
+
+
 
   
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">30 Jul 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie">
-			
-				整合FB广告步骤总结</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。</p>
+</aside>
 
-<p>当然，使用FB的SDK，同样也需要翻墙。</p>
-
-<p>首先我们先到FB的官方网站上面注册自己的应用。<br />
-然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。<br />
-最后能够得到一个placementId，这个是我们最终需要用到的东西。<br />
-然后开始集成 Facebook Audience Network 的SDK。<br />
-
-	</section>
-
-    </article>
-
-  
-    <article class="post">
-      
-	
-	<header class="post-header">
-		<span class="post-meta">27 Jul 2016</span>
-		<h2 class="post-title">
-			
-			<a href="/blog/2016/07/27/diao-yong-man-wei-kai-fa-api">
-			
-				调用漫威开发API</a>
-		</h2>
-	</header>
-	<section class="post-excerpt">
-		<p>无意间看到漫威原来也提供了开放API接口。真是让我惊喜意外。<br />
-简单了看了一下他们的文档，看样子很简单就能够调用。不需要额外的登录和授权。<br />
-API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
-请求结构文档<a href="http://developer.marvel.com/documentation/generalinfo">在此</a></p>
-
-<p>因此要调用他们接口，需要提供如下三个参数即可<br />
-
-	</section>
-
-    </article>
-
-
-<nav class="pagination" role="pagination">
-  
-
-  <span class="page-number">
-    Page 1 of 6
-  </span>
-
-  
-    <a class="older-posts"
-        href="/posts/2">
-      Older Posts →
-    </a>
-  
-</nav>
-
-  </main>
-  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
-
-
-<div class="inner">
-
-
-
-
-
-
-
-
-
-<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
-
-<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
-
-<p>
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
   Copyright &copy; 2016 - newtomato -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
-
-</div>
 </footer>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
+  
 
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
 
 
 

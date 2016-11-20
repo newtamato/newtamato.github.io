@@ -1,42 +1,95 @@
 
-<!DOCTYPE HTML>
-<html>
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
-	<meta http-equiv="Content-Type" content="text/html" charset="UTF-8" />
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<meta charset="utf-8">
-	<title>GIT常用方法 | 番茄手册</title>
+  <meta charset="utf-8">
+  <title>GIT常用方法 - 番茄手册</title>
+  <meta name="author" content="newtomato">
 
-	<meta name="author" content="newtomato">
-	
-	<meta name="description" content="番茄手册 30 Oct 2015 GIT常用方法 使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
-简单地介绍一下GIT的工作流程 首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。 1 git init &hellip;">
+  
+  <meta name="description" content="使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
+简单地介绍一下GIT的工作流程 首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。 1 git init 然后新增一个文件。随便写点什么，比如readMe 1 &hellip;">
+  
 
-	<meta name="HandheldFriendly" content="True" />
-	<meta name="MobileOptimized" content="320" />
-	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-	<link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-	<link rel="canonical" href="">
-	<link href="/favicon.png" rel="shortcut icon">
-	<link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Droid+Serif:400,700,400italic|Open+Sans:700,400" />
-	<link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-	<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/styles/.min.css" />
-	<!--[if lt IE 9]><script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2015/10/30/git-basic">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
 </head>
 
-
-<body class="post-template">
-  <main class="content" role="main"><article class="post">
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
   
-	<header class="post-header">
-		<a id="blog-logo" href="/">番茄手册</a>
-	</header>
-	<span class="post-meta">30 Oct 2015</span>
-	<h1 class="post-title">GIT常用方法</h1>
+</hgroup>
 
-	<section class="post-content">
-		<p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">GIT常用方法</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-30T10:58:35+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
 简单地介绍一下GIT的工作流程<br />
 <!--more--><br />
 首先，创建我们自己的代码仓库。前提是我们自己的电脑上已经安装过了git。</p>
@@ -80,35 +133,45 @@
 </span><span class="line"><span class="n">git</span> <span class="n">push</span> <span class="o">-</span><span class="n">u</span> <span class="n">origin</span> <span class="n">master</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p>那么接下来我们还能够做什么呢？我们能够做更多地事情。<br />
-&gt; 创建分支</p>
+<p>那么接下来我们还能够做什么呢？我们能够做更多地事情。</p>
+
+<ul>
+  <li>创建分支</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">b</span> <span class="n">new_branch_name</span> <span class="n">master</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>以master为准创建一个分支，名字是new_branch_name<br />
-&gt; 删除分支</p>
+<p>以master为准创建一个分支，名字是new_branch_name</p>
+
+<ul>
+  <li>删除分支</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
 </pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">d</span>  <span class="n">new_branch_name</span>
-</span><span class="line"><span class="c">#彻底删除</span>
-</span><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">D</span>  <span class="n">new_branch_name</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
-<blockquote>
-  <p>分支重新命名</p>
-</blockquote>
+
+<ul>
+  <li>彻底删除</li>
+</ul>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">branch</span> <span class="o">-</span><span class="n">D</span>  <span class="n">new_branch_name</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<ul>
+  <li>分支重新命名，将oldbranch改名为newbranch</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="python"><span class="line"> <span class="n">git</span> <span class="n">branch</span> <span class="p">(</span><span class="o">-</span><span class="n">m</span> <span class="o">|</span> <span class="o">-</span><span class="n">M</span><span class="p">)</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">oldbranch</span><span class="o">&gt;</span><span class="p">]</span> <span class="o">&lt;</span><span class="n">newbranch</span><span class="o">&gt;</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>将oldbranch改名为newbranch</p>
 
-<blockquote>
-  <p>提交代码<br />
-我们在自己的工作区，写了部分的代码之后，需要提交。但是提交有两种含义。一种是本地提交。一种是远端提交。本地提交只有自己看得见。但是远端提交则就是提到了服务器上。大家都可以看得到。</p>
-</blockquote>
+<ul>
+  <li>提交代码<br />
+我们在自己的工作区，写了部分的代码之后，需要提交。但是提交有两种含义。一种是本地提交。一种是远端提交。本地提交只有自己看得见。但是远端提交则就是提到了服务器上。大家都可以看得到。</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
@@ -122,10 +185,10 @@
 
 <p>git commit实现的就是本地提交。git push实现的就是远端提交。</p>
 
-<blockquote>
-  <p>更新仓库<br />
-更新仓库就是将远端的东西都拿下来。简单地命令如下</p>
-</blockquote>
+<ul>
+  <li>更新仓库<br />
+更新仓库就是将远端的东西都拿下来。简单地命令如下</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">pull</span>
@@ -148,9 +211,9 @@
 
 <p>merge和rebase的不同之处在于，rebase是new_branch_name的本地提交，以远端仓库的最后一次提交为准，挨个的增长上去。提交就显得很有序。</p>
 
-<blockquote>
-  <p>检查提交记录</p>
-</blockquote>
+<ul>
+  <li>检查提交记录</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">log</span> <span class="o">--</span><span class="n">graph</span> <span class="o">--</span><span class="n">pretty</span><span class="o">=</span><span class="n">format</span><span class="p">:</span><span class="s">&#39;%Cred</span><span class="si">%h%</span><span class="s">Creset -%C(yellow)</span><span class="si">%d</span><span class="s">%Creset </span><span class="si">%s</span><span class="s"> %Cgreen(</span><span class="si">%c</span><span class="s">r)%Creset&#39;</span> <span class="o">--</span><span class="n">abbrev</span><span class="o">-</span><span class="n">commit</span> <span class="o">--</span><span class="n">date</span><span class="o">=</span><span class="n">relative</span> <span class="o">--</span><span class="n">name</span><span class="o">-</span><span class="n">status</span>
@@ -159,10 +222,10 @@
 <p>我们可以通过<code>gitk&amp;</code> 的方式查看文件的日志。有些时候我们也可以通过命令行更为直观的看到提交日志。<br />
 如同上面的命令。在命令行中直接回车，你会看到意外地惊喜。</p>
 
-<blockquote>
-  <p>修改提交记录<br />
-这里的修改指的是提交到本地仓库没有提交到远端。如果已经提交到了远端，一般是改不了的。</p>
-</blockquote>
+<ul>
+  <li>修改提交记录<br />
+这里的修改指的是提交到本地仓库没有提交到远端。如果已经提交到了远端，一般是改不了的。</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
@@ -185,35 +248,34 @@
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>上面的命令可以讲从head到第head-n次的提交修改进行修改。比如修改commit的信息和将几个提交合并在一次。</p>
 
-<blockquote>
-  <p>git补丁的创建及应用<br />
-创建补丁的方式有两种，一个是git diff，另一个git format-patch</p>
-</blockquote>
-
-<p>git format-patch的命令方法:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#将当前分支超前master的commit做成补丁</span>
-</span><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">-</span><span class="n">M</span> <span class="n">master</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#hashcode之前n个提交做成补丁，hashcode不写，默认是head</span>
-</span><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="err">–</span><span class="n">n</span> <span class="n">hashcode</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#检查补丁是否可以成功打上</span>
-</span><span class="line"><span class="n">git</span> <span class="nb">apply</span> <span class="o">--</span><span class="n">check</span> <span class="mo">0001</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+<ul>
+  <li>git补丁的创建及应用<br />
+创建补丁的方式有两种，一个是<code>git diff</code>，另一个<code>git format-patch </code><br />
+<code>git format-patch</code>的命令方法:</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
 <span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#开始打补丁</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="c">#将当前分支超前master的commit做成补丁</span>
+</span><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="o">-</span><span class="n">M</span> <span class="n">master</span>
+</span><span class="line">
+</span><span class="line"><span class="c">#hashcode之前n个提交做成补丁，hashcode不写，默认是head</span>
+</span><span class="line"><span class="n">git</span> <span class="n">format</span><span class="o">-</span><span class="n">patch</span> <span class="err">–</span><span class="n">n</span> <span class="n">hashcode</span>
+</span><span class="line">
+</span><span class="line"><span class="c">#检查补丁是否可以成功打上</span>
+</span><span class="line"><span class="n">git</span> <span class="nb">apply</span> <span class="o">--</span><span class="n">check</span> <span class="mo">0001</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
+</span><span class="line">
+</span><span class="line"><span class="c">#开始打补丁</span>
 </span><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="mo">0001</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
 </span><span class="line"><span class="n">git</span> <span class="n">am</span> <span class="mo">0002</span><span class="o">-</span><span class="n">xxxx</span><span class="o">.</span><span class="n">patch</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
@@ -226,72 +288,198 @@
 </span><span class="line"><span class="n">git</span> <span class="nb">apply</span> <span class="n">diff</span><span class="o">.</span><span class="n">patch</span>
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-
-	</section>
-
-  <footer class="post-footer">
-  <section class="author">
-    <h4>newtomato</h4>
-    <p></p>
-  </section>
-  <section class="share">
-    <h4>Share this post</h4>
-    <a class="icon-twitter" href="http://twitter.com/share?text=GIT常用方法&amp;url=http://www.newtomato.me/blog/2015/10/30/git-basic" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-      <span class="hidden">Twitter</span>
-    </a>
-    <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2015/10/30/git-basic" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-      <span class="hidden">Facebook</span>
-    </a>
-    <a class="icon-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2015/10/30/git-basic" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-      <span class="hidden">Google+</span>
-    </a>
-  </section>
-</footer>
-  <hr>
-  
-    <div class="share">
-	
-	   <!-- UY BEGIN -->
-<div id="uyan_frame"></div>
-<script type="text/javascript" src="http://v2.uyan.cc/code/uyan.js?uid=2100653"></script>
-<!-- UY END -->
-
-	
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-30T10:58:35+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/basic/'>basic</a>, <a class='category' href='/blog/categories/git/'>git</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2015/10/30/git-basic" data-via="" data-counturl="http://www.newtomato.me/blog/2015/10/30/git-basic" >Tweet</a>
   
   
-</article></main>
-  <footer class="site-footer"><a class="subscribe icon-feed" href="http://www.newtomato.me/atom.xml"><span class="tooltip">Subscribe!</span></a>
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2015/10/17/genymotionde-an-zhuang" title="Previous Post: GenyMotion的安装">&laquo; GenyMotion的安装</a>
+      
+      
+        <a class="basic-alignment right" href="/blog/2015/11/01/lua-basic" title="Next Post: lua基础知识-语法">lua基础知识-语法 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">万圣节上线纪念</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">搭建ipv6环境和问题记录</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (3)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (3)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (8)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
+
+ </ul>
+</section>
 
 
-<div class="inner">
 
 
+  
+</aside>
 
 
-
-
-
-
-
-<section class="copyright">All content copyright <a href="/">newtomato</a> © 2016 • All rights reserved.</section>
-
-<section class="poweredby">Casper theme by <a class="icon-ghost" href="http://tryghost.org">Ghost</a> &amp; Published with <a href="http://octopress.org">Octopress</a></section>
-
-<p>
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
   Copyright &copy; 2016 - newtomato -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a> and <a href="https://github.com/gluttony/object-octopress-theme">Object</a></span>
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-<script type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? " https://" : " http://");document.write(unescape("%3Cspan id='cnzz_stat_icon_1259207383'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s4.cnzz.com/z_stat.php%3Fid%3D1259207383' type='text/javascript'%3E%3C/script%3E"));</script>
-
-</div>
 </footer>
-  <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.4/highlight.min.js"></script>
-<script>hljs.initHighlightingOnLoad()</script>
+  
 
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
 
 
 

@@ -4,7 +4,7 @@
   <title><![CDATA[分类:git | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-11-01T18:34:51+08:00</updated>
+  <updated>2016-11-20T18:14:47+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -90,30 +90,41 @@ git config --global push.default "matching"
 git push -u origin master
 </code></pre>
 
-<p>那么接下来我们还能够做什么呢？我们能够做更多地事情。<br />
-&gt; 创建分支</p>
+<p>那么接下来我们还能够做什么呢？我们能够做更多地事情。</p>
+
+<ul>
+  <li>创建分支</li>
+</ul>
 
 <pre><code class="language-python">git branch -b new_branch_name master
 </code></pre>
-<p>以master为准创建一个分支，名字是new_branch_name<br />
-&gt; 删除分支</p>
+<p>以master为准创建一个分支，名字是new_branch_name</p>
+
+<ul>
+  <li>删除分支</li>
+</ul>
 
 <pre><code class="language-python">git branch -d  new_branch_name
-#彻底删除
-git branch -D  new_branch_name 
 </code></pre>
-<blockquote>
-  <p>分支重新命名</p>
-</blockquote>
+
+<ul>
+  <li>彻底删除</li>
+</ul>
+
+<pre><code>git branch -D  new_branch_name 
+</code></pre>
+
+<ul>
+  <li>分支重新命名，将oldbranch改名为newbranch</li>
+</ul>
 
 <pre><code class="language-python"> git branch (-m | -M) [&lt;oldbranch&gt;] &lt;newbranch&gt;
 </code></pre>
-<p>将oldbranch改名为newbranch</p>
 
-<blockquote>
-  <p>提交代码<br />
-我们在自己的工作区，写了部分的代码之后，需要提交。但是提交有两种含义。一种是本地提交。一种是远端提交。本地提交只有自己看得见。但是远端提交则就是提到了服务器上。大家都可以看得到。</p>
-</blockquote>
+<ul>
+  <li>提交代码<br />
+我们在自己的工作区，写了部分的代码之后，需要提交。但是提交有两种含义。一种是本地提交。一种是远端提交。本地提交只有自己看得见。但是远端提交则就是提到了服务器上。大家都可以看得到。</li>
+</ul>
 
 <pre><code>#将自己的修改都添加到本地仓库
 git add xxx 
@@ -123,10 +134,10 @@ git push origin new_branch_name
 
 <p>git commit实现的就是本地提交。git push实现的就是远端提交。</p>
 
-<blockquote>
-  <p>更新仓库<br />
-更新仓库就是将远端的东西都拿下来。简单地命令如下</p>
-</blockquote>
+<ul>
+  <li>更新仓库<br />
+更新仓库就是将远端的东西都拿下来。简单地命令如下</li>
+</ul>
 
 <pre><code class="language-python">git pull
 </code></pre>
@@ -144,9 +155,9 @@ git rebase origin/new_branch_name
 
 <p>merge和rebase的不同之处在于，rebase是new_branch_name的本地提交，以远端仓库的最后一次提交为准，挨个的增长上去。提交就显得很有序。</p>
 
-<blockquote>
-  <p>检查提交记录</p>
-</blockquote>
+<ul>
+  <li>检查提交记录</li>
+</ul>
 
 <pre><code class="language-python">git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
 </code></pre>
@@ -154,10 +165,10 @@ git rebase origin/new_branch_name
 <p>我们可以通过<code>gitk&amp;</code> 的方式查看文件的日志。有些时候我们也可以通过命令行更为直观的看到提交日志。<br />
 如同上面的命令。在命令行中直接回车，你会看到意外地惊喜。</p>
 
-<blockquote>
-  <p>修改提交记录<br />
-这里的修改指的是提交到本地仓库没有提交到远端。如果已经提交到了远端，一般是改不了的。</p>
-</blockquote>
+<ul>
+  <li>修改提交记录<br />
+这里的修改指的是提交到本地仓库没有提交到远端。如果已经提交到了远端，一般是改不了的。</li>
+</ul>
 
 <pre><code class="language-python">git rebase -i head~n
 
@@ -172,26 +183,22 @@ git rebase origin/new_branch_name
 </code></pre>
 <p>上面的命令可以讲从head到第head-n次的提交修改进行修改。比如修改commit的信息和将几个提交合并在一次。</p>
 
-<blockquote>
-  <p>git补丁的创建及应用<br />
-创建补丁的方式有两种，一个是git diff，另一个git format-patch</p>
-</blockquote>
-
-<p>git format-patch的命令方法:</p>
+<ul>
+  <li>git补丁的创建及应用<br />
+创建补丁的方式有两种，一个是<code>git diff</code>，另一个<code>git format-patch </code><br />
+<code>git format-patch</code>的命令方法:</li>
+</ul>
 
 <pre><code class="language-python">#将当前分支超前master的commit做成补丁
 git format-patch -M master
-</code></pre>
 
-<pre><code class="language-python">#hashcode之前n个提交做成补丁，hashcode不写，默认是head
+#hashcode之前n个提交做成补丁，hashcode不写，默认是head
 git format-patch –n hashcode  
-</code></pre>
 
-<pre><code class="language-python">#检查补丁是否可以成功打上
+#检查补丁是否可以成功打上
 git apply --check 0001-xxxx.patch
-</code></pre>
 
-<pre><code class="language-python">#开始打补丁
+#开始打补丁
 git am 0001-xxxx.patch
 git am 0002-xxxx.patch
 </code></pre>
@@ -235,28 +242,41 @@ git apply diff.patch
     <link href="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log"/>
     <updated>2015-10-17T22:08:49+08:00</updated>
     <id>http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-log</id>
-    <content type="html"><![CDATA[<pre><code class="language-python">git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
+    <content type="html"><![CDATA[<ul>
+  <li>git 输入部分提交的log日志</li>
+</ul>
+
+<pre><code>git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq 
 </code></pre>
 
-<p>##格式化文件输出</p>
+<ul>
+  <li>格式化文件输出</li>
+</ul>
 
-<pre><code class="language-python">git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
+<pre><code>git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status
 </code></pre>
 
-<p>##将某一个commit之后的提交做成patch</p>
+<ul>
+  <li>将某一个commit之后的提交做成patch</li>
+</ul>
 
-<pre><code class="language-python">git format-patch -M HEAD~1
+<pre><code>git format-patch -M HEAD~1
 </code></pre>
 
-<p>##将patch打到我们的开发分支</p>
+<ul>
+  <li>将patch打到我们的开发分支</li>
+</ul>
 
-<pre><code class="language-python">git am xxx.patch
+<pre><code>git am xxx.patch
 </code></pre>
 
-<p>##vim中格式化json</p>
+<ul>
+  <li>vim中格式化json</li>
+</ul>
 
-<pre><code class="language-python">:%!python -m json.tool       
+<pre><code>:%!python -m json.tool       
 </code></pre>
+
 ]]></content>
   </entry>
   

@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-11-01T18:34:51+08:00</updated>
+  <updated>2016-11-20T18:14:47+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,228 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Cocos2dx和OBB的结合使用]]></title>
+    <link href="http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong"/>
+    <updated>2016-11-20T18:04:13+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong</id>
+    <content type="html"><![CDATA[<p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
+有两种方法可以使用OBB文件。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
+
+<h3 id="section">方法比较</h3>
+
+<ul>
+  <li>第一种方法，obb文件也是一种ZIP文件，我们可以解压缩obb文件，</li>
+  <li>第二种方法，直接读取obb文件。<code>getFileDataFromZip</code>这样的方法就可以。</li>
+</ul>
+
+<p>这两种方法各有优缺点。<br />
+第一种方法将文件解压缩到<code>getWritablePath()</code>文件夹下面。然后此路径<code>addSearchPath</code>到搜索路径中，我们不需要修改其他的代码就可以读取了。缺点是我们需要有一个解压缩的过程。尤其是obb过大的时候，解压缩耗费的时间也会很长。另外解压缩之后，请不要删除obb文件，否则下次进入，又要重新下载。另外这种方式还破坏了obb的加密性。另外这种方法是可行的，但Google并不推荐这种方式。<br />
+第二种方式则需要修改部分c++代码。</p>
+
+<p>因此我采用了第二种方法，对CCFileUtil做了一些修改。（主要说一下除了音效音乐之外的使用。）<br />
+CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAndroid.cpp文件。<br />
+<!--more--><br />
+### 方法梳理</p>
+
+<p>CCFileUtil主要功能是检查一个文件是否存在，能否读取文件的内容。而我们把部分资源文件放到了obb之中，CCFileUtil需要知道这个地方，才能够从那里读取。</p>
+
+<p>在java层，我们知道我们的obb存储的位置是在</p>
+
+<pre><code>	int versionCode = "项目的versionCode"
+	String apkName = Helpers.getExpansionAPKFileName(sContext,true,versionCode);
+	return Helpers.generateSaveFileName(sContext,apkName);
+</code></pre>
+
+<p>通过JNI，将这个路径${obbPath}传递给c++，可以参考<code>CCFileAndroid.cpp</code>里面的<code>getApkPath()</code>函数。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">std::string resourcePath = getApkPath();
+</span><span class="line">s_pZipFile = new ZipFile(resourcePath, "assets/");        </span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>类似s_pZipFile，我们也生成一个${obbZipFile}，用于文件的查找。</p>
+
+<p>然后将此路径<code>addSearchPath</code>到搜索路径中。通过阅读CCFileUtil.cpp文件我们得知检查一个文件的全路径主要是检测<code>isFileExist</code>函数。如果他证明存在此文件，就能获取到全路径。</p>
+
+<pre><code>fullPathForFilename--&gt;getPathForFilename--&gt;getFullPathForDirectoryAndFilename--&gt;isFileExist
+</code></pre>
+
+<p>因此我们修改isFileExist文件，在里面根据文件的路径检查是否在。伪代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">bool CCFileUtilsAndroid::isFileExist(const std::string&amp; strFilePath)
+</span><span class="line">{
+</span><span class="line">	...
+</span><span class="line">    bool bFound = false;
+</span><span class="line">
+</span><span class="line">    if (strFilePath.find(${obbPath}) != std::string::npos)
+</span><span class="line">    {
+</span><span class="line">        if (${obbZipFile} &amp;&amp; ${obbZipFile}-&gt;fileExists(strPath))
+</span><span class="line">        {
+</span><span class="line">            bFound = true;
+</span><span class="line">        } 
+</span><span class="line">    }
+</span><span class="line">	...
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>上面我们把obb文件做成了ZipFile对象，因此在doGetFileData中，就很容易得到文件的内容。伪代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">unsigned char* CCFileUtilsAndroid::doGetFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize, bool forAsync)
+</span><span class="line">{
+</span><span class="line">    unsigned char * pData = 0;
+</span><span class="line">    
+</span><span class="line">...
+</span><span class="line">    string fullPath = fullPathForFilename(pszFileName);
+</span><span class="line">   
+</span><span class="line">    // 获取obb文件
+</span><span class="line">    if (${obbZipFile} &amp;&amp; fullPath.find(${obbPath}) != std::string::npos){
+</span><span class="line">        
+</span><span class="line">        if (forAsync)
+</span><span class="line">        {
+</span><span class="line">            pData = ${obbZipFile}-&gt;getFileData(fullPath.c_str(), pSize, ${obbZipFile}-&gt;_dataThread);
+</span><span class="line">        }
+</span><span class="line">        else
+</span><span class="line">        {
+</span><span class="line">            pData = ${obbZipFile}-&gt;getFileData(fullPath.c_str(), pSize);
+</span><span class="line">        }
+</span><span class="line">    }
+</span><span class="line">    ...
+</span><span class="line">  }
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h3 id="section-1">总结语</h3>
+
+<p>至此我们就能够读取obb里面的内容了。<br />
+我的方法基于将obb看成了ZIP，模仿apk的方式去读取文件。将obb位置放到了搜索路径。ZIP对象存在且能够从里面读取文件，则表明文件存在。就可以读取他了。</p>
+
+<p>这里面设计到JNI传递数据。其实这对于我们只要仿照APK路径传递就可以了。关于JNI具体的实现，还请看下一章节内容。</p>
+
+<p>感谢你的阅读！</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Google Android 扩展文件OBB的使用]]></title>
+    <link href="http://www.newtomato.me/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong"/>
+    <updated>2016-11-20T16:13:41+08:00</updated>
+    <id>http://www.newtomato.me/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong</id>
+    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
+
+<p>我们提交应用到Google Store的时候，Google要求应用的大小不能够超过100M，那么超过100M怎么办呢？<br />
+那就用到了本章将要讲的东西<strong>OBB</strong>（扩展二进制文件）。</p>
+
+<p>OBB文件，你可以看成是一个ZIP文件。我们提交母包APK的时候，在界面上也有提价扩展文件的地方。假设我们的母包APK是100M，OBB扩展是100M，用户在Google Store上看到或者下载的大小将是二者之和。<br />
+<!--more--><br />
+因此一个完整的流程是下载应用，是同时下载母包和OBB，但是Google文档中提到，他们并不保证OBB文件能够100%下载完成。这就需要我们在启动应用之后，程序去检测是否已经正确下载和验证有效性，如果是则可以进入游戏了。如果不是，那么就要重新下载OBB。</p>
+
+<p>为什么要验证OBB的有效性呢？难道下载100%不行么？这是因为OBB安装的位置是暴露给用户的。用户可以打开修改这个文件。因此制作的时候要注意做好加密工作。</p>
+
+<p>Google提供的jobb工具刚好有加密的参数，其参数的使用方法可以参考<a href="https://developer.android.com/studio/command-line/jobb.html">这里</a></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">$ jobb -d /temp/assets/ -o my-app-assets.obb -k secret-key -pn com.my.app.package -pv 11</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>上面提到OBB是暴露给用户的，那么OBB具体是存放在哪里呢？<br />
+在Google文档中提到是在</p>
+
+<p><code>&lt;shared-storage&gt;/Android/obb/&lt;package-name&gt;/&lt;obb-name&gt;.obb</code></p>
+
+<ul>
+  <li>shared-storage 是通过<code>getExternalStorageDirectory()</code>获取的位置</li>
+  <li>package-name是我们的包名，通过函数<code>getPackageName()</code>获得.</li>
+  <li>obb-name则是有自己的命名规范。<code>[main|patch].&lt;expansion-version&gt;.&lt;package-name&gt;.obb</code></li>
+  <li>因为Google能够让我们提交的obb只有两种类型，main和patch。main表示主要的obb包，patch是更新包的意思，例如我们经常更新的部分，可以做成patch，这样下次更新APP的时候，只要提交着一个patch就行了。</li>
+  <li>expansion-version表示版本号，他们我们的AndroidManifest.xml里面的versionCode是一致的。</li>
+  <li>pack-name和上面的解释一致。</li>
+  <li>针对 Android 2.3 及以上版本的 APK，母包要求在100M以内，如果是 Android 2.2 及以下版本则要求在50M以内。</li>
+</ul>
+
+<h3 id="section">开始代码</h3>
+<p>首先需要加入三个依赖库。<br />
+1. <a href="https://developer.android.com/google/play/expansion-files.html#ZipLib">APK Expansion Zip Library</a><br />
+2. <a href="https://developer.android.com/google/play/licensing/index.html">Application Licensing</a><br />
+3. <a href="https://developer.android.com/google/play/expansion-files.html#AboutLibraries">Downloader Library</a></p>
+
+<p>这三个库在<code>android-sdk文件夹/extras/google/</code>下面都有。只要导入到Eclipse或者Android Studio即可！<br />
+导入之后会有部分报错情况，可以检查他们之间彼此依赖关系，清理在重新build即可。</p>
+
+<p>接下来按照Google文档我们要集成DownloadService和BroadcastReceiver等，这一部分代码我们可以直接参考Google的实例工程<code>downloader_sample</code>，他的位置在<code>android-sdk文件夹/extras/google/market_apk_expansion/downloader_sample</code>。我们要做的就是修改如下两个函数</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">public static final String BASE64_PUBLIC_KEY = "YourLVLKey";
+</span><span class="line">// You should also modify this salt
+</span><span class="line">public static final byte[] SALT = new byte[] { 1, 42, -12, -1, 54, 98,
+</span><span class="line">   -100, -12, 43, 2, -8, -4, 9, 5, -106, -107, -33, 45, -1, 84
+</span><span class="line">};</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>BASE64_PUBLIC_KEY是我们创建Google应用的时候，会自动生成的key，SALT则是需要我们修改一下即可使用。</p>
+
+<p>现在我们使用downloader_sample的包名和version生成一个obb文件和apk文件，然后提交。等待生效之后，我们要开始测试。</p>
+
+<h3 id="section-1">如何测试</h3>
+
+<p>按照上面的方法我们做好obb提及到Google开发者平台后，等待beta版本生效之后，就可以在本地测试了。<br />
+复杂的测试方法是，需要我们登录Google Play Store找到beta应用下载测试（前提条件使我们要加入测试组，才能看到这个应用）。</p>
+
+<p>相对简单的方法如下:</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">adb push xxx.obb /Android/obb/${package-name}/
+</span><span class="line">adb install xxx.apk</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>启动我们的应用，检测是obb已经下载，验证obb有效性。downloader_sample的启动界面会提示我们此时已经Success完成。</p>
+
+<p>这两种方式都可以使用，也不必每次都重新提交到Google那里了。此时就可以连着设备直接debug调试了。</p>
+
+<h3 id="section-2">结束语</h3>
+
+<p>走通这个流程中，我们遇到了不少奇怪的问题，比如Google无法验证身份，（检查是否加入了测试组，设备上的Google账号是否正确等，缓存是否清理），比如没有检测到obb文件，（网络是否正常，能否连接到Google play Store等），文件的下载之后大小有问题等。因此建议你们，手里要有一个可以翻墙的VPN才是事半功倍的利器啊。</p>
+
+<p>至此OBB的工作已经完成，站在Google巨人的肩膀上，省去了我们不少力气。下篇文章，我将结合cocos2dx来讲一下怎么使用下载下来的obb文件。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[万圣节上线纪念]]></title>
@@ -1493,106 +1715,6 @@ B关心英雄，那么受到这个事件之后，直接从Player身上拿到最�
 
 <p>从头到尾花费了一下午的时光，不过终于把它搭建起来也真是开心。<br />
 希望这篇文章能够帮到你。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[关于自动化测试的一些思考]]></title>
-    <link href="http://www.newtomato.me/blog/2016/05/29/zi-dong-hua-ce-shi"/>
-    <updated>2016-05-29T17:12:45+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/05/29/zi-dong-hua-ce-shi</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-05-29-%E6%9C%BA%E5%99%A8%E4%BA%BA.jpg" alt="机器人-w300" /></p>
-
-<p>之所以想到自动化测试，是因为想要能够从技术的角度解决一些我们经常的重复性的工作。<br />
-重复性的工作特别多，如果能够有一套合适的工具，比如有一个智能一点的机器人，辅助我们，而我们只要在喝一杯咖啡的时间，回来就能够看到测试的结果，那么能够省去我们不少的精力和时间。</p>
-
-<p>对于游戏开发测试而言，我们经常要做的就是对某个功能不断的测试。比如如下的情况。</p>
-
-<blockquote>
-  <p>购买一个道具。<br />
-点击按钮触发面板弹出，触发相关动画和界面数据的相关初始化操作。此次为一个二次确认面板。<br />
-点击购买。<br />
-开始发出通讯请求。<br />
-然后响应回来。根据服务器发来的数据决定此次操作是否合法。<br />
-如果合法，则弹出相关的面板和动画。<br />
-如果不合法，则也是弹出面板提示用户。</p>
-</blockquote>
-
-<!--more-->
-
-<p>这样的细小的逻辑，经常是功能测试人员所需要检查的。大部分自动测试工具也做不到如此细致的检查。</p>
-
-<h2 id="section">测试工具</h2>
-
-<ol>
-  <li>
-    <p>###按键精灵和AutoTouch<br />
-**	必须使用越狱的苹果手机上面**<br />
- 用过这两个工具的人都差不多知道他们是来做什么的，就是能够录制用户的操作，然后通过回放的功能将操作重新跑一边。这能够满足一些需求，但是要求屏幕上出现固定位置的按钮之类的触发，如果换了位置。那他就不起作用了。<br />
- AutoTouch还能够编写部分lua脚本，通过一些位置信息或者颜色信息等函数来自定义一些逻辑。确保我们触发正确的位置。<br />
- 但是他们都有一个共同的缺点就是，他们要求此次执行的时序之间的时间必须一致。如果本次录制的时候，A点和B点之间触发的时间为1s，下次再回放的时候，机器性能有些许偏差，成了0.8s，那么B点的点击就失效了。这样自动测试也就失败了。<br />
- <strong>同时，这样的工具只能负责点击，而对于具体操作结果是怎么一回事，就无能为力了。</strong><br />
- 比如，我们购买道具，如果支付成功。接下来，我们可能继续购买，但是如果失败，就弹出界面通知。按照录制的操作，此处失败的购买就会导致原先的录制回放失败。</p>
-  </li>
-  <li>
-    <p>###TouchTest Lite<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-05-29-TouchTestLogin.png" alt="TouchTestLogin-w200" /></p>
-
-    <p>他们的官方网站做的视频介绍<a href="https://www.soasta.com/blog/touchtest-lite-part-1/">在此</a>。从视频上面可以看出，他们是将我们的应用的点击事件全部发送到了自己的服务器上面（前提是我们在他们的服务器上面先注册，才能够做测试）。然后通过后台管理，点击录制，收集点击事件。才能做成回放处理。这样有一个好处在于不必越狱手机即可使用。<br />
- 但是这样也依赖于网络请求，如果网络环境差，我们的录制就很有可能失败。<br />
- 不过看到他们这样的产品还提供各种工具和Example，我就忍不住下载下来尝试一番。可惜的是，到目前为止总是出现，设备不匹配的错误。后台认为已经connected了，但是启动应用总是不能成功的录制。十分可惜。</p>
-  </li>
-  <li>
-    <p>图像对比,控件识别<br />
- 在自动化测试中，空间识别是比较重要的，因此记录点击的坐标在不同的分辨率的设备上有的时候是不起作用的，但是如果能够识别空间，那么一切就方便许多。因此会出现类似<strong><a href="http://my.oschina.net/u/940726/blog/103328">White</a></strong>这样的工具。但是这个工作我现在的项目是用不到的。<br />
- 但是对于我们的项目，暂时没有找到合适的控件识别工具。<br />
- 于是对于UI界面上是否正确的测试，我想到的是图像对比，我们事先提供一张正确的图片，然后将结果图片和此张图片进行对比。如果对比成功，那么UI测试就没有问题。<br />
- 这样对我们截图图片的时机就要求很严格。如果有动画，动画时间较长，就需要等待动画截至之后做截屏。然后比较。这样一来，就需要具体时机具体判定了。</p>
-  </li>
-</ol>
-
-<h2 id="section-1">解决方案</h2>
-<p>综合以上的考虑，我能想到解决我们工作需求的自动化测试工具就是一套自己开发的解决方案。<br />
-我们要知道，一次操作的具体返回。成功是什么操作，失败又是什么操作。<br />
-这套解决方案，要能够提供如下的功能</p>
-
-<ol>
-  <li>单纯的录制，单纯的回放，比如购买，成功。失败的情况可以不处理。</li>
-  <li>触发功能。比如点击购买，剩下的事情便交给AI智能的处理。</li>
-</ol>
-
-<p>第一条单纯的录制，是比较简单地，只要把用户的操作都记录下来，如实的播放出来即可。<br />
-第二条就需要特殊处理。</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/a.png" alt="流程图-w400" /></p>
-
-<p>A面板的controller肯定有这两个与控件绑定的函数。<br />
-调用购买确认函数，一定会触发购买是否成功的逻辑函数.<br />
-而这个时候，我们只要再此函数中将各种条件判定做处理，拿到返回结果保存起来。等我们喝完咖啡回来，就能看到明确的展示。对结果做一些可视化的展示，效果更佳。</p>
-
-<p>这需要在代码中增加许多代码，对开发这个功能的程序员便有额外工作。但是这样做有极大的好处，他能让很快检测我们自己的工作是否有疏漏。也能加快测试时间。</p>
-
-<p>其实我们在开发中，还有一些问题需要注意，就是数据的变化，尤其是在和服务器通讯前后。比如此次购买。<br />
-在购买成功前后对会发生变化的数据做一个profile。我们对变化的数据是清楚的，购买一个道具需要50金砖。占用1个背包格子等这些数据变化。然后在购买结束之后，对这些变化的数据做unittest。如果不符合变化，那么就证明此次购买出现了问题。</p>
-
-<p>这样既能保证数据的正确又能够节能人力，很快看到一个清晰的结果。</p>
-
-<p><strong>上述，是我个人一些想法，也正在努力的希望自己能够按照这个思路开发出一套合适我们自己的测试工具。<br />
-我的这套思路其实并没有解决所有问题，比如图像识别，如果真的要做这样的功能，上我上面提到的，需要截取图像的时机正确，并且不能发生变化太多。购买之后，肯定会界面上钱发生变化。物品数量发生变化。如果和要对比的图片钱和物品数量不一样，那本来是正确的也会判定不正确。所以做起来是比较麻烦的。<br />
-所以如果真的有一天，科技的发展到机器人智能时代，我们给他们设定一些程序。通过他们的点击和图像识别能力，辅助我们测试工作。那么我相信这样的自动化测试才是最完美的测试。真心期待那一天的到来。</strong></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[神秘海域4 通关截图纪念]]></title>
-    <link href="http://www.newtomato.me/blog/2016/05/24/shen-mi-hai-yu-tong-guan-jie-tu"/>
-    <updated>2016-05-24T11:40:43+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/05/24/shen-mi-hai-yu-tong-guan-jie-tu</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-08-a.jpg" alt="IMG_0407" /></p>
-
-<p>最后一战，和雷夫作战，大呼过瘾！</p>
 
 ]]></content>
   </entry>
