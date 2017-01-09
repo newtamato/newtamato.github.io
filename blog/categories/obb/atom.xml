@@ -4,7 +4,7 @@
   <title><![CDATA[分类:obb | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/obb/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-11-20T19:34:30+08:00</updated>
+  <updated>2017-01-09T14:42:59+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -156,6 +156,11 @@ s_pZipFile = new ZipFile(resourcePath, "assets/");
 1. <a href="https://developer.android.com/google/play/expansion-files.html#ZipLib">APK Expansion Zip Library</a><br />
 2. <a href="https://developer.android.com/google/play/licensing/index.html">Application Licensing</a><br />
 3. <a href="https://developer.android.com/google/play/expansion-files.html#AboutLibraries">Downloader Library</a></p>
+
+<p>另外，Google的licensing在lollipop会有如下的报错：<br />
+&gt;java.lang.IllegalArgumentException: Service Intent must be explicit: Intent { act=com.android.vending.licensing.ILicensingService }</p>
+
+<p>解决方法：<a href="http://stackoverflow.com/questions/28305125/android-app-crashes-on-lollipop">http://stackoverflow.com/questions/28305125/android-app-crashes-on-lollipop</a></p>
 
 <p>这三个库在<code>android-sdk文件夹/extras/google/</code>下面都有。只要导入到Eclipse或者Android Studio即可！<br />
 导入之后会有部分报错情况，可以检查他们之间彼此依赖关系，清理在重新build即可。</p>

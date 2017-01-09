@@ -127,6 +127,11 @@
 2. <a href="https://developer.android.com/google/play/licensing/index.html">Application Licensing</a><br />
 3. <a href="https://developer.android.com/google/play/expansion-files.html#AboutLibraries">Downloader Library</a></p>
 
+<p>另外，Google的licensing在lollipop会有如下的报错：<br />
+&gt;java.lang.IllegalArgumentException: Service Intent must be explicit: Intent { act=com.android.vending.licensing.ILicensingService }</p>
+
+<p>解决方法：<a href="http://stackoverflow.com/questions/28305125/android-app-crashes-on-lollipop">http://stackoverflow.com/questions/28305125/android-app-crashes-on-lollipop</a></p>
+
 <p>这三个库在<code>android-sdk文件夹/extras/google/</code>下面都有。只要导入到Eclipse或者Android Studio即可！<br />
 导入之后会有部分报错情况，可以检查他们之间彼此依赖关系，清理在重新build即可。</p>
 
@@ -231,6 +236,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">keytool的基本用法以及检查apk签名</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/07/android-facebookdeng-lu-wen-ti">Android facebook登录问题</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2016/11/20/jni">JNI,java和C++之间的桥梁</a>
       </li>
     
@@ -242,14 +255,6 @@
         <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">万圣节上线纪念</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -257,7 +262,7 @@
  <ul id="categories">
   <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
 <li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
-<li class='category'><a href='/blog/categories/android/'>android (3)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (5)</a></li>
 <li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
 <li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
 <li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
@@ -267,6 +272,7 @@
 <li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
 <li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
 <li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
 <li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
 <li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
@@ -274,6 +280,8 @@
 <li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
 <li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
 <li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
+<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
+<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
 <li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
 <li class='category'><a href='/blog/categories/lua/'>lua (8)</a></li>
@@ -340,7 +348,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2016 - newtomato -
+  Copyright &copy; 2017 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

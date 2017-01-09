@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:keystore | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/keystore/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-01-09T14:42:59+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[keytool的基本用法以及检查apk签名]]></title>
+    <link href="http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming"/>
+    <updated>2017-01-09T14:38:22+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming</id>
+    <content type="html"><![CDATA[<p>要导出正式的android的apk，就需要用得到一个keystore的文件。这个文件就是由keytool生成的一个文件。</p>
+
+<p><code>Keytool</code> 是一个JAVA环境下的安全钥匙与证书的管理工具，用于生成一个证书管理库，用于管理私钥公钥验证相关的一个证书keystore。<br />
+你可以把keystore看成是一个数据库，里面存储的是证书，keytool就是用来操作这个数据库的工具！<br />
+<!--more--><br />
+他常用的命令有以下几种方式。</p>
+
+<ol>
+  <li>
+    <p>创建keystore<br />
+<code>keytool -genkeypair -alias "android" -keyalg "RSA" -keystore "mylib.keystore"  </code></p>
+
+    <p>创建一个别名为<code>android</code>的证书，该证书存放在名为<code>mylib.keystore</code>的密钥库中.<br />
+ <code>-alias</code>指明这是证书的别名，同时也是秘钥对的别名。</p>
+  </li>
+  <li>查看keystore<br />
+  <code>keytool -list -keystore mylib.keystore</code></li>
+  <li>导出keystore里面的证书<br />
+ <code>keytool -export -alias android -file android.crt -keystore mylib.keystore</code></li>
+  <li>查看导出的证书信息<br />
+ <code>keytool -printcert -file "android.crt"</code></li>
+  <li>删除keystore里面的证书<br />
+ <code>keytool -delete -keystore mylib.keystore -alias android</code></li>
+</ol>
+
+<p>另外，keytool最有用的的方法是检查apk的签名和验证。<br />
+检查apk签名方法有两种一种是将apk解压缩，找到里面的<code>META-INF</code>文件夹。然后对其RSA文件进行如下命令即可:<br />
+<code>keytool -printcert -file META-INF/XXXX.RSA</code><br />
+第二种方法，在不加压缩的情况下<br />
+<code>keytool -list -printcert -jarfile xxx.apk</code><br />
+但是jarfile是java 7才引入，所以如果自己电脑里面的java版本不足，需要升级。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

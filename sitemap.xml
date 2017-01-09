@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming</loc>
+<lastmod>2017-01-09T14:38:22+08:00</lastmod>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/2017/01/07/android-facebookdeng-lu-wen-ti</loc>
+<lastmod>2017-01-07T19:31:06+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2016/11/20/jni</loc>
 <lastmod>2016-11-20T19:32:36+08:00</lastmod>
 </url>
@@ -460,19 +468,13 @@
 <loc>http://www.newtomato.me/blog/categories/java/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/2/</loc>
+<loc>http://www.newtomato.me/blog/categories/facebook/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/3/</loc>
+<loc>http://www.newtomato.me/blog/categories/keystore/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/4/</loc>
-</url>
-<url>
-<loc>http://www.newtomato.me/posts/5/</loc>
-</url>
-<url>
-<loc>http://www.newtomato.me/posts/6/</loc>
+<loc>http://www.newtomato.me/blog/categories/keytool/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

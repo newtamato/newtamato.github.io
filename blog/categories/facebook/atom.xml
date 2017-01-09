@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:facebook | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/facebook/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-01-09T14:42:59+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Android facebook登录问题]]></title>
+    <link href="http://www.newtomato.me/blog/2017/01/07/android-facebookdeng-lu-wen-ti"/>
+    <updated>2017-01-07T19:31:06+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/01/07/android-facebookdeng-lu-wen-ti</id>
+    <content type="html"><![CDATA[<p>如果应用通过web方式登录fb，没有出现问题，但是通过fb应用登录反而报错，报错信息如下：<br />
+<code>Android hash key always does not match any stored key hashes</code></p>
+
+<p>这个时候，怎么解决呢？<br />
+<!--more--><br />
+我在这个<a href="http://stackoverflow.com/questions/22818516/android-facebook-api-key-hash-not-match-any-store-key-hashes">stackoverflow</a>下面找到了解决方法。</p>
+
+<p>总结起来的方法就是，fb会弹出提示告诉你，你应用的hash值和我们存储的不一致。我们记下这个hashcode，然后到fb developer console那里设置<code>key Hashes</code><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-07-14837800858205.jpg" alt="-w400" /></p>
+
+<p>但是这个key hashes值是怎么创建的呢？<br />
+一番搜索之后，在<a href="https://github.com/AntonioCuevaUrraco/nativescript-facebook-login/issues/14">这里</a>找到了答案</p>
+
+<pre><code>keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore | openssl sha1 -binary | openssl base64
+</code></pre>
+
+<p>命令运行了之后，果然和上面的一样。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

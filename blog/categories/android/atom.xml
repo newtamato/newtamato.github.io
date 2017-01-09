@@ -4,7 +4,7 @@
   <title><![CDATA[分类:android | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2016-11-20T19:34:30+08:00</updated>
+  <updated>2017-01-09T14:42:59+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,72 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[keytool的基本用法以及检查apk签名]]></title>
+    <link href="http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming"/>
+    <updated>2017-01-09T14:38:22+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming</id>
+    <content type="html"><![CDATA[<p>要导出正式的android的apk，就需要用得到一个keystore的文件。这个文件就是由keytool生成的一个文件。</p>
+
+<p><code>Keytool</code> 是一个JAVA环境下的安全钥匙与证书的管理工具，用于生成一个证书管理库，用于管理私钥公钥验证相关的一个证书keystore。<br />
+你可以把keystore看成是一个数据库，里面存储的是证书，keytool就是用来操作这个数据库的工具！<br />
+<!--more--><br />
+他常用的命令有以下几种方式。</p>
+
+<ol>
+  <li>
+    <p>创建keystore<br />
+<code>keytool -genkeypair -alias "android" -keyalg "RSA" -keystore "mylib.keystore"  </code></p>
+
+    <p>创建一个别名为<code>android</code>的证书，该证书存放在名为<code>mylib.keystore</code>的密钥库中.<br />
+ <code>-alias</code>指明这是证书的别名，同时也是秘钥对的别名。</p>
+  </li>
+  <li>查看keystore<br />
+  <code>keytool -list -keystore mylib.keystore</code></li>
+  <li>导出keystore里面的证书<br />
+ <code>keytool -export -alias android -file android.crt -keystore mylib.keystore</code></li>
+  <li>查看导出的证书信息<br />
+ <code>keytool -printcert -file "android.crt"</code></li>
+  <li>删除keystore里面的证书<br />
+ <code>keytool -delete -keystore mylib.keystore -alias android</code></li>
+</ol>
+
+<p>另外，keytool最有用的的方法是检查apk的签名和验证。<br />
+检查apk签名方法有两种一种是将apk解压缩，找到里面的<code>META-INF</code>文件夹。然后对其RSA文件进行如下命令即可:<br />
+<code>keytool -printcert -file META-INF/XXXX.RSA</code><br />
+第二种方法，在不加压缩的情况下<br />
+<code>keytool -list -printcert -jarfile xxx.apk</code><br />
+但是jarfile是java 7才引入，所以如果自己电脑里面的java版本不足，需要升级。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Android facebook登录问题]]></title>
+    <link href="http://www.newtomato.me/blog/2017/01/07/android-facebookdeng-lu-wen-ti"/>
+    <updated>2017-01-07T19:31:06+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/01/07/android-facebookdeng-lu-wen-ti</id>
+    <content type="html"><![CDATA[<p>如果应用通过web方式登录fb，没有出现问题，但是通过fb应用登录反而报错，报错信息如下：<br />
+<code>Android hash key always does not match any stored key hashes</code></p>
+
+<p>这个时候，怎么解决呢？<br />
+<!--more--><br />
+我在这个<a href="http://stackoverflow.com/questions/22818516/android-facebook-api-key-hash-not-match-any-store-key-hashes">stackoverflow</a>下面找到了解决方法。</p>
+
+<p>总结起来的方法就是，fb会弹出提示告诉你，你应用的hash值和我们存储的不一致。我们记下这个hashcode，然后到fb developer console那里设置<code>key Hashes</code><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-07-14837800858205.jpg" alt="-w400" /></p>
+
+<p>但是这个key hashes值是怎么创建的呢？<br />
+一番搜索之后，在<a href="https://github.com/AntonioCuevaUrraco/nativescript-facebook-login/issues/14">这里</a>找到了答案</p>
+
+<pre><code>keytool -exportcert -alias androiddebugkey -keystore ~/.android/debug.keystore | openssl sha1 -binary | openssl base64
+</code></pre>
+
+<p>命令运行了之后，果然和上面的一样。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Google Android 扩展文件OBB的使用]]></title>
@@ -54,6 +120,11 @@
 1. <a href="https://developer.android.com/google/play/expansion-files.html#ZipLib">APK Expansion Zip Library</a><br />
 2. <a href="https://developer.android.com/google/play/licensing/index.html">Application Licensing</a><br />
 3. <a href="https://developer.android.com/google/play/expansion-files.html#AboutLibraries">Downloader Library</a></p>
+
+<p>另外，Google的licensing在lollipop会有如下的报错：<br />
+&gt;java.lang.IllegalArgumentException: Service Intent must be explicit: Intent { act=com.android.vending.licensing.ILicensingService }</p>
+
+<p>解决方法：<a href="http://stackoverflow.com/questions/28305125/android-app-crashes-on-lollipop">http://stackoverflow.com/questions/28305125/android-app-crashes-on-lollipop</a></p>
 
 <p>这三个库在<code>android-sdk文件夹/extras/google/</code>下面都有。只要导入到Eclipse或者Android Studio即可！<br />
 导入之后会有部分报错情况，可以检查他们之间彼此依赖关系，清理在重新build即可。</p>
