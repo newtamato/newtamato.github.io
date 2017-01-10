@@ -9,7 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="周四和团队中的一人有些小摩擦，当时被他一下子噎着了，不知道怎么说才好。事后为此郁闷满怀。心情大坏，甚至将此负能量传染给了周围的人。 此事的起因说到本质，便是我想让他能够讲责任负起来，做事能有效率有些，而他却并不以为意。当时的语气急躁了一些，语气便也急冲了起来，尤其当时看到他散漫不负责任的态度， &hellip;">
+  <meta name="description" content="未找到原文出处，从网络博客天道酬勤,重剑无锋上转载。 Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)，所以在函数体中仍然可以定义函数。
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +64,92 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/11/11/function-closure-upvalue">Function, Closures, Up Values</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-11T19:01:05+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>未找到原文出处，从网络博客<a href="http://blog.chinaunix.net/uid-52437-id-2108789.html">天道酬勤,重剑无锋</a>上转载。</p>
+
+<p>Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)，所以在函数体中仍然可以定义函数。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/11/11/function-closure-upvalue">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/11/01/the-last-of-us-you-xi">通关the Last of US的感悟</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-01T19:31:52+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="/images/1446377446064.jpg" alt="Alt text" /></p>
+
+<p>今年年初的时候，在同事那里听说了the last of us的这款游戏，同事说的眉飞色舞，吹捧拔高至此毫不吝啬，甚至不惜把他家里的PS3拿给我让我玩。当时的我甚至没有买过一台PS3，或者一张游戏碟片。<br />
+自然一点想玩的想法都没有，婉言谢绝了同事的好意。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/11/01/the-last-of-us-you-xi">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -450,77 +537,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log">Git命令行总结-log</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:08:49+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-  <li>git 输入部分提交的log日志</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>格式化文件输出</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>将某一个commit之后的提交做成patch</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git format-patch -M HEAD~1</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>将patch打到我们的开发分支</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git am xxx.patch</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>vim中格式化json</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">:%!python -m json.tool       </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="7">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -535,6 +554,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong">常用工具网站汇集-不定期更新中</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">keytool的基本用法以及检查apk签名</a>
       </li>
     
@@ -546,14 +573,6 @@
         <a href="/blog/2016/11/20/jni">JNI,java和C++之间的桥梁</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -562,8 +581,10 @@
   <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
 <li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
 <li class='category'><a href='/blog/categories/android/'>android (5)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
 <li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
 <li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
 <li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
@@ -572,6 +593,7 @@
 <li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
 <li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
 <li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
 <li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
 <li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>

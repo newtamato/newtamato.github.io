@@ -9,7 +9,7 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="Python是一门很容易掌握的语言，简单的语法强大的功能，在很多地方都视他为最高效的语言，尤其是在处理数据和文本上面，真的是帮了我们大忙。比如讲产品经理那里过来的文案导出成localizaiton文件，或者将他们的Excel表格导出成json，xml等配置文件， &hellip;">
+  <meta name="description" content="天下武功，唯快不破。加快时间是制胜王道。 对于出一次大包，是一件很费时费力的事情。具体包括以下步骤： 加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同，小的项目会很快，大的项目则慢的多。 打包ipa或者apk文件。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,101 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">快速打包测试提交苹果审核的流程</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-09-18T17:22:24+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote>
+  <p>天下武功，唯快不破。加快时间是制胜王道。</p>
+</blockquote>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-1.jpg" alt="1" /></p>
+
+<p>对于出一次大包，是一件很费时费力的事情。具体包括以下步骤：</p>
+
+<ol>
+  <li>加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同，小的项目会很快，大的项目则慢的多。</li>
+  <li>打包ipa或者apk文件。此时依赖于项目的复杂度，有依赖的项目库也会重新build，不修改依赖库，也就是使用缓存的build文件会加快速度。一般需要30分钟左右。</li>
+  <li>上传ipa或者apk文件。这个过程依赖网络速度。我们网络上传速度是100~200k/s的速度，一般需要20分钟左右。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2016/09/17/stack-packzhi-zuo">Stack Pack制作</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-09-17T21:49:19+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3 id="section">创建方法</h3>
+
+<p>IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。</p>
+
+<p>首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码，称之为sticker pack，另外一种可以编写代码，调用一些类似支付的接口的API，称之为iMessage app，他们都可以作为应用的扩展，也可以独立成为一个应用。因此有两种不同的创建方式。如下图所示：<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/09/17/stack-packzhi-zuo">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -419,93 +514,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie">节省开发时间的几种方案总结</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-06-09T14:31:39+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我们框架使用的是cocos2d-x。它支持ios和Android的开发。传统的开发，肯定是ios使用xcode，Android使用eclipse。eclipse同时还要配置一些模拟器。如果环境搭配的好，并且配置的电脑性能高，运行起来是可以接受的。但是我们的环境略微艰苦一点。使用Mac Mini，启动xcode很慢，更别提启动eclipse了。更是慢上加慢。为此浪费了我们不少时间。并且一直在想怎么样能够缩减开发时间。最后功夫不负有心人吧。找到了几种方法。分享出来给大家，希望也能解决你遇到这个问题。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/06/08/hai-ma-mo-ni-qi">在海马模拟器上运行并测试游戏</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-06-08T16:34:12+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>海马模拟器是我现阶段用过的比较快速稳定的模拟器了。<br />
-且能够满足我们日常的开发需求</p>
-
-<ol>
-  <li>快速安装并启动游戏。便于我们测试。</li>
-  <li>取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。</li>
-</ol>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/06/08/hai-ma-mo-ni-qi">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="3">&larr; Older</a>
@@ -523,6 +531,14 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong">常用工具网站汇集-不定期更新中</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">keytool的基本用法以及检查apk签名</a>
       </li>
     
@@ -534,14 +550,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
         <a href="/blog/2016/11/20/jni">JNI,java和C++之间的桥梁</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -550,8 +558,10 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
   <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
 <li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
 <li class='category'><a href='/blog/categories/android/'>android (5)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
 <li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
 <li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
 <li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
@@ -560,6 +570,7 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 <li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
 <li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
 <li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
 <li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
 <li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>

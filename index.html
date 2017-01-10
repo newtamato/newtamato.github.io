@@ -9,7 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="要导出正式的android的apk，就需要用得到一个keystore的文件。这个文件就是由keytool生成的一个文件。 Keytool 是一个JAVA环境下的安全钥匙与证书的管理工具，用于生成一个证书管理库，用于管理私钥公钥验证相关的一个证书keystore。 &hellip;">
+  <meta name="description" content="以前制作多个渠道包的方法是这样子的，在AndroidMenifest.xml里面放置一个的变量。例如 1
+&lt;meta-data android:name="dksdk_channel" android:value="CHANNEL_CHANNEL_VALUES" /&gt; &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +64,97 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-01-10T20:24:50+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>以前制作多个渠道包的方法是这样子的，在AndroidMenifest.xml里面放置一个的变量。例如</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;meta-data android:name="dksdk_channel" android:value="CHANNEL_CHANNEL_VALUES" /&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>然后对生成的apk分析，替换里面的SETTING_UMENG_CHANNEL_CHANNELID_VALUES，重新打包就可以了。</p>
+
+<p>这段时间从Eclipse迁移到android studio上面，发现android studio里面有<code>flavor</code>的一个特殊存在，不太了解，Google了一下，发现这个东西正好可以解决我们多平台制作apk的需求。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-10-14840497981415.jpg" alt="-w250" /><br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong">常用工具网站汇集-不定期更新中</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-01-09T15:08:23+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ol>
+  <li><a href="https://apptut.gitbooks.io/android-note/content/common_tools/use_gradle.html">Android笔记</a></li>
+  <li><a href="http://www.liaoxuefeng.com/">廖雪峰的官方网站</a></li>
+  <li><a href="https://leohxj.gitbooks.io/a-programmer-prepares/content/index.html">程序员的自我修养</a></li>
+  <li><a href="https://www.zilongshanren.com/">子龙山人</a></li>
+  <li><a href="https://git-scm.com/book/ch7-1.html">GIT手册</a></li>
+</ol>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -434,101 +526,6 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">快速打包测试提交苹果审核的流程</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-09-18T17:22:24+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote>
-  <p>天下武功，唯快不破。加快时间是制胜王道。</p>
-</blockquote>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-1.jpg" alt="1" /></p>
-
-<p>对于出一次大包，是一件很费时费力的事情。具体包括以下步骤：</p>
-
-<ol>
-  <li>加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同，小的项目会很快，大的项目则慢的多。</li>
-  <li>打包ipa或者apk文件。此时依赖于项目的复杂度，有依赖的项目库也会重新build，不修改依赖库，也就是使用缓存的build文件会加快速度。一般需要30分钟左右。</li>
-  <li>上传ipa或者apk文件。这个过程依赖网络速度。我们网络上传速度是100~200k/s的速度，一般需要20分钟左右。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2016/09/17/stack-packzhi-zuo">Stack Pack制作</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-09-17T21:49:19+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3 id="section">创建方法</h3>
-
-<p>IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。</p>
-
-<p>首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码，称之为sticker pack，另外一种可以编写代码，调用一些类似支付的接口的API，称之为iMessage app，他们都可以作为应用的扩展，也可以独立成为一个应用。因此有两种不同的创建方式。如下图所示：<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/09/17/stack-packzhi-zuo">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -544,6 +541,14 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong">常用工具网站汇集-不定期更新中</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">keytool的基本用法以及检查apk签名</a>
       </li>
     
@@ -555,14 +560,6 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
         <a href="/blog/2016/11/20/jni">JNI,java和C++之间的桥梁</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a>
-      </li>
-    
   </ul>
 </section>
 <section>
@@ -571,8 +568,10 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
 <li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
 <li class='category'><a href='/blog/categories/android/'>android (5)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
 <li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
 <li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
 <li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
@@ -581,6 +580,7 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 <li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
 <li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
 <li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
 <li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
 <li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>

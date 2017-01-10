@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao</loc>
+<lastmod>2017-01-10T20:24:50+08:00</lastmod>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong</loc>
+<lastmod>2017-01-09T15:08:23+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming</loc>
 <lastmod>2017-01-09T14:38:22+08:00</lastmod>
 </url>
@@ -475,6 +483,15 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/keytool/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/androidstudio/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/flavors/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/apk/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>
