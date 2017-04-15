@@ -9,7 +9,7 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="作为需要将应用上传到App Store的开发者，我们肯定会遇到一个有意思的问题，那就是申请AppId和开发者证书。 开发者证书主要有两种类型。Developer Program 和Enterprise Program 。前一种就是99美金的开发者证书，而后一种就是299美金的开发者证书， &hellip;">
+  <meta name="description" content="我们在创建Certificate的时候，要求先自己生成一个CSR文件。 ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +63,47 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/11/29/dev-certification-provision2">Certificate与provision Profiles 2</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-29T20:10:15+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们在创建Certificate的时候，要求先自己生成一个CSR文件。<br />
+<img src="/images/1448076369836.png" alt="Alt text" /><br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/11/29/dev-certification-provision2">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -459,50 +500,6 @@ flash IDE dragbone官方的插件</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/11/12/lua-deep-2">Lua脚本在C++下的舞步（二）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-11-12T21:47:58+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
-
-<p>上一节讲了一些基本的Lua应用，或许你会说，还是很简单么。呵呵，恩，是的，本来Lua就是为了让大家使用的方便快捷而设计的。如果设计的过为复杂，就不会有人使用了。 <br />
-下面，我要强调一下，Lua的栈的一些概念，因为这个确实很重要，你会经常用到。熟练使用Lua，最重要的就是要时刻知道什么时候栈里面的数据是什么顺序，都是什么。如果你能熟练知道这些，实际你已经是Lua运用的高手了。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/11/12/lua-deep-2">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="6">&larr; Older</a>
@@ -520,6 +517,10 @@ flash IDE dragbone官方的插件</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/04/15/requirehe-re-geng">require机制和自动更新之间的爱恨情仇</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">记最近遇到最头疼的一个Bug</a>
       </li>
     
@@ -533,10 +534,6 @@ flash IDE dragbone官方的插件</p>
     
       <li class="post">
         <a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">keytool的基本用法以及检查apk签名</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/01/07/android-facebookdeng-lu-wen-ti">Android facebook登录问题</a>
       </li>
     
   </ul>
@@ -571,7 +568,7 @@ flash IDE dragbone官方的插件</p>
 <li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
 <li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
 <li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
-<li class='category'><a href='/blog/categories/lua/'>lua (8)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
 <li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
 <li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
 <li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
@@ -579,6 +576,7 @@ flash IDE dragbone官方的插件</p>
 <li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
 <li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
 <li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
 <li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
 <li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
 <li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
@@ -609,6 +607,7 @@ flash IDE dragbone官方的插件</p>
 <li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
 <li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
 <li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
 <li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
 <li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
 <li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>

@@ -1,0 +1,333 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>require机制和自动更新之间的爱恨情仇 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="lua之所以能够做自动更新，和require的特殊机制有很大的关系。
+通过阅读require相关的代码，我们得知，require的原理是先从package.loaded当中先检查是否存在要加载的lua文件，如果不存在则读取之后放入到package.loaded中，如果存在直接将从package. &hellip;">
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <h1><a href="/">番茄手册</a></h1>
+  
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+   <li><a href="/about">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      <h1 class="entry-title">Require机制和自动更新之间的爱恨情仇</h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-04-15T15:02:02+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>lua之所以能够做自动更新，和require的特殊机制有很大的关系。<br />
+通过阅读require相关的代码，我们得知，require的原理是先从<code>package.loaded</code>当中先检查是否存在要加载的lua文件，如果不存在则读取之后放入到<code>package.loaded</code>中，如果存在直接将从<code>package.loaded</code>中读取即可。<br />
+因此我们热更新之后，为了能够让新的文件生效，会将<code>package.loaded</code>直接清空。这样按照上面的逻辑，<code>require</code>进来得文件肯定都是新的文件了。</p>
+
+<p>事实是，总有意想不到的事情发生。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-04-15-805c3d47ly1fdoys4g14mg209q05g4jr.gif" alt="805c3d47ly1fdoys4g14mg209q05g4j" /></p>
+
+<!--more-->
+
+<p>但是事实上这里面暗藏了小小的机关。<br />
+那就是如何清空<code>package.loaded</code> ?</p>
+
+<p>有两种情况清空的方法。</p>
+
+<p>第一种：<br />
+<code>package.loaded = {}</code></p>
+
+<p>这种方式之后，热更的文件是否生效了呢？我们发现没有生效照样还是返回以前的lua模块了。所以这种方法没有达到我们理想的清空啊。</p>
+
+<p>第二种方法：</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">for k,v in pairs(package.loaded) do
+</span><span class="line">	package.loaded[k] = nil
+</span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这两种看起来没什么区别，但是第二种起作用了。重新加载文件，生效的是新的lua模块。</p>
+
+<p>仔细看看这两种方法，第一种其实并未真的清空，他是将package.loaded的指向的对象地址发生了变化，原先内存中存在的那份加载对象还是存在的。也就是对象并未释放，导致加载未生效。而第二种则是对加载对象这块儿内存数据直接清理。因此重新加载的时候肯定生效。</p>
+
+<p>因此对象引用这块儿，一定要切记小心。不要被他简单的外表欺骗了。</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-04-15T15:02:02+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/lua/'>lua</a>, <a class='category' href='/blog/categories/require/'>require</a>, <a class='category' href='/blog/categories/re-geng/'>热更</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng" data-via="" data-counturl="http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left" href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug" title="Previous Post: 记最近遇到最头疼的一个Bug">&laquo; 记最近遇到最头疼的一个Bug</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/04/15/requirehe-re-geng">require机制和自动更新之间的爱恨情仇</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">记最近遇到最头疼的一个Bug</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong">常用工具网站汇集-不定期更新中</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">keytool的基本用法以及检查apk签名</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (1)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (5)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
+<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
+<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
+<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/问题/'>问题 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (2)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
+
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

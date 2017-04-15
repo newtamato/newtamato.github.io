@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:热更 | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/re-geng/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-04-15T15:07:07+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[require机制和自动更新之间的爱恨情仇]]></title>
+    <link href="http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng"/>
+    <updated>2017-04-15T15:02:02+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng</id>
+    <content type="html"><![CDATA[<p>lua之所以能够做自动更新，和require的特殊机制有很大的关系。<br />
+通过阅读require相关的代码，我们得知，require的原理是先从<code>package.loaded</code>当中先检查是否存在要加载的lua文件，如果不存在则读取之后放入到<code>package.loaded</code>中，如果存在直接将从<code>package.loaded</code>中读取即可。<br />
+因此我们热更新之后，为了能够让新的文件生效，会将<code>package.loaded</code>直接清空。这样按照上面的逻辑，<code>require</code>进来得文件肯定都是新的文件了。</p>
+
+<p>事实是，总有意想不到的事情发生。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-04-15-805c3d47ly1fdoys4g14mg209q05g4jr.gif" alt="805c3d47ly1fdoys4g14mg209q05g4j" /></p>
+
+<!--more-->
+
+<p>但是事实上这里面暗藏了小小的机关。<br />
+那就是如何清空<code>package.loaded</code> ?</p>
+
+<p>有两种情况清空的方法。</p>
+
+<p>第一种：<br />
+<code>package.loaded = {}</code></p>
+
+<p>这种方式之后，热更的文件是否生效了呢？我们发现没有生效照样还是返回以前的lua模块了。所以这种方法没有达到我们理想的清空啊。</p>
+
+<p>第二种方法：<br />
+<code>
+for k,v in pairs(package.loaded) do
+	package.loaded[k] = nil
+end
+</code></p>
+
+<p>这两种看起来没什么区别，但是第二种起作用了。重新加载文件，生效的是新的lua模块。</p>
+
+<p>仔细看看这两种方法，第一种其实并未真的清空，他是将package.loaded的指向的对象地址发生了变化，原先内存中存在的那份加载对象还是存在的。也就是对象并未释放，导致加载未生效。而第二种则是对加载对象这块儿内存数据直接清理。因此重新加载的时候肯定生效。</p>
+
+<p>因此对象引用这块儿，一定要切记小心。不要被他简单的外表欺骗了。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

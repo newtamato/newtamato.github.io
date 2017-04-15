@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng</loc>
+<lastmod>2017-04-15T15:02:02+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug</loc>
 <lastmod>2017-03-12T16:15:46+08:00</lastmod>
 </url>
@@ -499,6 +503,12 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/wen-ti/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/require/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/re-geng/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/posts/2/</loc>
