@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-14T18:03:03+08:00</updated>
+  <updated>2017-05-14T23:55:08+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,140 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unity UGUI控件]]></title>
+    <link href="http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian"/>
+    <updated>2017-05-14T23:49:02+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian</id>
+    <content type="html"><![CDATA[<p>Unity的UI控件有以下几种。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947687801645_1.jpg" alt="=w130" /><br />
+今天我们主要说一下常用的Text，Image，Button，InputField，ScrollView。因为这些组件需要在一个容器里面因此还有Canvas和Panel。</p>
+
+<h2 id="text">Text</h2>
+
+<p>Text的创建方式，可以是是用Unity编辑器直接创建，另外就是用代码生成。<br />
+在我们首次创建的时候，Unity会自动给我们另外两个东西，一个是Canvas，一个是EventSystem。<br />
+而接下来我们创建其他组件的时候，EventSystem都不会创建。Canvas则看你的需求了。也就是说EventSystem是UI管理的一个单例。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-QQ20170514-223354-HD.gif" alt="QQ20170514-223354-HD" /><br />
+<!--more--><br />
+他是负责什么功能？通过看他的Inspector，可知他是一个Empty GameObject，但是有两个脚本<code>Standalone Input Module</code>，<code>Event System</code>。前一个用于接受玩家的输入。点击触摸手柄等。后一个呢，是对用户的输入进行处理，比如点击button事件传递。<br />
+Unity运行之后，可以观察到EventSystem下面的输出：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947734607623_1.jpg" alt="=w200" /><br />
+这里面使用的是RayCast的方法检查是否碰撞到了某一个组件。</p>
+
+<p>上面说到使用Unity编辑器创建，使用代码的方式如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GameObject go2 = new GameObject("newLabel");    
+</span><span class="line">go2.layer = LayerMask.NameToLayer("UI");
+</span><span class="line">
+</span><span class="line">Text labelName = go2.AddComponent&lt;Text&gt;();
+</span><span class="line">labelName.text = "start";
+</span><span class="line">
+</span><span class="line">labelName.font = Resources.Load("font/fontName",typeof(Font)) as Font;
+</span><span class="line">labelName.fontSize = 32;
+</span><span class="line">labelName.alignment = TextAnchor.MiddleCenter;
+</span><span class="line">go2.transform.parent = parentTransform;
+</span><span class="line">
+</span><span class="line">go2.transform.localPosition = Vector3.zero;
+</span><span class="line">go2.transform.localScale = Vector3.one;
+</span><span class="line">go2.transform.localRotation = new Quaternion();</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="image">Image</h2>
+
+<p>Image就是展示一张图片。这个和cocos2dx中的精灵是一个概念。给组件一张图片，它就可以显示出来。<br />
+通过Unity编辑器，创建一个Image，然后修改他的Source Image。选择你要的<strong>Sprite</strong>。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947742976727_1.jpg" alt="=w250" /><br />
+这里的Sprite是Unity里面的概念。导入一张图片到Unity中，然后将图片的类型选择成Sprite即可。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947745422670_1.jpg" alt="=w250" /><br />
+这样Image就展示出来了。</p>
+
+<p>代码的方式创建：</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GameObject go = new GameObject("newImage");
+</span><span class="line">go.layer = LayerMask.NameToLayer("UI");
+</span><span class="line">Image image = go.AddComponent&lt;Image&gt;();
+</span><span class="line">string name = "ImagePrefab";
+</span><span class="line">image.sprite = Resources.Load&lt;GameObject&gt;(name).GetComponent&lt;SpriteRenderer&gt;().sprite;
+</span><span class="line">image.SetNativeSize();
+</span><span class="line">go.transform.SetParent(parentTransform,false);  
+</span><span class="line">go.transform.localPosition = Vector3.zero;  
+</span><span class="line">go.transform.localScale = Vector3.one;   
+</span><span class="line">go.transform.localRotation = new Quaternion();  
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="button">Button</h2>
+
+<p>出去用source image来更变button的样式，和改变lable的文案。button最关键的就是他的点击回调函数的处理。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void Start()
+</span><span class="line">{
+</span><span class="line">   Button btn = yourButton.GetComponent&lt;Button&gt;();
+</span><span class="line">	 btn.onClick.AddListener(delegate() { StartGame(); });
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">void StartGame()
+</span><span class="line">{
+</span><span class="line">    Debug.Log("You have clicked the button!");
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>另外就是在Unity编辑器那里<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947752981359_1.jpg" alt="=w250" /><br />
+增加一个object对应的脚本objectController.cs文件。<br />
+object处选择当前的对象，然后在后面选择objectController选择对应的public类型的函数。</p>
+
+<h2 id="inputfield">InputField</h2>
+
+<p>输入文本框，如何展示输入文本的提示，如果得到输入文本，如果做输入限制等。<br />
+<code>Placeholder</code>就是用来做提示的。我们需要得到的是他的<strong>Text组件</strong>，对他赋值即可。<br />
+他的<code>OnSubmit（What to do when the event system sends a submit Event）</code>.函数用来接收提交。<br />
+<code>onValueChange</code>就是用户每次输入的监听。</p>
+
+<h2 id="scrollview">ScrollView</h2>
+
+<p>Unity里面拥有的其实是Scroll Rect。<br />
+他就是用于滑动滚动的组件。但是做的并不好。需要我们自己做一些优化。在cocos中这些事已经替我们做了，Unity中似乎还需要我们自己手动管理。通过对象池原理循环使用这些组件。降低创建组件的开销。</p>
+
+<p>例如我们做一个垂直的上下滑动的scrollView。首先在Inspector选择他他的方向。然后关闭另一个方向的滑动滚动条。scroll view有一个遮罩mask，外加一个content，content是用来add子控件，显示区域就是遮罩区域。因此需要给content增加一个垂直布局。这样我们只要添加道具进来，他会负责替我们自动布局。<br />
+最终的效果是这样。但是content需要我们代码中自动调整height。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-QQ20170514-234643-HD.gif" alt="QQ20170514-234643-HD" /></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[怎么控制镜头跟随人物移动]]></title>
@@ -1412,129 +1546,6 @@ Google Play Store是否正常，可以自己上去下载一个其他应用测试
 <p>此时在运行Android Studio，就可以在设备或者模拟器上看到广告了。文档里面说模拟器是不需要设备id的，但是我没有设备id，在模拟器上是看不到的。加上设备id，就可以看得到了。</p>
 
 <p>至此FB广告整合就结束了，是不是非常简单？但是在实际操作中总会遇到其他各色的问题。但是请放心，只要翻墙翻得好，问题都会好！</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[调用漫威开发API]]></title>
-    <link href="http://www.newtomato.me/blog/2016/07/27/diao-yong-man-wei-kai-fa-api"/>
-    <updated>2016-07-27T16:03:31+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/07/27/diao-yong-man-wei-kai-fa-api</id>
-    <content type="html"><![CDATA[<p>无意间看到漫威原来也提供了开放API接口。真是让我惊喜意外。<br />
-简单了看了一下他们的文档，看样子很简单就能够调用。不需要额外的登录和授权。<br />
-API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
-请求结构文档<a href="http://developer.marvel.com/documentation/generalinfo">在此</a></p>
-
-<p>因此要调用他们接口，需要提供如下三个参数即可<br />
-<!--more--></p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">Params: 
-</span><span class="line">{   	"apikey": "your api key",   
-</span><span class="line">		"ts": "a timestamp",   
-</span><span class="line">		"hash": "your hash" 
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>第一个参数<strong>apikey</strong>是我们申请漫威开发者账号的时候，由他提供的一个<code>publick key</code>，（对应还有一个<code>private key</code>），第二个<strong>ts</strong>是一个时间戳，第三个hash是通过如下算法计算出来的</p>
-
-<pre><code>	md5(ts+privateKey+publicKey)
-</code></pre>
-
-<p>例如，ts是1，public key是1234,private key是abcd，那么这个数字就是<code>md5(1abcd1234)</code></p>
-
-<p>按照他的这个规则，我用Python写了一个简单的调用demo，代码下载下来，直接可用。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">import httplib
-</span><span class="line">import urllib
-</span><span class="line">import json
-</span><span class="line">import datetime
-</span><span class="line">import time
-</span><span class="line">from md5 import md5
-</span><span class="line">
-</span><span class="line">APIKEY = "1e8b043610d5ae2f4294eaf94dede6db"
-</span><span class="line">PRIVATE_KEY = "32360edc7f06e025819a974ade95e513994761b1"
-</span><span class="line">class BaseHttpRequest :
-</span><span class="line">def __init__(self,action,param):
-</span><span class="line">   self.mAction = action
-</span><span class="line">   self.mParams = param
-</span><span class="line">
-</span><span class="line">def execute(self):
-</span><span class="line">strRequest = "gateway.marvel.com" 
-</span><span class="line">    	
-</span><span class="line">headers = {"Accept":"application/json","Content-Type" : "application/json"}
-</span><span class="line">
-</span><span class="line">params = {}
-</span><span class="line">params["apikey"] = APIKEY
-</span><span class="line">    	
-</span><span class="line">ts = time.time()
-</span><span class="line">ts = int(ts)
-</span><span class="line">params["ts"] = ts
-</span><span class="line">strKey = "%s%s%s" % (ts,PRIVATE_KEY,APIKEY)
-</span><span class="line">params["hash"] = md5(strKey).hexdigest()
-</span><span class="line">params["limit"] = 1
-</span><span class="line">params["offset"] = 1
-</span><span class="line">params = urllib.urlencode(params)
-</span><span class="line">strUrl = "/v1/public/%s?%s" % (self.mAction,params)
-</span><span class="line">conn = httplib.HTTPSConnection(strRequest)
-</span><span class="line">conn.request("GET",strUrl,None,headers) #params,headers
-</span><span class="line">res = conn.getresponse()
-</span><span class="line">    	
-</span><span class="line">data = res.read()
-</span><span class="line">jsonResult = json.loads(data)
-</span><span class="line">   </span></code></pre></td></tr></table></div></figure></notextile></div>
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">if __name__ == "__main__":
-</span><span class="line">	#characters,comics,creators,events,stories
-</span><span class="line">	request = BaseHttpRequest("stories",None)
-</span><span class="line">	request.execute()</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>调用结果如下<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-27-14696064871563.jpg" alt="" /></p>
 
 ]]></content>
   </entry>
