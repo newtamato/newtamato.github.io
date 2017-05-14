@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:unity | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/unity/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-05-14T17:55:16+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[怎么控制镜头跟随人物移动]]></title>
+    <link href="http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui"/>
+    <updated>2017-05-14T17:48:56+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui</id>
+    <content type="html"><![CDATA[<p>在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？<br />
+我们从简入手，开始说一下怎么控制镜头的移动。<br />
+这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！<br />
+<img src="http://wx2.sinaimg.cn/mw690/805c3d47ly1fevq3bkj1mg206y06y4ql.gif" alt="" /></p>
+
+<!--more-->
+<p>## 开始入手</p>
+
+<p>镜头移动是需要控制镜头的位置随着英雄的位置变动而变动。<br />
+因此有下面的代码：</p>
+
+<pre><code>public class SimpleFollower : MonoBehaviour {
+	public Transform target;
+	void Update () {
+		transform.position = target.position;
+	}
+}
+</code></pre>
+
+<p>target就是英雄，把这个组件拖到英雄身上。移动英雄。看看效果。<br />
+是不是发现镜头嵌在了英雄身上，英雄的position的中心点在身体重心上，这是镜头也在这。因为出现嵌入感。所以应该增加一个偏移量offset。</p>
+
+<p>一般我们在场景中先设置好镜头和英雄的偏移。在代码中可以计算得到。</p>
+
+<pre><code>private Vector3 _deltaPosition；
+void Start () {
+	_deltaPosition = transform.position - target.position;
+}
+</code></pre>
+
+<p>英雄在移动中需要将这个偏移量也一并计算在内。<br />
+<code>
+transform.position = target.position + _deltaPosition;
+</code></p>
+
+<p>此时运行unity，镜头跟随没问题了。但是还有个问题就是此时玩家如果左右移动，镜头就又出现问题了。我们需要镜头一直在人身后做跟随。即使人物左右移动，镜头也要左右移动才更好。<br />
+因此代码还需要优化。就是增加旋转的考虑。</p>
+
+<p>假设我们只考虑玩家左右渲染，即围绕Y轴的旋转。</p>
+
+<pre><code>float yAngle = target.rotation.eulerAngles.y;
+Quaternion quat = Quaternion.Euler (0, yAngle, 0);
+transform.position = target.position + _deltaPosition * quat;
+</code></pre>
+
+<p>这样运行之后，镜头确实随着移动，但是表现不够自然。因此就需要用到Lerp函数。</p>
+
+<pre><code>transform.position = Vector3.Lerp(transform.position,target.position + _deltaPosition * quat,Time.deltaTime);
+</code></pre>
+
+<p>同样的上面计算的旋转角度也可以使用Lerp函数。</p>
+
+<pre><code>float yAngle = Mathf.Lerp (transform.rotation.eulerAngles.y,target.rotation.eulerAngles.y,Time.deltaTime * damping);
+Quaternion quat = Quaternion.Euler (0, yAngle, 0);
+
+transform.position = Vector3.Lerp(transform.position,target.position + _deltaPosition * quat,Time.deltaTime);
+
+</code></pre>
+
+<h2 id="section">可选阅读</h2>
+
+<p>在FPS游戏中，有输入设备可控制英雄的移动，例如手柄，键盘等。我们这里使用鼠标控制英雄的旋转。</p>
+
+<pre><code>_horizontalRotation += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1)* rotateSpeed * Time.deltaTime;
+_horizontalRotation = Mathf.Clamp (_horizontalRotation, -90, 90);
+target.transform.rotation = Quaternion.Euler (0, _horizontalRotation, 0);
+</code></pre>
+
+<p>此处_horizontalRotation用于记录英雄的旋转角度。这里做了个限制，英雄旋转不能超过左转90度和右转90度。<br />
+rotateSpeed是旋转速度。每秒钟旋转多少。<br />
+通过Quaternion.Euler计算一个旋转四元数，用来控制英雄的旋转。</p>
+
+<h2 id="section-1">结语</h2>
+<p>上面旋转用到了矩阵和向量的乘法运算。将一个坐标转换到另一个坐标。其他的都是通过Lerp和Clamp对数据进行处理。</p>
+
+<p>总体来说，为了达到那种顺畅的动作，需要增加其他Vector3的转换以及fieldOfView来增加动感。如有兴趣大家可以把Unity官方的镜头跟随代码打开看看。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

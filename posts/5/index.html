@@ -9,7 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="我们在创建Certificate的时候，要求先自己生成一个CSR文件。 ">
+  <meta name="description" content="###认识proj.android工程 使用quick cocos2dx的项目可以新建工程，可以看到他已经为我们准备了两个工程一个是ios一个是Android的。 1
+$QUICK_COCOS2DX_ROOT/bin/create_project.sh -p com.newtomato.test &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -63,6 +64,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <h1 class="entry-title"><a href="/blog/2015/12/27/android-1">Quick Cocos2dx 导出Android包记录过程</a></h1>
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-12-27T11:23:39+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>###认识proj.android工程</p>
+
+<p>使用quick cocos2dx的项目可以新建工程，可以看到他已经为我们准备了两个工程一个是ios一个是Android的。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">$QUICK_COCOS2DX_ROOT/bin/create_project.sh -p com.newtomato.test</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>新建的工程结构如下：<br />
+<img src="/images/1450598436105.png" alt="Alt text" /><br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/12/27/android-1">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -454,52 +503,6 @@ flash IDE dragbone官方的插件</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <h1 class="entry-title"><a href="/blog/2015/11/12/lua-deep-3">Lua脚本在C++下的舞步（三）</a></h1>
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-11-12T21:48:47+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
-
-<p>上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然，这些功能是为了今天这篇文章而铺路的。</p>
-
-<p>看了七猫的回帖，呵呵，确实应该说一下SWIG这个工具，说真的，我对这个工具理解不深，因为没有怎么用过，读过一些关于它的文章，似乎是帮你把C++的功能封装成一个Lua基本库的东西，但是后来研究，他可以很轻松帮你把公用函数封装成一个Lua的基本库(类似C++的dll)，但是对于我的需求而言，可能不太一样。因为我大量的是需要在C++里面进行数据传输以及变量的交互，所以为了紧贴C++，我需要很多关联数据的处理。 <br />
-我是一名C++程序员，所以在很多时候，不想过多的使用Lua的特性，因为个人感觉，Lua的语法要比C++的更加灵活。而我更希望，在函数调用的某些习惯上，遵循一些C++的规则。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2015/11/12/lua-deep-3">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="6">&larr; Older</a>
@@ -517,6 +520,10 @@ flash IDE dragbone官方的插件</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/04/15/requirehe-re-geng">require机制和自动更新之间的爱恨情仇</a>
       </li>
     
@@ -530,10 +537,6 @@ flash IDE dragbone官方的插件</p>
     
       <li class="post">
         <a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong">常用工具网站汇集-不定期更新中</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">keytool的基本用法以及检查apk签名</a>
       </li>
     
   </ul>
@@ -575,6 +578,7 @@ flash IDE dragbone官方的插件</p>
 <li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
 <li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
 <li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
+<li class='category'><a href='/blog/categories/quaternion/'>quaternion (1)</a></li>
 <li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
 <li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
 <li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
@@ -584,6 +588,8 @@ flash IDE dragbone官方的插件</p>
 <li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
 <li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
 <li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
 <li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
 <li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>

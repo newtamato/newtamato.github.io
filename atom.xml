@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-14T17:35:01+08:00</updated>
+  <updated>2017-05-14T17:55:16+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,105 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[怎么控制镜头跟随人物移动]]></title>
+    <link href="http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui"/>
+    <updated>2017-05-14T17:48:56+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui</id>
+    <content type="html"><![CDATA[<p>在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？<br />
+我们从简入手，开始说一下怎么控制镜头的移动。<br />
+这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！<br />
+<img src="http://wx2.sinaimg.cn/mw690/805c3d47ly1fevq3bkj1mg206y06y4ql.gif" alt="" /></p>
+
+<!--more-->
+<p>## 开始入手</p>
+
+<p>镜头移动是需要控制镜头的位置随着英雄的位置变动而变动。<br />
+因此有下面的代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">public class SimpleFollower : MonoBehaviour {
+</span><span class="line">	public Transform target;
+</span><span class="line">	void Update () {
+</span><span class="line">		transform.position = target.position;
+</span><span class="line">	}
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>target就是英雄，把这个组件拖到英雄身上。移动英雄。看看效果。<br />
+是不是发现镜头嵌在了英雄身上，英雄的position的中心点在身体重心上，这是镜头也在这。因为出现嵌入感。所以应该增加一个偏移量offset。</p>
+
+<p>一般我们在场景中先设置好镜头和英雄的偏移。在代码中可以计算得到。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">private Vector3 _deltaPosition；
+</span><span class="line">void Start () {
+</span><span class="line">	_deltaPosition = transform.position - target.position;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>英雄在移动中需要将这个偏移量也一并计算在内。</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">transform.position = target.position + _deltaPosition;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此时运行unity，镜头跟随没问题了。但是还有个问题就是此时玩家如果左右移动，镜头就又出现问题了。我们需要镜头一直在人身后做跟随。即使人物左右移动，镜头也要左右移动才更好。<br />
+因此代码还需要优化。就是增加旋转的考虑。</p>
+
+<p>假设我们只考虑玩家左右渲染，即围绕Y轴的旋转。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">float yAngle = target.rotation.eulerAngles.y;
+</span><span class="line">Quaternion quat = Quaternion.Euler (0, yAngle, 0);
+</span><span class="line">transform.position = target.position + _deltaPosition * quat;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这样运行之后，镜头确实随着移动，但是表现不够自然。因此就需要用到Lerp函数。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">transform.position = Vector3.Lerp(transform.position,target.position + _deltaPosition * quat,Time.deltaTime);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>同样的上面计算的旋转角度也可以使用Lerp函数。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">float yAngle = Mathf.Lerp (transform.rotation.eulerAngles.y,target.rotation.eulerAngles.y,Time.deltaTime * damping);
+</span><span class="line">Quaternion quat = Quaternion.Euler (0, yAngle, 0);
+</span><span class="line">
+</span><span class="line">transform.position = Vector3.Lerp(transform.position,target.position + _deltaPosition * quat,Time.deltaTime);
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="section">可选阅读</h2>
+
+<p>在FPS游戏中，有输入设备可控制英雄的移动，例如手柄，键盘等。我们这里使用鼠标控制英雄的旋转。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">_horizontalRotation += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1)* rotateSpeed * Time.deltaTime;
+</span><span class="line">_horizontalRotation = Mathf.Clamp (_horizontalRotation, -90, 90);
+</span><span class="line">target.transform.rotation = Quaternion.Euler (0, _horizontalRotation, 0);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此处_horizontalRotation用于记录英雄的旋转角度。这里做了个限制，英雄旋转不能超过左转90度和右转90度。<br />
+rotateSpeed是旋转速度。每秒钟旋转多少。<br />
+通过Quaternion.Euler计算一个旋转四元数，用来控制英雄的旋转。</p>
+
+<h2 id="section-1">结语</h2>
+<p>上面旋转用到了矩阵和向量的乘法运算。将一个坐标转换到另一个坐标。其他的都是通过Lerp和Clamp对数据进行处理。</p>
+
+<p>总体来说，为了达到那种顺畅的动作，需要增加其他Vector3的转换以及fieldOfView来增加动感。如有兴趣大家可以把Unity官方的镜头跟随代码打开看看。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[require机制和自动更新之间的爱恨情仇]]></title>
@@ -1437,77 +1536,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 </span><span class="line">	request.execute()</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>调用结果如下<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-27-14696064871563.jpg" alt="" /></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[cocos2dx 增加Google移动广告]]></title>
-    <link href="http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads"/>
-    <updated>2016-07-18T22:13:43+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads</id>
-    <content type="html"><![CDATA[<p>Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-any.jpeg" alt="any" /></p>
-
-<p>但是AnySDK是一个大而全的东西，而我们只需要广告接入这一小块儿的东西。同时，我们的cocos2dx的版本是2.2.6，相对于触控的3.18，已经有很大差别。</p>
-
-<p>于是我们需要自己在重新造一遍轮子，幸运的是网上有不少这样的材料。</p>
-
-<ol>
-  <li>Firebase提供的文档刚好有与cocos2x相关的资料，<a href="https://firebase.google.com/docs/admob/android/games?hl=zh-cn">移步至此</a>,</li>
-  <li>还有热心的同学贴出了更详细的步骤<a href="http://www.cnblogs.com/qianyuming/p/5023018.html">cocos2dx-3.9 集成admob</a>。</li>
-  <li>
-    <p><a href="https://firebase.google.com/docs/admob/ios/quick-start?hl=zh-cn">入门基础指导</a><br />
-<!--more--><br />
-参考了上面的资料，我还是遇到了不少问题。</p>
-  </li>
-  <li>
-    <p>首当其冲的就是<strong>安装CocoaPods</strong> ，可以参考下面两篇文章。</p>
-
-    <ol>
-      <li><a href="http://blog.csdn.net/wuquan0625/article/details/47401235">pod install速度慢的终极解决方案</a>。</li>
-      <li><a href="http://www.cnblogs.com/qianyuming/p/5012578.html">cocoapod安装过程中的幺蛾子</a></li>
-    </ol>
-  </li>
-  <li>一定要下载最新的googlemobilesdk版本，<a href="https://firebase.google.com/docs/admob/ios/download?hl=zh-cn">地址在此处</a>,我当前用的是v7.9.0。</li>
-  <li>我们的项目不仅仅会依赖上面的<code>GoogleMobileAds.framework</code>，还依赖一下的framework，请在target-&gt; build phase -&gt; frameworks中找出来。此处我也是被坑到了，总是提示类似<code>"_OBJC_CLASS_$_SFSafariViewController", referenced from: "_CMTimeMakeWithSeconds", referenced from: l3880 in GoogleMobileAds(flat-arm64)"</code>这样的错误，究其原因就是没有找到对应的framework。</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">CoreMideia.framework,SafariServices.framework,
-</span><span class="line">CoreBluetooth.framework,MessageUI.framework,
-</span><span class="line">AdSupport.framework,EventKit.framework,EventKitUI.framework,
-</span><span class="line">AudioToolbox.framework,MediaPlayer.framework,
-</span><span class="line">StoreKit.framework,SystemConfiguration.framework,
-</span><span class="line">CoreTelephony.framework,CoreGraphics.framework,
-</span><span class="line">AVFoundation.framework</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ol>
-  <li>clean-&gt;build project</li>
-  <li>在模拟器上运行，Google Ads会自动加载测试的广告。但是如果要在真机上测试，需要打开真机上关闭广告跟踪的功能。在手机的设置-&gt;隐私-&gt;广告里面。关闭即可。</li>
-  <li>运行项目从输出控制台先拿到测试设备号。然后填写到下面的位置。再次运行。</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">GADRequest *request = [GADRequest request];
-</span><span class="line">request.testDevices = @[@"测试设备号"];</span></code></pre></td></tr></table></div></figure></notextile></div>
-<ol>
-  <li>设备上测试，还要考虑装一个VPN。</li>
-  <li>如果首次没有显示出来，并且控制台也没有报错，估计就是网络响应慢导致的问题。可以多次尝试即可。</li>
-  <li>Google 提供了一个example工程。<a href="git@github.com:googleads/googleads-mobile-ios-examples.git">地址</a>,可以先调通这个工程，那么整合到cocos2dx中也就不是什么事儿了！</li>
-</ol>
-
-<p>上述是我花费了大半天的时间，踩了不少坑，才将这套流程走通。并且仅仅是展示了Banner广告。<br />
-先看一下效果吧。接下来的计划就是调通控制广告播时长的接口。</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-IMG_0511.png" alt="IMG_0511" /></p>
 
 ]]></content>
   </entry>
