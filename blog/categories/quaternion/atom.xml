@@ -4,7 +4,7 @@
   <title><![CDATA[分类:quaternion | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/quaternion/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-14T17:55:16+08:00</updated>
+  <updated>2017-05-14T18:03:03+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -23,19 +23,19 @@
 这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！<br />
 <img src="http://wx2.sinaimg.cn/mw690/805c3d47ly1fevq3bkj1mg206y06y4ql.gif" alt="" /></p>
 
-<!--more-->
-<p>## 开始入手</p>
+<h2 id="section">开始入手</h2>
 
 <p>镜头移动是需要控制镜头的位置随着英雄的位置变动而变动。<br />
-因此有下面的代码：</p>
-
-<pre><code>public class SimpleFollower : MonoBehaviour {
+因此有下面的代码：<br />
+<!--more--><br />
+<code>
+public class SimpleFollower : MonoBehaviour {
 	public Transform target;
 	void Update () {
 		transform.position = target.position;
 	}
 }
-</code></pre>
+</code></p>
 
 <p>target就是英雄，把这个组件拖到英雄身上。移动英雄。看看效果。<br />
 是不是发现镜头嵌在了英雄身上，英雄的position的中心点在身体重心上，这是镜头也在这。因为出现嵌入感。所以应该增加一个偏移量offset。</p>
@@ -77,7 +77,7 @@ transform.position = Vector3.Lerp(transform.position,target.position + _deltaPos
 
 </code></pre>
 
-<h2 id="section">可选阅读</h2>
+<h2 id="section-1">可选阅读</h2>
 
 <p>在FPS游戏中，有输入设备可控制英雄的移动，例如手柄，键盘等。我们这里使用鼠标控制英雄的旋转。</p>
 
@@ -90,7 +90,7 @@ target.transform.rotation = Quaternion.Euler (0, _horizontalRotation, 0);
 rotateSpeed是旋转速度。每秒钟旋转多少。<br />
 通过Quaternion.Euler计算一个旋转四元数，用来控制英雄的旋转。</p>
 
-<h2 id="section-1">结语</h2>
+<h2 id="section-2">结语</h2>
 <p>上面旋转用到了矩阵和向量的乘法运算。将一个坐标转换到另一个坐标。其他的都是通过Lerp和Clamp对数据进行处理。</p>
 
 <p>总体来说，为了达到那种顺畅的动作，需要增加其他Vector3的转换以及fieldOfView来增加动感。如有兴趣大家可以把Unity官方的镜头跟随代码打开看看。</p>
