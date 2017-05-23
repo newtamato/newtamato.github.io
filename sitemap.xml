@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2017/05/23/shi-yong-godot</loc>
+<lastmod>2017-05-23T16:33:36+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian</loc>
 <lastmod>2017-05-14T23:49:02+08:00</lastmod>
 </url>
@@ -526,6 +530,15 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/quaternion/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/godot/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/ren-wu-kong-zhi-yi-dong/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/categories/gdscript/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/posts/2/</loc>
