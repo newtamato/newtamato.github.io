@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-23T16:40:24+08:00</updated>
+  <updated>2017-05-24T21:49:09+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,29 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unity制作platform游戏]]></title>
+    <link href="http://www.newtomato.me/blog/2017/05/24/unityzhi-zuo-platformyou-xi"/>
+    <updated>2017-05-24T21:41:16+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/05/24/unityzhi-zuo-platformyou-xi</id>
+    <content type="html"><![CDATA[<p>最近抽时间做了一个简单的Platform游戏，待以后有空可将这个demo扩展一下。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-24-Untitled.gif" alt="" /></p>
+
+<p>这里面涉及到以下的问题：<br />
+<!--more--><br />
+1. 控制英雄移动。<br />
+2. 平台移动。<br />
+3. 碰撞检测。<br />
+4. 英雄播放特殊动画。<br />
+5. 动画中使用了onewaycollision的方式，让能够让平台上面有碰撞体，而下面碰撞不生效。英雄可以直接从下面穿过。采用Unity最新的Platform Effect 2D<br />
+6. 场景加载。<br />
+7. 实例化面板。<br />
+8. 事件通知。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用GoDot引擎制作一款mini小游戏]]></title>
@@ -1590,41 +1613,6 @@ Google Play Store是否正常，可以自己上去下载一个其他应用测试
 开发者账号和测试者账号要分开，猜想是Google Play服务后面有一些缓存的问题。</strong></p>
 
 <p>运气好的话，一遍就能通过，如果不好，那就两遍。祝你好运吧。我花费了2天时间，才跑通了一个测试支付。希望你能比我运气好一些。不必这么痛苦。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[游戏引擎记录 - GameMaker]]></title>
-    <link href="http://www.newtomato.me/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker"/>
-    <updated>2016-08-28T19:17:58+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/08/28/you-xi-yin-qing-ji-lu-gamemaker</id>
-    <content type="html"><![CDATA[<p>GameMaker是一款制作2D游戏的引擎，支持跨平台发布游戏，Android，IOS，Win，Xbox，PS等。现在已经支持直接将游戏发布导出html5格式。1999 年 11 月发布了首个公开版本。早期是免费，4.3版本之后成为收费版本。</p>
-
-<p>它提供自己的开发编辑器 Game Maker Studio和开发语言GML，语法简单。有1000个函数左右，能够满足所有的游戏需求。官方网站提供了几个简单的游戏demo，每个不过百行代码。极其简单，易于上手。<br />
-<!--more--></p>
-
-<p>游戏基于事件，通过拖拽控件到room中(就是场景)然后，在控件上写代码，检查控件位置，移动，和是否接受Input事件，以及是否和other物体碰撞，来判定控件的行动和改变控件的显示。比如切换控件的图片，sprite_index = 2即可。比如切换到其他房间go_to_room，或者设定计时器alarm。</p>
-
-<p>此游戏引擎在做2d的闯关冒险游戏，射击有很大的优势。游戏流畅自如，比如下面两款游戏：</p>
-
-<p><a href="http://www.yoyogames.com/showcase/2/defenders-of-ekron">defenders of ekron</a></p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-14_feature.png" alt="14_feature" /></p>
-
-<p><a href="http://www.cybernate.com/">SUPER MUTANT ALIEN ASSAULT</a><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-1033_feature.png" alt="1033_feature" /></p>
-
-<p>游戏工具开发整体感受是-简单易用，语法相对于其他游戏语言简直不能太简单。且游戏打包之后体积相对于unity真的惊人的小。且国内不少这方面的开发者，在<a href="http://www.gamemaker.cn/">Game Maker开发者之家</a>里面很多人提供了一些源码工程。真心学习的话，一两个星期就可以上手了。且受益于前人的贡献，gamemaker的文档已被翻译成中文，<a href="http://f1.gamemake.org/gm/">地址</a>,<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-14723833105217.jpg" alt="" /></p>
-
-<p>不过也有不足之处，首先游戏UI需要自己手写代码，和早期unity的GUI相似，暂时没有找到一些第三方比较好的UI编辑器。</p>
-
-<p>其次，在Mac上的编辑器不如Windows好用，很多工程打不开。正如编译ios包，最好弄一台mac一样，使用这个引擎最好也能弄个Windows系统才可以。</p>
-
-<p>再次，对于团队合作的项目，这个引擎是否合适？如果多人写作编辑同一个room之后，是如何解决冲突的？如果不能，是否是需要通过将功能划分，然后团队各负责一块儿的方式来协作？所以可能不适合大的团队，但是小团队，甚至个人开发者来说，这就不是问题了。</p>
-
-<p>不得不说，这个引擎在快速出原型demo还是很不错的。个人认为甚至快于Unity。Unity自有他的好处。下次再说。</p>
 
 ]]></content>
   </entry>

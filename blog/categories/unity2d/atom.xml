@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:unity2d | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/unity2d/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-05-24T21:49:09+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Unity制作platform游戏]]></title>
+    <link href="http://www.newtomato.me/blog/2017/05/24/unityzhi-zuo-platformyou-xi"/>
+    <updated>2017-05-24T21:41:16+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/05/24/unityzhi-zuo-platformyou-xi</id>
+    <content type="html"><![CDATA[<p>最近抽时间做了一个简单的Platform游戏，待以后有空可将这个demo扩展一下。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-24-Untitled.gif" alt="" /></p>
+
+<p>这里面涉及到以下的问题：<br />
+<!--more--><br />
+1. 控制英雄移动。<br />
+2. 平台移动。<br />
+3. 碰撞检测。<br />
+4. 英雄播放特殊动画。<br />
+5. 动画中使用了onewaycollision的方式，让能够让平台上面有碰撞体，而下面碰撞不生效。英雄可以直接从下面穿过。采用Unity最新的Platform Effect 2D<br />
+6. 场景加载。<br />
+7. 实例化面板。<br />
+8. 事件通知。</p>
+
+]]></content>
+  </entry>
+  
+</feed>

@@ -4,7 +4,7 @@
   <title><![CDATA[分类:2d | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/2d/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-23T16:40:24+08:00</updated>
+  <updated>2017-05-24T21:49:09+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,186 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用GoDot引擎制作一款mini小游戏]]></title>
+    <link href="http://www.newtomato.me/blog/2017/05/23/shi-yong-godot"/>
+    <updated>2017-05-23T16:33:36+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/05/23/shi-yong-godot</id>
+    <content type="html"><![CDATA[<p>Godot是一款高级，多功能，跨平台的2D和3D开源游戏引擎。其基本功能和Unity类似。<br />
+他采用GDScript脚本语言，语法类似Python。简单易学。开发IDE工具体积很小，支持功能复杂，包括UI编辑，动画编辑，光照，Shader，寻路导航。不同类型碰撞检测等。</p>
+
+<p>今天我们就通过一个小游戏来熟悉一下这个引擎。小游戏的效果如下</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-hunter.gif" alt="hunte" /></p>
+
+<p>这是个2D的游戏，玩家控制英雄四处移动旋转，控制开枪，消灭包围过来的敌人。<br />
+<!--more--></p>
+
+<p>需要考虑的问题有</p>
+
+<ol>
+  <li>制作UI，上面有是哪个lable。</li>
+  <li>多点触摸，如何同时控制两个左右两个控制器。左边控制移动旋转，右侧控制开枪</li>
+  <li>敌人的生成和目标追踪。</li>
+  <li>数据更新。例如上面杀死的敌人数量是有变化的。</li>
+</ol>
+
+<h3 id="section">游戏结构介绍</h3>
+
+<p>游戏的场景结构如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955237845110.jpg" alt="=w300" /></p>
+
+<p>整个root下面有一个大的节点Node2D,TextureFrame被我用来做背景。Player就是我们将要控制的英雄。<br />
+animal_layer是敌人层。所有敌人都被放到这里，便于管理和控制。Timer是用来计时，用于每隔1秒开始生成新的敌人逻辑。info和info2以及fps都是界面上UI的展示。console就是我们的控制器。<br />
+在这张图上可以看到有三个节点绑定了脚本，一个是Node2D，用于管理和生成敌人。一个是Player，另外一个是console。</p>
+
+<p>Player上多一个影片剪辑一样的图标，这表示他里面还有子元件，双击它打开，里面的样式如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955241457399.jpg" alt="=w300" /><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955244267190.jpg" alt="=w100" /></p>
+
+<p>AnimatedSprite是一个类似序列帧一样的动画，可以程序控制固定展示第几张图片。我这里有三张图片，一张是表示idel状态，一张是奔跑状态，还有一张是开枪状态。默认是第一张，开枪则会设置set_frame(2)这样展示第三种状态了。</p>
+
+<p>firePosition是一个点，用来占位。开枪之后，子弹会从这个地方发射。</p>
+
+<h3 id="section-1">英雄控制</h3>
+
+<p>OK，下面我们来说一下，最有意思的地方，那就是如何控制移动和旋转英雄。<br />
+移动的函数是<code>set_pos()</code>,<code>translate()</code>。旋转的函数是<code>set_rot(),set_rotd()</code>,一个是控制弧度，一个是控制角度。</p>
+
+<p>我采用的是set_pos()，和set_rot(),</p>
+
+<pre><code>angle = 玩家触摸的目标点和当前位置之间的夹角
+directionVector = 当前位置到玩家触摸点的方向向量
+get_node("Player").set_pos(directionVector * SPEED * delta)
+get_node("Player").set_rot(angle)
+</code></pre>
+
+<p>上述代码需要求得angle和directionVector，有了这两个变量，Player就可以受我们的控制了。而这两个变量刚好是<code>console</code>这个节点负责提供的。<br />
+console的样式如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955248782400.jpg" alt="=w300" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955248919593.jpg" alt="=w300" /></p>
+
+<p>玩家触摸左边的控制器，（确切说是整个控制器一分为2，触摸整个左侧任何位置），根据触摸的点，和圆中心的点，可以计算得到angle和directionVector。<br />
+触摸右边的控制器，控制开火。</p>
+
+<pre><code>func _input(event):
+	if event.type == InputEvent.MOUSE_BUTTON:
+		if event.is_pressed():
+			pass
+		else:
+			get_node("touch").set_pos(Vector2(0,0))
+			get_parent().get_node("Player").set_walking(false);
+	if event.type == InputEvent.MOUSE_MOTION :
+		if Input.is_mouse_button_pressed(BUTTON_LEFT) :
+			if event.pos.x &gt; get_viewport_rect().size.width/2:
+				return
+			get_parent().get_node("Player").set_walking(true);
+			var localPos = get_local_mouse_pos() 
+			var maxRadius = self.get_texture().get_width()/2;
+			var minRadius = self.get_node("touch").get_texture().get_width()/2;
+			var offset = maxRadius - minRadius
+			var startPos = Vector2(0,0)
+			var distance = localPos.distance_to(startPos)
+			var direction = (localPos - startPos).normalized()
+			if distance &gt;= offset:
+				localPos = direction * offset;
+	
+			get_node("touch").set_pos(localPos);
+			
+			var angle = localPos.angle_to_point(startPos);
+			get_parent().get_node("Player").set_rot(angle)
+			get_parent().get_node("Player").set_direction(direction);
+			
+	if event.type == InputEvent.SCREEN_TOUCH:
+		#_point[event.index] = {pressed = event.pressed,pos = event.pos}
+		var event2 = get_node("aim").make_input_local(event)
+		if get_node("aim").get_item_and_children_rect().has_point(event2.pos):
+			if event2.pressed == true:
+				#get_node("aim").set_scale(Vector2(0.5,0.5))
+				get_parent().get_node("Player").startToShoot()
+			else:
+				get_node("aim").set_scale(Vector2(1,1))
+
+</code></pre>
+
+<p>这里我用的是mouse_motion来计算玩家的对左侧控制器的控制。由于是多点触摸InputEvent.SCREEN_TOUCH会派发多次，程序可以通过event.index来追踪用的是那个点被点击了。index=0，表示第一个点被点击，index=1，表示第二个点被点击，然后通过event.is_pressed()来检查是否是玩家松开了手指。</p>
+
+<p>至于怎么打开多点触摸，在godot这里模拟器中还没有找到合适的方法，我的做法是编译好pck，运行到ios的模拟器上，这样测试。比较麻烦一些吧。</p>
+
+<h3 id="section-2">敌人的生成</h3>
+
+<p>为了简单，敌人的生成是没有做缓存池机制的。通过Timer,每隔一秒创建一个敌人，然后添加到animal_layer上面。将Player节点传递给敌人。敌人通过updater函数去追踪player的位置。</p>
+
+<pre><code>	var enemy = preload("res://hunter/AnimalArea2D.tscn").instance()
+	enemy.connect("enemy_dead_signal",self,"_on_enemy_dead_handler");
+	enemy.set_target(get_node("Player"))
+	_index += 1
+	enemy.set_name("animal_%d" % _index)
+	get_node("animal_layer").add_child(enemy)
+	enemy.set_pos(pos)
+</code></pre>
+<p>敌人的追踪代码如下：</p>
+
+<pre><code>func _process(delta):
+	if _target != null and _target extends preload("res://hunter/Player.gd"):
+		var pos = _target.get_global_pos()
+		look_at(pos)
+		if _isDead == true:
+			return
+
+		var distance = pos - get_global_pos()
+		if distance.length() &lt; 80:
+			return
+		translate(distance.normalized() * delta * SPEED)
+</code></pre>
+
+<p>敌人的结构如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955257583598.jpg" alt="=w200" /><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955257655740.jpg" alt="=w300" /></p>
+
+<p>敌人里面多了几个UI组件。一个是进度条，用于控制血量的展示。一个是爆炸效果。被子弹击中之后，触发这个效果。name的Lable组件。还有一个就是碰撞区域，上面蓝色的圆形区域。用于检测子弹是否碰撞到敌人身上。<br />
+子弹的结构如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955260774599.jpg" alt="" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955260863005.jpg" alt="=w300" /></p>
+
+<p>因此当子弹进入到敌人的圆形区域后，会触发body_enter事件。我们可以通过这个事件判定是否被击中了。</p>
+
+<p>上面创建敌人的时候，敌人connect了一个<strong>信号</strong>（事件），就是<code>enemy_dead_signal</code>，这个事件如果触发了会被<code>_on_enemy_dead_handler</code>接收到然后处理。</p>
+
+<p>这个信号怎么派发的？和事件一样，那么怎么携带参数呢？</p>
+
+<p>下面我们就开始说一下第四条，怎么处理数据更新。</p>
+
+<h3 id="section-3">数据更新</h3>
+<p><code>enemy_dead_signal</code>是一个信号，而不是一个简单的字符串。在GDScript语法中，定义一个信号的语法如下：</p>
+
+<p><code>signal enemy_dead_signal</code></p>
+
+<p>这样enemy_dead_signal就被做成了信号，但是也只有定义它的组件可以派发。</p>
+
+<pre><code>emit_signal("enemy_dead_signal"）
+</code></pre>
+<p>这里派发信号，用的又是字符串enemy_dead_signal，因此在我看来，enemy_dead_signal是相当于信号的name，具有唯一性。信号名不能再同一个对象上重复。它应该是挂在对象这个空间里，根据信号名找到真正的信号。然后把信号发射出去。</p>
+
+<p>如何携带参数呢？那就需要修改信号的定义了。修改如下</p>
+
+<pre><code>signal enemy_dead_signal(val1,val2,...)
+</code></pre>
+
+<p>这样我们发射信号就将参数放在后面即可。</p>
+
+<pre><code>emit_signal("enemy_dead_signal",参数1，参数2）
+</code></pre>
+
+<p>这样当我们收到敌人死亡的信号，将数据更新。然后 get_node(“info2”).set_text( 死亡敌人数 : num_dead)</p>
+
+<h3 id="section-4">结语</h3>
+
+<p>这个游戏大致的结构和核心的代码差不多已经讲完。可以看到godot将一切都看成是node，node绑定脚本。脚本负责逻辑。因此脚本可能会非常大。不方便维护，不像是unity组件化的思想，逻辑拆分成不同组件。方便维护。<br />
+相对unity，godot显得有点小众。不过，对于开发一个独立游戏，除了rpgMaker，GMS之外，又多了一个这样的开源引擎，还是不错的。<br />
+感兴趣的同学们，移步到官方<a href="https://godotengine.org/news">网站</a>去看看，他们一直在努力做新的东西。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[游戏引擎记录 - GameMaker]]></title>
