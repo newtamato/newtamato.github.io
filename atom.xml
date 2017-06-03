@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-24T21:49:09+08:00</updated>
+  <updated>2017-06-03T20:05:46+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -504,7 +504,7 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[require机制和自动更新之间的爱恨情仇]]></title>
+    <title type="html"><![CDATA[Require机制和自动更新之间的爱恨情仇]]></title>
     <link href="http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng"/>
     <updated>2017-04-15T15:02:02+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng</id>
@@ -696,7 +696,7 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[keytool的基本用法以及检查apk签名]]></title>
+    <title type="html"><![CDATA[Keytool的基本用法以及检查apk签名]]></title>
     <link href="http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming"/>
     <updated>2017-01-09T14:38:22+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming</id>
@@ -736,7 +736,7 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Android facebook登录问题]]></title>
+    <title type="html"><![CDATA[Android Facebook登录问题]]></title>
     <link href="http://www.newtomato.me/blog/2017/01/07/android-facebookdeng-lu-wen-ti"/>
     <updated>2017-01-07T19:31:06+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/01/07/android-facebookdeng-lu-wen-ti</id>

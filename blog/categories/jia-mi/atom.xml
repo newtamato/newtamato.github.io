@@ -4,7 +4,7 @@
   <title><![CDATA[分类:加密 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/jia-mi/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-24T21:49:09+08:00</updated>
+  <updated>2017-06-03T20:05:46+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[cocos2dx中如何让sqlite3具有加密的功能]]></title>
+    <title type="html"><![CDATA[Cocos2dx中如何让sqlite3具有加密的功能]]></title>
     <link href="http://www.newtomato.me/blog/2016/05/07/sqlite-cocos2dx"/>
     <updated>2016-05-07T19:00:44+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/05/07/sqlite-cocos2dx</id>

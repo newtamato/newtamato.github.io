@@ -4,7 +4,7 @@
   <title><![CDATA[分类:xcode | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/xcode/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-24T21:49:09+08:00</updated>
+  <updated>2017-06-03T20:05:46+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[Xcode 7 error: “Missing iOS Distribution signing identity for …”]]></title>
+    <title type="html"><![CDATA[Xcode 7 Error: “Missing iOS Distribution Signing Identity for …”]]></title>
     <link href="http://www.newtomato.me/blog/2016/04/02/missing-ios-distribution"/>
     <updated>2016-04-02T14:25:05+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/04/02/missing-ios-distribution</id>

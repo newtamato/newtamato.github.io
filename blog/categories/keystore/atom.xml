@@ -4,7 +4,7 @@
   <title><![CDATA[分类:keystore | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/keystore/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-24T21:49:09+08:00</updated>
+  <updated>2017-06-03T20:05:46+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[keytool的基本用法以及检查apk签名]]></title>
+    <title type="html"><![CDATA[Keytool的基本用法以及检查apk签名]]></title>
     <link href="http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming"/>
     <updated>2017-01-09T14:38:22+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming</id>

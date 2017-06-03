@@ -1,15 +1,11 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
   <title>番茄手册</title>
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="阅读cocos2dx的代码，我们会发现它里面有很多看似很奇怪的代码，比如cocos2dx/platform/android/jni/下面的c++文件。 里面的函数命名和一般的c++命名不一样！这是因为里面全是JNI规范的函数。 这个JNI是怎么工作的呢？我们先说JAVA是怎么调用c++函数。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -19,60 +15,72 @@
 
   
   <link rel="canonical" href="http://www.newtomato.me/posts/2/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <!-- http://opengraphprotocol.org/ -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://www.newtomato.me/posts/2/">
+  <meta property="og:title" content="番茄手册">
+  
+
+  <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
+
+<link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  
+  <link href="/stylesheets/screen.css" media="screen, projection, print" rel="stylesheet" type="text/css">
 
   
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">番茄手册</a></h1>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.newtomato.me" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-   <li><a href="/about">About</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
+  <body   >
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <div id="wrap">
       
-  <header>
+      <div id="banner-image">
+        <div class="layer">
+          <div id="banner-text">
+            <h1 class="page-title">番茄手册</h1>
+            <p class="page-desc">
+              <br>
+            </p>
+            <br>
+            <br>
+            <div class="page-links center">
+              <ul class="index-nav">
+                  <li ><a href="/">Home</a></li>
+<li ><a href="/blog/archives">Archives</a></li>
+<li ><a href="about">About</a></li>
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="main" role="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content">
+    <div class="blog-index" itemscope itemtype="http://schema.org/Blog">
+    <meta itemprop="name" content="番茄手册" />
     
-      <h1 class="entry-title"><a href="/blog/2016/11/20/jni">JNI,java和C++之间的桥梁</a></h1>
+    <meta itemprop="url" content="http://www.newtomato.me" />
+      
+      
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -82,17 +90,21 @@
 
 
 
-  
 
 
-<time datetime="2016-11-20T19:32:36+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-11-20T19:32:36+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年11 月20 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/11/20/jni" itemprop="url">JNI,java和C++之间的桥梁</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-image002.png" alt="image002" /></p>
+  <div class="entry-content clearfix" itemprop="articleBody description"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-image002.png" alt="image002" /></p>
 
 <p>阅读cocos2dx的代码，我们会发现它里面有很多看似很奇怪的代码，比如<code>cocos2dx/platform/android/jni/</code>下面的c++文件。</p>
 
@@ -104,22 +116,19 @@
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/11/20/jni">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/11/20/jni">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -129,17 +138,21 @@
 
 
 
-  
 
 
-<time datetime="2016-11-20T18:04:13+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-11-20T18:04:13+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年11 月20 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong" itemprop="url">Cocos2dx和OBB的结合使用</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
+  <div class="entry-content clearfix" itemprop="articleBody description"><p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
 有两种方法可以使用OBB文件。<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
 
@@ -160,22 +173,19 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -185,17 +195,21 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 
 
 
-  
 
 
-<time datetime="2016-11-20T16:13:41+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-11-20T16:13:41+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年11 月20 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong" itemprop="url">Google Android 扩展文件OBB的使用</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
+  <div class="entry-content clearfix" itemprop="articleBody description"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
 
 <p>我们提交应用到Google Store的时候，Google要求应用的大小不能够超过100M，那么超过100M怎么办呢？<br />
 那就用到了本章将要讲的东西<strong>OBB</strong>（扩展二进制文件）。</p>
@@ -205,22 +219,19 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">万圣节上线纪念</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -230,17 +241,21 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 
 
 
-  
 
 
-<time datetime="2016-11-01T18:23:34+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-11-01T18:23:34+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年11 月1 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian" itemprop="url">万圣节上线纪念</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-01-1348470031_5209.jpg" alt="1348470031_5209-w395" /></p>
+  <div class="entry-content clearfix" itemprop="articleBody description"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-01-1348470031_5209.jpg" alt="1348470031_5209-w395" /></p>
 
 <p>从去年万圣节开始，我们开始了第一个正式的大更新，到今天已经整整一年。<br />
 正因为此次的紧张仓促的更新，我才发现了我们自身很多问题。这些问题由来已久，就像是我们的老朋友一样自然到我们总是忽视了他，直到他们全部暴露出来，压得我们无法喘息。</p>
@@ -250,22 +265,19 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/11/01/mo-sheng-jie-shang-xian-ji-nian">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -275,38 +287,39 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 
 
 
-  
 
 
-<time datetime="2016-10-23T14:28:52+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-10-23T14:28:52+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年10 月23 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru" itemprop="url">支付宝微信接入</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
+  <div class="entry-content clearfix" itemprop="articleBody description"><p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">搭建ipv6环境和问题记录</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -316,17 +329,21 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 
 
 
-  
 
 
-<time datetime="2016-09-18T20:15:26+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-09-18T20:15:26+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年9 月18 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu" itemprop="url">搭建ipv6环境和问题记录</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742018443262.png" alt="" /><br />
+  <div class="entry-content clearfix" itemprop="articleBody description"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742018443262.png" alt="" /><br />
 自从16年6月份开始，苹果要求提交的应用一定要支持ipv6。ipv6是做什么用呢？和ipv4有什么区别？<br />
 其实这个教科书上已经和我们解释过了，只是这一天来得太快。<br />
 ipv4的是32位长度，而ipv6是128位，是ipv4的4倍。能够大大的解决ip地址不够用的问题。<br />
@@ -341,22 +358,19 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">快速打包测试提交苹果审核的流程</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -366,17 +380,21 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 
 
 
-  
 
 
-<time datetime="2016-09-18T17:22:24+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-09-18T17:22:24+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年9 月18 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng" itemprop="url">快速打包测试提交苹果审核的流程</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><blockquote>
+  <div class="entry-content clearfix" itemprop="articleBody description"><blockquote>
   <p>天下武功，唯快不破。加快时间是制胜王道。</p>
 </blockquote>
 
@@ -392,22 +410,19 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/09/17/stack-packzhi-zuo">Stack Pack制作</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -417,17 +432,21 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 
 
 
-  
 
 
-<time datetime="2016-09-17T21:49:19+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-09-17T21:49:19+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年9 月17 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/09/17/stack-packzhi-zuo" itemprop="url">Stack Pack制作</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><h3 id="section">创建方法</h3>
+  <div class="entry-content clearfix" itemprop="articleBody description"><h3 id="section">创建方法</h3>
 
 <p>IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。</p>
 
@@ -436,22 +455,19 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/09/17/stack-packzhi-zuo">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/09/17/stack-packzhi-zuo">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/09/11/pythonji-ben-shi-yong">Python基本使用</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -461,39 +477,40 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 
 
 
-  
 
 
-<time datetime="2016-09-11T19:15:05+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-09-11T19:15:05+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年9 月11 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/09/11/pythonji-ben-shi-yong" itemprop="url">Python基本使用</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p><strong>Python</strong>是一门很容易掌握的语言，简单的语法强大的功能，在很多地方都视他为最高效的语言，尤其是在处理数据和文本上面，真的是帮了我们大忙。比如讲产品经理那里过来的文案导出成localizaiton文件，或者将他们的Excel表格导出成json，xml等配置文件，再将我们的数据信息导成他们看的懂得excel表格。<br />
+  <div class="entry-content clearfix" itemprop="articleBody description"><p><strong>Python</strong>是一门很容易掌握的语言，简单的语法强大的功能，在很多地方都视他为最高效的语言，尤其是在处理数据和文本上面，真的是帮了我们大忙。比如讲产品经理那里过来的文案导出成localizaiton文件，或者将他们的Excel表格导出成json，xml等配置文件，再将我们的数据信息导成他们看的懂得excel表格。<br />
 如下的部分是我在团队内部（针对有部分编程语言基础的同学）做的关于Python的分享，也算是对自己使用Python做一个总结吧。</p>
 
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/09/11/pythonji-ben-shi-yong">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/09/11/pythonji-ben-shi-yong">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">Android In-app-billing 接入- 问题总结</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -503,17 +520,21 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 
 
 
-  
 
 
-<time datetime="2016-08-31T16:28:48+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-08-31T16:28:48+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年8 月31 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie" itemprop="url">Android In-app-billing 接入- 问题总结</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><h2 id="section">准备过程</h2>
+  <div class="entry-content clearfix" itemprop="articleBody description"><h2 id="section">准备过程</h2>
 <p>接入Google支付之前，你要预先准备如下几件事情。</p>
 
 <ol>
@@ -523,162 +544,42 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   
   
     <footer>
-      <a rel="full-article" href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  <div class="pagination">
-    
-      <a class="prev" href="3">&larr; Older</a>
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-    <a class="next" href="1">Newer &rarr;</a>
-    
+        </article>
+      
+    </div>
+
+    <ul class="pager">
+      
+        <li class="previous"><a href="/posts/3">&larr;&nbsp;Older</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+        <li class="next"><a href="/index.html">Newer&nbsp;&rarr;</a></li>
+      
+    </ul>
   </div>
 </div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2017/05/24/unityzhi-zuo-platformyou-xi">Unity制作platform游戏</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/23/shi-yong-godot">使用GoDot引擎制作一款mini小游戏</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/15/requirehe-re-geng">require机制和自动更新之间的爱恨情仇</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
- <h1>Categories</h1>
- <ul id="categories">
-  <li class='category'><a href='/blog/categories/2d/'>2d (2)</a></li>
-<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
-<li class='category'><a href='/blog/categories/android/'>android (5)</a></li>
-<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
-<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
-<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
-<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
-<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
-<li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
-<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
-<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
-<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
-<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
-<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
-<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
-<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
-<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
-<li class='category'><a href='/blog/categories/gdscript/'>gdscript (1)</a></li>
-<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
-<li class='category'><a href='/blog/categories/godot/'>godot (1)</a></li>
-<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
-<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
-<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
-<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
-<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
-<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
-<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
-<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
-<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
-<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
-<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
-<li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
-<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
-<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
-<li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
-<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
-<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
-<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
-<li class='category'><a href='/blog/categories/quaternion/'>quaternion (1)</a></li>
-<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
-<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
-<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
-<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
-<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
-<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
-<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
-<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
-<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
-<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
-<li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
-<li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
-<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
-<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
-<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
-<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
-<li class='category'><a href='/blog/categories/人物控制移动/'>人物控制移动 (1)</a></li>
-<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
-<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
-<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
-<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
-<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
-<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
-<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
-<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
-<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
-<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
-<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
-<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
-<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
-<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
-<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
-<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
-<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
-<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
-<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
-<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
-<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
-<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
-<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
-<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
-<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
-<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
-<li class='category'><a href='/blog/categories/问题/'>问题 (1)</a></li>
-<li class='category'><a href='/blog/categories/项目/'>项目 (2)</a></li>
-<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
-<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
 
- </ul>
-</section>
-
-
-
-
-  
-</aside>
-
+        </div>
+      </div>
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - newtomato -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2017 - newtomato<br>
+  <small>
+      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>,
+      <span class="credit">customized with <a href="https://github.com/bhrigu123/abacus">abacus theme</a></span>.
+  </small>
 </p>
 
+</div>
 </footer>
-  
+    
 
 
 
@@ -691,14 +592,15 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
 
 
+<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr.js"></script>
 
 
-
-</body>
+  </body>
 </html>

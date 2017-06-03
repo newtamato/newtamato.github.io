@@ -4,7 +4,7 @@
   <title><![CDATA[分类:cocos2dx | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/cocos2dx/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-05-24T21:49:09+08:00</updated>
+  <updated>2017-06-03T20:05:46+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -116,7 +116,7 @@ s_pZipFile = new ZipFile(resourcePath, "assets/");
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[cocos2dx 增加Google移动广告]]></title>
+    <title type="html"><![CDATA[Cocos2dx 增加Google移动广告]]></title>
     <link href="http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads"/>
     <updated>2016-07-18T22:13:43+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads</id>
@@ -180,7 +180,7 @@ request.testDevices = @[@"测试设备号"];
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[cocos2dx中如何让sqlite3具有加密的功能]]></title>
+    <title type="html"><![CDATA[Cocos2dx中如何让sqlite3具有加密的功能]]></title>
     <link href="http://www.newtomato.me/blog/2016/05/07/sqlite-cocos2dx"/>
     <updated>2016-05-07T19:00:44+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/05/07/sqlite-cocos2dx</id>

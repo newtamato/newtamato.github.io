@@ -1,17 +1,11 @@
-
 <!DOCTYPE html>
-<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
-<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
-<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
   <title>番茄手册</title>
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。
-简单地介绍一下GIT的工作流程
-">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -21,60 +15,72 @@
 
   
   <link rel="canonical" href="http://www.newtomato.me/posts/7/">
-  <link href="/favicon.png" rel="icon">
-  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
-  <script src="/javascripts/modernizr-2.0.js"></script>
-  <script src="/javascripts/ender.js"></script>
-  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
-<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
-<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  <!-- http://opengraphprotocol.org/ -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://www.newtomato.me/posts/7/">
+  <meta property="og:title" content="番茄手册">
+  
+
+  <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
+
+<link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  
+  <link href="/stylesheets/screen.css" media="screen, projection, print" rel="stylesheet" type="text/css">
 
   
 
 </head>
 
-<body   >
-  <header role="banner"><hgroup>
-  <h1><a href="/">番茄手册</a></h1>
-  
-</hgroup>
-
-</header>
-  <nav role="navigation"><ul class="subscription" data-subscription="rss">
-  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
-  
-</ul>
-  
-<form action="https://www.google.com/search" method="get">
-  <fieldset role="search">
-    <input type="hidden" name="q" value="site:www.newtomato.me" />
-    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
-  </fieldset>
-</form>
-  
-<ul class="main-navigation">
-  <li><a href="/">Blog</a></li>
-  <li><a href="/blog/archives">Archives</a></li>
-   <li><a href="/about">About</a></li>
-</ul>
-
-</nav>
-  <div id="main">
-    <div id="content">
-      <div class="blog-index">
-  
-  
-  
-    <article>
+  <body   >
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <div id="wrap">
       
-  <header>
+      <div id="banner-image">
+        <div class="layer">
+          <div id="banner-text">
+            <h1 class="page-title">番茄手册</h1>
+            <p class="page-desc">
+              <br>
+            </p>
+            <br>
+            <br>
+            <div class="page-links center">
+              <ul class="index-nav">
+                  <li ><a href="/">Home</a></li>
+<li ><a href="/blog/archives">Archives</a></li>
+<li ><a href="about">About</a></li>
+
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div id="main" role="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content">
+    <div class="blog-index" itemscope itemtype="http://schema.org/Blog">
+    <meta itemprop="name" content="番茄手册" />
     
-      <h1 class="entry-title"><a href="/blog/2015/10/30/git-basic">GIT常用方法</a></h1>
+    <meta itemprop="url" content="http://www.newtomato.me" />
+      
+      
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -84,38 +90,39 @@
 
 
 
-  
 
 
-<time datetime="2015-10-30T10:58:35+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-10-30T10:58:35+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年10 月30 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/10/30/git-basic" itemprop="url">GIT常用方法</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
+  <div class="entry-content clearfix" itemprop="articleBody description"><p>使用Git作为代码管理的工具，是一种常见的方式。相对于其他的代码管理工具，Git灵活，易切换。而且很方便和别人交互。<br />
 简单地介绍一下GIT的工作流程<br />
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2015/10/30/git-basic">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2015/10/30/git-basic">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2015/10/17/genymotionde-an-zhuang">GenyMotion的安装</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -125,17 +132,21 @@
 
 
 
-  
 
 
-<time datetime="2015-10-17T22:28:11+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-10-17T22:28:11+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年10 月17 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/10/17/genymotionde-an-zhuang" itemprop="url">GenyMotion的安装</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><ol>
+  <div class="entry-content clearfix" itemprop="articleBody description"><ol>
   <li>先安装虚拟机<a href="https://www.virtualbox.org/wiki/Downloads">VirtualBox</a></li>
   <li>在下载  <a href="http://www.genymotion.cn/#theme=download">GenyMotion</a>,但是他还需要注册，才能继续使用</li>
   <li>主界面的 Settings 按钮，可以用来设置 VirtualBox 及 ADB 路径等信息。</li>
@@ -156,17 +167,14 @@
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2015/10/17/lsming-ling-xing-pai-xu">Ls命令行排序</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -176,17 +184,21 @@
 
 
 
-  
 
 
-<time datetime="2015-10-17T22:26:44+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-10-17T22:26:44+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年10 月17 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/10/17/lsming-ling-xing-pai-xu" itemprop="url">Ls命令行排序</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><ul>
+  <div class="entry-content clearfix" itemprop="articleBody description"><ul>
   <li>
     <p>按文件大小降序排列  <code>ls -lSr </code></p>
   </li>
@@ -209,17 +221,14 @@
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2015/10/17/vimshi-yong-yan-se">Vim使用-颜色</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -229,17 +238,21 @@
 
 
 
-  
 
 
-<time datetime="2015-10-17T22:19:24+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-10-17T22:19:24+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年10 月17 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/10/17/vimshi-yong-yan-se" itemprop="url">Vim使用-颜色</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><ol>
+  <div class="entry-content clearfix" itemprop="articleBody description"><ol>
   <li>首先将Solarized的配色库download下来</li>
 </ol>
 
@@ -270,17 +283,14 @@
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de">项目管理心得</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -290,39 +300,40 @@
 
 
 
-  
 
 
-<time datetime="2015-10-17T22:14:06+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-10-17T22:14:06+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年10 月17 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/10/17/xiang-mu-guan-li-xin-de" itemprop="url">项目管理心得</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
+  <div class="entry-content clearfix" itemprop="articleBody description"><p>项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。</p>
 
 <p>谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性，因为我自己估算了时间怎么会完不成呢？可是，你是否也会想过这样是否这个srcum就真的没有问题了呢？他是否是适合所有的团队？对于我们这样有些松散的，开发经验并不足够的小团队而言，并且开发任务也很繁重，是否也是适合的呢？<br />
 </div>
   
   
     <footer>
-      <a rel="full-article" href="/blog/2015/10/17/xiang-mu-guan-li-xin-de">阅读全文&rarr;</a>
+      <a class="read-more btn btn-default" href="/blog/2015/10/17/xiang-mu-guan-li-xin-de">阅读全文&rarr;</a>
     </footer>
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase">Git命令行总结-rebase</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -332,17 +343,21 @@
 
 
 
-  
 
 
-<time datetime="2015-10-17T22:11:24+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-10-17T22:11:24+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年10 月17 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase" itemprop="url">Git命令行总结-rebase</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
+  <div class="entry-content clearfix" itemprop="articleBody description"><p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
 
 <p>使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
 
@@ -365,17 +380,14 @@
   
 
 
-    </article>
-  
-  
-    <article>
+        </article>
       
-  <header>
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
     
-      <h1 class="entry-title"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log">Git命令行总结-log</a></h1>
-    
-    
-      <p class="meta">
+      <p class="meta text-muted text-uppercase">
         
 
 
@@ -385,17 +397,21 @@
 
 
 
-  
 
 
-<time datetime="2015-10-17T22:08:49+08:00" pubdate data-updated="true"></time>
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-10-17T22:08:49+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年10 月17 日</time>
         
       </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log" itemprop="url">Git命令行总结-log</a></h2>
     
   </header>
 
 
-  <div class="entry-content"><ul>
+  <div class="entry-content clearfix" itemprop="articleBody description"><ul>
   <li>git 输入部分提交的log日志</li>
 </ul>
 
@@ -435,155 +451,37 @@
   
 
 
-    </article>
-  
-  <div class="pagination">
-    
-    <a href="/blog/archives">Blog Archives</a>
-    
-    <a class="next" href="6">Newer &rarr;</a>
-    
+        </article>
+      
+    </div>
+
+    <ul class="pager">
+      
+        <li class="previous disabled"><a href="#">&larr;&nbsp;Older</a></li>
+      
+      <li><a href="/blog/archives">Blog Archives</a></li>
+      
+        <li class="next"><a href="/posts/6">Newer&nbsp;&rarr;</a></li>
+      
+    </ul>
   </div>
 </div>
-<aside class="sidebar">
-  
-    <section>
-  <h1>Recent Posts</h1>
-  <ul id="recent_posts">
-    
-      <li class="post">
-        <a href="/blog/2017/05/24/unityzhi-zuo-platformyou-xi">Unity制作platform游戏</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/23/shi-yong-godot">使用GoDot引擎制作一款mini小游戏</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/15/requirehe-re-geng">require机制和自动更新之间的爱恨情仇</a>
-      </li>
-    
-  </ul>
-</section>
-<section>
- <h1>Categories</h1>
- <ul id="categories">
-  <li class='category'><a href='/blog/categories/2d/'>2d (2)</a></li>
-<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
-<li class='category'><a href='/blog/categories/android/'>android (5)</a></li>
-<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
-<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
-<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
-<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
-<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
-<li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
-<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
-<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
-<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
-<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (3)</a></li>
-<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
-<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
-<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
-<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
-<li class='category'><a href='/blog/categories/gdscript/'>gdscript (1)</a></li>
-<li class='category'><a href='/blog/categories/git/'>git (4)</a></li>
-<li class='category'><a href='/blog/categories/godot/'>godot (1)</a></li>
-<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
-<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
-<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
-<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
-<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
-<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
-<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
-<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
-<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
-<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
-<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
-<li class='category'><a href='/blog/categories/mac/'>mac (1)</a></li>
-<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
-<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
-<li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
-<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
-<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
-<li class='category'><a href='/blog/categories/python/'>python (2)</a></li>
-<li class='category'><a href='/blog/categories/quaternion/'>quaternion (1)</a></li>
-<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
-<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
-<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
-<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
-<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
-<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
-<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
-<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
-<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
-<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
-<li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
-<li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
-<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
-<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
-<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
-<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
-<li class='category'><a href='/blog/categories/人物控制移动/'>人物控制移动 (1)</a></li>
-<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
-<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
-<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
-<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
-<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
-<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
-<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
-<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
-<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
-<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
-<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
-<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
-<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
-<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
-<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
-<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
-<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
-<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
-<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
-<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
-<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
-<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
-<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
-<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
-<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
-<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
-<li class='category'><a href='/blog/categories/问题/'>问题 (1)</a></li>
-<li class='category'><a href='/blog/categories/项目/'>项目 (2)</a></li>
-<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
-<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
 
- </ul>
-</section>
-
-
-
-
-  
-</aside>
-
+        </div>
+      </div>
     </div>
-  </div>
-  <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - newtomato -
-  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2017 - newtomato<br>
+  <small>
+      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>,
+      <span class="credit">customized with <a href="https://github.com/bhrigu123/abacus">abacus theme</a></span>.
+  </small>
 </p>
 
+</div>
 </footer>
-  
+    
 
 
 
@@ -596,14 +494,15 @@
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
 
 
+<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr.js"></script>
 
 
-
-</body>
+  </body>
 </html>
