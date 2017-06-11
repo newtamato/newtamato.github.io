@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-06-03T20:30:19+08:00</updated>
+  <updated>2017-06-11T21:16:20+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,87 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MAC上安装git-svn未生效的办法]]></title>
+    <link href="http://www.newtomato.me/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa"/>
+    <updated>2017-06-11T20:47:57+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa</id>
+    <content type="html"><![CDATA[<h2 id="git-svn-">git svn 介绍</h2>
+
+<p>git svn的原理就是服务器端还是svn服务器，但是本地使用git，这样可以本地保留git所有的功能，但是代码提交是需要提交给svn服务器的。<br />
+git svn的命令可以认为和git是一样的。部分命令有些不同。</p>
+
+<p><img src="https://git-scm.com/images/logo@2x.png" alt="" /> + <img src="https://tortoisesvn.net/assets/img/tortoisesvn_logo_hor468x64.5e0587de.svg" alt="svn" /></p>
+
+<!--more-->
+<p>例如克隆代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">git svn clone xxxx.git</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>初始化仓库：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">git svn init</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>提交代码到服务器：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">git svn dcommit</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>平时开发需要用到的命令，创建分支，本地提交，切换分支，合并分支都和git的命令相同。</p>
+
+<h2 id="git-svn">安装git svn</h2>
+<p>MAC上默认安装的git，理论上应该自带git svn的功能。但是这只是理论上，验证是否支持svn，只要在terminal测试下。<br />
+输入<code>git svn --help</code>没有报错。那恭喜你了，不需要经历我这一番折腾了。</p>
+
+<p>如果不是，请继续往下看。</p>
+
+<p>先说一下我的工作环境，我的操作系统是<code>MAC OS Sierra</code>。Git的版本是通过<code>homebrew</code>安装的，安装版本是<code>2.11.1</code>。<br />
+这个版本的git，竟然不支持git svn的命令的。于是到Git的<a href="https://git-scm.com/docs/git-svn/1.8.5">官方网站</a>，搜索了一下，他们从1.8.5版本之后就开始支持这个命令了。<br />
+所以我分析有可能brew安装的git只是一个不完整版本。于是我在官方网站重新下载了Git。开始安装。</p>
+
+<p>安装完成之后，通过命令行检查版本，还是老版本。没有变化。于是通过<code>which git</code>发现使用的位置是<code>/usr/local/bin/git</code>，于是将我安装的git做了一个软连接覆盖了这里的git。我安装之后的位置在<code>/usr/local/git</code>。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">ln -s /usr/local/git /usr/local/bin/git
+</span><span class="line">git --version</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>输出就是最新的安装版本了。<code>git version 2.13.0</code>。</p>
+
+<h2 id="section">安装完成却遇到了另一个问题</h2>
+
+<p><code>git svn --help</code>之后没有出现我预期的输出，反而报错了。</p>
+
+<p>错误如下：</p>
+
+<pre><code>Can't locate SVN/Core.pm in @INC (you may need to install the SVN::Core module) (@INC contains: /usr/local/git/lib/perl5/site_perl/5.18.2/darwin-thread-multi-2level /usr/local/git/lib/perl5/site_perl/5.18.2 /usr/local/git/lib/perl5/site_perl /Library/Perl/5.18/darwin-thread-multi-2level /Library/Perl/5.18 /Network/Library/Perl/5.18/darwin-thread-multi-2level /Network/Library/Perl/5.18 /Library/Perl/Updates/5.18.2 /System/Library/Perl/5.18/darwin-thread-multi-2level /System/Library/Perl/5.18 /System/Library/Perl/Extras/5.18/darwin-thread-multi-2level /System/Library/Perl/Extras/5.18 .) at /usr/local/git/lib/perl5/site_perl/Git/SVN/Utils.pm line 6.
+BEGIN failed--compilation aborted at /usr/local/git/lib/perl5/site_perl/Git/SVN/Utils.pm line 6.
+Compilation failed in require at /usr/local/git/lib/perl5/site_perl/Git/SVN.pm line 25.
+BEGIN failed--compilation aborted at /usr/local/git/lib/perl5/site_perl/Git/SVN.pm line 32.
+Compilation failed in require at /usr/local/git/libexec/git-core/git-svn line 21.
+BEGIN failed--compilation aborted at /usr/local/git/libexec/git-core/git-svn line 21.
+</code></pre>
+
+<p>这一坨报错消息让人摸不着头脑，于是Google一下，果然有人和我报一样的错误。</p>
+
+<p>解决方案<a href="https://stackoverflow.com/questions/16578465/on-osx-using-sourcetree-git-svn-getting-cant-locate-svn-core-pm-in-inc">在此</a>,如果你打不开，那就按照我下面的命令设置一下。看看效果吧！</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">sudo mkdir /Library/Perl/5.18/auto
+</span><span class="line">sudo ln -s /Applications/Xcode.app/Contents/Developer/Library/Perl/5.18/darwin-thread-multi‌-2level/SVN /Library/Perl/5.18/darwin-thread-multi-2level
+</span><span class="line">sudo ln -s /Applications/Xcode.app/Contents/Developer/Library/Perl/5.18/darwin-thread-multi‌-2level/auto/SVN /Library/Perl/5.18/auto/</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="section-1">结语</h2>
+
+<p>幸运的话，<code>git svn --help</code>就会正确工作了。好了开始享受用Git方式管理svn仓库吧！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unity制作platform游戏]]></title>
@@ -1543,76 +1624,6 @@ Python是动态语言，因此他和java已经c语言等静态语言最大的不
 也可以添加自己指定的搜索目录：sys.path.append(‘dirName’)和修改PYTHONPATH</p>
 
 <p>接下来的分享还要类的使用和py调用外部命令等。放到下一章。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Android In-app-billing 接入- 问题总结]]></title>
-    <link href="http://www.newtomato.me/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie"/>
-    <updated>2016-08-31T16:28:48+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie</id>
-    <content type="html"><![CDATA[<h2 id="section">准备过程</h2>
-<p>接入Google支付之前，你要预先准备如下几件事情。</p>
-
-<ol>
-  <li>准备一个google开发者账号，绑定信用卡，在花费20美金。否则进入不了Google Play Developer Console。</li>
-  <li>接下来，如果你身在大陆地区，那就你要学会翻墙。同时找一个没被阉割的android手机，这比较难，那就在已有的手机里面安装Google play store和Google Play Service。百度出来的不靠谱，因此最好能够先翻墙，然后google搜索上面两个安装包，安装即可。Android上的翻墙软件，推荐影梭，<a href="http://gjsq.me/1438224">GreenVPN</a>,<a href="http://itxs.co/s/14ff19gw">土行孙</a>。翻墙就祝各位好运了。<br />
-<!--more--></li>
-  <li>文档准备，看到全是英文Google支付接入文档，不少同学估计会头疼，此处刚好有一份<a href="http://www.baijingapp.com/question/6745">中文流程图</a>，大家可以参考借鉴一下，但最好还是能够通读一下他的开发文档。通过文档大概了解google支付的基本流程和几个概念。<strong>从文档中，我们可以看出Google支付和其他平台的支付最不一样的地方，那就是他需要先上传APK到后台，做成Alpha或者beta测试。然后把我们的小伙伴添加到测试名单中才能够发起支付。如果不发布应用，是无法测试的。PS：发布一个应用，不是瞬间完成的事情，至少等上2个小时，我创建了2个应用做测试，一个等了2个小时，一个等了一晚上。应用通过了，我们接下来才能测试。</strong>可是如果按照上述要求，我们如果修改了应用，是不是还要上传到后台呢？答案是不用，只要是下载过一次测试应用，接下来，我们只需要用相同的签名再次打包，直接覆盖安装到自己手机上即可测试。</li>
-  <li>参考如下资料：
-    <ol>
-      <li><a href="http://leenjewel.github.io/blog/2014/11/21/google-play-in-app-billing-cai-guo-de-na-xie-keng/">Google Play In-app Billing 踩过的那些坑</a></li>
-      <li><a href="http://www.jianshu.com/p/cff0f2333db6">Google In-app Billing 支付接入小结</a></li>
-    </ol>
-  </li>
-  <li>下载Android Studio,尽早地熟悉使用它。google提供的Example就是这种工具做的工程。</li>
-</ol>
-
-<p>看到这里，基本工作是OK了。<br />
-现在假设我们已经通过了成功创建了商品，发布了Alpha测试应用。测试支付，可以先将google的Example工程先做一下修改，然后打包扔上去就可以了。我们需要做的事情有<br />
-## 打包<br />
-1. 将申请应用的base64publicKey替换成自己的。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-14726312121126.jpg" alt="" /><br />
-2. 修改包名。原先是com.example换成你们想要的就行。然后清理工程重新编译。<br />
-3. 修改配置文件中的包名和applicationId。<br />
-其他保持不变，直接签名打包。提交上去等待审核通过吧。提交要提交到Alpha测试那里。而不是Production.</p>
-
-<h2 id="section-1">测试购买</h2>
-<p>接下来，讲讲怎么测试。<br />
-开发者创建一个Google group或者google plus的社区，将测试同学的google邮箱添加进来。<br />
-应用发布之后，会出现一个测试连接。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-14726296504218.jpg" alt="-w=400" /><br />
-将这个链接发给测试同学。此时他们打开这个链接才能成为有效的Tester。而不是加入到社区就可以了。<br />
-然后在此链接的页面上有一个下载链接，此时就能够下载测试应用了。<br />
-下载完成之后，接下来，我们开始测试支付。<br />
-问题才刚刚开始哦！</p>
-
-<ol>
-  <li>
-    <p>此版本的应用未配置通过Google Play结算。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-30-15-04-45.jpeg" alt="-w200" /><br />
-解决方法：检查版本号和Google Play上设置的是否一致。检查签名等。Google那边基本认为这个应用不是一个有效的测试应用。</p>
-  </li>
-  <li>
-    <p>需要验证身份，您需要登录自己的Google账户。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-31-15-55-46.jpeg" alt="-w200" /><br />
-解决方法：打开手机设置-&gt;账户-&gt;删除Google账户。然后在应用管理中，找到Google Play Store，Google Play Service分别清理缓存数据。然后在打开Google Play商店。此时要求你账户登录。重新登录一遍。在杀死我们的测试应用，重新登录游戏。测试一下。这套方法能成功最好，如果不行，请换一个google账号再试一下。<br />
-或者检查一下购买的商品Id在配置中是否一样。</p>
-  </li>
-  <li>
-    <p>无法购买您要买的商品<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-30-16-48-47.jpeg" alt="-w200" /><br />
-解决方法：1. 检查是否自己的账号是不是测试账号，一定要是测试账号，不是开发者账号。怎么成为Tester，上面已经说过了。2. 商品的Id是否配置的正确。</p>
-  </li>
-</ol>
-
-<p>遇到的所有的坑，总结下来就是：<br />
-<strong>提交的包名，版本号，商品号，public key，签名等一定要和Google Play上面一致。<br />
-Google Play Store是否正常，可以自己上去下载一个其他应用测试一下，如果这个应用能够打开支付，那么Google支付就是正常的。<br />
-开发者账号和测试者账号要分开，猜想是Google Play服务后面有一些缓存的问题。</strong></p>
-
-<p>运气好的话，一遍就能通过，如果不好，那就两遍。祝你好运吧。我花费了2天时间，才跑通了一个测试支付。希望你能比我运气好一些。不必这么痛苦。</p>
 
 ]]></content>
   </entry>

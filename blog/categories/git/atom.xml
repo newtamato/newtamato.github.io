@@ -4,7 +4,7 @@
   <title><![CDATA[分类:git | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/git/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-06-03T20:30:19+08:00</updated>
+  <updated>2017-06-11T21:16:20+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,84 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[MAC上安装git-svn未生效的办法]]></title>
+    <link href="http://www.newtomato.me/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa"/>
+    <updated>2017-06-11T20:47:57+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa</id>
+    <content type="html"><![CDATA[<h2 id="git-svn-">git svn 介绍</h2>
+
+<p>git svn的原理就是服务器端还是svn服务器，但是本地使用git，这样可以本地保留git所有的功能，但是代码提交是需要提交给svn服务器的。<br />
+git svn的命令可以认为和git是一样的。部分命令有些不同。</p>
+
+<p><img src="https://git-scm.com/images/logo@2x.png" alt="" /> + <img src="https://tortoisesvn.net/assets/img/tortoisesvn_logo_hor468x64.5e0587de.svg" alt="svn" /></p>
+
+<!--more-->
+<p>例如克隆代码：</p>
+
+<pre><code>git svn clone xxxx.git
+</code></pre>
+
+<p>初始化仓库：</p>
+
+<pre><code>git svn init
+</code></pre>
+
+<p>提交代码到服务器：</p>
+
+<pre><code>git svn dcommit
+</code></pre>
+
+<p>平时开发需要用到的命令，创建分支，本地提交，切换分支，合并分支都和git的命令相同。</p>
+
+<h2 id="git-svn">安装git svn</h2>
+<p>MAC上默认安装的git，理论上应该自带git svn的功能。但是这只是理论上，验证是否支持svn，只要在terminal测试下。<br />
+输入<code>git svn --help</code>没有报错。那恭喜你了，不需要经历我这一番折腾了。</p>
+
+<p>如果不是，请继续往下看。</p>
+
+<p>先说一下我的工作环境，我的操作系统是<code>MAC OS Sierra</code>。Git的版本是通过<code>homebrew</code>安装的，安装版本是<code>2.11.1</code>。<br />
+这个版本的git，竟然不支持git svn的命令的。于是到Git的<a href="https://git-scm.com/docs/git-svn/1.8.5">官方网站</a>，搜索了一下，他们从1.8.5版本之后就开始支持这个命令了。<br />
+所以我分析有可能brew安装的git只是一个不完整版本。于是我在官方网站重新下载了Git。开始安装。</p>
+
+<p>安装完成之后，通过命令行检查版本，还是老版本。没有变化。于是通过<code>which git</code>发现使用的位置是<code>/usr/local/bin/git</code>，于是将我安装的git做了一个软连接覆盖了这里的git。我安装之后的位置在<code>/usr/local/git</code>。</p>
+
+<pre><code>ln -s /usr/local/git /usr/local/bin/git
+git --version
+</code></pre>
+
+<p>输出就是最新的安装版本了。<code>git version 2.13.0</code>。</p>
+
+<h2 id="section">安装完成却遇到了另一个问题</h2>
+
+<p><code>git svn --help</code>之后没有出现我预期的输出，反而报错了。</p>
+
+<p>错误如下：</p>
+
+<pre><code>Can't locate SVN/Core.pm in @INC (you may need to install the SVN::Core module) (@INC contains: /usr/local/git/lib/perl5/site_perl/5.18.2/darwin-thread-multi-2level /usr/local/git/lib/perl5/site_perl/5.18.2 /usr/local/git/lib/perl5/site_perl /Library/Perl/5.18/darwin-thread-multi-2level /Library/Perl/5.18 /Network/Library/Perl/5.18/darwin-thread-multi-2level /Network/Library/Perl/5.18 /Library/Perl/Updates/5.18.2 /System/Library/Perl/5.18/darwin-thread-multi-2level /System/Library/Perl/5.18 /System/Library/Perl/Extras/5.18/darwin-thread-multi-2level /System/Library/Perl/Extras/5.18 .) at /usr/local/git/lib/perl5/site_perl/Git/SVN/Utils.pm line 6.
+BEGIN failed--compilation aborted at /usr/local/git/lib/perl5/site_perl/Git/SVN/Utils.pm line 6.
+Compilation failed in require at /usr/local/git/lib/perl5/site_perl/Git/SVN.pm line 25.
+BEGIN failed--compilation aborted at /usr/local/git/lib/perl5/site_perl/Git/SVN.pm line 32.
+Compilation failed in require at /usr/local/git/libexec/git-core/git-svn line 21.
+BEGIN failed--compilation aborted at /usr/local/git/libexec/git-core/git-svn line 21.
+</code></pre>
+
+<p>这一坨报错消息让人摸不着头脑，于是Google一下，果然有人和我报一样的错误。</p>
+
+<p>解决方案<a href="https://stackoverflow.com/questions/16578465/on-osx-using-sourcetree-git-svn-getting-cant-locate-svn-core-pm-in-inc">在此</a>,如果你打不开，那就按照我下面的命令设置一下。看看效果吧！</p>
+
+<pre><code>sudo mkdir /Library/Perl/5.18/auto
+sudo ln -s /Applications/Xcode.app/Contents/Developer/Library/Perl/5.18/darwin-thread-multi‌-2level/SVN /Library/Perl/5.18/darwin-thread-multi-2level
+sudo ln -s /Applications/Xcode.app/Contents/Developer/Library/Perl/5.18/darwin-thread-multi‌-2level/auto/SVN /Library/Perl/5.18/auto/
+</code></pre>
+
+<h2 id="section-1">结语</h2>
+
+<p>幸运的话，<code>git svn --help</code>就会正确工作了。好了开始享受用Git方式管理svn仓库吧！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Git如何在本地和远端都删除相关的分支]]></title>
