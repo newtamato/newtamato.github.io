@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun</loc>
+<lastmod>2017-06-25T23:24:41+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa</loc>
 <lastmod>2017-06-11T20:47:57+08:00</lastmod>
 </url>
@@ -564,22 +568,13 @@
 <loc>http://www.newtomato.me/blog/categories/svn/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/2/</loc>
+<loc>http://www.newtomato.me/blog/categories/liquidfunc/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/3/</loc>
+<loc>http://www.newtomato.me/blog/categories/box2d/</loc>
 </url>
 <url>
-<loc>http://www.newtomato.me/posts/4/</loc>
-</url>
-<url>
-<loc>http://www.newtomato.me/posts/5/</loc>
-</url>
-<url>
-<loc>http://www.newtomato.me/posts/6/</loc>
-</url>
-<url>
-<loc>http://www.newtomato.me/posts/7/</loc>
+<loc>http://www.newtomato.me/blog/categories/luabing/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

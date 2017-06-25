@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:liquidfunc | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/liquidfunc/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-06-25T23:44:24+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[认识liquidFun（流体物理引擎）]]></title>
+    <link href="http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun"/>
+    <updated>2017-06-25T23:24:41+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun</id>
+    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-06-25-14984044203691.png" alt="" /></p>
+
+<h2 id="section">初识</h2>
+
+<p>在一款名为<a href="http://fingerlab.net/portfolio/yuri">《yuri》</a>的游戏中，发现了点有意思的东西，于是乎各种搜索，终于找到了相关的技术，那就是由google开源的物理引擎<a href="http://google.github.io/liquidfun/">liquidFun</a>。</p>
+
+<p><code>liquidFunc</code>的demo地址<a href="http://google.github.io/liquidfun/testbed/index.html">在此</a>。相信我你看到这个demo之后，绝对会对<code>liquidFun</code>这个引擎产生无比的喜欢。（这里不需要翻墙，只要能打的开github，就能够看得到这个演示。）<br />
+<!--more--></p>
+
+<p><strong>他</strong>继承自<strong>Box2D</strong>，是Box2D的扩展版本，但增加了粒子的流体和柔软性效果。<br />
+<a href="http://google.github.io/liquidfun/API-Ref.html">相关的API文档</a><br />
+<a href="http://docs.google.com/presentation/d/1fEAb4-lSyqxlVGNPog3G1LZ7UgtvxfRAwR0dwd19G4g/edit?usp=sharing">具体的实现细节在这里</a></p>
+
+<p>因为支持C++, Java, or JavaScript，因此可以整合到cocos2dx引擎中。方便我们使用。当我想到这里的时候，立马去github上搜索了一下。果然触控已经开始考虑到这点了。</p>
+
+<h2 id="section-1">了解</h2>
+
+<p>于是在github触控这里，找到了一份<a href="https://github.com/cocos2d/cocos2d-x-samples">cocos2dx整合liquidFunc的实例工程。</a></p>
+
+<p>安装方法如下:</p>
+
+<pre><code>git clone https://github.com/cocos2d/cocos2d-x-samples
+cd cocos2d-x-samples
+python download-engine.py
+git submodule init
+git submodule update
+</code></pre>
+
+<p>执行完上述步骤，就可以在sample中打开<code>LiquidFun - EyeCandy</code>工程了。效果也是震撼。<br />
+完全足够我们的使用了。</p>
+
+<p>这个工程的作者<a href="https://github.com/ricardoquesada">Ricardo Quesada</a>在他的的博客中有两篇文章，讲解了整合cocos2dx和liquidFun的细节。</p>
+
+<ul>
+  <li>
+    <p><a href="https://retro.moe/2014/04/23/integrating-liquidfun-with-cocos2d-x-part-i/">Integrating LiquidFun with Cocos2d-x: Part I</a></p>
+  </li>
+  <li>
+    <p><a href="https://retro.moe/2014/07/30/integrating-liquidfun-with-cocos2d-x-part-ii/">Integrating LiquidFun with Cocos2d-x: Part II</a></p>
+  </li>
+</ul>
+
+<p>感兴趣的各位同学不妨移步去看看，加深对liquidFunc的理解。</p>
+
+<h2 id="section-2">下一步</h2>
+
+<p>由于我们的项目使用的cocos2dx + lua，因此下一步要考虑的就是通过luabing将<strong>Box2D</strong>和<strong>liquidFunc</strong>的代码注册到lua虚拟机中使用。这部分我将在下一篇文章中讲解。</p>
+
+]]></content>
+  </entry>
+  
+</feed>
