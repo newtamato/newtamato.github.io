@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-06-25T23:42:34+08:00</updated>
+  <updated>2017-07-02T21:20:09+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,89 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何为第三方c++库导出luabinding (Part One)]]></title>
+    <link href="http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding"/>
+    <updated>2017-07-02T20:26:16+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding</id>
+    <content type="html"><![CDATA[<p>上一篇文章讲到怎么使用<code>liquidfunc</code>,本章节讲述怎么将liquidfun通过luabinding的方式导出给lua使用。</p>
+
+<p>cocos2dx在早期2.x时代，是通过tolua++和pkg的方式，导出成luabinding。现在已经是 3.x版本了，cocos2dx改进了这种导出方式，我们只需要增加一个.ini的配置文件就可以了。</p>
+
+<p>两种方式各有优劣。第一种方式最大的弊病就是花费很多时间在重复做一些事情，麻烦。<br />
+第二种方法，看似节省了我们不少时间，但是如果对<code>genbindings.py</code>的原理不熟悉，会让我们对出的错误一头雾水。</p>
+
+<!--more-->
+<p>第一种方法按照如下原则，将头文件转为pkg文件即可。</p>
+
+<pre><code>1.    enum keeps the same
+2.    remove CC_DLL for the class defines, pay attention to multi inherites
+3.    remove inline keyword for declaration and implementation
+4.    remove public protect and private
+5.    remove the decalration of class member variable
+6.    keep static keyword
+7.    remove memeber functions that declared as private or protected
+</code></pre>
+
+<p>在导出liquidfun的过程中，我采用了第二种方法。在此记录一下过程和遇到的问题。</p>
+
+<h2 id="genbindingspy">使用<code>genbindings.py</code>的方式导出。</h2>
+
+<p>在<code>cocos2d-x/tools/tolua</code>文件夹下面有genbindings.py文件。如果没有，有可能你用的cocos2dx的版本不在3.x以内。</p>
+
+<p>执行py之前，请阅读此处文档，安装相关的工具。<a href="https://github.com/cocos2d/bindings-generator">Requirements</a></p>
+
+<ul>
+  <li>先将liquidfun仓库提供的Box2D覆盖cocos2dx原先的Box2D，有一些文件有变化。</li>
+  <li>在<code>cocos2d-x/tools/tolua</code>里增加一个<code>cocos2dx_box2d.ini</code>的文件。（因为liquidfun依赖于box2D，因此我们需要先导出box2D）这里提供box2d.ini文件。<a href="media/14989759807211/cocos2dx_box2d.ini">cocos2dx_box2d.ini</a></li>
+  <li>修改genbindings.py文件如下：</li>
+</ul>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">cmd_args = {'cocos2dx_box2d.ini':('cocos2dx_box2d','lua_cocos2dx_box2d_auto')}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<ul>
+  <li>运行如下命令：</li>
+</ul>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">cd cocos2d-x/tools/tolua
+</span><span class="line">./genbindings.py</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>最后看到生成了如下文件</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">cocos/scripting/lua-bindings/auto/lua_cocos2dx_box2d_auto.cpp
+</span><span class="line">cocos/scripting/lua-bindings/auto/lua_cocos2dx_box2d_auto.hpp</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="cpp">使用生成的cpp文件</h2>
+
+<p>将他们添加到工程中，<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-14989852241192.jpg" alt="=w250" /><br />
+同时在cocos2d_lua_binding工程中<code>building setting-&gt;search paths</code>添加一条搜索路径。<code>$(SRCROOT)/../../../../external/Box2D</code></p>
+
+<p>编译运行一下。</p>
+
+<p>遇到的问题：</p>
+
+<pre><code>1. `luaval_to_object`导出了5个参数，导致不兼容。
+2.  enmu没有导出
+3.  编译成功，链接失败。
+</code></pre>
+
+<p>第一个问题可以通过手动删除第五个参数解决。<br />
+第二个问题，可以通过修改lua代码解决。<br />
+第三个问题暂时没有找到原因。不知道哪里丢失了路径，导致link总是失败。此处留个坑，待下回处理。</p>
+
+<h2 id="section">参考链接</h2>
+
+<p>1.<a href="https://segmentfault.com/a/1190000000631630">Cocos2d-x下Lua调用自定义C++类和函数的最佳实践</a></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[认识liquidFun（流体物理引擎）]]></title>
@@ -24,8 +107,12 @@
 
 <p>在一款名为<a href="http://fingerlab.net/portfolio/yuri">《yuri》</a>的游戏中，发现了点有意思的东西，于是乎各种搜索，终于找到了相关的技术，那就是由google开源的物理引擎<a href="http://google.github.io/liquidfun/">liquidFun</a>。</p>
 
-<p><code>liquidFunc</code>的demo地址<a href="http://google.github.io/liquidfun/testbed/index.html">在此</a>。相信我你看到这个demo之后，绝对会对<code>liquidFun</code>这个引擎产生无比的喜欢。（这里不需要翻墙，只要能打的开github，就能够看得到这个演示。）<br />
-<!--more--></p>
+<p><code>liquidFunc</code>的demo地址<a href="http://google.github.io/liquidfun/testbed/index.html">在此</a>。相信我你看到这个demo之后，绝对会对<code>liquidFun</code>这个引擎产生无比的喜欢。（这里不需要翻墙，只要能打的开github，就能够看得到这个演示。）</p>
+
+<p>先来一睹为快！<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-Untitled.gif" alt="" /></p>
+
+<!--more-->
 
 <p><strong>他</strong>继承自<strong>Box2D</strong>，是Box2D的扩展版本，但增加了粒子的流体和柔软性效果。<br />
 <a href="http://google.github.io/liquidfun/API-Ref.html">相关的API文档</a><br />
@@ -1468,45 +1555,6 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 <p>所以优势很明显了，能为我们省去不少等待时间。这样下来之后，我们<strong>时间缩减到30分钟~1小时</strong>。简直要欢呼雀跃了。</p>
 
 <p>可能有更好的提交的方法，还请知道的老司机同学帮帮忙，给我们提点好的意见，感激不尽！</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Stack Pack制作]]></title>
-    <link href="http://www.newtomato.me/blog/2016/09/17/stack-packzhi-zuo"/>
-    <updated>2016-09-17T21:49:19+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/09/17/stack-packzhi-zuo</id>
-    <content type="html"><![CDATA[<h3 id="section">创建方法</h3>
-
-<p>IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。</p>
-
-<p>首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码，称之为sticker pack，另外一种可以编写代码，调用一些类似支付的接口的API，称之为iMessage app，他们都可以作为应用的扩展，也可以独立成为一个应用。因此有两种不同的创建方式。如下图所示：<br />
-<!--more--><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-a.jpeg" alt="创建应用" /></p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-b.jpeg" alt="创建应用扩展" /></p>
-
-<h3 id="sticker-pack">Sticker pack</h3>
-
-<p>Sticker pack的制作很简单，准备好一些图片（png,jpg,gif），大小在500k之内即可。将资源直接拖拽到stacker packer的xcassets里面。在右侧属性栏可以调节大，中，小三种显示模式。<br />
-然后xcode选择最新的ios10的模拟器，运行。<br />
-在模拟器的iMessage中测试互发消息即可看见我们的表情包了。</p>
-
-<p>现在一个简单的表情应用算是搞定了，如果你有开发者账号，可以直接提交给苹果审核了。</p>
-
-<p>而我们遇到了另一个问题，就是需要和应用挂钩，也就是表情包需要成为我们应用的扩展，这样应用在被用户安装到设备上的时候，表情包自然而然的就会出现在用户的iMessage里面。因此，我们用图二扩展的形式在应用下面创建表情包。</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-c.jpeg" alt="" /></p>
-
-<p>此时他下面出现一个Info.plist的文件，他也需要一个唯一id的，而且这个id是有强制规则的，<strong>以container app的id为前缀，后面再增加自己的名字。前缀一定要和container app的id保持一致</strong>。</p>
-
-<p>然后模拟器和真机运行测试。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-IMG_0585.png" alt="IMG_0585" /></p>
-
-<p>在苹果未正式发布ios10的时候，真机需要安装ios10的GM版，需要到苹果官方网站下载一个文件（<code>iOS_10_beta_Configuration_Profile.mobileconfig</code>）,这是一个OTA证书，安装了之后即可以更新最新的ios10开发版。不过现在已经用不到了。</p>
-
-<p><strong>iMessage App</strong>需要有一些Swift的基础，大家有需要可以移步至此<a href="http://www.jianshu.com/p/be79b8729bf8">趁热来一波，WWDC 2016 iMessage App开发</a></p>
 
 ]]></content>
   </entry>

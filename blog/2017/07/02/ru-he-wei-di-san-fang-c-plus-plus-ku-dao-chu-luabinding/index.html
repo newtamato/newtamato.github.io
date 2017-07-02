@@ -2,7 +2,7 @@
 <html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>认识liquidFun（流体物理引擎） - 番茄手册</title>
+  <title>如何为第三方c++库导出luabinding (Part One) - 番茄手册</title>
   <meta name="author" content="newtomato">
 
   
@@ -14,15 +14,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun">
+  <link rel="canonical" href="http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding">
   <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
 
   <!-- http://opengraphprotocol.org/ -->
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun">
-  <meta property="og:title" content="认识liquidFun（流体物理引擎） - 番茄手册">
+  <meta property="og:url" content="http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding">
+  <meta property="og:title" content="如何为第三方c++库导出luabinding (Part One) - 番茄手册">
   
 
   <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
@@ -112,74 +112,93 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-06-25T23:24:41+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年6 月25 日</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-07-02T20:26:16+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年7 月2 日</time>
         
       </p>
     
     
     <h1 class="entry-title" itemprop="name headline">
-        认识liquidFun（流体物理引擎）
+        如何为第三方c++库导出luabinding (Part One)
         
     </h1>
     
   </header>
 
 
-<div class="entry-content clearfix" itemprop="articleBody description"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-06-25-14984044203691.png" alt="" /></p>
+<div class="entry-content clearfix" itemprop="articleBody description"><p>上一篇文章讲到怎么使用<code>liquidfunc</code>,本章节讲述怎么将liquidfun通过luabinding的方式导出给lua使用。</p>
 
-<h2 id="section">初识</h2>
+<p>cocos2dx在早期2.x时代，是通过tolua++和pkg的方式，导出成luabinding。现在已经是 3.x版本了，cocos2dx改进了这种导出方式，我们只需要增加一个.ini的配置文件就可以了。</p>
 
-<p>在一款名为<a href="http://fingerlab.net/portfolio/yuri">《yuri》</a>的游戏中，发现了点有意思的东西，于是乎各种搜索，终于找到了相关的技术，那就是由google开源的物理引擎<a href="http://google.github.io/liquidfun/">liquidFun</a>。</p>
-
-<p><code>liquidFunc</code>的demo地址<a href="http://google.github.io/liquidfun/testbed/index.html">在此</a>。相信我你看到这个demo之后，绝对会对<code>liquidFun</code>这个引擎产生无比的喜欢。（这里不需要翻墙，只要能打的开github，就能够看得到这个演示。）</p>
-
-<p>先来一睹为快！<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-Untitled.gif" alt="" /></p>
+<p>两种方式各有优劣。第一种方式最大的弊病就是花费很多时间在重复做一些事情，麻烦。<br />
+第二种方法，看似节省了我们不少时间，但是如果对<code>genbindings.py</code>的原理不熟悉，会让我们对出的错误一头雾水。</p>
 
 <!--more-->
+<p>第一种方法按照如下原则，将头文件转为pkg文件即可。</p>
 
-<p><strong>他</strong>继承自<strong>Box2D</strong>，是Box2D的扩展版本，但增加了粒子的流体和柔软性效果。<br />
-<a href="http://google.github.io/liquidfun/API-Ref.html">相关的API文档</a><br />
-<a href="http://docs.google.com/presentation/d/1fEAb4-lSyqxlVGNPog3G1LZ7UgtvxfRAwR0dwd19G4g/edit?usp=sharing">具体的实现细节在这里</a></p>
+<pre><code>1.    enum keeps the same
+2.    remove CC_DLL for the class defines, pay attention to multi inherites
+3.    remove inline keyword for declaration and implementation
+4.    remove public protect and private
+5.    remove the decalration of class member variable
+6.    keep static keyword
+7.    remove memeber functions that declared as private or protected
+</code></pre>
 
-<p>因为支持C++, Java, or JavaScript，因此可以整合到cocos2dx引擎中。方便我们使用。当我想到这里的时候，立马去github上搜索了一下。果然触控已经开始考虑到这点了。</p>
+<p>在导出liquidfun的过程中，我采用了第二种方法。在此记录一下过程和遇到的问题。</p>
 
-<h2 id="section-1">了解</h2>
+<h2 id="genbindingspy">使用<code>genbindings.py</code>的方式导出。</h2>
 
-<p>于是在github触控这里，找到了一份<a href="https://github.com/cocos2d/cocos2d-x-samples">cocos2dx整合liquidFunc的实例工程。</a></p>
+<p>在<code>cocos2d-x/tools/tolua</code>文件夹下面有genbindings.py文件。如果没有，有可能你用的cocos2dx的版本不在3.x以内。</p>
 
-<p>安装方法如下:</p>
+<p>执行py之前，请阅读此处文档，安装相关的工具。<a href="https://github.com/cocos2d/bindings-generator">Requirements</a></p>
+
+<ul>
+  <li>先将liquidfun仓库提供的Box2D覆盖cocos2dx原先的Box2D，有一些文件有变化。</li>
+  <li>在<code>cocos2d-x/tools/tolua</code>里增加一个<code>cocos2dx_box2d.ini</code>的文件。（因为liquidfun依赖于box2D，因此我们需要先导出box2D）这里提供box2d.ini文件。<a href="media/14989759807211/cocos2dx_box2d.ini">cocos2dx_box2d.ini</a></li>
+  <li>修改genbindings.py文件如下：</li>
+</ul>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">cmd_args = {'cocos2dx_box2d.ini':('cocos2dx_box2d','lua_cocos2dx_box2d_auto')}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<ul>
+  <li>运行如下命令：</li>
+</ul>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git clone https://github.com/cocos2d/cocos2d-x-samples
-</span><span class="line">cd cocos2d-x-samples
-</span><span class="line">python download-engine.py
-</span><span class="line">git submodule init
-</span><span class="line">git submodule update</span></code></pre></td></tr></table></div></figure></notextile></div>
+</pre></td><td class="code"><pre><code class=""><span class="line">cd cocos2d-x/tools/tolua
+</span><span class="line">./genbindings.py</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p>执行完上述步骤，就可以在sample中打开<code>LiquidFun - EyeCandy</code>工程了。效果也是震撼。<br />
-完全足够我们的使用了。</p>
+<p>最后看到生成了如下文件</p>
 
-<p>这个工程的作者<a href="https://github.com/ricardoquesada">Ricardo Quesada</a>在他的的博客中有两篇文章，讲解了整合cocos2dx和liquidFun的细节。</p>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">cocos/scripting/lua-bindings/auto/lua_cocos2dx_box2d_auto.cpp
+</span><span class="line">cocos/scripting/lua-bindings/auto/lua_cocos2dx_box2d_auto.hpp</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<ul>
-  <li>
-    <p><a href="https://retro.moe/2014/04/23/integrating-liquidfun-with-cocos2d-x-part-i/">Integrating LiquidFun with Cocos2d-x: Part I</a></p>
-  </li>
-  <li>
-    <p><a href="https://retro.moe/2014/07/30/integrating-liquidfun-with-cocos2d-x-part-ii/">Integrating LiquidFun with Cocos2d-x: Part II</a></p>
-  </li>
-</ul>
+<h2 id="cpp">使用生成的cpp文件</h2>
 
-<p>感兴趣的各位同学不妨移步去看看，加深对liquidFunc的理解。</p>
+<p>将他们添加到工程中，<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-14989852241192.jpg" alt="=w250" /><br />
+同时在cocos2d_lua_binding工程中<code>building setting-&gt;search paths</code>添加一条搜索路径。<code>$(SRCROOT)/../../../../external/Box2D</code></p>
 
-<h2 id="section-2">下一步</h2>
+<p>编译运行一下。</p>
 
-<p>由于我们的项目使用的cocos2dx + lua，因此下一步要考虑的就是通过luabing将<strong>Box2D</strong>和<strong>liquidFunc</strong>的代码注册到lua虚拟机中使用。这部分我将在下一篇文章中讲解。</p>
+<p>遇到的问题：</p>
+
+<pre><code>1. `luaval_to_object`导出了5个参数，导致不兼容。
+2.  enmu没有导出
+3.  编译成功，链接失败。
+</code></pre>
+
+<p>第一个问题可以通过手动删除第五个参数解决。<br />
+第二个问题，可以通过修改lua代码解决。<br />
+第三个问题暂时没有找到原因。不知道哪里丢失了路径，导致link总是失败。此处留个坑，待下回处理。</p>
+
+<h2 id="section">参考链接</h2>
+
+<p>1.<a href="https://segmentfault.com/a/1190000000631630">Cocos2d-x下Lua调用自定义C++类和函数的最佳实践</a></p>
 
 </div>
 
@@ -209,14 +228,14 @@
     
     <h4>Share this post</h4>
     
-    <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?url=http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun;" 
+    <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?url=http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding;" 
         onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
         <span class="hidden">Twitter</span>
     </a>
-    <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+    <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
         <span class="hidden">Facebook</span>
     </a>
-    <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+    <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
         <span class="hidden">Google+</span>
     </a>
     
@@ -260,13 +279,13 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-06-25T23:24:41+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年6 月25 日</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-07-02T20:26:16+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年7 月2 日</time>
           <br>
 
 <span class="glyphicon glyphicon-tags"></span>&nbsp;
 <span class="categories">
   
-    <a class='category' href='/blog/categories/box2d/'>box2d</a>, <a class='category' href='/blog/categories/cocos2dx/'>cocos2dx</a>, <a class='category' href='/blog/categories/liquidfunc/'>liquidfunc</a>, <a class='category' href='/blog/categories/luabing/'>luabing</a>
+    <a class='category' href='/blog/categories/box2d/'>box2d</a>, <a class='category' href='/blog/categories/luabing/'>luabing</a>, <a class='category' href='/blog/categories/tolua-plus-plus/'>tolua++</a>
   
 </span>
 
@@ -277,28 +296,16 @@
             
             
               
-                <a href="/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa" class="col-xs-12 col-md-4 btn btn-default" title="Previous Post: MAC上安装git-svn未生效的办法"> 
+                <a href="/blog/2017/06/25/ren-shi-liquidfun" class="col-xs-12 col-md-4 btn btn-default" title="Previous Post: 认识liquidFun（流体物理引擎）"> 
                   <div class="text-muted">
                     <small>Previous Post</small>
                   </div>
                   <div class="pager-title">
-                    <h4>MAC上安装git-svn未生效的办法</h4>
+                    <h4>认识liquidFun（流体物理引擎）</h4>
                   </div>
                 </a>
               
             
-            
-            
-              
-              <a href="/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding" class="col-xs-12 col-md-4 btn btn-default pull-right" title="Next Post: 如何为第三方c++库导出luabinding (Part One)">
-                <div class="text-muted">
-                  <small>Next Post</small>
-                </div>
-                <div class="pager-title">
-                  <h4>如何为第三方c++库导出luabinding (Part One)</h4>
-                </div>
-              </a>
-              
             
             
           </div>

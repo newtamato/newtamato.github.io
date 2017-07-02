@@ -4,7 +4,7 @@
   <title><![CDATA[分类:liquidfunc | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/liquidfunc/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-06-25T23:44:24+08:00</updated>
+  <updated>2017-07-02T21:20:09+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -24,8 +24,12 @@
 
 <p>在一款名为<a href="http://fingerlab.net/portfolio/yuri">《yuri》</a>的游戏中，发现了点有意思的东西，于是乎各种搜索，终于找到了相关的技术，那就是由google开源的物理引擎<a href="http://google.github.io/liquidfun/">liquidFun</a>。</p>
 
-<p><code>liquidFunc</code>的demo地址<a href="http://google.github.io/liquidfun/testbed/index.html">在此</a>。相信我你看到这个demo之后，绝对会对<code>liquidFun</code>这个引擎产生无比的喜欢。（这里不需要翻墙，只要能打的开github，就能够看得到这个演示。）<br />
-<!--more--></p>
+<p><code>liquidFunc</code>的demo地址<a href="http://google.github.io/liquidfun/testbed/index.html">在此</a>。相信我你看到这个demo之后，绝对会对<code>liquidFun</code>这个引擎产生无比的喜欢。（这里不需要翻墙，只要能打的开github，就能够看得到这个演示。）</p>
+
+<p>先来一睹为快！<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-Untitled.gif" alt="" /></p>
+
+<!--more-->
 
 <p><strong>他</strong>继承自<strong>Box2D</strong>，是Box2D的扩展版本，但增加了粒子的流体和柔软性效果。<br />
 <a href="http://google.github.io/liquidfun/API-Ref.html">相关的API文档</a><br />
