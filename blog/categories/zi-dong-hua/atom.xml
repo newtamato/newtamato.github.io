@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:自动化 | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/zi-dong-hua/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-07-15T20:35:46+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用jekins打造一个自动化编译流程]]></title>
+    <link href="http://www.newtomato.me/blog/2017/07/15/jekins"/>
+    <updated>2017-07-15T20:34:07+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/07/15/jekins</id>
+    <content type="html"><![CDATA[<h2 id="jekins">为什么要使用jekins？</h2>
+
+<p>我们假设有这样一种情况，项目有个打包的工作或者导出策划给的配置文件。<br />
+这项任务，交给了A同学，A把写了脚本，进行了测试，把里面的坑都填好了。但是每次做这个事情，都需要占用A的时间。<br />
+有一天A请假不在，交给B做，B电脑上没有A那样的工作环境，虽然有脚本工具，但是怎么也执行不起来。<br />
+这下怎么办好？</p>
+
+<p>解决这个痛点，就是使用jekins。在他这里稍作配置，就可以将A从繁琐重复的劳作中解脱出来。也能让其他人无缝切换的使用它。</p>
+
+<p>这就是jekins的好处。</p>
+
+<p>甚至我们可以通过设置jekins定时开启某个服务。比如我经常使用的使用tomcat启动。<br />
+<!--more--></p>
+
+<h2 id="section">欲善其事 必先利其器</h2>
+
+<p>首先让我们先搭建好jekins。到<a href="https://jenkins.io/download/">jekins的官方网站</a>上下载平台对应的版本。<br />
+但是我这里推荐使用Generic Java package版本，因为他相当的简单易用。一句命令就可以搞定。<br />
+<strong>java版本要求是java7以上。</strong></p>
+
+<pre><code>java -jar jekins.war 
+</code></pre>
+
+<p>执行此命令之后，在浏览器中执行<code>http://localhost:8080</code>，看看效果吧。<br />
+如果8080端口被别的程序占用了。可以改变端口号来启动jekins。</p>
+
+<pre><code>java -jar jekins.war --httpPort=1000
+</code></pre>
+
+<p>启动后，命令上显示一行明显的<code>secret</code>，用于我们刚才的页面上填写。<br />
+然后就开始安装各种插件了。</p>
+
+<h2 id="jekins-1">让我们从一个简单的事情来熟悉jekins</h2>
+
+<p>正如我们经常要做的打包流程。尤其是android打包。涉及到不同平台，不同渠道，有各种配置。<br />
+此处我们用gradle命令来做这件事。因此前面要把grdle插件安装上。</p>
+
+<p>因此我们新建一个jekins自由风格的工程。</p>
+
+<p>有两种方式构建我们的应用。一种是有仓库管理，另一种是没有仓库管理。<br />
+仓库管理，是需要提供svn地址（Git地址），以及对用的用户名和密码。点击”Credentials”右边的”Add”，输入仓库对用的用户名密码即可。<br />
+没有仓库管理，则需要提供一个工作目录。</p>
+
+<p>默认情况，jekins会将自己安装在<code>~/.jekins</code>下面。我们生成的工程也会<code>~/.jekins/workspace/</code>找得到。</p>
+
+<p>构建触发器，可以保持默认即可。在这里我们可以定制自己的服务，比如定时构建项目。</p>
+
+<p>在构建步骤这里，我们可以按照自己的需求，增加多个构建步骤。<br />
+像这样：</p>
+
+<ol>
+  <li>准备资源。</li>
+  <li>开始打包apk</li>
+  <li>检查上一步的结果，如果成功，则发邮件通知对应的人，并将最新的地址生成出来。</li>
+</ol>
+
+<p>第一步我们可以通过脚本完成。windows上我们使用bat，unix，mac上使用bash脚本。甚至我们可以调用python脚本。只要将python放到对用的目录中即可。</p>
+
+<p>如果是仓库管理，脚本的位置就是刚才提到的~/.jekins/workspace/%{yourProject},这个目录在初始化的时候，会被remove all，所以脚本是需要放在仓库里面的。<br />
+如果不是仓库管理方式，那脚本的位置就放在我们提供的工作目录中。</p>
+
+<p>第二步，打包apk，可以使用jekins自己的gradle插件。非常方便。但是gradle需要先指定版本。因此到<code>Manage Jenkins &gt; Configuration Options</code>这里，增加自己要的gradle版本。勾选自动set up选项。然后在构建的时候，指定版本。这样我们在执行到这一步的时候，jenkins会自定下载这个版本。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-15-15001211854325.jpg" alt="" /><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-15-15001212202303.jpg" alt="" /></p>
+
+<p>剩下的第三步，将apk生成一个新的url地址，这样大家可以在这个地址下载。我使用了一个web服务，apk上传到这里，这样大家都可以在这里下载。启动web服务，很简单。你可以下载tomcat或者使用python的flask。</p>
+
+<p>也有第三方公司提供这样的功能，例如蒲公英，同时他们会自动生成一个二维码，对于测试同学方便很多。</p>
+
+<h2 id="section-1">构建的时候怎么已使用参数？</h2>
+
+<p>在创建项目的时候，下面有一个参数化构建过程。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-15-15001216832377.jpg" alt="" /></p>
+
+<p>在这里增加几个参数，就行。使用他也是很方便。<br />
+比如上面的参数是name，那在脚本中直接把他当做变量使用就行。<code>$name</code></p>
+
+<h2 id="section-2">接下来呢？</h2>
+
+<p>如果你看到这里，基本上可以搭建一个可以使用的jekins了。但是Jenkins还有很多有意思的东西可以整合进来，比如上面提到的邮件。比如如何把参数，传递给gradle配置。<br />
+这些都是需要我们在实践中慢慢理解了。</p>
+
+]]></content>
+  </entry>
+  
+</feed>
