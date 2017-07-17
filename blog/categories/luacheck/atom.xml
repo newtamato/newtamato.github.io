@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:luacheck | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/luacheck/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-07-17T13:24:12+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[为Atom,Sublime增加linter-luacheck插件]]></title>
+    <link href="http://www.newtomato.me/blog/2017/07/17/install-luacheck"/>
+    <updated>2017-07-17T13:21:18+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/07/17/install-luacheck</id>
+    <content type="html"><![CDATA[<p><code>linter-luacheck</code>是一款很酷的插件，它能够检查lua的语法以及对lua未使用过的变量进行提示。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679036933.jpg" alt="=" /></p>
+
+<p>还有这样:<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679458003.jpg" alt="=" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679724165.jpg" alt="=" /></p>
+
+<p>因此这款能够实时提醒我们帮助我们的插件，你心动了么？<br />
+<!--more--><br />
+## 如何安装</p>
+
+<h3 id="lua">安装lua</h3>
+
+<p>atom上找到这款插件。然后安装。如果电脑上没有安装lua命令，那么<code>linter-luacheck</code>不会正常工作。</p>
+
+<p>因此我们需要先安装好lua。</p>
+
+<p>官方网站提供了源码和binary包下载安装。不过我更推荐使用brew安装，方便快捷。</p>
+
+<pre><code>brew search lua
+brew install lua51
+</code></pre>
+
+<p>重新启动Atom（Sublime）试试。</p>
+
+<p>写个简单的lua，试试是否生效？</p>
+
+<p>好像还没有！怎么回事？</p>
+
+<p>看<code>linter-luacheck</code>的Setting页面上，有一个配置luacheck执行命令的地方。也就是说<code>linter-luacheck</code>，底层调用的是<code>luacheck</code>的命令。</p>
+
+<p>而我们是否安装了这个命令？</p>
+
+<p>在终端上敲入luacheck，检查看看。如果同时没有这个命令，那就是问题的症结所在了。</p>
+
+<h3 id="luacheck">安装luacheck</h3>
+
+<p>我这里使用的是luarocks的安装包管理命令。</p>
+
+<p>MAC上</p>
+
+<pre><code>luarocks install luacheck
+</code></pre>
+
+<p>Windows：</p>
+
+<pre><code>cd luarocks/bin
+
+luarocks.bat install luacheck
+</code></pre>
+
+<p>怎么安装luarocks呢？只要打开他的官方网站，下载安装包即可。</p>
+
+<h3 id="section">现在好了么？</h3>
+
+<p>没错，有了luacheck之后，linter-luacheck就可以正常工作了。<br />
+现在试试吧？<br />
+lua用久了，绝对离不开这样的神兵利器。</p>
+
+]]></content>
+  </entry>
+  
+</feed>
