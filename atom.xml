@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-07-17T13:24:12+08:00</updated>
+  <updated>2017-08-05T18:53:22+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,246 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[使用djnago-blog-zinnia搭建一个博客网站]]></title>
+    <link href="http://www.newtomato.me/blog/2017/08/05/djnago-blog-zinnia"/>
+    <updated>2017-08-05T18:32:15+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/08/05/djnago-blog-zinnia</id>
+    <content type="html"><![CDATA[<p>搭建网站的方法有很多，大致有如下几种方法：</p>
+
+<ol>
+  <li>
+    <p>在godaddy上申请一个全套的建站服务，从域名到空间，再到网站内容编辑工具。全部都是一步到位。网站的基本要素都是有的。最受大家喜欢的就是<code>WordPress</code>这样的博客网站了。</p>
+  </li>
+  <li>小白搭建博客必备技能。静态网站搭建。现在比较流行的方法，例如在github上申请一个账户，用github，octpress就可以搭建一个简单的静态网站。虽然是“静态”，但是也可以有很多功能。利用markdown的强大能力，你可以做出漂亮的排版。还可以使用第三方的留言，统计，转发，分享，点赞等功能。我们常常头疼的是怎么找一个合适的插件。有很多插件已经失效。</li>
+  <li>最后一种，搭建一个动态网站。简而言之就是，自己申请域名和购买服务器。然后在服务器上架设网站服务，提交和部署代码。将域名和服务器绑定起来，这套流程说是简单，但是一般都是有一定计算机网络知识的同学才能熟练操作的技能。</li>
+</ol>
+
+<p>这三种方法都可以将我们网站开放到互联网。没有哪一种是好的，只有适合你的才是好的。我个人常用的是第二种，简单快捷，而且效率高。<br />
+但是今天我要要说的是第三种方式。按照我的步骤，你很快就能搭建一个可以访问的网站。<br />
+<!--more--><br />
+## 申请域名<br />
+付费域名申请网站<code>godaddy.com</code>。同时他还提供域名隐私服务。不过需要付费。当然也可以申请免费域名。<br />
+国内到<code>万网域名申请</code>，需要备案。<br />
+我使用的是<a href="http://www.freenom.com/zh/freeandpaiddomains.html">Freenom</a>，免费域名提供商。<br />
+只需要注册个账户，然后就可以领走你想要的域名。<br />
+## 申请空间<br />
+到<a href="https://www.pythonanywhere.com/">pythonanywhere</a>,注册账号。就有免费的空间供你使用。同时他已经实现安装了一套python的库，这对于我们后面搭建博客系统方便了需要。<br />
+注册完账户，进入首页,选择web选项卡<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501923895242.jpg" alt="=w300" /></p>
+
+<p>此时可以<strong>Add a new web app</strong>.<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019239387431.jpg" alt="=w300" /><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019240064418.jpg" alt="=w300" /></p>
+
+<p>最终你会看到如下的界面。这个<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019242449324.jpg" alt="" /></p>
+
+<p>点击<code>xxx.pythonanywhere.com</code>链接,打开的就是你的网站<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019243247447.jpg" alt="=w300" /></p>
+
+<p>但是是不是少点什么？<br />
+是的，那就是这个域名不是你想要的，你的个性化域名还没有和网站有什么关系啊！<br />
+接下来就要发生点关系了。</p>
+
+<h2 id="section">绑定域名和空间</h2>
+<p>我们刚刚申请的域名，需要绑定到空间映射的一个地址。所以我们要得到这个地址。<br />
+还得找一个来解析域名和地址对应关系的中间服务。（假设我们现在已经有了这个空间的地址）<br />
+<code>DNSPod</code>刚好为我们做了这些。当然我们在申请域名服务的地方,就是上面提到的freenom也可以做这件事。<br />
+freenom是个国外的网站，解析起来没有国内的快。所以我选择了DNSPod。<br />
+注册DNSPod之后，<strong>添加域名</strong>，在域名解析里面添加记录<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019251536702.jpg" alt="=w400" /><br />
+其中的记录值需要改成你的空间地址。</p>
+
+<p>获取空间地址的方法:</p>
+
+<p>打开你的终端，然后输入</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">ping xxx.pythonanywhere.com</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019252613848.jpg" alt="=w400" /></p>
+
+<p>然后等下，访问你的域名试试。是不是打开了<code>It's work</code>的网页！</p>
+
+<h2 id="section-1">在服务器上部署一套博客系统</h2>
+
+<p>此时到这里，就差网站搭建了。我选择<code>djnago-blog-zinnia</code>框架。<br />
+最后的效果如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019256268930.jpg" alt="=w300" /></p>
+
+<ol>
+  <li>进入我们的空间后台<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501925720319.jpg" alt="=w300" /></li>
+  <li>在终端输入，安装我们需要的模块：
+    <ol>
+      <li><code>virtualenv --python=python2.7 myvenv</code></li>
+      <li><code>source myvenv/bin/activate</code></li>
+      <li><code>pip install django whitenoise</code></li>
+      <li><code>pip install django-blog-zinnia</code></li>
+      <li><code>django-admin startproject mysite .</code></li>
+      <li><code>python manage.py migrate</code></li>
+      <li><code>python manage.py collectstatic</code></li>
+    </ol>
+  </li>
+  <li>进入mysite文件夹，<code>cd mysite</code>，修改setting.py</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">		INSTALLED_APPS = (
+</span><span class="line">		  ...
+</span><span class="line">		  'django_comments',
+</span><span class="line">		  'mptt',
+</span><span class="line">		  'tagging',
+</span><span class="line">		  'zinnia',
+</span><span class="line">		)	
+</span><span class="line">		
+</span><span class="line">		TEMPLATES = [
+</span><span class="line">		 {
+</span><span class="line">		    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+</span><span class="line">		    'APP_DIRS': True,
+</span><span class="line">		    'OPTIONS': {
+</span><span class="line">		      'context_processors': [
+</span><span class="line">		       ...
+</span><span class="line">		        'zinnia.context_processors.version',  # Optional
+</span><span class="line">		      ]
+</span><span class="line">		    }
+</span><span class="line">		  }
+</span><span class="line">		]
+</span><span class="line">		</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>然后修改<code>urls.py</code></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">	url(r'', include('zinnia.urls')),
+</span><span class="line">	url(r'^comments/', include('django_comments.urls'))	</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>最后配置一个WGSI文件，点击 “WSGI configuration file” 链接。将下面的代码替换进去。</p>
+
+<pre><code>```
+import os
+import sys
+
+path = 'mysite所在的父文件夹'  # use your own username here
+if path not in sys.path:
+    sys.path.append(path)
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+
+from django.core.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
+application = DjangoWhiteNoise(get_wsgi_application())
+
+``` 另外，设置virtualenv，我们在上面已经选择了python2.7，这里配置一下，以后进入后台中断，生效的就是这个python，而不是系统给的python。
+</code></pre>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019275863573.jpg" alt="=w300" /><br />
+将你的myvenv的目录写在此处。<code>/home/yourname/myvenv</code></p>
+
+<p>所有的步骤基本完成。运行试试看。<code>python manager.py runserver</code></p>
+
+<p>此时的博客看起来，不是很美观，因此我们还需要给他提供一个主题。</p>
+
+<h2 id="section-2">主题安装</h2>
+
+<p>进入虚拟环境终端。输入</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">pip install django-app-namespace-template-loader
+</span><span class="line">pip install zinnia-theme-bootstrap
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>打开<code>settings.py</code>修改</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">INSTALLED_APPS = [
+</span><span class="line">    ...
+</span><span class="line">    'zinnia_bootstrap',
+</span><span class="line">    'zinnia',
+</span><span class="line">]
+</span><span class="line">
+</span><span class="line">TEMPLATES = [
+</span><span class="line">    {
+</span><span class="line">        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+</span><span class="line">        'DIRS': [],        
+</span><span class="line">        'APP_DIRS': False,
+</span><span class="line">        'OPTIONS': {
+</span><span class="line">            'context_processors': [
+</span><span class="line">                ...
+</span><span class="line">                'zinnia.context_processors.version',  # Optional
+</span><span class="line">            ],
+</span><span class="line">
+</span><span class="line">            'loaders': [
+</span><span class="line">               'app_namespace.Loader',
+</span><span class="line">               'django.template.loaders.filesystem.Loader',
+</span><span class="line">               'django.template.loaders.app_directories.Loader',
+</span><span class="line">            ],
+</span><span class="line">
+</span><span class="line">        },
+</span><span class="line">    },
+</span><span class="line">]
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>OK,主题安装成功。这次在重新运行看看吧！</p>
+
+<h2 id="section-3">参考文章</h2>
+<ol>
+  <li><a href="http://blog.csdn.net/fujianfafu/article/details/58239434">zinnia-theme-bootstrap 使用过程中的问题</a></li>
+  <li><a href="http://blog.csdn.net/u014792107/article/details/52458333?locationNum=9"> 使用 django-blog-zinnia 搭建个人博客</a></li>
+  <li><a href="http://docs.django-blog-zinnia.com/en/develop/getting-started/install.html">django blog zinnia</a></li>
+  <li><a href="https://tutorial.djangogirls.org/zh/deploy/">djangogirls</a></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[为Atom,Sublime增加linter-luacheck插件]]></title>
@@ -1553,53 +1793,6 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 时时刻刻都要自己能够跟得上新的潮流。
 看着年轻的90后，在看看自己，真实的感到实实在在的压力。
 </code></pre>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[支付宝微信接入]]></title>
-    <link href="http://www.newtomato.me/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru"/>
-    <updated>2016-10-23T14:28:52+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru</id>
-    <content type="html"><![CDATA[<p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
-
-<!--more-->
-
-<h3 id="section">开始动手 - 接入微信</h3>
-
-<p>首先，需要注册一个<a href="https://open.weixin.qq.com/">微信开发者账号</a>，按照文档搭建一个应用，然后按照demo接入就可以了。但是在这中间有几个问题一定要注意。</p>
-
-<ol>
-  <li>开发者需要需要提交一些资料，申请认证的资质。这样才能够申请到支付服务。我们一开始想的简单了以为可以先尝试接入，然后上线在申请资质。结果发现不行。<strong>这一步走不通，下面即使跑通了他们的demo，也无法在自己的项目中运行。</strong></li>
-  <li>
-    <p>创建应用填写项目的包名和<strong>签名</strong>，此处的签名慎重，我们在这个地方也是吃过苦头。<br />
-一般android的签名，想到的就是我们项目中使用<code>keytool</code>，<code>jarsigner</code>的方式给项目签名，但是这里不是的。<br />
-这里的签名是微信自己的协议，我们将项目apk安装到自己的手机，然后在安装一个<a href="https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android1f09c7.apk">微信的签名apk工具</a>，其中这个签名工具，输入自己应用的包名，即可生成一个32位签名。这个就是微信需要的签名。但是注意，我们平时coding的时候，一般是开发模式，debug模式，所以打包生成的apk有可能也是Debug模式，一旦换成Release模式，生成出来的这个签名又会不一样。<br />
-因为为了保证Debug和Release模式签名一致。我们唯一要做的就是设置项目两种模式下面keystore是一样的。我们使用的是Android Studio，因此只要按照如下设置即可。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-release.jpeg" alt="release" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-debug.jpeg" alt="debug" /><br />
-这样生成出来的签名前后都是一致的。</p>
-  </li>
-  <li>
-    <p>签名搞定之后按照他们的Demo修改我们的项目，还要注意一点的就是在支付完成之后的会调回到项目中，进入<code>WXPayEntryActivity</code>,这个我们可以完全拿过来放到自己的Project中，但是一定要注意保持他的目录结构。在AndroidManifest.xml中是如下的表示：<br />
-  <code>&lt;activity android:name=".wxapi.WXPayEntryActivity" android:exported="true" 	andorid:launchMode="singleTop"&gt;
- &lt;/activity&gt;</code></p>
-  </li>
-  <li>测试的时候会遇到这样的情况，Demo也会遇到这种情况。就是第一次点击支付，弹出了微信的支付界面。但是第二次点击，就不会成功。然后删应用在安装，重复同样的错误。有些蒙圈不知所谓。最后Google了一大圈，才找到一个方法，<strong>删除微信的缓存</strong>。然后问题你就解决了。再也没有出现过。可能是运气好，看到别人即使用了这样的方法还是会出现问题。</li>
-  <li>玩家支付的时候，要检测是否安装了微信，否则支付失败。</li>
-  <li>问题各不相同，只要看准几条，你一定能解决他。包名，签名，应用名（微信回调的scheme）。</li>
-</ol>
-
-<h3 id="section-1">开始动手 - 接入支付宝</h3>
-
-<p>相对于微信的一个模棱两可的签名概念，支付宝的公钥私钥就简单的多了。<br />
-同样，这里也需要先申请一个开发者账号，和签约支付。<br />
-需要的注意的问题有如下几点：<br />
-1. 提交公钥。支付宝对用户的金钱往来是非常注意的。使用这种非对称式加密的方法。对用户的请求进行加密。防止被别人篡改数据。所以按照他的<a href="https://cshall.alipay.com/enterprise/knowledgeDetail.htm?knowledgeId=201602033418">文档</a>去生成公钥私钥就行。但是生成完了，得验证是否正确。在提交公钥的弹出框下面有个验证公钥链接，点进入后，将要我们用私钥生成的一个段密文粘贴进来验证。验证通过即证明我们的公钥私钥没问题。<br />
-2. 私钥加密这种一定放到后端去做。他的客户端里面的代码只是给我们看流程使用的。</p>
-
-<p>上述是我们遇到的问题，在已经有了开发者资者的情况下，总体花费了2天时间接入，比较顺利。希望遇到问题的你，不要着急，不要慌。好事多磨，多看文档和FAQ，总会解决的。</p>
 
 ]]></content>
   </entry>

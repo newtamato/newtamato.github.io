@@ -1,0 +1,211 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:djnago-blog-zinnia | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/djnago-blog-zinnia/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2017-08-05T18:53:46+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[使用djnago-blog-zinnia搭建一个博客网站]]></title>
+    <link href="http://www.newtomato.me/blog/2017/08/05/djnago-blog-zinnia"/>
+    <updated>2017-08-05T18:32:15+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/08/05/djnago-blog-zinnia</id>
+    <content type="html"><![CDATA[<p>搭建网站的方法有很多，大致有如下几种方法：</p>
+
+<ol>
+  <li>
+    <p>在godaddy上申请一个全套的建站服务，从域名到空间，再到网站内容编辑工具。全部都是一步到位。网站的基本要素都是有的。最受大家喜欢的就是<code>WordPress</code>这样的博客网站了。</p>
+  </li>
+  <li>小白搭建博客必备技能。静态网站搭建。现在比较流行的方法，例如在github上申请一个账户，用github，octpress就可以搭建一个简单的静态网站。虽然是“静态”，但是也可以有很多功能。利用markdown的强大能力，你可以做出漂亮的排版。还可以使用第三方的留言，统计，转发，分享，点赞等功能。我们常常头疼的是怎么找一个合适的插件。有很多插件已经失效。</li>
+  <li>最后一种，搭建一个动态网站。简而言之就是，自己申请域名和购买服务器。然后在服务器上架设网站服务，提交和部署代码。将域名和服务器绑定起来，这套流程说是简单，但是一般都是有一定计算机网络知识的同学才能熟练操作的技能。</li>
+</ol>
+
+<p>这三种方法都可以将我们网站开放到互联网。没有哪一种是好的，只有适合你的才是好的。我个人常用的是第二种，简单快捷，而且效率高。<br />
+但是今天我要要说的是第三种方式。按照我的步骤，你很快就能搭建一个可以访问的网站。</p>
+
+<!--more-->
+
+<h2 id="section">申请域名</h2>
+<p>付费域名申请网站<code>godaddy.com</code>。同时他还提供域名隐私服务。不过需要付费。当然也可以申请免费域名。<br />
+国内到<code>万网域名申请</code>，需要备案。<br />
+我使用的是<a href="http://www.freenom.com/zh/freeandpaiddomains.html">Freenom</a>，免费域名提供商。<br />
+只需要注册个账户，然后就可以领走你想要的域名。<br />
+## 申请空间<br />
+到<a href="https://www.pythonanywhere.com/">pythonanywhere</a>,注册账号。就有免费的空间供你使用。同时他已经实现安装了一套python的库，这对于我们后面搭建博客系统方便了需要。<br />
+注册完账户，进入首页,选择web选项卡<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501923895242.jpg" alt="=w300" /></p>
+
+<p>此时可以<strong>Add a new web app</strong>.<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019239387431.jpg" alt="=w300" /><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019240064418.jpg" alt="=w300" /></p>
+
+<p>最终你会看到如下的界面。这个<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019242449324.jpg" alt="" /></p>
+
+<p>点击<code>xxx.pythonanywhere.com</code>链接,打开的就是你的网站<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019243247447.jpg" alt="=w300" /></p>
+
+<p>但是是不是少点什么？<br />
+是的，那就是这个域名不是你想要的，你的个性化域名还没有和网站有什么关系啊！<br />
+接下来就要发生点关系了。</p>
+
+<h2 id="section-1">绑定域名和空间</h2>
+<p>我们刚刚申请的域名，需要绑定到空间映射的一个地址。所以我们要得到这个地址。<br />
+还得找一个来解析域名和地址对应关系的中间服务。（假设我们现在已经有了这个空间的地址）<br />
+<code>DNSPod</code>刚好为我们做了这些。当然我们在申请域名服务的地方,就是上面提到的freenom也可以做这件事。<br />
+freenom是个国外的网站，解析起来没有国内的快。所以我选择了DNSPod。<br />
+注册DNSPod之后，<strong>添加域名</strong>，在域名解析里面添加记录<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019251536702.jpg" alt="=w400" /><br />
+其中的记录值需要改成你的空间地址。</p>
+
+<p>获取空间地址的方法:</p>
+
+<p>打开你的终端，然后输入</p>
+
+<pre><code>ping xxx.pythonanywhere.com
+</code></pre>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019252613848.jpg" alt="=w400" /></p>
+
+<p>然后等下，访问你的域名试试。是不是打开了<code>It's work</code>的网页！</p>
+
+<h2 id="section-2">在服务器上部署一套博客系统</h2>
+
+<p>此时到这里，就差网站搭建了。我选择<code>djnago-blog-zinnia</code>框架。<br />
+最后的效果如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019256268930.jpg" alt="=w300" /></p>
+
+<ol>
+  <li>进入我们的空间后台<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501925720319.jpg" alt="=w300" /></li>
+  <li>在终端输入，安装我们需要的模块：
+    <ol>
+      <li><code>virtualenv --python=python2.7 myvenv</code></li>
+      <li><code>source myvenv/bin/activate</code></li>
+      <li><code>pip install django whitenoise</code></li>
+      <li><code>pip install django-blog-zinnia</code></li>
+      <li><code>django-admin startproject mysite .</code></li>
+      <li><code>python manage.py migrate</code></li>
+      <li><code>python manage.py collectstatic</code></li>
+    </ol>
+  </li>
+  <li>进入mysite文件夹，<code>cd mysite</code>，修改setting.py</li>
+</ol>
+
+<pre><code>			INSTALLED_APPS = (
+			  ...
+			  'django_comments',
+			  'mptt',
+			  'tagging',
+			  'zinnia',
+			)	
+			
+			TEMPLATES = [
+			 {
+			    'BACKEND': 'django.template.backends.django.DjangoTemplates',
+			    'APP_DIRS': True,
+			    'OPTIONS': {
+			      'context_processors': [
+			       ...
+			        'zinnia.context_processors.version',  # Optional
+			      ]
+			    }
+			  }
+			]
+			
+</code></pre>
+
+<p>然后修改<code>urls.py</code></p>
+
+<pre><code>		url(r'', include('zinnia.urls')),
+		url(r'^comments/', include('django_comments.urls'))	
+</code></pre>
+
+<p>最后配置一个WGSI文件，点击 “WSGI configuration file” 链接。将下面的代码替换进去。</p>
+
+<pre><code>```
+import os
+import sys
+
+path = 'mysite所在的父文件夹'  # use your own username here
+if path not in sys.path:
+    sys.path.append(path)
+
+os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
+
+from django.core.wsgi import get_wsgi_application
+from whitenoise.django import DjangoWhiteNoise
+application = DjangoWhiteNoise(get_wsgi_application())
+
+``` 另外，设置virtualenv，我们在上面已经选择了python2.7，这里配置一下，以后进入后台中断，生效的就是这个python，而不是系统给的python。
+</code></pre>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019275863573.jpg" alt="=w300" /><br />
+将你的myvenv的目录写在此处。<code>/home/yourname/myvenv</code></p>
+
+<p>所有的步骤基本完成。运行试试看。<code>python manager.py runserver</code></p>
+
+<p>此时的博客看起来，不是很美观，因此我们还需要给他提供一个主题。</p>
+
+<h2 id="section-3">主题安装</h2>
+
+<p>进入虚拟环境终端。输入</p>
+
+<pre><code>pip install django-app-namespace-template-loader
+pip install zinnia-theme-bootstrap
+
+</code></pre>
+
+<p>打开<code>settings.py</code>修改</p>
+
+<pre><code>INSTALLED_APPS = [
+    ...
+    'zinnia_bootstrap',
+    'zinnia',
+]
+
+TEMPLATES = [
+    {
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [],        
+        'APP_DIRS': False,
+        'OPTIONS': {
+            'context_processors': [
+                ...
+                'zinnia.context_processors.version',  # Optional
+            ],
+
+            'loaders': [
+               'app_namespace.Loader',
+               'django.template.loaders.filesystem.Loader',
+               'django.template.loaders.app_directories.Loader',
+            ],
+
+        },
+    },
+]
+
+</code></pre>
+
+<p>OK,主题安装成功。这次在重新运行看看吧！</p>
+
+<h2 id="section-4">参考文章</h2>
+<ol>
+  <li><a href="http://blog.csdn.net/fujianfafu/article/details/58239434">zinnia-theme-bootstrap 使用过程中的问题</a></li>
+  <li><a href="http://blog.csdn.net/u014792107/article/details/52458333?locationNum=9"> 使用 django-blog-zinnia 搭建个人博客</a></li>
+  <li><a href="http://docs.django-blog-zinnia.com/en/develop/getting-started/install.html">django blog zinnia</a></li>
+  <li><a href="https://tutorial.djangogirls.org/zh/deploy/">djangogirls</a></li>
+</ol>
+
+]]></content>
+  </entry>
+  
+</feed>
