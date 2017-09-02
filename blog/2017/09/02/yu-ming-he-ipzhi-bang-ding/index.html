@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>域名和ip之绑定 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="keywords" content="dnspod freedomain ip Nameservers">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding">
+  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+
+  <!-- http://opengraphprotocol.org/ -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://www.newtomato.me/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding">
+  <meta property="og:title" content="域名和ip之绑定 - 番茄手册">
+  
+
+  <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
+
+<link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  
+  <link href="/stylesheets/screen.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+  <body   >
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <div id="wrap">
+      
+        <header role="banner">
+          <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" title="toggle navbar" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">番茄手册</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li ><a href="/">首页</a></li>
+<li ><a href="/blog/archives">文章列表</a></li>
+<li ><a href="/about2">关于我</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="subscribe-rss" href="/atom.xml" title="subscribe via RSS">
+                        <span class="visible-xs">RSS</span>
+                        <img class="hidden-xs" src="/images/rss.png" alt="RSS">
+                    </a>
+                </li>
+                
+            </ul>
+            
+                <form class="navbar-form navbar-right" action="https://www.google.com/search" method="GET">
+                    <input type="hidden" name="sitesearch" value="www.newtomato.me">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="q" placeholder="Search">
+                    </div>
+                </form>
+            
+        </div>
+    </div>
+</nav>
+
+
+        </header>
+      
+      <div id="main" role="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content" itemscope itemtype="http://schema.org/Blog">
+    <meta itemprop="name" content="番茄手册" />
+    
+    <meta itemprop="url" content="http://www.newtomato.me" />
+    <article class="hentry" role="article" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+      
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-09-02T18:55:22+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年9 月2 日</time>
+        
+      </p>
+    
+    
+    <h1 class="entry-title" itemprop="name headline">
+        域名和ip之绑定
+        
+    </h1>
+    
+  </header>
+
+
+<div class="entry-content clearfix" itemprop="articleBody description"><h3 id="section">原由</h3>
+
+<p>之前帮朋友弄了几个域名和搭建网站，但是最近接连几个朋友遇到域名过期，丢失的情况。<br />
+之前为了节省成本用地都是免费域名。<br />
+重新注册回来就行。但是总是前后麻烦，也没有很好的和他们解释清楚。弄得自己很疲惫。<br />
+域名和ip之间的爱恨情仇不是三言两语就可以解释清楚的。而我自己也不是这方面的专家，只能将自己的理解以通俗的语言说一下。希望能让初次接触互联网的人们有个大概的认识。<br />
+<!--more--></p>
+
+<h3 id="section-1">初识</h3>
+
+<p>先分清几个概念，域名注册商和DNS服务商，是可以分开的。<br />
+可以在域名注册商那里注册域名，到DNS服务商这里做域名解析的。<br />
+当然很多域名注册商也有一条龙服务器，注册域名完了之后，直接帮你做域名解析。但是免费的域名一般都是国外网站，用国外的域名解析有的时候会比较慢。因此可以考虑用国内。比如DNSPod。</p>
+
+<h3 id="section-2">相知</h3>
+
+<p>可是如何让DNSpod知道我们域名在哪里注册的呢？</p>
+
+<p>首先DNSPod有自己的域名解析服务器</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">F1G1NS2.DNSPOD.NET
+</span><span class="line">F1G1NS1.DNSPOD.NET</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>我们在域名注册商哪里，先找到域名解析服务(Nameservers)，然后在这里填写上面两个地址。</p>
+
+<p>这样，我们访问一个域名的时候，他找到Nameservers指向的地址，然后就开始让DNSPod来负责解析这个域名。<br />
+DNSPod负责将这个域名和ip地址或者另一个域名绑定起来。ip地址就是我们申请空间的时候，空间服务商提供的ip地址。</p>
+
+<p>到此ip地址和我们的域名就绑定起来了。</p>
+
+<p>接下来的事情，就是等待域名生效了。因为修改Nameservers，需要花费10分钟左右的时间才能生效。</p>
+
+<h3 id="section-3">后续</h3>
+
+<p>如果还对网站搭建感兴趣的读者，可以看看我前几篇文章。有静态网站，动态网站的。不同方式任君挑选！</p>
+
+</div>
+
+
+      <footer class="post-footer">
+        <p class="meta text-muted">
+          
+  
+
+
+
+<figure class="author-image">
+    <span class="img" href="/about" style="background-image: url(/images/avatar.jpg)"><span class="hidden">Picture</span></span>
+</figure>
+
+<section class="author">
+    <h4><span class="byline author vcard" itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="fn" itemprop="name">newtomato</span></span></h4>
+
+    <div class="author-meta">
+        <span class="author-link icon-link"><i class="fa fa-link" aria-hidden="true"></i> <a href="http://www.newtomato.me">http://www.newtomato.me</a></span>
+    </div>
+</section>
+
+<hr>
+
+<section class="share">
+    
+    <h4>Share this post</h4>
+    
+    <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?url=http://www.newtomato.me/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding;" 
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <span class="hidden">Twitter</span>
+    </a>
+    <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <span class="hidden">Facebook</span>
+    </a>
+    <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <span class="hidden">Google+</span>
+    </a>
+    
+</section>
+
+
+
+
+<!--
+<footer class="post-footer">
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=Instant%20Movie%20Streamer%20v3%20Release&amp;url=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+
+        </footer>
+
+
+&#8211;>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-09-02T18:55:22+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年9 月2 日</time>
+          <br>
+
+
+        </p>
+        
+          <div class="pager">
+            
+            
+              
+                <a href="/blog/2017/08/05/djnago-blog-zinnia" class="col-xs-12 col-md-4 btn btn-default" title="Previous Post: 使用djnago-blog-zinnia搭建一个博客网站"> 
+                  <div class="text-muted">
+                    <small>Previous Post</small>
+                  </div>
+                  <div class="pager-title">
+                    <h4>使用djnago-blog-zinnia搭建一个博客网站</h4>
+                  </div>
+                </a>
+              
+            
+            
+            
+          </div>
+        
+      </footer>
+    </article>
+    
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2017 - newtomato<br>
+  <small>
+      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>,
+      <span class="credit">customized with <a href="https://github.com/bhrigu123/abacus">abacus theme</a></span>.
+  </small>
+</p>
+
+</div>
+</footer>
+    
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr.js"></script>
+
+
+  </body>
+</html>
