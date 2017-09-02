@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-08-05T18:53:22+08:00</updated>
+  <updated>2017-08-06T16:01:37+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -29,15 +29,20 @@
 </ol>
 
 <p>这三种方法都可以将我们网站开放到互联网。没有哪一种是好的，只有适合你的才是好的。我个人常用的是第二种，简单快捷，而且效率高。<br />
-但是今天我要要说的是第三种方式。按照我的步骤，你很快就能搭建一个可以访问的网站。<br />
-<!--more--><br />
-## 申请域名<br />
-付费域名申请网站<code>godaddy.com</code>。同时他还提供域名隐私服务。不过需要付费。当然也可以申请免费域名。<br />
+但是今天我要要说的是第三种方式。按照我的步骤，你很快就能搭建一个可以访问的网站。</p>
+
+<!--more-->
+
+<h2 id="section">申请域名</h2>
+
+<p>付费域名申请网站<code>godaddy.com</code>。同时他还提供域名隐私服务。不过需要付费。当然也可以申请免费域名。<br />
 国内到<code>万网域名申请</code>，需要备案。<br />
 我使用的是<a href="http://www.freenom.com/zh/freeandpaiddomains.html">Freenom</a>，免费域名提供商。<br />
-只需要注册个账户，然后就可以领走你想要的域名。<br />
-## 申请空间<br />
-到<a href="https://www.pythonanywhere.com/">pythonanywhere</a>,注册账号。就有免费的空间供你使用。同时他已经实现安装了一套python的库，这对于我们后面搭建博客系统方便了需要。<br />
+只需要注册个账户，然后就可以领走你想要的域名。</p>
+
+<h2 id="section-1">申请空间</h2>
+
+<p>到<a href="https://www.pythonanywhere.com/">pythonanywhere</a>,注册账号。就有免费的空间供你使用。同时他已经实现安装了一套python的库，这对于我们后面搭建博客系统方便了需要。<br />
 注册完账户，进入首页,选择web选项卡<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501923895242.jpg" alt="=w300" /></p>
 
@@ -55,7 +60,8 @@
 是的，那就是这个域名不是你想要的，你的个性化域名还没有和网站有什么关系啊！<br />
 接下来就要发生点关系了。</p>
 
-<h2 id="section">绑定域名和空间</h2>
+<h2 id="section-2">绑定域名和空间</h2>
+
 <p>我们刚刚申请的域名，需要绑定到空间映射的一个地址。所以我们要得到这个地址。<br />
 还得找一个来解析域名和地址对应关系的中间服务。（假设我们现在已经有了这个空间的地址）<br />
 <code>DNSPod</code>刚好为我们做了这些。当然我们在申请域名服务的地方,就是上面提到的freenom也可以做这件事。<br />
@@ -75,7 +81,7 @@ freenom是个国外的网站，解析起来没有国内的快。所以我选择�
 
 <p>然后等下，访问你的域名试试。是不是打开了<code>It's work</code>的网页！</p>
 
-<h2 id="section-1">在服务器上部署一套博客系统</h2>
+<h2 id="section-3">在服务器上部署一套博客系统</h2>
 
 <p>此时到这里，就差网站搭建了。我选择<code>djnago-blog-zinnia</code>框架。<br />
 最后的效果如下：<br />
@@ -174,7 +180,7 @@ application = DjangoWhiteNoise(get_wsgi_application())
 
 <p>此时的博客看起来，不是很美观，因此我们还需要给他提供一个主题。</p>
 
-<h2 id="section-2">主题安装</h2>
+<h2 id="section-4">主题安装</h2>
 
 <p>进入虚拟环境终端。输入</p>
 
@@ -242,7 +248,7 @@ application = DjangoWhiteNoise(get_wsgi_application())
 
 <p>OK,主题安装成功。这次在重新运行看看吧！</p>
 
-<h2 id="section-3">参考文章</h2>
+<h2 id="section-5">参考文章</h2>
 <ol>
   <li><a href="http://blog.csdn.net/fujianfafu/article/details/58239434">zinnia-theme-bootstrap 使用过程中的问题</a></li>
   <li><a href="http://blog.csdn.net/u014792107/article/details/52458333?locationNum=9"> 使用 django-blog-zinnia 搭建个人博客</a></li>
