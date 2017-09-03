@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>[gamemaker]BounceMover代码阅读 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">
+  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+
+  <!-- http://opengraphprotocol.org/ -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">
+  <meta property="og:title" content="[gamemaker]BounceMover代码阅读 - 番茄手册">
+  
+
+  <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
+
+<link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  
+  <link href="/stylesheets/screen.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+  <body   >
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <div id="wrap">
+      
+        <header role="banner">
+          <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" title="toggle navbar" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">番茄手册</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li ><a href="/">首页</a></li>
+<li ><a href="/blog/archives">文章列表</a></li>
+<li ><a href="/about2">关于我</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="subscribe-rss" href="/atom.xml" title="subscribe via RSS">
+                        <span class="visible-xs">RSS</span>
+                        <img class="hidden-xs" src="/images/rss.png" alt="RSS">
+                    </a>
+                </li>
+                
+            </ul>
+            
+                <form class="navbar-form navbar-right" action="https://www.google.com/search" method="GET">
+                    <input type="hidden" name="sitesearch" value="www.newtomato.me">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="q" placeholder="Search">
+                    </div>
+                </form>
+            
+        </div>
+    </div>
+</nav>
+
+
+        </header>
+      
+      <div id="main" role="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content" itemscope itemtype="http://schema.org/Blog">
+    <meta itemprop="name" content="番茄手册" />
+    
+    <meta itemprop="url" content="http://www.newtomato.me" />
+    <article class="hentry" role="article" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+      
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-09-03T21:10:41+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年9 月3 日</time>
+        
+      </p>
+    
+    
+    <h1 class="entry-title" itemprop="name headline">
+        [gamemaker]BounceMover代码阅读
+        
+    </h1>
+    
+  </header>
+
+
+<div class="entry-content clearfix" itemprop="articleBody description"><p>先来看看效果是怎么样的：</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-09-03-aa.gif" alt="aa" /></p>
+
+<p>上代码：<br />
+<!--more--><br />
+create代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vx = 0;
+</span><span class="line">vy = 0;
+</span><span class="line">
+</span><span class="line">cx = 0;
+</span><span class="line">cy = 0;
+</span><span class="line">
+</span><span class="line">playerAbove = place_meeting(x, y - 1, oPlayer);
+</span><span class="line">
+</span><span class="line">// Initial fallspeed when player makes contact
+</span><span class="line">fallSpd = 8;
+</span><span class="line">
+</span><span class="line">xscale = 1;
+</span><span class="line">yscale = 1;
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>step代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">var playerAbovePrev = playerAbove;
+</span><span class="line">playerAbove         = place_meeting(x, y - 1, oPlayer);
+</span><span class="line">
+</span><span class="line">// If it's the first frame of player contact
+</span><span class="line">if (playerAbove &amp;&amp; !playerAbovePrev) {
+</span><span class="line">    xscale = 1.34;
+</span><span class="line">    yscale = 0.67;
+</span><span class="line">    
+</span><span class="line">    vy = fallSpd;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>step_end代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">var vxNew, vyNew;
+</span><span class="line">
+</span><span class="line">// Handle sub-pixel movement
+</span><span class="line">cx += vx;
+</span><span class="line">cy += vy;
+</span><span class="line">vxNew = round(cx);
+</span><span class="line">vyNew = round(cy);
+</span><span class="line">cx -= vxNew;
+</span><span class="line">cy -= vyNew;
+</span><span class="line">
+</span><span class="line">repeat (abs(vyNew)) {
+</span><span class="line">    if ((y + sign(vyNew) &gt;= ystart) &amp;&amp; (y + sign(vyNew) &lt;= (ystart + abs(vy)))) {
+</span><span class="line">        with (oParEntity) {
+</span><span class="line">            if (place_meeting(x, y + 1, other.id)) {
+</span><span class="line">                if (!PlaceMeetingException(x, y + sign(vyNew), oParSolid, other.id))
+</span><span class="line">                    y += sign(vyNew);
+</span><span class="line">            }
+</span><span class="line">            
+</span><span class="line">            if (place_meeting(x, y - 1, other.id))
+</span><span class="line">                y += sign(vyNew);
+</span><span class="line">            
+</span><span class="line">        }
+</span><span class="line">        y += sign(vyNew);
+</span><span class="line">    }
+</span><span class="line">    else {
+</span><span class="line">        if (vy &gt;= 0)
+</span><span class="line">            vy *= -1;
+</span><span class="line">        else
+</span><span class="line">            vy *= -0.75;
+</span><span class="line">        break;
+</span><span class="line">    }
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">repeat(abs(vxNew)) {
+</span><span class="line">    if (!place_meeting(x + sign(vxNew), y, oParSolid)) {
+</span><span class="line">        with (oParEntity) {
+</span><span class="line">            if (place_meeting(x - sign(vxNew), y, other.id))
+</span><span class="line">                x += sign(vxNew);
+</span><span class="line">                
+</span><span class="line">            if (place_meeting(x + sign(vxNew), y, other.id) &amp;&amp; wallTarget == other.id)
+</span><span class="line">                x += sign(vxNew);    
+</span><span class="line">            
+</span><span class="line">            if (platformTarget != other.id)
+</span><span class="line">                continue;
+</span><span class="line">                
+</span><span class="line">            if (!platformTarget) {
+</span><span class="line">                if (place_meeting(x, y + 1, other.id))
+</span><span class="line">                    platformTarget = other.id;
+</span><span class="line">            }
+</span><span class="line">            
+</span><span class="line">            if (!place_meeting(x + sign(vxNew), y, oParSolid) &amp;&amp; platformTarget == other.id)
+</span><span class="line">                x += sign(vxNew);
+</span><span class="line">        }
+</span><span class="line">        x += sign(vxNew);
+</span><span class="line">    }
+</span><span class="line">    else
+</span><span class="line">        vx *= -1;
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">/// Procedural Animation
+</span><span class="line">
+</span><span class="line">xscale = Approach(xscale, 1, 0.033);
+</span><span class="line">yscale = Approach(yscale, 1, 0.033);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这个物体就是检查当人物或者<code>oParEntity</code>类型的任何物体，在它上面的时候，就会触发这个上下抖动的效果。<br />
+上面最重要的代码在<code>step_end</code>中，由于他可以垂直方向上下抖动（此处忽略水平抖动），也就意味着要修改y值。</p>
+
+<p>修改物体的y，同时也要修改oParEntity类型物体的y值。<br />
+此处<code>oParEntity</code>踩到这个物体上，会触发vy变量的变化。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">cy+=vy
+</span><span class="line">
+</span><span class="line">//将cy的近似值给vyNew
+</span><span class="line">vyNew = round(cy); 
+</span><span class="line">
+</span><span class="line">//cy保留一份vy和vyNew之间的差异，用于下一个step事件,保留这个cy的目的是让每一帧变化不同，显得更加自然一些。
+</span><span class="line">cy-=vyNew				</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><code>vyNew</code>就是每个<code>step事件</code>中y要变化的次数。repeat多少次。<br />
+如果要偏移的位置在<code>开始ystart</code>和<code>最大偏移（ystart + vy）</code>之间的一个数值。就检查是不是<code>oParEntity</code>是不是只碰到了这个物体，如果是则，跟着<code>vyNew</code>的方向移动1一个像素。如果<code>oParEntity</code>向上移动也碰到了这个物体，则也跟着向上移动。<br />
+如果这个物体偏移的位置在偏移范围之外，则让vy开始转变方向。每转一次方向，则缩小可以偏移的距离0.75倍。<br />
+这样就达到了这个效果。<br />
+而<code>xscale</code>，<code>yscale</code>在step事件中减少或增加0.033，达到缩小放大的目的。<br />
+在draw事件中又重新<code>draw_sprite_ext</code></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">draw_sprite_ext(sprite_index, image_index, x, y, xscale, yscale, 0, c_white, image_alpha);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+</div>
+
+
+      <footer class="post-footer">
+        <p class="meta text-muted">
+          
+  
+
+
+
+<figure class="author-image">
+    <span class="img" href="/about" style="background-image: url(/images/avatar.jpg)"><span class="hidden">Picture</span></span>
+</figure>
+
+<section class="author">
+    <h4><span class="byline author vcard" itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="fn" itemprop="name">newtomato</span></span></h4>
+
+    <div class="author-meta">
+        <span class="author-link icon-link"><i class="fa fa-link" aria-hidden="true"></i> <a href="http://www.newtomato.me">http://www.newtomato.me</a></span>
+    </div>
+</section>
+
+<hr>
+
+<section class="share">
+    
+    <h4>Share this post</h4>
+    
+    <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?url=http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du;" 
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <span class="hidden">Twitter</span>
+    </a>
+    <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <span class="hidden">Facebook</span>
+    </a>
+    <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <span class="hidden">Google+</span>
+    </a>
+    
+</section>
+
+
+
+
+<!--
+<footer class="post-footer">
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=Instant%20Movie%20Streamer%20v3%20Release&amp;url=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+
+        </footer>
+
+
+&#8211;>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-09-03T21:10:41+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年9 月3 日</time>
+          <br>
+
+
+        </p>
+        
+          <div class="pager">
+            
+            
+              
+                <a href="/blog/2017/09/03/hao-you-xi" class="col-xs-12 col-md-4 btn btn-default" title="Previous Post: 什么才算是好游戏？"> 
+                  <div class="text-muted">
+                    <small>Previous Post</small>
+                  </div>
+                  <div class="pager-title">
+                    <h4>什么才算是好游戏？</h4>
+                  </div>
+                </a>
+              
+            
+            
+            
+          </div>
+        
+      </footer>
+    </article>
+    
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2017 - newtomato<br>
+  <small>
+      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>,
+      <span class="credit">customized with <a href="https://github.com/bhrigu123/abacus">abacus theme</a></span>.
+  </small>
+</p>
+
+</div>
+</footer>
+    
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr.js"></script>
+
+
+  </body>
+</html>

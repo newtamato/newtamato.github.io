@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-09-03T19:47:53+08:00</updated>
+  <updated>2017-09-03T21:12:35+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,233 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[[gamemaker]BounceMover代码阅读]]></title>
+    <link href="http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du"/>
+    <updated>2017-09-03T21:10:41+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du</id>
+    <content type="html"><![CDATA[<p>先来看看效果是怎么样的：</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-09-03-aa.gif" alt="aa" /></p>
+
+<p>上代码：<br />
+<!--more--><br />
+create代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vx = 0;
+</span><span class="line">vy = 0;
+</span><span class="line">
+</span><span class="line">cx = 0;
+</span><span class="line">cy = 0;
+</span><span class="line">
+</span><span class="line">playerAbove = place_meeting(x, y - 1, oPlayer);
+</span><span class="line">
+</span><span class="line">// Initial fallspeed when player makes contact
+</span><span class="line">fallSpd = 8;
+</span><span class="line">
+</span><span class="line">xscale = 1;
+</span><span class="line">yscale = 1;
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>step代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">var playerAbovePrev = playerAbove;
+</span><span class="line">playerAbove         = place_meeting(x, y - 1, oPlayer);
+</span><span class="line">
+</span><span class="line">// If it's the first frame of player contact
+</span><span class="line">if (playerAbove &amp;&amp; !playerAbovePrev) {
+</span><span class="line">    xscale = 1.34;
+</span><span class="line">    yscale = 0.67;
+</span><span class="line">    
+</span><span class="line">    vy = fallSpd;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>step_end代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+<span class="line-number">46</span>
+<span class="line-number">47</span>
+<span class="line-number">48</span>
+<span class="line-number">49</span>
+<span class="line-number">50</span>
+<span class="line-number">51</span>
+<span class="line-number">52</span>
+<span class="line-number">53</span>
+<span class="line-number">54</span>
+<span class="line-number">55</span>
+<span class="line-number">56</span>
+<span class="line-number">57</span>
+<span class="line-number">58</span>
+<span class="line-number">59</span>
+<span class="line-number">60</span>
+<span class="line-number">61</span>
+<span class="line-number">62</span>
+<span class="line-number">63</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">var vxNew, vyNew;
+</span><span class="line">
+</span><span class="line">// Handle sub-pixel movement
+</span><span class="line">cx += vx;
+</span><span class="line">cy += vy;
+</span><span class="line">vxNew = round(cx);
+</span><span class="line">vyNew = round(cy);
+</span><span class="line">cx -= vxNew;
+</span><span class="line">cy -= vyNew;
+</span><span class="line">
+</span><span class="line">repeat (abs(vyNew)) {
+</span><span class="line">    if ((y + sign(vyNew) &gt;= ystart) &amp;&amp; (y + sign(vyNew) &lt;= (ystart + abs(vy)))) {
+</span><span class="line">        with (oParEntity) {
+</span><span class="line">            if (place_meeting(x, y + 1, other.id)) {
+</span><span class="line">                if (!PlaceMeetingException(x, y + sign(vyNew), oParSolid, other.id))
+</span><span class="line">                    y += sign(vyNew);
+</span><span class="line">            }
+</span><span class="line">            
+</span><span class="line">            if (place_meeting(x, y - 1, other.id))
+</span><span class="line">                y += sign(vyNew);
+</span><span class="line">            
+</span><span class="line">        }
+</span><span class="line">        y += sign(vyNew);
+</span><span class="line">    }
+</span><span class="line">    else {
+</span><span class="line">        if (vy &gt;= 0)
+</span><span class="line">            vy *= -1;
+</span><span class="line">        else
+</span><span class="line">            vy *= -0.75;
+</span><span class="line">        break;
+</span><span class="line">    }
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">repeat(abs(vxNew)) {
+</span><span class="line">    if (!place_meeting(x + sign(vxNew), y, oParSolid)) {
+</span><span class="line">        with (oParEntity) {
+</span><span class="line">            if (place_meeting(x - sign(vxNew), y, other.id))
+</span><span class="line">                x += sign(vxNew);
+</span><span class="line">                
+</span><span class="line">            if (place_meeting(x + sign(vxNew), y, other.id) &amp;&amp; wallTarget == other.id)
+</span><span class="line">                x += sign(vxNew);    
+</span><span class="line">            
+</span><span class="line">            if (platformTarget != other.id)
+</span><span class="line">                continue;
+</span><span class="line">                
+</span><span class="line">            if (!platformTarget) {
+</span><span class="line">                if (place_meeting(x, y + 1, other.id))
+</span><span class="line">                    platformTarget = other.id;
+</span><span class="line">            }
+</span><span class="line">            
+</span><span class="line">            if (!place_meeting(x + sign(vxNew), y, oParSolid) &amp;&amp; platformTarget == other.id)
+</span><span class="line">                x += sign(vxNew);
+</span><span class="line">        }
+</span><span class="line">        x += sign(vxNew);
+</span><span class="line">    }
+</span><span class="line">    else
+</span><span class="line">        vx *= -1;
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">/// Procedural Animation
+</span><span class="line">
+</span><span class="line">xscale = Approach(xscale, 1, 0.033);
+</span><span class="line">yscale = Approach(yscale, 1, 0.033);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这个物体就是检查当人物或者<code>oParEntity</code>类型的任何物体，在它上面的时候，就会触发这个上下抖动的效果。<br />
+上面最重要的代码在<code>step_end</code>中，由于他可以垂直方向上下抖动（此处忽略水平抖动），也就意味着要修改y值。</p>
+
+<p>修改物体的y，同时也要修改oParEntity类型物体的y值。<br />
+此处<code>oParEntity</code>踩到这个物体上，会触发vy变量的变化。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">cy+=vy
+</span><span class="line">
+</span><span class="line">//将cy的近似值给vyNew
+</span><span class="line">vyNew = round(cy); 
+</span><span class="line">
+</span><span class="line">//cy保留一份vy和vyNew之间的差异，用于下一个step事件,保留这个cy的目的是让每一帧变化不同，显得更加自然一些。
+</span><span class="line">cy-=vyNew				</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><code>vyNew</code>就是每个<code>step事件</code>中y要变化的次数。repeat多少次。<br />
+如果要偏移的位置在<code>开始ystart</code>和<code>最大偏移（ystart + vy）</code>之间的一个数值。就检查是不是<code>oParEntity</code>是不是只碰到了这个物体，如果是则，跟着<code>vyNew</code>的方向移动1一个像素。如果<code>oParEntity</code>向上移动也碰到了这个物体，则也跟着向上移动。<br />
+如果这个物体偏移的位置在偏移范围之外，则让vy开始转变方向。每转一次方向，则缩小可以偏移的距离0.75倍。<br />
+这样就达到了这个效果。<br />
+而<code>xscale</code>，<code>yscale</code>在step事件中减少或增加0.033，达到缩小放大的目的。<br />
+在draw事件中又重新<code>draw_sprite_ext</code></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">draw_sprite_ext(sprite_index, image_index, x, y, xscale, yscale, 0, c_white, image_alpha);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[什么才算是好游戏？]]></title>
@@ -1610,142 +1837,6 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
 <p>JNI对我们是透明的，很多时候，我们会忽略掉他。但是cocos2dx做的跨平台技术是依赖到他的，资源读取，数据的存储，图片渲染等。还有很多等着我们去发现。有兴趣的同学可以移步<a href="http://wiki.jikexueyuan.com/project/deep-android-v1/jni.html">这里</a>可以学到更多东西。</p>
 
 <p>欢迎大家沟通交流！</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Cocos2dx和OBB的结合使用]]></title>
-    <link href="http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong"/>
-    <updated>2016-11-20T18:04:13+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong</id>
-    <content type="html"><![CDATA[<p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
-有两种方法可以使用OBB文件。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
-
-<h3 id="section">方法比较</h3>
-
-<ul>
-  <li>第一种方法，obb文件也是一种ZIP文件，我们可以解压缩obb文件，</li>
-  <li>第二种方法，直接读取obb文件。<code>getFileDataFromZip</code>这样的方法就可以。</li>
-</ul>
-
-<p>这两种方法各有优缺点。<br />
-第一种方法将文件解压缩到<code>getWritablePath()</code>文件夹下面。然后此路径<code>addSearchPath</code>到搜索路径中，我们不需要修改其他的代码就可以读取了。缺点是我们需要有一个解压缩的过程。尤其是obb过大的时候，解压缩耗费的时间也会很长。另外解压缩之后，请不要删除obb文件，否则下次进入，又要重新下载。另外这种方式还破坏了obb的加密性。另外这种方法是可行的，但Google并不推荐这种方式。<br />
-第二种方式则需要修改部分c++代码。</p>
-
-<p>因此我采用了第二种方法，对CCFileUtil做了一些修改。（主要说一下除了音效音乐之外的使用。）<br />
-CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAndroid.cpp文件。<br />
-<!--more--><br />
-### 方法梳理</p>
-
-<p>CCFileUtil主要功能是检查一个文件是否存在，能否读取文件的内容。而我们把部分资源文件放到了obb之中，CCFileUtil需要知道这个地方，才能够从那里读取。</p>
-
-<p>在java层，我们知道我们的obb存储的位置是在</p>
-
-<pre><code>	int versionCode = "项目的versionCode"
-	String apkName = Helpers.getExpansionAPKFileName(sContext,true,versionCode);
-	return Helpers.generateSaveFileName(sContext,apkName);
-</code></pre>
-
-<p>通过JNI，将这个路径${obbPath}传递给c++，可以参考<code>CCFileAndroid.cpp</code>里面的<code>getApkPath()</code>函数。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">std::string resourcePath = getApkPath();
-</span><span class="line">s_pZipFile = new ZipFile(resourcePath, "assets/");        </span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>类似s_pZipFile，我们也生成一个${obbZipFile}，用于文件的查找。</p>
-
-<p>然后将此路径<code>addSearchPath</code>到搜索路径中。通过阅读CCFileUtil.cpp文件我们得知检查一个文件的全路径主要是检测<code>isFileExist</code>函数。如果他证明存在此文件，就能获取到全路径。</p>
-
-<pre><code>fullPathForFilename--&gt;getPathForFilename--&gt;getFullPathForDirectoryAndFilename--&gt;isFileExist
-</code></pre>
-
-<p>因此我们修改isFileExist文件，在里面根据文件的路径检查是否在。伪代码如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">bool CCFileUtilsAndroid::isFileExist(const std::string&amp; strFilePath)
-</span><span class="line">{
-</span><span class="line">	...
-</span><span class="line">    bool bFound = false;
-</span><span class="line">
-</span><span class="line">    if (strFilePath.find(${obbPath}) != std::string::npos)
-</span><span class="line">    {
-</span><span class="line">        if (${obbZipFile} &amp;&amp; ${obbZipFile}-&gt;fileExists(strPath))
-</span><span class="line">        {
-</span><span class="line">            bFound = true;
-</span><span class="line">        } 
-</span><span class="line">    }
-</span><span class="line">	...
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>上面我们把obb文件做成了ZipFile对象，因此在doGetFileData中，就很容易得到文件的内容。伪代码如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">unsigned char* CCFileUtilsAndroid::doGetFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize, bool forAsync)
-</span><span class="line">{
-</span><span class="line">    unsigned char * pData = 0;
-</span><span class="line">    
-</span><span class="line">...
-</span><span class="line">    string fullPath = fullPathForFilename(pszFileName);
-</span><span class="line">   
-</span><span class="line">    // 获取obb文件
-</span><span class="line">    if (${obbZipFile} &amp;&amp; fullPath.find(${obbPath}) != std::string::npos){
-</span><span class="line">        
-</span><span class="line">        if (forAsync)
-</span><span class="line">        {
-</span><span class="line">            pData = ${obbZipFile}-&gt;getFileData(fullPath.c_str(), pSize, ${obbZipFile}-&gt;_dataThread);
-</span><span class="line">        }
-</span><span class="line">        else
-</span><span class="line">        {
-</span><span class="line">            pData = ${obbZipFile}-&gt;getFileData(fullPath.c_str(), pSize);
-</span><span class="line">        }
-</span><span class="line">    }
-</span><span class="line">    ...
-</span><span class="line">  }
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<h3 id="section-1">总结语</h3>
-
-<p>至此我们就能够读取obb里面的内容了。<br />
-我的方法基于将obb看成了ZIP，模仿apk的方式去读取文件。将obb位置放到了搜索路径。ZIP对象存在且能够从里面读取文件，则表明文件存在。就可以读取他了。</p>
-
-<p>这里面设计到JNI传递数据。其实这对于我们只要仿照APK路径传递就可以了。关于JNI具体的实现，还请看下一章节内容。</p>
-
-<p>感谢你的阅读！</p>
 
 ]]></content>
   </entry>
