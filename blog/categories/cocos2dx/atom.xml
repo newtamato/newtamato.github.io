@@ -4,7 +4,7 @@
   <title><![CDATA[分类:cocos2dx | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/cocos2dx/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-09-03T21:12:35+08:00</updated>
+  <updated>2017-10-08T17:35:20+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,224 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[为游戏增加记录回放功能]]></title>
+    <link href="http://www.newtomato.me/blog/2017/10/08/hui-fang"/>
+    <updated>2017-10-08T17:29:29+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/10/08/hui-fang</id>
+    <content type="html"><![CDATA[<p>为游戏增加回放功能的主要目的是可以将原来的操作重新播放一遍，很快的定位问题。尤其的不易复现的问题。<br />
+早先定位不易复现的问题采用的方法是让服务器记录玩家的操作请求。<br />
+如果发生问题，可以根据请求日志做分析。<br />
+这种方案一般是用在游戏上线之后。在上线之前，只能靠开发和测试同学大量的测试。<br />
+所以当我看到cocos2dx增加一个控制台（<code>Console</code>）类的时候，就突发奇想，是否可以在前端做一个简单的记录回放。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-柴犬.jpg" alt="柴犬" /><br />
+柴柴帮忙镇楼！<br />
+<!--more--></p>
+
+<h3 id="section">原理和问题</h3>
+
+<p>记录回放不是游戏业务逻辑，不需要增加额外的代码。它独立于游戏存在。记录玩家的点击操作。保存到本地文件中。然后在游戏启动之后，读取文件内容，挨个播放玩家的点击。以此实现回放功能。</p>
+
+<p>这里涉及到的问题是：</p>
+
+<ol>
+  <li>玩家上次操作的游戏和本次回放的游戏内容要一致。现在游戏为了增加趣味性，很多采用随机。比如道具物品的生成，如果不一致，回放肯定出问题。</li>
+  <li>记录的点击位置是以当前设备分辨率为准。如果回放设备和当前设备分辨率不一致。位置信息不对，点击也会出问题。</li>
+  <li>即使解决了上面两个问题，如果上次点击和这次点击之间用时10s钟（可能是网络卡住，可能是性能出现问题）。当回放的时候，挨个触发的点击之间时长小于10s中，那么点击就不能正确触发。依然会出现问题。</li>
+</ol>
+
+<p>这三个问题，最容易的是第二个，只要保证在同一分辨率的设备上播放即可。<br />
+第一个问题，我们需要和服务器同学沟通，让他对关卡做一个镜像。开发成本较高。只好放弃。<br />
+最后我们在开发模式下，通过客户端的缓存，将服务器的数据全部保存下来。回放的时候，完全是客户端在自己播放。将与服务器请求的数据也缓存起来。虽然开发成本高了，但是基于此，没有任何网络请求的压力，第三个问题也有了解决方案。<br />
+第三个问题还涉及性能问题，要快速解决，我们想到的是用一台高端配置的设备，或者直接在模拟器上播放。</p>
+
+<p>至此大问题都已经解决，剩下的就是如何实现回放了。</p>
+
+<h3 id="cocos2dxconsole">cocos2dx提供的console为基础</h3>
+
+<p>在cocos2dx 3.x版本，增加了一个<code>Console</code>功能。提供的基本功能如下：</p>
+
+<pre><code>
+{
+    createCommandAllocator();
+    createCommandConfig();
+    createCommandDebugMsg();
+    createCommandDirector();
+    createCommandExit();
+    createCommandFileUtils();
+    createCommandFps();
+    createCommandHelp();
+    createCommandProjection();
+    createCommandResolution();
+    createCommandSceneGraph();
+    createCommandTexture();
+    createCommandTouch();
+    createCommandUpload();
+    createCommandVersion();
+}
+</code></pre>
+<p>在项目中增加对端口5678的监听即可。</p>
+
+<p>lua代码：</p>
+
+<pre><code>cc.Director:getInstance():getConsole():listenOnTCP(5678)
+</code></pre>
+
+<p>c++代码</p>
+
+<pre><code>auto console = director-&gt;getConsole();
+console-&gt;listenOnTCP(5678);
+</code></pre>
+
+<p>项目启动之后，打开终端：</p>
+
+<pre><code>nc localhost 5678
+</code></pre>
+
+<p>如果是在手机上启动，则需要手机和电脑连在同一个局域网之内。然后查看手机的ip地址。替换上面的localhost。</p>
+
+<p>敲入命令之后，终端显示connect success。然后输入<code>help</code>。此时cocos2dx提供的定制命令全会罗列出来。</p>
+
+<p>而我们要使用的就是<code>touch</code>命令。</p>
+
+<h3 id="section-1">保存点击位置和回放</h3>
+
+<p>保存的位置，应该是什么位置呢？</p>
+
+<p>因为我们使用的是touch命令，而他需要的位置信息，是以设备坐标系为准的。也就是原点坐标在左上角为准。而cocos2dx的坐标系是以opengl为准，左下角是原点。</p>
+
+<p>所以我们要将点击的opengl坐标转为设备坐标。<br />
+这个转换，cocos2dx也提供了对应的接口。代码如下：</p>
+
+<pre><code>Vec2 Director::convertToGL(const Vec2&amp; uiPoint)
+{
+    Mat4 transform;
+    GLToClipTransform(&amp;transform);
+    ...
+    return Vec2(glCoord.x * factor, glCoord.y * factor);
+}
+
+Vec2 Director::convertToUI(const Vec2&amp; glPoint)
+{
+    Mat4 transform;
+    GLToClipTransform(&amp;transform);
+		...
+    return Vec2(glSize.width * (clipCoord.x * 0.5f + 0.5f) * factor, glSize.height * (-clipCoord.y * 0.5f + 0.5f) * factor);
+}
+</code></pre>
+
+<p>所以记录点击位置的代码很简单：</p>
+
+<pre><code>local posx,posy = node:getPosition()
+local pos = node:getParent():convertToWorldSpace(cc.p(posx,posy))
+local director = cc.Director:getInstance()
+local uiPos = director:convertToUI(pos)
+</code></pre>
+
+<p>记录位置，然后保存。大功完成一半。是不是很简单。</p>
+
+<p>接下来说一下回放。<br />
+回放是自动完成，也就意味有一个定时器，定时将位置信息触发。<br />
+我的做法是使用<code>python</code>结合<code>nc</code>，<code>touch</code>命令，将位置信息挨个触发。</p>
+
+<p>python可以调用系统命令。我们使用adb命令将保存的位置信息文件读出来，然后<code>nc连接</code>游戏。在nc命令模式下，调用<code>touch</code>命令。</p>
+
+<pre><code>touch swipe 300 400 300 400
+</code></pre>
+
+<p>这里touch有一个bug，就是对单点的支持不正确，点击并未触发。于是我尝试使用了多点。就是传递了同一个位置。竟然可以使用。</p>
+
+<p>python代码如下：</p>
+
+<pre><code>nc = Netcat(server_address, 5678)
+while(index &lt; len(recordArray)):
+    nc.read_until('&gt;')
+    item = recordArray[index]
+    cmd = "touch swipe %d %d %d %d \n"  % (item[0],item[1],item[0],item[1])
+    nc.write(cmd)
+
+    index = index + 1
+    time.sleep(4)
+</code></pre>
+
+<h3 id="section-2">结语</h3>
+
+<p>至此这个工具的制作过程都讲完了。期间也掉进了坑中，幸运的是和其他同事交流下，脑袋就清晰了一些。慢慢的我的这个大坑也就填上了。<br />
+实践过程中也存在一些问题。也在慢慢优化中。期望有一天成熟起来，能给其他项目中带来便利。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-15074549225204.jpg" alt="" /></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Cocos2dx游戏性能优化技巧]]></title>
+    <link href="http://www.newtomato.me/blog/2017/10/06/cocos2dxxing-neng-you-hua"/>
+    <updated>2017-10-06T22:09:58+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/10/06/cocos2dxxing-neng-you-hua</id>
+    <content type="html"><![CDATA[<p>手机游戏性能优化主要有两个方面。一个CPU，一个GPU。</p>
+
+<p>GPU主要用于图像渲染方面。由于现在显卡发展迅速。原本CPU的部分功能，可以转移到GPU上计算运行。这样大大的减轻了CPU的运算压力。提升效率。</p>
+
+<p>GPU和CPU都有各自的性能指标。我们最常优化的地方都是CPU，因此我先从这一部分讲起。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-06-15073018470041.jpg" alt="" /><br />
+我给你演示一下我做的项目！这…,肯定是环境的问题！<br />
+<!--more--></p>
+
+<h3 id="cpu">CPU有关的方法</h3>
+
+<p>cocos2dx在开启debug模式之后，在左下角有三行debug信息。<code>GL vertical</code>，<code>draw call</code>，以及<code>fps</code>.<br />
+fps是最常用的指标之一。数值越高游戏运行越流畅。他表示一秒钟能刷新多少帧。<br />
+draw call也是性能优化的指标。他表示需要几次draw才能把图片展示出来。<br />
+gl vertical不常用，但是也是优化指标之一，他表示当前有多少个顶点数据。</p>
+
+<p>所有的方法就是围绕这三个指标开始展开。</p>
+
+<ol>
+  <li>使用<code>batchnode</code>批处理的方式加载图片。因此cocos2dx在这方面做了优化，在同一个<code>batchnode</code>的图片会一次性draw到GPU上，从而降低<code>draw call</code>的调用。从cocos2dx 3.0以后的版本，cocos2dx自动使用batchnode技术，而不需要开发者自己创建。</li>
+  <li><code>fps</code>的降低是因为有大量数据的计算，例如对象的生成。因此考虑对象池技术。例如cocos2dx使用的<code>AnimaitonCache</code>，<code>TextureCache</code>，<code>SpriteFrameCache</code>等。例如我们创建很多敌人。敌人消亡之后又会重新创建。实际上可以放到对象池中，默认从池中获取，如果池子里面没有对象，在重新创建。</li>
+  <li>加载较大资源，瞬间fps会下降很多。那是因为这个过程是加载图片资源和解析动画数据创建对象。动画资源最好提前加载。
+    <ol>
+      <li>按照由大到小的顺序加载。加载大的资源会和内存申请资源2倍的内存。但加载完什么时候不会立即释放。接着在依次加载。此时内存已经被撑大，在加载资源也可能不在需要申请新的内存了。</li>
+      <li>io读取动画数据信息，使用缓存，这点在cocos studio制作的armature中已经使用。但是Spine动画并未如此。他会每次创建都会重新加载。</li>
+      <li>可以用序列帧动画代替复杂的需要计算的动画。序列帧动画资源比较大。加载后压力转嫁给gpu而非cpu。</li>
+    </ol>
+  </li>
+  <li>减少粒子动画的使用。</li>
+  <li>图片加载之后，为什么会占据那么高的内存？一张1024x1024的RGB8888，大小200k的图片，加载后，占内存4M，因为图片本身是压缩的数据。在内存中都会被解压缩膨胀起来。他先被CCImage读取解析（它实现了对于不同类型图片得读取、解析、像素信息保存），然后CCTexture2D在根据CCImage又创建了一份数据。因此内存会有2倍的开销，如果我们可以使用gpu直接解析的图片，比如ios平台的pvr tc4格式，或者android的etc格式，则内存只有1倍左右的开销。</li>
+  <li>上述提到的pvr tc4格式，也有自己的缺点，它是有损压缩。肉眼可以看得出来，因此只能用于细微的地方。比如特效或者粒子等。</li>
+</ol>
+
+<h3 id="gpu">GPU有关的方法</h3>
+
+<p>GPU的优化则要分情况而定。</p>
+
+<p>GPU早期的架构和PC相似，都是IMR（Immediate Mode Rendering），这种架构的GPU渲染有个问题，就是Overdraw过高。因为他将被遮挡的物体也被draw到显卡上。这明显是一种浪费。<br />
+现在的GPU在一定程度上可以避免这个问题，但是需要应用程序将物体按照z轴顺序从前往后的顺序提交给GPU，这是一种方案。<br />
+另外，现在GPU有三家大的厂商。分别是<code>powervr，高通Adreno，ARM mali</code>。他们采用的是TBR（分块渲染）的架构。在overdraw方面，<code>powervr</code>是做得最好的一家。他使用<code>TBDR（Tile Based DeferredRendering）</code>架构，他增加了一个<code>HSR（Hidden Surface Removal)</code>硬件单元，剔除掉被遮挡的三角形。</p>
+
+<p>因此说GPU的优化分情况而定。而为了降低遮挡，在我们开发游戏中可以通过TexturePacker的多边形裁剪来做到。<br />
+说着这个，最常见的情况是有透明的图片，透明也是像素，也需要被读取到显卡上，增加带宽的浪费。而多边形裁剪就是将透明的部分裁掉。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-06-15072972637518.jpg" alt="=w300" /></p>
+
+<p>使用cocos2dx打开<code>CC_SPRITE_DEBUG_DRAW</code>,此时你可以看到一个<code>Sprite</code>的三角形不再是两个。而是多个。<br />
+但同时，我们也发现他的<code>gl vertcail</code>也变得很大。顶点越多，cpu计算越多。而我们使用了这种多边形裁剪，期初是为了降低GPU的计算和渲染。却带来了另一个问题。</p>
+
+<p>因此又回到那种时间换取空间的问题。可根据具体情况考虑是否使用这种方法。<br />
+不过，经过测试这种方法在powervr型号的gpu设备上没有多少成效。</p>
+
+<h3 id="section">其他技巧</h3>
+
+<ol>
+  <li>善用dumpCachedTextureInfo，找到那些texture一直未被释放。</li>
+  <li>对于只是使用一次的texture，在加载到gpu之后，可以remove内存对他的引用。这不会产生问题。</li>
+  <li>善于使用九宫格，降低对同一种资源的频繁加载。</li>
+  <li>早期手机部分不支持npot，为了统一资源，都做成了pot的格式，浪费了资源。现在手机大都已经支持npot。所以texturepacker导出可以选择npot，最新的npot的版本已经是anysize了。</li>
+  <li>数字字体尽量使用bmffont。</li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[认识liquidFun（流体物理引擎）]]></title>
@@ -235,78 +453,6 @@ request.testDevices = @[@"测试设备号"];
 先看一下效果吧。接下来的计划就是调通控制广告播时长的接口。</p>
 
 <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-IMG_0511.png" alt="IMG_0511" /></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Cocos2dx中如何让sqlite3具有加密的功能]]></title>
-    <link href="http://www.newtomato.me/blog/2016/05/07/sqlite-cocos2dx"/>
-    <updated>2016-05-07T19:00:44+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/05/07/sqlite-cocos2dx</id>
-    <content type="html"><![CDATA[<p>sqlite3是一个轻量级的但同时功能完备的数据库系统。既然是数据库，那么他最基本的功能就是为我们存储一些基本的数据。<br />
-我们经常遇到能使用它的场景是这样的，比如客户端（包括浏览器，App应用，游戏），需要存储一些数据到本地，这些数据比较大，存储在本地是最合适的。<br />
-但是这样的情况下，有很多种手段我们可以使用，比如使用json,或者xml的方式。一般某些引擎都会提供一些接口给我们调用。以往的Adobe Flash就有一个shareData的数据存储。cocos2dx则使用userData，实际就是存储到UserDefault.xml中。<br />
-<!--more--><br />
-但是这样做有几个缺点:<br />
-1. 以上两种方式没有提供加密的功能。也就是我们存储的数据会被别人很容易导出来。<br />
-2. 如果数据过多，生成的文件大小势必也会变大。<br />
-3. 数据多，还会造成一点，就是系统io时间有所损失。尤其是在启动客户端的时候，不能很快将界面展示出来，就会造成用户体验的损失。</p>
-
-<p>而上面介绍的sqlite3，对于这些问题都能解决。</p>
-
-<p><strong>他首先足够小，简单易操作，且读取写入等操作较快。有自己的压缩算法，因此我们写入的数据不会占据太大的空间。且提供加密的功能，自己的数据库即使被人拿到也不会容易被破解。</strong></p>
-
-<p>在cocos2dx的2.2.6版本中，已经把sqlite3的包引入进来了。因此它的基本功能我们都能看到。</p>
-
-<p>sqlite3的接口<br />
-<img src="/images/1462613459251.png" alt="Alt text" /><br />
-database的接口<br />
-<img src="/images/1462613520932.png" alt="Alt text" /></p>
-
-<p>打开sqlite</p>
-
-<pre><code>local sqlite3 = require("lsqlite3") --创建sqlite3对象
-local db = sqlite3.open(databasefilename) -- 打开一个db
-local sql=[[
-	 		SELECT * FROM userData ;
-    		]]
-local ret = db:execute(sql) --执行上面的sql语句。他有自己的返回值。可以打印看看结果
-db:close()
-</code></pre>
-
-<p>上面的方式就是操作sqlite的一个基本模式。<br />
-所以说大部分工作，cocos2dx已经替我们实现了。我们只要使用它即可。<br />
-但是不足之处在于2.2.6版本并没有提供sqlite3加密的功能。这一部分需要我们自己做。</p>
-
-<p>还好，网上有不少同学对此已经贡献了自己的方法，我也是为此折腾了许久才搞定。所以别人的路我们拿来参考，但是真要弄明白还是需要自己去实践才可以的。</p>
-
-<p>首先，加密可以自己实现，那就需要自己编写c代码，扩展sqlite3。幸运的是，我们有<a href="http://wxcode.sourceforge.net/components/wxsqlite3/">wxSqite3</a>. 站在巨人的肩膀上我们才能看的更远。<br />
-下载wxsqlite3之后，将整个文件下放到cocos2dx的项目下面。我放到了external的下面。然后在xcode中只需要引入如下文件。其他文件不需要引用到xcode，但是也需要放在哪个目录下面。工程运行时也会调用。引用sqlite3secure.c这个文件是因为他已经include了其他的文件。（我曾尝试把其他文件也都引用进来，发现许多的报错，于是把报错的文件都挨个删掉，结果剩下这个文件不报错且可以运行）<br />
-<img src="/images/1462615862424.png" alt="Alt text" /><br />
-如果项目中有其他的相同的文件，删掉他们即可。<br />
-然后只要在我们操作数据库之前，调用一次<strong>sqlite3_key( sqlite3 *db, const void *pKey, int nKey)</strong>，这个函数就是对数据库加密.</p>
-
-<ol>
-  <li>sqlite3_key：设置秘钥</li>
-  <li>sqlite3_rekey: 重新设置秘钥，可以通过后两个参数为nil来清空数据空的秘钥</li>
-</ol>
-
-<p>这里推荐一个工具sqlitebrowser，如果我们的db没有加密，拖入到这个应用中，能够很清楚的看到我们的数据库表，但是如果一旦加密，应用就无法读取这个表。</p>
-
-<p>这样还不算结束，需要将打开它的某些宏定义，这样某些函数我们才能够正确的调用。<br />
-<img src="/images/1462616491431.png" alt="Alt text" /></p>
-
-<p>这样配置之后，在clean工程，然后重新编译运行。差不多就能够运行起来。</p>
-
-<p>下面的话，是我自己在研究wxsqlite3的时候，想到的。如果你的项目已经能够运行起来，那么下面的话可以忽略不看。<br />
-仔细看这个wxsqlite3，其实并没有在项目任何地方做设置，也没有被完全引用，但是他是如何运行起来的呢？程序运行的时序，分析下来，应该是如下的顺序：<br />
-lua_extension.c先被调用注册了了一些供lua调用的函数。<br />
-<img src="/images/1462617671136.png" alt="Alt text" /></p>
-
-<p>接下来我们调用lsqlite3之后，就按照我上面说的开始注册sqlite3的函数，然后就是db等函数。因此分析可以知道，运行时候已经就是将要wxsqlite3的函数和lsqlite3要调用的函数映射在一起。<br />
-因此我的理解是这样，项目在编译期间，由于导入了sqlite3secure.c这个文件，编译器会扫描这个文件引用的其他.h,.c文件，将.h文件转换成同名的.c文件进行编译。如果.h里面声明了一个函数，并且在.c中有相关的实现，那么就可以编译通过。编译成功之后这些函数可能挂在某些命名空间下面，也可能是全局函数，所以我们调用的时候，就能找到这个函数，和是否在同一个目录没有关系。<br />
-上面的理解，和后来搜索到的c语言编译刚好不谋而合，本人c语言的基础早在大学就已经还给了老师，毕业之后一直使用面向对象的思想使用语言。由于接触lua才开始研究c和c++，果然是一入编程深似海。惭愧惭愧啊！</p>
 
 ]]></content>
   </entry>

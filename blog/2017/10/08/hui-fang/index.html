@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>为游戏增加记录回放功能 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  <meta name="description" content="项目测试工具"> 
+  <meta name="keywords" content="cocos2dx netcat nc touch 坐标转换">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2017/10/08/hui-fang">
+  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+
+  <!-- http://opengraphprotocol.org/ -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="http://www.newtomato.me/blog/2017/10/08/hui-fang">
+  <meta property="og:title" content="为游戏增加记录回放功能 - 番茄手册">
+  <meta property="og:description" content="项目测试工具">
+
+  <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
+
+<link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+<link href="/assets/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
+
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+
+
+  
+  <link href="/stylesheets/screen.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+  <body   >
+    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
+    <div id="wrap">
+      
+        <header role="banner">
+          <nav class="navbar navbar-default" role="navigation">
+    <div class="container">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle" title="toggle navbar" data-toggle="collapse" data-target=".navbar-collapse">
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/">番茄手册</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav">
+                <li ><a href="/">首页</a></li>
+<li ><a href="/blog/archives">文章列表</a></li>
+<li ><a href="/about2">关于我</a></li>
+
+            </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li>
+                    <a class="subscribe-rss" href="/atom.xml" title="subscribe via RSS">
+                        <span class="visible-xs">RSS</span>
+                        <img class="hidden-xs" src="/images/rss.png" alt="RSS">
+                    </a>
+                </li>
+                
+            </ul>
+            
+                <form class="navbar-form navbar-right" action="https://www.google.com/search" method="GET">
+                    <input type="hidden" name="sitesearch" value="www.newtomato.me">
+                    <div class="form-group">
+                        <input class="form-control" type="text" name="q" placeholder="Search">
+                    </div>
+                </form>
+            
+        </div>
+    </div>
+</nav>
+
+
+        </header>
+      
+      <div id="main" role="main" class="container">
+        <div id="content">
+          <div class="row">
+  <div class="page-content" itemscope itemtype="http://schema.org/Blog">
+    <meta itemprop="name" content="番茄手册" />
+    
+    <meta itemprop="url" content="http://www.newtomato.me" />
+    <article class="hentry" role="article" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+      
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-10-08T17:29:29+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年10 月8 日</time>
+        
+      </p>
+    
+    
+    <h1 class="entry-title" itemprop="name headline">
+        为游戏增加记录回放功能
+        
+    </h1>
+    
+  </header>
+
+
+<div class="entry-content clearfix" itemprop="articleBody description"><p>为游戏增加回放功能的主要目的是可以将原来的操作重新播放一遍，很快的定位问题。尤其的不易复现的问题。<br />
+早先定位不易复现的问题采用的方法是让服务器记录玩家的操作请求。<br />
+如果发生问题，可以根据请求日志做分析。<br />
+这种方案一般是用在游戏上线之后。在上线之前，只能靠开发和测试同学大量的测试。<br />
+所以当我看到cocos2dx增加一个控制台（<code>Console</code>）类的时候，就突发奇想，是否可以在前端做一个简单的记录回放。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-柴犬.jpg" alt="柴犬" /><br />
+柴柴帮忙镇楼！<br />
+<!--more--></p>
+
+<h3 id="section">原理和问题</h3>
+
+<p>记录回放不是游戏业务逻辑，不需要增加额外的代码。它独立于游戏存在。记录玩家的点击操作。保存到本地文件中。然后在游戏启动之后，读取文件内容，挨个播放玩家的点击。以此实现回放功能。</p>
+
+<p>这里涉及到的问题是：</p>
+
+<ol>
+  <li>玩家上次操作的游戏和本次回放的游戏内容要一致。现在游戏为了增加趣味性，很多采用随机。比如道具物品的生成，如果不一致，回放肯定出问题。</li>
+  <li>记录的点击位置是以当前设备分辨率为准。如果回放设备和当前设备分辨率不一致。位置信息不对，点击也会出问题。</li>
+  <li>即使解决了上面两个问题，如果上次点击和这次点击之间用时10s钟（可能是网络卡住，可能是性能出现问题）。当回放的时候，挨个触发的点击之间时长小于10s中，那么点击就不能正确触发。依然会出现问题。</li>
+</ol>
+
+<p>这三个问题，最容易的是第二个，只要保证在同一分辨率的设备上播放即可。<br />
+第一个问题，我们需要和服务器同学沟通，让他对关卡做一个镜像。开发成本较高。只好放弃。<br />
+最后我们在开发模式下，通过客户端的缓存，将服务器的数据全部保存下来。回放的时候，完全是客户端在自己播放。将与服务器请求的数据也缓存起来。虽然开发成本高了，但是基于此，没有任何网络请求的压力，第三个问题也有了解决方案。<br />
+第三个问题还涉及性能问题，要快速解决，我们想到的是用一台高端配置的设备，或者直接在模拟器上播放。</p>
+
+<p>至此大问题都已经解决，剩下的就是如何实现回放了。</p>
+
+<h3 id="cocos2dxconsole">cocos2dx提供的console为基础</h3>
+
+<p>在cocos2dx 3.x版本，增加了一个<code>Console</code>功能。提供的基本功能如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">
+</span><span class="line">{
+</span><span class="line">    createCommandAllocator();
+</span><span class="line">    createCommandConfig();
+</span><span class="line">    createCommandDebugMsg();
+</span><span class="line">    createCommandDirector();
+</span><span class="line">    createCommandExit();
+</span><span class="line">    createCommandFileUtils();
+</span><span class="line">    createCommandFps();
+</span><span class="line">    createCommandHelp();
+</span><span class="line">    createCommandProjection();
+</span><span class="line">    createCommandResolution();
+</span><span class="line">    createCommandSceneGraph();
+</span><span class="line">    createCommandTexture();
+</span><span class="line">    createCommandTouch();
+</span><span class="line">    createCommandUpload();
+</span><span class="line">    createCommandVersion();
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>在项目中增加对端口5678的监听即可。</p>
+
+<p>lua代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">cc.Director:getInstance():getConsole():listenOnTCP(5678)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>c++代码</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">auto console = director-&gt;getConsole();
+</span><span class="line">console-&gt;listenOnTCP(5678);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>项目启动之后，打开终端：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">nc localhost 5678</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>如果是在手机上启动，则需要手机和电脑连在同一个局域网之内。然后查看手机的ip地址。替换上面的localhost。</p>
+
+<p>敲入命令之后，终端显示connect success。然后输入<code>help</code>。此时cocos2dx提供的定制命令全会罗列出来。</p>
+
+<p>而我们要使用的就是<code>touch</code>命令。</p>
+
+<h3 id="section-1">保存点击位置和回放</h3>
+
+<p>保存的位置，应该是什么位置呢？</p>
+
+<p>因为我们使用的是touch命令，而他需要的位置信息，是以设备坐标系为准的。也就是原点坐标在左上角为准。而cocos2dx的坐标系是以opengl为准，左下角是原点。</p>
+
+<p>所以我们要将点击的opengl坐标转为设备坐标。<br />
+这个转换，cocos2dx也提供了对应的接口。代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">Vec2 Director::convertToGL(const Vec2&amp; uiPoint)
+</span><span class="line">{
+</span><span class="line">    Mat4 transform;
+</span><span class="line">    GLToClipTransform(&amp;transform);
+</span><span class="line">    ...
+</span><span class="line">    return Vec2(glCoord.x * factor, glCoord.y * factor);
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">Vec2 Director::convertToUI(const Vec2&amp; glPoint)
+</span><span class="line">{
+</span><span class="line">    Mat4 transform;
+</span><span class="line">    GLToClipTransform(&amp;transform);
+</span><span class="line">		...
+</span><span class="line">    return Vec2(glSize.width * (clipCoord.x * 0.5f + 0.5f) * factor, glSize.height * (-clipCoord.y * 0.5f + 0.5f) * factor);
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>所以记录点击位置的代码很简单：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local posx,posy = node:getPosition()
+</span><span class="line">local pos = node:getParent():convertToWorldSpace(cc.p(posx,posy))
+</span><span class="line">local director = cc.Director:getInstance()
+</span><span class="line">local uiPos = director:convertToUI(pos)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>记录位置，然后保存。大功完成一半。是不是很简单。</p>
+
+<p>接下来说一下回放。<br />
+回放是自动完成，也就意味有一个定时器，定时将位置信息触发。<br />
+我的做法是使用<code>python</code>结合<code>nc</code>，<code>touch</code>命令，将位置信息挨个触发。</p>
+
+<p>python可以调用系统命令。我们使用adb命令将保存的位置信息文件读出来，然后<code>nc连接</code>游戏。在nc命令模式下，调用<code>touch</code>命令。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">touch swipe 300 400 300 400</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>这里touch有一个bug，就是对单点的支持不正确，点击并未触发。于是我尝试使用了多点。就是传递了同一个位置。竟然可以使用。</p>
+
+<p>python代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">nc = Netcat(server_address, 5678)
+</span><span class="line">while(index &lt; len(recordArray)):
+</span><span class="line">    nc.read_until('&gt;')
+</span><span class="line">    item = recordArray[index]
+</span><span class="line">    cmd = "touch swipe %d %d %d %d \n"  % (item[0],item[1],item[0],item[1])
+</span><span class="line">    nc.write(cmd)
+</span><span class="line">
+</span><span class="line">    index = index + 1
+</span><span class="line">    time.sleep(4)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h3 id="section-2">结语</h3>
+
+<p>至此这个工具的制作过程都讲完了。期间也掉进了坑中，幸运的是和其他同事交流下，脑袋就清晰了一些。慢慢的我的这个大坑也就填上了。<br />
+实践过程中也存在一些问题。也在慢慢优化中。期望有一天成熟起来，能给其他项目中带来便利。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-15074549225204.jpg" alt="" /></p>
+
+</div>
+
+
+      <footer class="post-footer">
+        <p class="meta text-muted">
+          
+  
+
+
+
+<figure class="author-image">
+    <span class="img" href="/about" style="background-image: url(/images/avatar.jpg)"><span class="hidden">Picture</span></span>
+</figure>
+
+<section class="author">
+    <h4><span class="byline author vcard" itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="fn" itemprop="name">newtomato</span></span></h4>
+
+    <div class="author-meta">
+        <span class="author-link icon-link"><i class="fa fa-link" aria-hidden="true"></i> <a href="http://www.newtomato.me">http://www.newtomato.me</a></span>
+    </div>
+</section>
+
+<hr>
+
+<section class="share">
+    
+    <h4>Share this post</h4>
+    
+    <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?url=http://www.newtomato.me/blog/2017/10/08/hui-fang;" 
+        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+        <span class="hidden">Twitter</span>
+    </a>
+    <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2017/10/08/hui-fang" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+        <span class="hidden">Facebook</span>
+    </a>
+    <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2017/10/08/hui-fang" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+        <span class="hidden">Google+</span>
+    </a>
+    
+</section>
+
+
+
+
+<!--
+<footer class="post-footer">
+
+
+            <section class="share">
+                <h4>Share this post</h4>
+                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=Instant%20Movie%20Streamer%20v3%20Release&amp;url=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
+                    <span class="hidden">Twitter</span>
+                </a>
+                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+                    <span class="hidden">Facebook</span>
+                </a>
+                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+                    <span class="hidden">Google+</span>
+                </a>
+            </section>
+
+
+        </footer>
+
+
+&#8211;>
+          
+
+
+
+
+
+
+
+
+
+
+
+
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-10-08T17:29:29+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年10 月8 日</time>
+          <br>
+
+<span class="glyphicon glyphicon-tags"></span>&nbsp;
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/cocos2dx/'>cocos2dx</a>
+  
+</span>
+
+
+        </p>
+        
+          <div class="pager">
+            
+            
+              
+                <a href="/blog/2017/10/06/cocos2dxxing-neng-you-hua" class="col-xs-12 col-md-4 btn btn-default" title="Previous Post: cocos2dx游戏性能优化技巧"> 
+                  <div class="text-muted">
+                    <small>Previous Post</small>
+                  </div>
+                  <div class="pager-title">
+                    <h4>cocos2dx游戏性能优化技巧</h4>
+                  </div>
+                </a>
+              
+            
+            
+            
+          </div>
+        
+      </footer>
+    </article>
+    
+  </div>
+</div>
+
+        </div>
+      </div>
+    </div>
+    <footer role="contentinfo"><div class="container">
+    <p class="text-muted credits">
+  Copyright &copy; 2017 - newtomato<br>
+  <small>
+      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>,
+      <span class="credit">customized with <a href="https://github.com/bhrigu123/abacus">abacus theme</a></span>.
+  </small>
+</p>
+
+</div>
+</footer>
+    
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="/javascripts/modernizr.js"></script>
+
+
+  </body>
+</html>
