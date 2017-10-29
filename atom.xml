@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-10-08T17:35:20+08:00</updated>
+  <updated>2017-10-29T23:03:36+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,127 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Game maker：Extend Blend Mode]]></title>
+    <link href="http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode"/>
+    <updated>2017-10-29T23:00:17+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode</id>
+    <content type="html"><![CDATA[<p>最近看到一款游戏，使用了<code>Extend blend mode</code>做了一个非常牛叉的特效。<br />
+特效在此，大家先欣赏一下：<br />
+<img src="http://www.davetech.co.uk/pages/gamemakersurfacedamage//twitter3.gif" alt="" /></p>
+
+<p>作者将如何实现的效果在<a href="http://www.davetech.co.uk/gamemakersurfacedamage">这里</a>介绍了一下。</p>
+
+<!--more-->
+
+<p>里面最关键的代码就是：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">damagemask = surface_create(room_width, room_height)
+</span><span class="line">
+</span><span class="line">surface_set_target(damagemask)
+</span><span class="line">draw_sprite(spr_room1walls,0,0,0);
+</span><span class="line">surface_reset_target();
+</span><span class="line">	
+</span><span class="line">/// obj_damage – draw
+</span><span class="line">if (surface_exists(damagemask)) {
+</span><span class="line">    draw_surface(damagemask,x,y)
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">
+</span><span class="line">...
+</span><span class="line">draw_set_blend_mode(bm_substract)
+</span><span class="line">draw_circle(x,y,random(10))
+</span><span class="line">draw_line(...)
+</span><span class="line">...
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="section">原理介绍</h2>
+
+<p><code>game maker</code>中surface是一个独特的存在，可以绘制任何物品上去，也可以将自己绘制到屏幕上。可以看成是画布。</p>
+
+<p><code>game maker</code>的draw也比较独特，普通情况下，我们是<code>bm_normal</code>的模式，既覆盖的绘制。<br />
+但是这里使用的是<code>bm_subtract</code>的方式，顾名思义就是将要画上去的东西裁减掉。比如上面绘制的是一个圆形和一条射击冲击波的line。则绘制的时候把这个圆形和line裁剪掉。</p>
+
+<p>由此上面的效果，被枪射中，墙壁上留有痕迹的效果就出来了。</p>
+
+<p>这么高级的功能，还需要继续深入的了解！</p>
+
+<h2 id="drawsetblendmode">draw_set_blend_mode</h2>
+
+<p>这方面的资源网络上比较少，现在在GM 2.0上已经改名为<code>gpu_set_blendmode_ext</code>,由此可以看出这个函数是在绘制的时候设置gpu的绘制模式。也就是不需要cpu的计算。</p>
+
+<p>他有两个重要的参数。<code>gpu_set_blendmode_ext(src,dest)</code>。<br />
+src是指：<code>the colour of the pixel we're going to draw</code>，即我们将要绘制的东西。<br />
+dest是指：<code>the colour that's already in the pixel we're drawing to</code>，即我们已经绘制的东西，也就是说我们将<code>src</code>绘制到<code>dest</code>上。可以简单的认为dest是一个背景，在后面，src是个道具，在上面。</p>
+
+<p>这里的概念很重要，因为绘制公式是在这个基础上绘制的。</p>
+
+<p>绘制公式如下</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">Rs * factor_src + Rd * factor_desc = new R
+</span><span class="line">Gs * factor_src + Gd * factor_desc = new G
+</span><span class="line">Bs * factor_src + Bd * factor_desc = new B
+</span><span class="line">As * factor_src + Ad * factor_desc = new A
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>某一个像素点是如何被混合绘制出来的呢？就是上面的公式。将背景和前景的像素颜色值，按照上述公式计算出来一个新的颜色值。</p>
+
+<p>两个参数还有一些默认值。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092877037009.jpg" alt="" /></p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092878217711.jpg" alt="=" /><br />
+所以如何实现<code>bm_subtract</code>的效果呢？参数就是上面的<code>（bm_zero,bm_inv_src_colour）</code>,<br />
+接下来我们套入到公式里面计算一下：</p>
+
+<p>画出来的圆圈和线条，相当于都是遮罩，都是黑色的。因此就是#000000。<br />
+<code>公式里面RGB颜色值是用0~1表示，就是百分比</code>。因此每个都是0。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">0 x 0 + Rd * 1 = Rd
+</span><span class="line">0 x 0 + Gd * 1 = Gd
+</span><span class="line">0 x 0 + Bd * 1 = Bd
+</span><span class="line">1 x 0 + Ad * 0 = 0
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>因此这个像素点就被成了透明的。是不是就实现了画上去的东西，其实被扣除了效果呢？</p>
+
+<h2 id="section-1">后续</h2>
+
+<p>这个功能还没有结束，远远超过你的想象。大名鼎鼎的独立游戏《INK》也是采用这个原理制作的。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092884978865.jpg" alt="" /></p>
+
+<p>作者使用的方式是<code>（bm_dest_alpha ，bm_inv_src_alpha）</code>。</p>
+
+<p>另外，在<code>reddit</code>上找了一份example工程，可以查看不同模式的组合带来不一样的体验哦。再次也分享给大家。<br />
+<a href="https://pan.baidu.com/s/1gf1WFyr">百度云盘链接</a>：https://pan.baidu.com/s/1gf1WFyr 密码: 8u98</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[为游戏增加记录回放功能]]></title>
@@ -1907,46 +2028,6 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
   <li><a href="https://www.zilongshanren.com/">子龙山人</a></li>
   <li><a href="https://git-scm.com/book/ch7-1.html">GIT手册</a></li>
 </ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Keytool的基本用法以及检查apk签名]]></title>
-    <link href="http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming"/>
-    <updated>2017-01-09T14:38:22+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming</id>
-    <content type="html"><![CDATA[<p>要导出正式的android的apk，就需要用得到一个keystore的文件。这个文件就是由keytool生成的一个文件。</p>
-
-<p><code>Keytool</code> 是一个JAVA环境下的安全钥匙与证书的管理工具，用于生成一个证书管理库，用于管理私钥公钥验证相关的一个证书keystore。<br />
-你可以把keystore看成是一个数据库，里面存储的是证书，keytool就是用来操作这个数据库的工具！<br />
-<!--more--><br />
-他常用的命令有以下几种方式。</p>
-
-<ol>
-  <li>
-    <p>创建keystore<br />
-<code>keytool -genkeypair -alias "android" -keyalg "RSA" -keystore "mylib.keystore"  </code></p>
-
-    <p>创建一个别名为<code>android</code>的证书，该证书存放在名为<code>mylib.keystore</code>的密钥库中.<br />
- <code>-alias</code>指明这是证书的别名，同时也是秘钥对的别名。</p>
-  </li>
-  <li>查看keystore<br />
-  <code>keytool -list -keystore mylib.keystore</code></li>
-  <li>导出keystore里面的证书<br />
- <code>keytool -export -alias android -file android.crt -keystore mylib.keystore</code></li>
-  <li>查看导出的证书信息<br />
- <code>keytool -printcert -file "android.crt"</code></li>
-  <li>删除keystore里面的证书<br />
- <code>keytool -delete -keystore mylib.keystore -alias android</code></li>
-</ol>
-
-<p>另外，keytool最有用的的方法是检查apk的签名和验证。<br />
-检查apk签名方法有两种一种是将apk解压缩，找到里面的<code>META-INF</code>文件夹。然后对其RSA文件进行如下命令即可:<br />
-<code>keytool -printcert -file META-INF/XXXX.RSA</code><br />
-第二种方法，在不加压缩的情况下<br />
-<code>keytool -list -printcert -jarfile xxx.apk</code><br />
-但是jarfile是java 7才引入，所以如果自己电脑里面的java版本不足，需要升级。</p>
 
 ]]></content>
   </entry>
