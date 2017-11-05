@@ -4,7 +4,7 @@
   <title><![CDATA[分类:game | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/game/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-10-29T23:03:36+08:00</updated>
+  <updated>2017-11-05T22:34:45+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,96 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Game Maker：blend Mode遮挡效果]]></title>
+    <link href="http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo"/>
+    <updated>2017-11-05T22:29:12+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo</id>
+    <content type="html"><![CDATA[<p>在FEZ游戏中，经常会有这样的效果。人物移动到某些物品之后，只有形状可见。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-15098910326144.jpg" alt="=" /></p>
+
+<p>这样的效果，在早期的flash游戏中，会计算两个物品是否发生遮挡，然后对后面的个物品的像素的alpha进行处理。并在前面draw一下。改变遮挡关系。</p>
+
+<p>Game Maker如何实现这样的效果呢？<br />
+只用不到10行代码即可。性能远超我所想象。用不到CPU的计算。纯粹的GPU计算。</p>
+
+<p>先看我的演示（请忽略我简单粗糙的画作）<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-a.gif" alt="a" /></p>
+
+<p>当绿团子躲在障碍物后面，漏出了他的形状。这里用到的就是<code>gpu_set_blendmode_ext()</code> 函数。<br />
+<!--more--></p>
+
+<h2 id="section">原理</h2>
+
+<p><code>gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_dest_alpha)</code></p>
+
+<p>这个函数最终起作用是因为如下的公式：</p>
+
+<p><code>final_color = (source_pixel * bm_dest_alpha) + (dest_pixel * bm_inv_dest_alpha)</code></p>
+
+<p>为了能看到前面的灰色的圆肚子，还是需要再次draw一遍。也就是这次draw才是source。下面的场景已经成为dest了。</p>
+
+<p>所以这个你看到效果，按照层次分的话，应该是如下的样子：</p>
+
+<p>最下面的是你能看到绿团子。<br />
+绿团子上面是一层你看不到的透明。大小是以绿团子为准。<br />
+然后是上面的障碍物。<br />
+最后在此draw一个绿团子的形状的灰色形状的物品，完全按照绿团子的形状为准。</p>
+
+<p>当绿团子在障碍物后面的时候，虽然看上去所有都是可见的。实际上，露出来的绿团子的像素对gpu而言“其实”是透明的。而障碍物那里是不透明的。<br />
+此时在draw一个灰色团子形状的物品。按照上面的公式，不透明的地方自然就展示出来了。透明的地方，灰色就不展示了。</p>
+
+<h2 id="section-1">源码</h2>
+
+<p>绿团子代码：</p>
+
+<p>draw event：</p>
+
+<pre><code>
+draw_self()
+gpu_set_blendenable(false)
+
+gpu_set_colorwriteenable(false,false,false,true)
+x1 = x - sprite_xoffset
+y1 = y - sprite_yoffset
+draw_set_alpha(0)
+//draw_set_color(c_blue)
+draw_rectangle(x1,y1,x1+sprite_width,y1+sprite_height,false)
+
+draw_set_alpha(1)
+gpu_set_colorwriteenable(true,true,true,true)
+gpu_set_blendenable(true)
+
+</code></pre>
+
+<p>draw end event：</p>
+
+<pre><code>gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_dest_alpha)
+
+gpu_set_alphatestenable(true)
+gpu_set_fog(true,c_gray,0,0.4);
+draw_set_alpha(0.4)
+draw_self()
+gpu_set_fog(false,c_white,0,0)
+gpu_set_alphatestenable(false)
+gpu_set_blendmode(bm_normal)
+</code></pre>
+
+<h2 id="section-2">结语：</h2>
+
+<p>game maker很多的黑魔法，都很值得学习。这里推荐几个我经常看的大神的频道。是他们无私的分享，才让我捡到这个漂亮的贝壳。</p>
+
+<ol>
+  <li><a href="https://www.youtube.com/user/999Greyfox">Shaun Spalding</a></li>
+  <li><a href="https://www.youtube.com/user/uheartbeast">HeartBeast</a></li>
+  <li><a href="https://www.youtube.com/user/PixelatedPope">PixelatedPope</a></li>
+  <li><a href="http://www.davetech.co.uk/">David</a></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Game maker：Extend Blend Mode]]></title>

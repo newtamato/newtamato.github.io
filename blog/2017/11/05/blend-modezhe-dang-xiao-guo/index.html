@@ -2,11 +2,11 @@
 <html class="no-js" lang="en">
 <head>
   <meta charset="utf-8">
-  <title>Game maker：Extend Blend Mode - 番茄手册</title>
+  <title>Game Maker：blend Mode遮挡效果 - 番茄手册</title>
   <meta name="author" content="newtomato">
 
-  
-  <meta name="keywords" content="game maker,blend mode">
+  <meta name="description" content="game maker实现遮挡形状"> 
+  <meta name="keywords" content="game maker,gpu_set_blendmode_ext,gpu_set_alphatestenable,gamemaker大神学习">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -14,16 +14,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode">
+  <link rel="canonical" href="http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo">
   <link href="/favicon.png" type="image/png" rel="icon">
   <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
 
   <!-- http://opengraphprotocol.org/ -->
   <meta name="twitter:card" content="summary_large_image">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode">
-  <meta property="og:title" content="Game maker：Extend Blend Mode - 番茄手册">
-  
+  <meta property="og:url" content="http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo">
+  <meta property="og:title" content="Game Maker：blend Mode遮挡效果 - 番茄手册">
+  <meta property="og:description" content="game maker实现遮挡形状">
 
   <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
 
@@ -112,28 +112,59 @@
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-10-29T23:00:17+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年10 月29 日</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-11-05T22:29:12+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年11 月5 日</time>
         
       </p>
     
     
     <h1 class="entry-title" itemprop="name headline">
-        Game maker：Extend Blend Mode
+        Game Maker：blend Mode遮挡效果
         
     </h1>
     
   </header>
 
 
-<div class="entry-content clearfix" itemprop="articleBody description"><p>最近看到一款游戏，使用了<code>Extend blend mode</code>做了一个非常牛叉的特效。<br />
-特效在此，大家先欣赏一下：<br />
-<img src="http://www.davetech.co.uk/pages/gamemakersurfacedamage//twitter3.gif" alt="" /></p>
+<div class="entry-content clearfix" itemprop="articleBody description"><p>在FEZ游戏中，经常会有这样的效果。人物移动到某些物品之后，只有形状可见。</p>
 
-<p>作者将如何实现的效果在<a href="http://www.davetech.co.uk/gamemakersurfacedamage">这里</a>介绍了一下。</p>
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-15098910326144.jpg" alt="=" /></p>
 
-<!--more-->
+<p>这样的效果，在早期的flash游戏中，会计算两个物品是否发生遮挡，然后对后面的个物品的像素的alpha进行处理。并在前面draw一下。改变遮挡关系。</p>
 
-<p>里面最关键的代码就是：</p>
+<p>Game Maker如何实现这样的效果呢？<br />
+只用不到10行代码即可。性能远超我所想象。用不到CPU的计算。纯粹的GPU计算。</p>
+
+<p>先看我的演示（请忽略我简单粗糙的画作）<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-a.gif" alt="a" /></p>
+
+<p>当绿团子躲在障碍物后面，漏出了他的形状。这里用到的就是<code>gpu_set_blendmode_ext()</code> 函数。<br />
+<!--more--></p>
+
+<h2 id="section">原理</h2>
+
+<p><code>gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_dest_alpha)</code></p>
+
+<p>这个函数最终起作用是因为如下的公式：</p>
+
+<p><code>final_color = (source_pixel * bm_dest_alpha) + (dest_pixel * bm_inv_dest_alpha)</code></p>
+
+<p>为了能看到前面的灰色的圆肚子，还是需要再次draw一遍。也就是这次draw才是source。下面的场景已经成为dest了。</p>
+
+<p>所以这个你看到效果，按照层次分的话，应该是如下的样子：</p>
+
+<p>最下面的是你能看到绿团子。<br />
+绿团子上面是一层你看不到的透明。大小是以绿团子为准。<br />
+然后是上面的障碍物。<br />
+最后在此draw一个绿团子的形状的灰色形状的物品，完全按照绿团子的形状为准。</p>
+
+<p>当绿团子在障碍物后面的时候，虽然看上去所有都是可见的。实际上，露出来的绿团子的像素对gpu而言“其实”是透明的。而障碍物那里是不透明的。<br />
+此时在draw一个灰色团子形状的物品。按照上面的公式，不透明的地方自然就展示出来了。透明的地方，灰色就不展示了。</p>
+
+<h2 id="section-1">源码</h2>
+
+<p>绿团子代码：</p>
+
+<p>draw event：</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
@@ -149,94 +180,53 @@
 <span class="line-number">12</span>
 <span class="line-number">13</span>
 <span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">damagemask = surface_create(room_width, room_height)
+</pre></td><td class="code"><pre><code class=""><span class="line">
+</span><span class="line">draw_self()
+</span><span class="line">gpu_set_blendenable(false)
 </span><span class="line">
-</span><span class="line">surface_set_target(damagemask)
-</span><span class="line">draw_sprite(spr_room1walls,0,0,0);
-</span><span class="line">surface_reset_target();
-</span><span class="line">	
-</span><span class="line">/// obj_damage – draw
-</span><span class="line">if (surface_exists(damagemask)) {
-</span><span class="line">    draw_surface(damagemask,x,y)
-</span><span class="line">}
+</span><span class="line">gpu_set_colorwriteenable(false,false,false,true)
+</span><span class="line">x1 = x - sprite_xoffset
+</span><span class="line">y1 = y - sprite_yoffset
+</span><span class="line">draw_set_alpha(0)
+</span><span class="line">//draw_set_color(c_blue)
+</span><span class="line">draw_rectangle(x1,y1,x1+sprite_width,y1+sprite_height,false)
 </span><span class="line">
-</span><span class="line">
-</span><span class="line">...
-</span><span class="line">draw_set_blend_mode(bm_substract)
-</span><span class="line">draw_circle(x,y,random(10))
-</span><span class="line">draw_line(...)
-</span><span class="line">...
+</span><span class="line">draw_set_alpha(1)
+</span><span class="line">gpu_set_colorwriteenable(true,true,true,true)
+</span><span class="line">gpu_set_blendenable(true)
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<h2 id="section">原理介绍</h2>
-
-<p><code>game maker</code>中surface是一个独特的存在，可以绘制任何物品上去，也可以将自己绘制到屏幕上。可以看成是画布。</p>
-
-<p><code>game maker</code>的draw也比较独特，普通情况下，我们是<code>bm_normal</code>的模式，既覆盖的绘制。<br />
-但是这里使用的是<code>bm_subtract</code>的方式，顾名思义就是将要画上去的东西裁减掉。比如上面绘制的是一个圆形和一条射击冲击波的line。则绘制的时候把这个圆形和line裁剪掉。</p>
-
-<p>由此上面的效果，被枪射中，墙壁上留有痕迹的效果就出来了。</p>
-
-<p>这么高级的功能，还需要继续深入的了解！</p>
-
-<h2 id="drawsetblendmode">draw_set_blend_mode</h2>
-
-<p>这方面的资源网络上比较少，现在在GM 2.0上已经改名为<code>gpu_set_blendmode_ext</code>,由此可以看出这个函数是在绘制的时候设置gpu的绘制模式。也就是不需要cpu的计算。</p>
-
-<p>他有两个重要的参数。<code>gpu_set_blendmode_ext(src,dest)</code>。<br />
-src是指：<code>the colour of the pixel we're going to draw</code>，即我们将要绘制的东西。<br />
-dest是指：<code>the colour that's already in the pixel we're drawing to</code>，即我们已经绘制的东西，也就是说我们将<code>src</code>绘制到<code>dest</code>上。可以简单的认为dest是一个背景，在后面，src是个道具，在上面。</p>
-
-<p>这里的概念很重要，因为绘制公式是在这个基础上绘制的。</p>
-
-<p>绘制公式如下</p>
+<p>draw end event：</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
 <span class="line-number">3</span>
 <span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">Rs * factor_src + Rd * factor_desc = new R
-</span><span class="line">Gs * factor_src + Gd * factor_desc = new G
-</span><span class="line">Bs * factor_src + Bd * factor_desc = new B
-</span><span class="line">As * factor_src + Ad * factor_desc = new A
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_dest_alpha)
+</span><span class="line">
+</span><span class="line">gpu_set_alphatestenable(true)
+</span><span class="line">gpu_set_fog(true,c_gray,0,0.4);
+</span><span class="line">draw_set_alpha(0.4)
+</span><span class="line">draw_self()
+</span><span class="line">gpu_set_fog(false,c_white,0,0)
+</span><span class="line">gpu_set_alphatestenable(false)
+</span><span class="line">gpu_set_blendmode(bm_normal)</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p>某一个像素点是如何被混合绘制出来的呢？就是上面的公式。将背景和前景的像素颜色值，按照上述公式计算出来一个新的颜色值。</p>
+<h2 id="section-2">结语：</h2>
 
-<p>两个参数还有一些默认值。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092877037009.jpg" alt="" /></p>
+<p>game maker很多的黑魔法，都很值得学习。这里推荐几个我经常看的大神的频道。是他们无私的分享，才让我捡到这个漂亮的贝壳。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092878217711.jpg" alt="=" /><br />
-所以如何实现<code>bm_subtract</code>的效果呢？参数就是上面的<code>（bm_zero,bm_inv_src_colour）</code>,<br />
-接下来我们套入到公式里面计算一下：</p>
-
-<p>画出来的圆圈和线条，相当于都是遮罩，都是黑色的。因此就是#000000。<br />
-<code>公式里面RGB颜色值是用0~1表示，就是百分比</code>。因此每个都是0。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">0 x 0 + Rd * 1 = Rd
-</span><span class="line">0 x 0 + Gd * 1 = Gd
-</span><span class="line">0 x 0 + Bd * 1 = Bd
-</span><span class="line">1 x 0 + Ad * 0 = 0
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>因此这个像素点就被成了透明的。是不是就实现了画上去的东西，其实被扣除了效果呢？</p>
-
-<h2 id="section-1">后续</h2>
-
-<p>这个功能还没有结束，远远超过你的想象。大名鼎鼎的独立游戏《INK》也是采用这个原理制作的。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092884978865.jpg" alt="" /></p>
-
-<p>作者使用的方式是<code>（bm_dest_alpha ，bm_inv_src_alpha）</code>。</p>
-
-<p>另外，在<code>reddit</code>上找了一份example工程，可以查看不同模式的组合带来不一样的体验哦。再次也分享给大家。<br />
-<a href="https://pan.baidu.com/s/1gf1WFyr">百度云盘链接</a>：https://pan.baidu.com/s/1gf1WFyr 密码: 8u98</p>
+<ol>
+  <li><a href="https://www.youtube.com/user/999Greyfox">Shaun Spalding</a></li>
+  <li><a href="https://www.youtube.com/user/uheartbeast">HeartBeast</a></li>
+  <li><a href="https://www.youtube.com/user/PixelatedPope">PixelatedPope</a></li>
+  <li><a href="http://www.davetech.co.uk/">David</a></li>
+</ol>
 
 </div>
 
@@ -266,14 +256,14 @@ dest是指：<code>the colour that's already in the pixel we're drawing to</code
     
     <h4>Share this post</h4>
     
-    <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?url=http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode;" 
+    <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?url=http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo;" 
         onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
         <span class="hidden">Twitter</span>
     </a>
-    <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
+    <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
         <span class="hidden">Facebook</span>
     </a>
-    <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
+    <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
         <span class="hidden">Google+</span>
     </a>
     
@@ -317,13 +307,13 @@ dest是指：<code>the colour that's already in the pixel we're drawing to</code
 
 
 
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-10-29T23:00:17+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年10 月29 日</time>
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-11-05T22:29:12+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年11 月5 日</time>
           <br>
 
 <span class="glyphicon glyphicon-tags"></span>&nbsp;
 <span class="categories">
   
-    <a class='category' href='/blog/categories/blend/'>blend</a>, <a class='category' href='/blog/categories/bm-subtract/'>bm_subtract</a>, <a class='category' href='/blog/categories/game/'>game</a>, <a class='category' href='/blog/categories/maker/'>maker</a>, <a class='category' href='/blog/categories/mode/'>mode</a>
+    <a class='category' href='/blog/categories/game/'>game</a>, <a class='category' href='/blog/categories/maker/'>maker</a>
   
 </span>
 
@@ -334,28 +324,16 @@ dest是指：<code>the colour that's already in the pixel we're drawing to</code
             
             
               
-                <a href="/blog/2017/10/08/hui-fang" class="col-xs-12 col-md-4 btn btn-default" title="Previous Post: 为游戏增加记录回放功能"> 
+                <a href="/blog/2017/10/29/gamemakerblendmode" class="col-xs-12 col-md-4 btn btn-default" title="Previous Post: Game maker：Extend blend mode"> 
                   <div class="text-muted">
                     <small>Previous Post</small>
                   </div>
                   <div class="pager-title">
-                    <h4>为游戏增加记录回放功能</h4>
+                    <h4>Game maker：Extend blend mode</h4>
                   </div>
                 </a>
               
             
-            
-            
-              
-              <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo" class="col-xs-12 col-md-4 btn btn-default pull-right" title="Next Post: Game Maker：blend mode遮挡效果">
-                <div class="text-muted">
-                  <small>Next Post</small>
-                </div>
-                <div class="pager-title">
-                  <h4>Game Maker：blend mode遮挡效果</h4>
-                </div>
-              </a>
-              
             
             
           </div>

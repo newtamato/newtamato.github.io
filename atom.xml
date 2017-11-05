@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-10-29T23:03:36+08:00</updated>
+  <updated>2017-11-05T22:34:45+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,117 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Game Maker：blend Mode遮挡效果]]></title>
+    <link href="http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo"/>
+    <updated>2017-11-05T22:29:12+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo</id>
+    <content type="html"><![CDATA[<p>在FEZ游戏中，经常会有这样的效果。人物移动到某些物品之后，只有形状可见。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-15098910326144.jpg" alt="=" /></p>
+
+<p>这样的效果，在早期的flash游戏中，会计算两个物品是否发生遮挡，然后对后面的个物品的像素的alpha进行处理。并在前面draw一下。改变遮挡关系。</p>
+
+<p>Game Maker如何实现这样的效果呢？<br />
+只用不到10行代码即可。性能远超我所想象。用不到CPU的计算。纯粹的GPU计算。</p>
+
+<p>先看我的演示（请忽略我简单粗糙的画作）<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-a.gif" alt="a" /></p>
+
+<p>当绿团子躲在障碍物后面，漏出了他的形状。这里用到的就是<code>gpu_set_blendmode_ext()</code> 函数。<br />
+<!--more--></p>
+
+<h2 id="section">原理</h2>
+
+<p><code>gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_dest_alpha)</code></p>
+
+<p>这个函数最终起作用是因为如下的公式：</p>
+
+<p><code>final_color = (source_pixel * bm_dest_alpha) + (dest_pixel * bm_inv_dest_alpha)</code></p>
+
+<p>为了能看到前面的灰色的圆肚子，还是需要再次draw一遍。也就是这次draw才是source。下面的场景已经成为dest了。</p>
+
+<p>所以这个你看到效果，按照层次分的话，应该是如下的样子：</p>
+
+<p>最下面的是你能看到绿团子。<br />
+绿团子上面是一层你看不到的透明。大小是以绿团子为准。<br />
+然后是上面的障碍物。<br />
+最后在此draw一个绿团子的形状的灰色形状的物品，完全按照绿团子的形状为准。</p>
+
+<p>当绿团子在障碍物后面的时候，虽然看上去所有都是可见的。实际上，露出来的绿团子的像素对gpu而言“其实”是透明的。而障碍物那里是不透明的。<br />
+此时在draw一个灰色团子形状的物品。按照上面的公式，不透明的地方自然就展示出来了。透明的地方，灰色就不展示了。</p>
+
+<h2 id="section-1">源码</h2>
+
+<p>绿团子代码：</p>
+
+<p>draw event：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">
+</span><span class="line">draw_self()
+</span><span class="line">gpu_set_blendenable(false)
+</span><span class="line">
+</span><span class="line">gpu_set_colorwriteenable(false,false,false,true)
+</span><span class="line">x1 = x - sprite_xoffset
+</span><span class="line">y1 = y - sprite_yoffset
+</span><span class="line">draw_set_alpha(0)
+</span><span class="line">//draw_set_color(c_blue)
+</span><span class="line">draw_rectangle(x1,y1,x1+sprite_width,y1+sprite_height,false)
+</span><span class="line">
+</span><span class="line">draw_set_alpha(1)
+</span><span class="line">gpu_set_colorwriteenable(true,true,true,true)
+</span><span class="line">gpu_set_blendenable(true)
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>draw end event：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">gpu_set_blendmode_ext(bm_dest_alpha,bm_inv_dest_alpha)
+</span><span class="line">
+</span><span class="line">gpu_set_alphatestenable(true)
+</span><span class="line">gpu_set_fog(true,c_gray,0,0.4);
+</span><span class="line">draw_set_alpha(0.4)
+</span><span class="line">draw_self()
+</span><span class="line">gpu_set_fog(false,c_white,0,0)
+</span><span class="line">gpu_set_alphatestenable(false)
+</span><span class="line">gpu_set_blendmode(bm_normal)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h2 id="section-2">结语：</h2>
+
+<p>game maker很多的黑魔法，都很值得学习。这里推荐几个我经常看的大神的频道。是他们无私的分享，才让我捡到这个漂亮的贝壳。</p>
+
+<ol>
+  <li><a href="https://www.youtube.com/user/999Greyfox">Shaun Spalding</a></li>
+  <li><a href="https://www.youtube.com/user/uheartbeast">HeartBeast</a></li>
+  <li><a href="https://www.youtube.com/user/PixelatedPope">PixelatedPope</a></li>
+  <li><a href="http://www.davetech.co.uk/">David</a></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Game maker：Extend Blend Mode]]></title>
@@ -2012,22 +2123,6 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
 
 <p><strong>PS:</strong><br />
 但是这样之后，发现每次debug，都是debug某一个平台，如何指定debug特定的平台？继续Google，发现在android studio左下角，有一个<code>build variants</code>的地方，点开，就可以选择你想要debug的平台了。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[常用工具网站汇集-不定期更新中]]></title>
-    <link href="http://www.newtomato.me/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong"/>
-    <updated>2017-01-09T15:08:23+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong</id>
-    <content type="html"><![CDATA[<ol>
-  <li><a href="https://apptut.gitbooks.io/android-note/content/common_tools/use_gradle.html">Android笔记</a></li>
-  <li><a href="http://www.liaoxuefeng.com/">廖雪峰的官方网站</a></li>
-  <li><a href="https://leohxj.gitbooks.io/a-programmer-prepares/content/index.html">程序员的自我修养</a></li>
-  <li><a href="https://www.zilongshanren.com/">子龙山人</a></li>
-  <li><a href="https://git-scm.com/book/ch7-1.html">GIT手册</a></li>
-</ol>
 
 ]]></content>
   </entry>

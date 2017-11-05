@@ -94,6 +94,59 @@
 
 
 
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-11-05T22:29:12+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年11 月5 日</time>
+        
+      </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo" itemprop="url">Game Maker：blend Mode遮挡效果</a></h2>
+    
+  </header>
+
+
+  <div class="entry-content clearfix" itemprop="articleBody description"><p>在FEZ游戏中，经常会有这样的效果。人物移动到某些物品之后，只有形状可见。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-15098910326144.jpg" alt="=" /></p>
+
+<p>这样的效果，在早期的flash游戏中，会计算两个物品是否发生遮挡，然后对后面的个物品的像素的alpha进行处理。并在前面draw一下。改变遮挡关系。</p>
+
+<p>Game Maker如何实现这样的效果呢？<br />
+只用不到10行代码即可。性能远超我所想象。用不到CPU的计算。纯粹的GPU计算。</p>
+
+<p>先看我的演示（请忽略我简单粗糙的画作）<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-a.gif" alt="a" /></p>
+
+<p>当绿团子躲在障碍物后面，漏出了他的形状。这里用到的就是<code>gpu_set_blendmode_ext()</code> 函数。<br />
+</div>
+  
+  
+    <footer>
+      <a class="read-more btn btn-default" href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+        </article>
+      
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
 <span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-10-29T23:00:17+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年10 月29 日</time>
         
       </p>
@@ -496,53 +549,6 @@
   
     <footer>
       <a class="read-more btn btn-default" href="/blog/2017/07/15/jekins">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-        </article>
-      
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
-    
-      <p class="meta text-muted text-uppercase">
-        
-
-
-
-
-
-
-
-
-
-
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-07-02T20:26:16+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年7 月2 日</time>
-        
-      </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding" itemprop="url">如何为第三方c++库导出luabinding (Part One)</a></h2>
-    
-  </header>
-
-
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>上一篇文章讲到怎么使用<code>liquidfunc</code>,本章节讲述怎么将liquidfun通过luabinding的方式导出给lua使用。</p>
-
-<p>cocos2dx在早期2.x时代，是通过tolua++和pkg的方式，导出成luabinding。现在已经是 3.x版本了，cocos2dx改进了这种导出方式，我们只需要增加一个.ini的配置文件就可以了。</p>
-
-<p>两种方式各有优劣。第一种方式最大的弊病就是花费很多时间在重复做一些事情，麻烦。<br />
-第二种方法，看似节省了我们不少时间，但是如果对<code>genbindings.py</code>的原理不熟悉，会让我们对出的错误一头雾水。</p>
-
-</div>
-  
-  
-    <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding">阅读全文&rarr;</a>
     </footer>
   
 
