@@ -189,9 +189,7 @@
 
 <p>这个库提供三个函数，dump,line和block，后面两个是dump函数的简易版本。</p>
 
-<p>####漂亮的多行打印</p>
-
-<hr />
+<h2 id="section">漂亮的多行打印</h2>
 
 <p>调试的时候如果你像看到一个表套表，这个就非常有用了。</p>
 
@@ -259,9 +257,8 @@
 </span><span class="line">  } --[[table: 00175300]]
 </span><span class="line">} --[[table: 001752D8]]</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p>####单行打印</p>
+<h2 id="section-1">单行打印</h2>
 
-<hr />
 <p>这是一个更加紧凑一点的展示。一行就展示出序列化的字符串。<br />
 不是一个完全的展示，不包括自我引用，共享数据，循环引用。</p>
 
@@ -280,6 +277,7 @@ print(serpent.dump(a, {name = ‘a’}))</p>
 </span><span class="line">--[[-math.huge]],x=1,z=loadstring("LuaQ...",'@serialized'),[io.stdin]=3,list=
 </span><span class="line">{[1]="a",[4]="f",[5]="g",[7]={},["3"]=33,[9]="i"},["true"]="some value"};
 </span><span class="line">a.c=a;a[a]=a;a["label 2"]=a[true][1];a[a[true][1]]=0/0;a[a.z]=print;return a;end</span></code></pre></td></tr></table></div></figure></notextile></div>
+
 </div>
 
 
