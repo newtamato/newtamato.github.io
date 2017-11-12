@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-11-05T22:34:45+08:00</updated>
+  <updated>2017-11-12T15:10:28+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,115 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ETC格式图片最佳实践]]></title>
+    <link href="http://www.newtomato.me/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian"/>
+    <updated>2017-11-12T15:04:27+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian</id>
+    <content type="html"><![CDATA[<p>最近整理android资源，发现有不少可以采用etc格式图片进行优化的地方。所以针对这块技术点进行了一下整理总结。分享给大家。</p>
+
+<p><strong>etc是纹理压缩格式，可以不用cpu解压缩对齐像素而直接上传给GPU读取。GPU可以通过位置索引得到像素信息。也就意味着可以随机读取，快速准确。</strong></p>
+
+<p>一张1024x1024的RGBA格式的图片，内存占用大约是1024x1024x4 = 4M。但是etc的每个像素占用0.5个字节。所以是0.5M。从这一点就有很多大的内存节约。</p>
+
+<p>优点如上。</p>
+
+<p>缺点就是不支持透明像素，而且图片的大小会变大很多。<br />
+对于透明，我们可以采用shader的方式，对一张图片的像素处理让他能够呈现出透明。</p>
+
+<p>具体的方案可以看<a href="http://malideveloper.arm.com/develop-for-mali/sample-code/etcv1-texture-compression-and-alpha-channels/">这里</a><br />
+<!--more--></p>
+
+<h2 id="section">开始</h2>
+
+<p>我这里使用的是<code>MALI GPU</code> 厂商提供给开发者的工具<code>Mali GPU Texture Compression Tool </code>，可以将图片压缩成ect1或者etc2格式。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-12-15104668339680.jpg" alt="" /></p>
+
+<p>在导出的时候我们选择如何处理<code>alpha</code>。</p>
+
+<p>第一种方式方式，放弃alpha通道数据。就是没有alpha也不影响图片显示。只有确定的不需要透明的图片可以才用这样的方式。比如模糊的大块儿图像。<br />
+清晰的图像，掉透明会让纹理上出现波纹状的显示。肉眼容易看出来。</p>
+
+<h2 id="section-1">图像和透明纹理合图</h2>
+
+<p>第二种是创建透明和图片纹理的合图。上面是图像纹理，下面是透明纹理，通过shader读取上下对应纹理坐标的数据，相加得到真实的问题数据。<br />
+这样的好处就是只要读取一个纹理采样即可。</p>
+
+<p>VerticalShader修改为：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">attribute vec4 a_v4Position;
+</span><span class="line">attribute vec2 a_v2TexCoord;
+</span><span class="line">varying vec2 v_v2TexCoord;
+</span><span class="line">varying vec2 v_v2AlphaCoord;
+</span><span class="line"> 
+</span><span class="line">void main()
+</span><span class="line">{
+</span><span class="line">    v_v2TexCoord = a_v2TexCoord * vec2(1.0, 0.5);
+</span><span class="line">    v_v2AlphaCoord = v_v2TexCoord + vec2(0.0, 0.5);
+</span><span class="line">    gl_Position = a_v4Position;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>FragmentShader修改为：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">precision mediump float;
+</span><span class="line">uniform sampler2D u_s2dTexture;
+</span><span class="line">varying vec2 v_v2TexCoord;
+</span><span class="line">varying vec2 v_v2AlphaCoord;
+</span><span class="line">void main()
+</span><span class="line">{
+</span><span class="line">    vec4 v4Colour = texture2D(u_s2dTexture, v_v2TexCoord);
+</span><span class="line">    v4Colour.a = texture2D(u_s2dTexture, v_v2AlphaCoord).r;
+</span><span class="line">    gl_FragColor = v4Colour;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>## 单独压缩的图像和透明纹理</p>
+
+<p>第三种方式是对图像和透明单独生成两张纹理。当然也是用Shader来实现两个纹理“叠加”，缺点就是需要两个纹理的采样读取。</p>
+
+<p>修改片段着色器</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vec4 colour = texture2D(u_s2dTexture, v_v2TexCoord);
+</span><span class="line">colour.a = texture2D(u_s2dAlpha, v_v2TexCoord).r;
+</span><span class="line">gl_FragColor = colour;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>至于最后一种方式，是第三种方式未压缩版本。暂时并未使用。所以在此不做叙述。</p>
+
+<h2 id="section-2">结语</h2>
+
+<p>在cocos2dx，我使用Sprite去使用这样的shader，都表现出我预期的样子。但是使用九宫格Scale9Sprite，则没有达到预期。Scale9Sprite从代码上看，已经对纹理做了切割。因此不满足上面Shader的纹理坐标系。导致读取不正确。</p>
+
+<p>生成pkm图片的工具除了<code>Mali GPU Texture Compression Tool</code>，<code>texturepacker</code>也可以，早期的版本有些问题，但是现在的最新版已经支持导出Alpha通道的纹理图片了。<br />
+<code>Mali GPU Texture Compression Tool</code>需要到mali开发者网站上下载，由于国内特殊情况，下载速度几乎回到10年前的速度。为此我放到百度云这里，需要的可以自取。</p>
+
+<p>链接:http://pan.baidu.com/s/1pK8S1mF  密码:cab2</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Game Maker：blend Mode遮挡效果]]></title>
@@ -2048,81 +2157,6 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
 
 <p>而此刻我的心情：<br />
 <img src="https://cdn.ruguoapp.com/FgXsKJOSxZSKIyRVLlhA1TuhcyGW" alt="" /></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用Android Studio制作多个渠道包]]></title>
-    <link href="http://www.newtomato.me/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao"/>
-    <updated>2017-01-10T20:24:50+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao</id>
-    <content type="html"><![CDATA[<p>以前制作多个渠道包的方法是这样子的，在AndroidMenifest.xml里面放置一个的变量。例如</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">&lt;meta-data android:name="dksdk_channel" android:value="CHANNEL_CHANNEL_VALUES" /&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>然后对生成的apk分析，替换里面的SETTING_UMENG_CHANNEL_CHANNELID_VALUES，重新打包就可以了。</p>
-
-<p>这段时间从Eclipse迁移到android studio上面，发现android studio里面有<code>flavor</code>的一个特殊存在，不太了解，Google了一下，发现这个东西正好可以解决我们多平台制作apk的需求。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-10-14840497981415.jpg" alt="-w250" /><br />
-<!--more--><br />
-接下来直奔主题吧！<br />
-首先，我们在AndroidManifest.xml文件中定义一个变量<code>"${channcelValue}"</code>。<br />
-其次，打开工程对应的Setting设置<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-10-14840500315961.jpg" alt="" /><br />
-在中间空白列下面点击+依次添加渠道，右侧对应的就是平台的特殊性。比如有的平台有自己的特殊包名，可以修改Application Id,这样编译之后，此id会替换androidmanifest里面的包名。<br />
-第三，打开工程对应的build.gradle文件，你会发现里面多了个<code>productFlavors</code>的配置，刚好是你刚刚配置的东西。在对应的每个平台或者渠道下面，增加<code>manifestPlaceholders = [platformValue:1]</code>。<br />
-我的配置如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">   productFlavors {
-</span><span class="line">        platform_1 {
-</span><span class="line">            manifestPlaceholders = [platformValue: "平台1号"]
-</span><span class="line">            minSdkVersion 15
-</span><span class="line">            targetSdkVersion 15
-</span><span class="line">        }
-</span><span class="line">        platform_2 {
-</span><span class="line">            manifestPlaceholders = [platformValue: "平台2号"]
-</span><span class="line">            minSdkVersion 11
-</span><span class="line">            targetSdkVersion 11
-</span><span class="line">        }
-</span><span class="line">        platform_3 {
-</span><span class="line">            manifestPlaceholders = [platformValue: "平台3号"]
-</span><span class="line">            minSdkVersion 11
-</span><span class="line">            targetSdkVersion 11
-</span><span class="line">        }
-</span><span class="line">        platform_4 {
-</span><span class="line">            manifestPlaceholders = [platformValue: "平台4号"]
-</span><span class="line">            minSdkVersion 11
-</span><span class="line">            targetSdkVersion 11
-</span><span class="line">        }
-</span><span class="line">    }	</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>大功告成！</p>
-
-<p><strong>PS:</strong><br />
-但是这样之后，发现每次debug，都是debug某一个平台，如何指定debug特定的平台？继续Google，发现在android studio左下角，有一个<code>build variants</code>的地方，点开，就可以选择你想要debug的平台了。</p>
 
 ]]></content>
   </entry>

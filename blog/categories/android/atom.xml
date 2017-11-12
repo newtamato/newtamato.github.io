@@ -4,7 +4,7 @@
   <title><![CDATA[分类:android | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-11-05T22:34:45+08:00</updated>
+  <updated>2017-11-12T15:10:28+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,94 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[ETC格式图片最佳实践]]></title>
+    <link href="http://www.newtomato.me/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian"/>
+    <updated>2017-11-12T15:04:27+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian</id>
+    <content type="html"><![CDATA[<p>最近整理android资源，发现有不少可以采用etc格式图片进行优化的地方。所以针对这块技术点进行了一下整理总结。分享给大家。</p>
+
+<p><strong>etc是纹理压缩格式，可以不用cpu解压缩对齐像素而直接上传给GPU读取。GPU可以通过位置索引得到像素信息。也就意味着可以随机读取，快速准确。</strong></p>
+
+<p>一张1024x1024的RGBA格式的图片，内存占用大约是1024x1024x4 = 4M。但是etc的每个像素占用0.5个字节。所以是0.5M。从这一点就有很多大的内存节约。</p>
+
+<p>优点如上。</p>
+
+<p>缺点就是不支持透明像素，而且图片的大小会变大很多。<br />
+对于透明，我们可以采用shader的方式，对一张图片的像素处理让他能够呈现出透明。</p>
+
+<p>具体的方案可以看<a href="http://malideveloper.arm.com/develop-for-mali/sample-code/etcv1-texture-compression-and-alpha-channels/">这里</a><br />
+<!--more--></p>
+
+<h2 id="section">开始</h2>
+
+<p>我这里使用的是<code>MALI GPU</code> 厂商提供给开发者的工具<code>Mali GPU Texture Compression Tool </code>，可以将图片压缩成ect1或者etc2格式。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-12-15104668339680.jpg" alt="" /></p>
+
+<p>在导出的时候我们选择如何处理<code>alpha</code>。</p>
+
+<p>第一种方式方式，放弃alpha通道数据。就是没有alpha也不影响图片显示。只有确定的不需要透明的图片可以才用这样的方式。比如模糊的大块儿图像。<br />
+清晰的图像，掉透明会让纹理上出现波纹状的显示。肉眼容易看出来。</p>
+
+<h2 id="section-1">图像和透明纹理合图</h2>
+
+<p>第二种是创建透明和图片纹理的合图。上面是图像纹理，下面是透明纹理，通过shader读取上下对应纹理坐标的数据，相加得到真实的问题数据。<br />
+这样的好处就是只要读取一个纹理采样即可。</p>
+
+<p>VerticalShader修改为：</p>
+
+<pre><code>attribute vec4 a_v4Position;
+attribute vec2 a_v2TexCoord;
+varying vec2 v_v2TexCoord;
+varying vec2 v_v2AlphaCoord;
+ 
+void main()
+{
+    v_v2TexCoord = a_v2TexCoord * vec2(1.0, 0.5);
+    v_v2AlphaCoord = v_v2TexCoord + vec2(0.0, 0.5);
+    gl_Position = a_v4Position;
+}
+</code></pre>
+
+<p>FragmentShader修改为：</p>
+
+<pre><code>precision mediump float;
+uniform sampler2D u_s2dTexture;
+varying vec2 v_v2TexCoord;
+varying vec2 v_v2AlphaCoord;
+void main()
+{
+    vec4 v4Colour = texture2D(u_s2dTexture, v_v2TexCoord);
+    v4Colour.a = texture2D(u_s2dTexture, v_v2AlphaCoord).r;
+    gl_FragColor = v4Colour;
+}
+</code></pre>
+<p>## 单独压缩的图像和透明纹理</p>
+
+<p>第三种方式是对图像和透明单独生成两张纹理。当然也是用Shader来实现两个纹理“叠加”，缺点就是需要两个纹理的采样读取。</p>
+
+<p>修改片段着色器</p>
+
+<pre><code>vec4 colour = texture2D(u_s2dTexture, v_v2TexCoord);
+colour.a = texture2D(u_s2dAlpha, v_v2TexCoord).r;
+gl_FragColor = colour;
+</code></pre>
+
+<p>至于最后一种方式，是第三种方式未压缩版本。暂时并未使用。所以在此不做叙述。</p>
+
+<h2 id="section-2">结语</h2>
+
+<p>在cocos2dx，我使用Sprite去使用这样的shader，都表现出我预期的样子。但是使用九宫格Scale9Sprite，则没有达到预期。Scale9Sprite从代码上看，已经对纹理做了切割。因此不满足上面Shader的纹理坐标系。导致读取不正确。</p>
+
+<p>生成pkm图片的工具除了<code>Mali GPU Texture Compression Tool</code>，<code>texturepacker</code>也可以，早期的版本有些问题，但是现在的最新版已经支持导出Alpha通道的纹理图片了。<br />
+<code>Mali GPU Texture Compression Tool</code>需要到mali开发者网站上下载，由于国内特殊情况，下载速度几乎回到10年前的速度。为此我放到百度云这里，需要的可以自取。</p>
+
+<p>链接:http://pan.baidu.com/s/1pK8S1mF  密码:cab2</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Keytool的基本用法以及检查apk签名]]></title>
@@ -204,56 +292,6 @@ adb install xxx.apk
 
 <p><strong>缺点：</strong><br />
 暂时没有发现，如果有，我后续更新！</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在海马模拟器上运行并测试游戏]]></title>
-    <link href="http://www.newtomato.me/blog/2016/06/08/hai-ma-mo-ni-qi"/>
-    <updated>2016-06-08T16:34:12+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/06/08/hai-ma-mo-ni-qi</id>
-    <content type="html"><![CDATA[<p>海马模拟器是我现阶段用过的比较快速稳定的模拟器了。<br />
-且能够满足我们日常的开发需求</p>
-
-<ol>
-  <li>快速安装并启动游戏。便于我们测试。</li>
-  <li>取出自动更新的文件内容。辅助我们检查是否是自动更新出现了问题。</li>
-</ol>
-
-<!--more-->
-<p>首先如果要查看文件在手机里面的内容，就要将手机设为root模式。</p>
-
-<ol>
-  <li>打开文件管理器-&gt;设置(右上角)-&gt;常规设置-&gt;高级选项。在此处设置为超级用户访问模式。</li>
-  <li>设置共享文件夹。<br />
- 打开设备上面设置<br />
- <img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-08-14653734292772.jpg" alt="" /><br />
- 然后在弹出的面板上选择<strong>共享文件夹</strong>，在电脑上选择一个与他同步的文件夹。<br />
- 此时设置好之后，模拟器会跳转到如下文件夹中<br />
- <code>/mnt/sdcard/droid4xshare/</code></li>
-  <li>
-    <p>开始选择一个游戏，能够自动更新最好。自动更新之后的文件一般会存在如下的位置<br />
- <code>/data/data/com.xxx.xxx.xxx/files</code>下面。</p>
-
-    <p>好了，是不是非常简单？</p>
-
-    <p>如果使用Genymotion的时候，可以同adb devices和adb shell的方式访问模拟器的内容。<br />
- 但是海马模拟器似乎并不可以。<br />
- 为了能够有更好的逼格，所以我搜索了一下，查找到如下的解决方案<br />
- 在命令行中输入</p>
-  </li>
-</ol>
-
-<pre><code>	&gt; adb connect 192.168.56.101
-	already connected to 192.168.56.101:5555
-	&gt; adb devices
-	List of devices attached
-	192.168.56.101:5555	device
-	&gt; adb shell
-</code></pre>
-
-<p>然后此时我们就能够用命令的方式访问了！</p>
 
 ]]></content>
   </entry>

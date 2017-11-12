@@ -94,6 +94,49 @@
 
 
 
+<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-11-11T19:01:05+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年11 月11 日</time>
+        
+      </p>
+    
+    
+      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/11/11/function-closure-upvalue" itemprop="url">Function, Closures, Up Values</a></h2>
+    
+  </header>
+
+
+  <div class="entry-content clearfix" itemprop="articleBody description"><p>未找到原文出处，从网络博客<a href="http://blog.chinaunix.net/uid-52437-id-2108789.html">天道酬勤,重剑无锋</a>上转载。</p>
+
+<p>Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)，所以在函数体中仍然可以定义函数。<br />
+</div>
+  
+  
+    <footer>
+      <a class="read-more btn btn-default" href="/blog/2015/11/11/function-closure-upvalue">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+        </article>
+      
+      
+        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
+          
+  <header class="page-header">
+    
+      <p class="meta text-muted text-uppercase">
+        
+
+
+
+
+
+
+
+
+
+
+
+
 <span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-11-01T19:31:52+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年11 月1 日</time>
         
       </p>
@@ -514,82 +557,11 @@
 
         </article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
-    
-      <p class="meta text-muted text-uppercase">
-        
-
-
-
-
-
-
-
-
-
-
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2015-10-17T22:08:49+08:00"  data-updated="true" itemprop="datePublished dateCreated">2015 年10 月17 日</time>
-        
-      </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log" itemprop="url">Git命令行总结-log</a></h2>
-    
-  </header>
-
-
-  <div class="entry-content clearfix" itemprop="articleBody description"><ul>
-  <li>git 输入部分提交的log日志</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>格式化文件输出</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>将某一个commit之后的提交做成patch</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git format-patch -M HEAD~1</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>将patch打到我们的开发分支</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git am xxx.patch</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>vim中格式化json</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">:%!python -m json.tool       </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-</div>
-  
-  
-
-
-        </article>
-      
     </div>
 
     <ul class="pager">
       
-        <li class="previous disabled"><a href="#">&larr;&nbsp;Older</a></li>
+        <li class="previous"><a href="/posts/9">&larr;&nbsp;Older</a></li>
       
       <li><a href="/blog/archives">Blog Archives</a></li>
       
