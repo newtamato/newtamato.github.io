@@ -4,7 +4,7 @@
   <title><![CDATA[分类:python | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-11-12T17:35:46+08:00</updated>
+  <updated>2017-11-21T16:52:41+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,81 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[安装pygraphviz遇到的问题]]></title>
+    <link href="http://www.newtomato.me/blog/2017/11/21/pygraphviz"/>
+    <updated>2017-11-21T16:50:21+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/11/21/pygraphviz</id>
+    <content type="html"><![CDATA[<h2 id="section">环境：</h2>
+
+<pre><code>MacOS sierra
+python 2.7
+</code></pre>
+
+<!--more-->
+
+<h2 id="section-1">使用安装命令：</h2>
+
+<p><code>	sudo pip install pygraphviz</code></p>
+
+<p>命令行报错，不能正确安装。报错日志如下：</p>
+
+<pre><code>Collecting pygraphviz
+  Downloading pygraphviz-1.3.1.zip (123kB)
+    100% |████████████████████████████████| 133kB 1.5MB/s 
+Installing collected packages: pygraphviz
+  Running setup.py install for pygraphviz ... error
+    Complete output from command /usr/bin/python -u -c "import setuptools, tokenize;__file__='/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-JmwjA6-record/install-record.txt --single-version-externally-managed --compile:
+    running install
+    Trying pkg-config
+    Package libcgraph was not found in the pkg-config search path.
+    Perhaps you should add the directory containing `libcgraph.pc'
+    to the PKG_CONFIG_PATH environment variable
+    No package 'libcgraph' found
+    Traceback (most recent call last):
+      File "&lt;string&gt;", line 1, in &lt;module&gt;
+      File "/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py", line 87, in &lt;module&gt;
+        tests_require=['nose&gt;=0.10.1', 'doctest-ignore-unicode&gt;=0.1.0',],
+      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/core.py", line 151, in setup
+        dist.run_commands()
+      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/dist.py", line 953, in run_commands
+        self.run_command(cmd)
+      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/dist.py", line 972, in run_command
+        cmd_obj.run()
+      File "setup_commands.py", line 44, in modified_run
+        self.include_path, self.library_path = get_graphviz_dirs()
+      File "setup_extra.py", line 121, in get_graphviz_dirs
+        include_dirs, library_dirs = _pkg_config()
+      File "setup_extra.py", line 44, in _pkg_config
+        output = S.check_output(['pkg-config', '--libs-only-L', 'libcgraph'])
+      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py", line 573, in check_output
+        raise CalledProcessError(retcode, cmd, output=output)
+    subprocess.CalledProcessError: Command '['pkg-config', '--libs-only-L', 'libcgraph']' returned non-zero exit status 1
+
+    ----------------------------------------
+Command "/usr/bin/python -u -c "import setuptools, tokenize;__file__='/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-JmwjA6-record/install-record.txt --single-version-externally-managed --compile" failed with error code 1 in /private/tmp/pip-build-qfFpFG/pygraphviz/
+
+</code></pre>
+
+<p>看报错的消息应该是没有<code>pkg-config</code>这个命令，于是开始安装它。</p>
+
+<p><code>brew install pkg-config</code></p>
+
+<p>再次运行<code>pygraphviz</code> 安装命令，依然报错。</p>
+
+<h2 id="section-2">最后的大招</h2>
+
+<p>最后，经过各种google搜索，下面的命令解决了我的问题</p>
+
+<pre><code>pkg-config --libs-only-L libcgraph
+pkg-config --cflags-only-I libcgraph
+pip install pygraphviz --install-option="--include-path='/usr/include/graphviz/'" --install-option="--library-path='/usr/lib/graphviz/'"
+
+</code></pre>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Python基本使用]]></title>

@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-11-12T17:35:46+08:00</updated>
+  <updated>2017-11-21T16:52:41+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,116 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[安装pygraphviz遇到的问题]]></title>
+    <link href="http://www.newtomato.me/blog/2017/11/21/pygraphviz"/>
+    <updated>2017-11-21T16:50:21+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/11/21/pygraphviz</id>
+    <content type="html"><![CDATA[<h2 id="section">环境：</h2>
+
+<pre><code>MacOS sierra
+python 2.7
+</code></pre>
+
+<!--more-->
+
+<h2 id="section-1">使用安装命令：</h2>
+
+<p><code>	sudo pip install pygraphviz</code></p>
+
+<p>命令行报错，不能正确安装。报错日志如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">Collecting pygraphviz
+</span><span class="line">  Downloading pygraphviz-1.3.1.zip (123kB)
+</span><span class="line">    100% |████████████████████████████████| 133kB 1.5MB/s 
+</span><span class="line">Installing collected packages: pygraphviz
+</span><span class="line">  Running setup.py install for pygraphviz ... error
+</span><span class="line">    Complete output from command /usr/bin/python -u -c "import setuptools, tokenize;__file__='/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-JmwjA6-record/install-record.txt --single-version-externally-managed --compile:
+</span><span class="line">    running install
+</span><span class="line">    Trying pkg-config
+</span><span class="line">    Package libcgraph was not found in the pkg-config search path.
+</span><span class="line">    Perhaps you should add the directory containing `libcgraph.pc'
+</span><span class="line">    to the PKG_CONFIG_PATH environment variable
+</span><span class="line">    No package 'libcgraph' found
+</span><span class="line">    Traceback (most recent call last):
+</span><span class="line">      File "&lt;string&gt;", line 1, in &lt;module&gt;
+</span><span class="line">      File "/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py", line 87, in &lt;module&gt;
+</span><span class="line">        tests_require=['nose&gt;=0.10.1', 'doctest-ignore-unicode&gt;=0.1.0',],
+</span><span class="line">      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/core.py", line 151, in setup
+</span><span class="line">        dist.run_commands()
+</span><span class="line">      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/dist.py", line 953, in run_commands
+</span><span class="line">        self.run_command(cmd)
+</span><span class="line">      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/dist.py", line 972, in run_command
+</span><span class="line">        cmd_obj.run()
+</span><span class="line">      File "setup_commands.py", line 44, in modified_run
+</span><span class="line">        self.include_path, self.library_path = get_graphviz_dirs()
+</span><span class="line">      File "setup_extra.py", line 121, in get_graphviz_dirs
+</span><span class="line">        include_dirs, library_dirs = _pkg_config()
+</span><span class="line">      File "setup_extra.py", line 44, in _pkg_config
+</span><span class="line">        output = S.check_output(['pkg-config', '--libs-only-L', 'libcgraph'])
+</span><span class="line">      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py", line 573, in check_output
+</span><span class="line">        raise CalledProcessError(retcode, cmd, output=output)
+</span><span class="line">    subprocess.CalledProcessError: Command '['pkg-config', '--libs-only-L', 'libcgraph']' returned non-zero exit status 1
+</span><span class="line">
+</span><span class="line">    ----------------------------------------
+</span><span class="line">Command "/usr/bin/python -u -c "import setuptools, tokenize;__file__='/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-JmwjA6-record/install-record.txt --single-version-externally-managed --compile" failed with error code 1 in /private/tmp/pip-build-qfFpFG/pygraphviz/
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>看报错的消息应该是没有<code>pkg-config</code>这个命令，于是开始安装它。</p>
+
+<p><code>brew install pkg-config</code></p>
+
+<p>再次运行<code>pygraphviz</code> 安装命令，依然报错。</p>
+
+<h2 id="section-2">最后的大招</h2>
+
+<p>最后，经过各种google搜索，下面的命令解决了我的问题</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">pkg-config --libs-only-L libcgraph
+</span><span class="line">pkg-config --cflags-only-I libcgraph
+</span><span class="line">pip install pygraphviz --install-option="--include-path='/usr/include/graphviz/'" --install-option="--library-path='/usr/lib/graphviz/'"
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ETC格式图片最佳实践]]></title>
@@ -2097,66 +2207,6 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
 <p>仔细看看这两种方法，第一种其实并未真的清空，他是将package.loaded的指向的对象地址发生了变化，原先内存中存在的那份加载对象还是存在的。也就是对象并未释放，导致加载未生效。而第二种则是对加载对象这块儿内存数据直接清理。因此重新加载的时候肯定生效。</p>
 
 <p>因此对象引用这块儿，一定要切记小心。不要被他简单的外表欺骗了。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[记最近遇到最头疼的一个Bug]]></title>
-    <link href="http://www.newtomato.me/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug"/>
-    <updated>2017-03-12T16:15:46+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug</id>
-    <content type="html"><![CDATA[<h3 id="section">前记</h3>
-
-<p><img src="https://cdn.ruguoapp.com/FkHR-5cSU8UK1upmG4x67UQCKWZI" alt="" /><br />
-这个将要说的bug并不复杂，但是却影响了一大波的用户。后果很严重。而引发这个问题的原因却是错综复杂，千丝万缕。<br />
-只能说一坑还有一坑深。<br />
-<!--more--></p>
-
-<h3 id="section-1">问题背景交代</h3>
-
-<p>问题的背景是这样的，我们在开发过程中，从主干开了一个分支，针对Google平台做优化，然后基于某些原因，这些优化的提交一直没有合并回主干分支。<br />
-为此我们相当于保持了两个主干，每种功能都会在这两个分支都做合并。每次发布热更新，都需要发布两种情况，一种是主干分支的更新，一种是专门针对Google的更新。</p>
-
-<p>直到某一天，我们决定再次出一个完整的apk包，提交给平台，负责出APK包的同事，以Google为准做了包，因为我们分析发现Google是比较完整的代码，且对底层做了部分优化，是没有问题的。并且当时测试APK没有任何问题。</p>
-
-<p>但是这样做了之后，我们却忘记将Google 分支的优化提交合并到真正的主干。导致这部分代码丢失。这是最大的错误。比如当时有个类文件A，里面原先有个函数<code>doAction()</code>,但是在主干上他没有这个函数。</p>
-
-<h3 id="section-2">问题开始发生了</h3>
-
-<p>这之后，我们又有新的功能，准备热更新出去。于是这里面的更新在新的APK包里面出现了问题。出问题的正式上面的A文件，A被更新出去，但是A没有这个函数，导致原先调用这个文件的地方都报错。</p>
-
-<p>到此，你们会疑问，为什么测试没有发现呢？那是因为这中触发bug的情况很特殊，并不是百分百触发。所以比遗漏了。</p>
-
-<p>当时已经发现了问题的根本原因，于是便从何合并优化提交，做成热更发出了。</p>
-
-<p>以为问题到此结束，哎。</p>
-
-<h3 id="section-3">问题开始发生了</h3>
-
-<p>之后我们发现部分用户突然进不去游戏了，止步于游戏的启动页面，然后就崩溃。</p>
-
-<p>这可头疼死了，只能知道是客户端崩溃，服务器还没有收到任何的请求。可以连接<code>monitor</code>也没有任何特殊的提示。<br />
-幸运的是，在新出的APK包上没有这个问题，只在旧有的APK上才有这种问题。这也是背景之一，我们的整包APK更新，并不是强制要求用户更新。于是外面有的时候会出现一个平台多个整包。<br />
-在这一点线索的情况的下，我们最终发现此次合并的优化提交有一部分是对字体的优化。刚好字体默认名字做成了配置。而初始化字体配置的地方在优化中移动到了一个敏感的文件中。这个文件只会在出整包的时候才有用，在自动更新的时候，是不会更新出去的。这是早期的约定。历史已经被遗忘。竟然没有人记得了。</p>
-
-<p>问题正是在这里，老的APK由于没有这个字体配置的初始化，导致面板全部崩溃。用户自然进不去了。</p>
-
-<h3 id="section-4">后记</h3>
-
-<p>这次问题，是我们开发流程出现了问题，本身可以避免。这让我反思了许久。我们存在的问题。</p>
-
-<ol>
-  <li>平台版本管理混乱，依靠人工记忆。没有任何地方记录当前那些版本可以用。</li>
-  <li>合并代码竟然没有提前做。没有对更新做充分考虑。</li>
-  <li>测试不充分。</li>
-  <li>没有收集crash崩溃的日志系统。这样我们在发生了问题的时候束手无策。</li>
-</ol>
-
-<p>问题带来的教训虽然惨痛，但是为此我们亡羊补牢，时刻注意。尽量避免下次再掉进同样的坑里。</p>
-
-<p>而此刻我的心情：<br />
-<img src="https://cdn.ruguoapp.com/FgXsKJOSxZSKIyRVLlhA1TuhcyGW" alt="" /></p>
 
 ]]></content>
   </entry>
