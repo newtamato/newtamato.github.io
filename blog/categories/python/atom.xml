@@ -4,7 +4,7 @@
   <title><![CDATA[分类:python | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-11-21T16:54:05+08:00</updated>
+  <updated>2017-12-03T19:53:57+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -77,13 +77,17 @@ Command "/usr/bin/python -u -c "import setuptools, tokenize;__file__='/private/t
 
 <h2 id="section-2">最后的大招</h2>
 
-<p>最后，经过各种google搜索，下面的命令解决了我的问题</p>
+<p>最后，经过各种google搜索和尝试，花费了我一上午的时间。才解决了这个问题。</p>
 
 <pre><code>pkg-config --libs-only-L libcgraph
 pkg-config --cflags-only-I libcgraph
 pip install pygraphviz --install-option="--include-path='/usr/include/graphviz/'" --install-option="--library-path='/usr/lib/graphviz/'"
 
 </code></pre>
+
+<p>此时graphviz成功安装。在python中就可以使用了</p>
+
+<p><code>import pygraphviz as gv</code></p>
 
 ]]></content>
   </entry>

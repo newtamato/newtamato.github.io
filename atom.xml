@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-11-21T16:54:05+08:00</updated>
+  <updated>2017-12-03T19:53:57+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,124 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在xcode上运行opengl工程-使用Glitter]]></title>
+    <link href="http://www.newtomato.me/blog/2017/12/03/opengl-glitter"/>
+    <updated>2017-12-03T19:52:27+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/12/03/opengl-glitter</id>
+    <content type="html"><![CDATA[<p>鉴于我们一般都是在<code>https://learnopengl-cn.github.io</code>这里学习opengl。这个开源的工程的example是非常好的学习工程。但是在mac上运行起来还是很麻烦。上面提到了glew，glfw以及glad等还不足以运行这些工程，手动安装其他依赖也是很痛苦的过程。</p>
+
+<p>githud地址<a href="https://github.com/Polytonic/Glitter">在此</a>.</p>
+
+<!--more-->
+
+<p>git clone之后，在终端中输入：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">git clone --recursive https://github.com/Polytonic/Glitter
+</span><span class="line">cd Glitter
+</span><span class="line">mkdir Build
+</span><span class="line">cd Build
+</span><span class="line">cmake -G "Xcode" ..</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>就可以在Build中生成一个xcode工程。</p>
+
+<p>这里我遇到最大的问题就是clone花费了很长时间，但是没有遇到安装失败的情况。<br />
+但是这个工程只是一个壳，我们还需要把learnopengl的源码发进来。<br />
+mac上使用的opengl版本过高以及一些屏幕分辨率的问题，我最终尝试到如下工程的修改刚好适合我的测试。作者对learnopengl的源码做了注释和部分修改。在他职业readme上说明了修改的地方：</p>
+
+<p><code>https://github.com/THISISAGOODNAME/learnopengl-glitter</code></p>
+
+<h2 id="learnopengl">如何运行learnopengl</h2>
+
+<p>为了能够运行这些example工程，我们先创建一个<code>target</code>，例如<code>hello_window</code>，然后将hello_window里面的文件全部都拖放进来。<br />
+此刻的target的hello_window需要配置很多才能运行，为了方便起见，我们直接复制<code>Glitter</code>出来一份，然后改名为hello_window。<br />
+在<code>complie source</code>这里将hello window的文件全部包含进来。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15123014609016.jpg" alt="" /><br />
+然后在scheme中选择hello_window，运行即可。</p>
+
+<h2 id="section">需要注意的问题</h2>
+
+<p>在mac创建一个矩阵对象，默认初始化似乎不正确。<br />
+为了能够正确展示，凡是出现<code>glm::mat4 trans;</code>这样默认初始化的地方，请一律改为了<code>glm::mat4 trans = glm::mat4(1);</code>.</p>
+
+<p>只有这样才能让矩阵转换生效。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-Untitled.gif" alt="" /></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在xcode上运行openGL工程]]></title>
+    <link href="http://www.newtomato.me/blog/2017/12/03/macshang-openglhuan-jing"/>
+    <updated>2017-12-03T17:36:47+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/12/03/macshang-openglhuan-jing</id>
+    <content type="html"><![CDATA[<p>学习opengl最基础的方法就是将新手教程的工程先运行起来，实战才能收获经验。<br />
+先介绍我的工作环境。<code>MAC Sierra 10.12.6</code>,<code>xcode 9.2</code>。</p>
+
+<h2 id="section">手动安装依赖库，配置各种环境变量。</h2>
+
+<h3 id="glfwglew">glfw以及glew安装</h3>
+
+<p>自己安装各种依赖工具包，主要有<code>glfw</code>和<code>glew</code>,以及<code>glad</code>。</p>
+
+<p><code>glfw</code>和<code>glew</code>最简单安装方法就是通过<code>brew</code>。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">brew install glfw
+</span><span class="line">brew install glew</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>安装完成之后，会在被存放在<code>/usr/local/Cellar/glew/</code>以及<code>/usr/local/Cellar/glfw</code>这里。</p>
+
+<!--more-->
+
+<h3 id="glad">安装glad</h3>
+
+<p>glad是非常重要的一个工具库，缺失这个库，即使你的工程能够编译通过，也运行不起来。因为opengl的接口函数是需要调用<code>gladLoadGL();</code>被加载进来。</p>
+
+<p>安装的方法：<br />
+	1. 到<a href="http://glad.dav1d.de/">http://glad.dav1d.de/</a>选择,3.3版本的opengl，Profile选择<code>Core</code><br />
+	2. generate a loader。下载zip文件。<br />
+	3. 解压缩之后，待会放到项目中。</p>
+
+<h3 id="xcode">创建一个xcode工程开始配置</h3>
+
+<ol>
+  <li>
+    <p>选择生成一个command line tool工程。</p>
+
+    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122917458581.jpg" alt="=w300" /></p>
+  </li>
+  <li>然后打开<code>Preference-&gt;Locations-&gt;Custom Pathes</code>,设置变量如下：<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122918927071.jpg" alt="" /></li>
+  <li>
+    <p>然后打开<code>Project</code>的基础配置，在<code>Header search paths</code> 和<code>Library search paths</code>这里设置</p>
+
+    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122921103307.jpg" alt="" /></p>
+  </li>
+  <li>
+    <p>最后将上面的glad文件放入到项目中。</p>
+
+    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122933160778.jpg" alt="" /></p>
+  </li>
+  <li>最后配置要编译的库文件</li>
+</ol>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122933998643.jpg" alt="" /><br />
+6. 修改你的main.cpp文件。例如我这边使用<a href="https://pan.baidu.com/s/1bp548Bd">main.cpp 密码:yud8</a>在此。运行工程你应该可以看到一个三角形。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122935323107.jpg" alt="=" /></p>
+
+<p>至此第一种方法，配置mac上opengl的环境已经结束。虽然很费时间。但是这趟流程走下来确实也是值得的。<br />
+下一遍文章我将介绍一个稍微简单的方法。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[安装pygraphviz遇到的问题]]></title>
@@ -110,7 +228,7 @@ python 2.7
 
 <h2 id="section-2">最后的大招</h2>
 
-<p>最后，经过各种google搜索，下面的命令解决了我的问题</p>
+<p>最后，经过各种google搜索和尝试，花费了我一上午的时间。才解决了这个问题。</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
@@ -119,6 +237,10 @@ python 2.7
 </span><span class="line">pkg-config --cflags-only-I libcgraph
 </span><span class="line">pip install pygraphviz --install-option="--include-path='/usr/include/graphviz/'" --install-option="--library-path='/usr/lib/graphviz/'"
 </span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此时graphviz成功安装。在python中就可以使用了</p>
+
+<p><code>import pygraphviz as gv</code></p>
 
 ]]></content>
   </entry>
@@ -2068,145 +2190,6 @@ object处选择当前的对象，然后在后面选择objectController选择对�
 最终的效果是这样。但是content需要我们代码中自动调整height。</p>
 
 <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-QQ20170514-234643-HD.gif" alt="QQ20170514-234643-HD" /></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[怎么控制镜头跟随人物移动]]></title>
-    <link href="http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui"/>
-    <updated>2017-05-14T17:48:56+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui</id>
-    <content type="html"><![CDATA[<p>在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？<br />
-我们从简入手，开始说一下怎么控制镜头的移动。<br />
-这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！<br />
-<img src="http://wx2.sinaimg.cn/mw690/805c3d47ly1fevq3bkj1mg206y06y4ql.gif" alt="" /></p>
-
-<h2 id="section">开始入手</h2>
-
-<p>镜头移动是需要控制镜头的位置随着英雄的位置变动而变动。<br />
-因此有下面的代码：<br />
-<!--more--></p>
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">public class SimpleFollower : MonoBehaviour {
-</span><span class="line">	public Transform target;
-</span><span class="line">	void Update () {
-</span><span class="line">		transform.position = target.position;
-</span><span class="line">	}
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>target就是英雄，把这个组件拖到英雄身上。移动英雄。看看效果。<br />
-是不是发现镜头嵌在了英雄身上，英雄的position的中心点在身体重心上，这是镜头也在这。因为出现嵌入感。所以应该增加一个偏移量offset。</p>
-
-<p>一般我们在场景中先设置好镜头和英雄的偏移。在代码中可以计算得到。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">private Vector3 _deltaPosition；
-</span><span class="line">void Start () {
-</span><span class="line">	_deltaPosition = transform.position - target.position;
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>英雄在移动中需要将这个偏移量也一并计算在内。</p>
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">transform.position = target.position + _deltaPosition;</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>此时运行unity，镜头跟随没问题了。但是还有个问题就是此时玩家如果左右移动，镜头就又出现问题了。我们需要镜头一直在人身后做跟随。即使人物左右移动，镜头也要左右移动才更好。<br />
-因此代码还需要优化。就是增加旋转的考虑。</p>
-
-<p>假设我们只考虑玩家左右渲染，即围绕Y轴的旋转。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">float yAngle = target.rotation.eulerAngles.y;
-</span><span class="line">Quaternion quat = Quaternion.Euler (0, yAngle, 0);
-</span><span class="line">transform.position = target.position + _deltaPosition * quat;</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这样运行之后，镜头确实随着移动，但是表现不够自然。因此就需要用到Lerp函数。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">transform.position = Vector3.Lerp(transform.position,target.position + _deltaPosition * quat,Time.deltaTime);</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>同样的上面计算的旋转角度也可以使用Lerp函数。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">float yAngle = Mathf.Lerp (transform.rotation.eulerAngles.y,target.rotation.eulerAngles.y,Time.deltaTime * damping);
-</span><span class="line">Quaternion quat = Quaternion.Euler (0, yAngle, 0);
-</span><span class="line">
-</span><span class="line">transform.position = Vector3.Lerp(transform.position,target.position + _deltaPosition * quat,Time.deltaTime);
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<h2 id="section-1">可选阅读</h2>
-
-<p>在FPS游戏中，有输入设备可控制英雄的移动，例如手柄，键盘等。我们这里使用鼠标控制英雄的旋转。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">_horizontalRotation += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1)* rotateSpeed * Time.deltaTime;
-</span><span class="line">_horizontalRotation = Mathf.Clamp (_horizontalRotation, -90, 90);
-</span><span class="line">target.transform.rotation = Quaternion.Euler (0, _horizontalRotation, 0);</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>此处_horizontalRotation用于记录英雄的旋转角度。这里做了个限制，英雄旋转不能超过左转90度和右转90度。<br />
-rotateSpeed是旋转速度。每秒钟旋转多少。<br />
-通过Quaternion.Euler计算一个旋转四元数，用来控制英雄的旋转。</p>
-
-<h2 id="section-2">结语</h2>
-<p>上面旋转用到了矩阵和向量的乘法运算。将一个坐标转换到另一个坐标。其他的都是通过Lerp和Clamp对数据进行处理。</p>
-
-<p>总体来说，为了达到那种顺畅的动作，需要增加其他Vector3的转换以及fieldOfView来增加动感。如有兴趣大家可以把Unity官方的镜头跟随代码打开看看。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Require机制和自动更新之间的爱恨情仇]]></title>
-    <link href="http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng"/>
-    <updated>2017-04-15T15:02:02+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/04/15/requirehe-re-geng</id>
-    <content type="html"><![CDATA[<p>lua之所以能够做自动更新，和require的特殊机制有很大的关系。<br />
-通过阅读require相关的代码，我们得知，require的原理是先从<code>package.loaded</code>当中先检查是否存在要加载的lua文件，如果不存在则读取之后放入到<code>package.loaded</code>中，如果存在直接将从<code>package.loaded</code>中读取即可。<br />
-因此我们热更新之后，为了能够让新的文件生效，会将<code>package.loaded</code>直接清空。这样按照上面的逻辑，<code>require</code>进来得文件肯定都是新的文件了。</p>
-
-<p>事实是，总有意想不到的事情发生。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-04-15-805c3d47ly1fdoys4g14mg209q05g4jr.gif" alt="805c3d47ly1fdoys4g14mg209q05g4j" /></p>
-
-<!--more-->
-
-<p>但是事实上这里面暗藏了小小的机关。<br />
-那就是如何清空<code>package.loaded</code> ?</p>
-
-<p>有两种情况清空的方法。</p>
-
-<p>第一种：<br />
-<code>package.loaded = {}</code></p>
-
-<p>这种方式之后，热更的文件是否生效了呢？我们发现没有生效照样还是返回以前的lua模块了。所以这种方法没有达到我们理想的清空啊。</p>
-
-<p>第二种方法：</p>
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">for k,v in pairs(package.loaded) do
-</span><span class="line">	package.loaded[k] = nil
-</span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这两种看起来没什么区别，但是第二种起作用了。重新加载文件，生效的是新的lua模块。</p>
-
-<p>仔细看看这两种方法，第一种其实并未真的清空，他是将package.loaded的指向的对象地址发生了变化，原先内存中存在的那份加载对象还是存在的。也就是对象并未释放，导致加载未生效。而第二种则是对加载对象这块儿内存数据直接清理。因此重新加载的时候肯定生效。</p>
-
-<p>因此对象引用这块儿，一定要切记小心。不要被他简单的外表欺骗了。</p>
 
 ]]></content>
   </entry>
