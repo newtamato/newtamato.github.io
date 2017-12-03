@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-03T20:29:20+08:00</updated>
+  <updated>2017-12-03T22:50:30+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -356,7 +356,7 @@ python 2.7
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Game Maker：blend Mode遮挡效果]]></title>
+    <title type="html"><![CDATA[Game Maker：blend mode遮挡效果]]></title>
     <link href="http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo"/>
     <updated>2017-11-05T22:29:12+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/11/05/blend-modezhe-dang-xiao-guo</id>
@@ -467,7 +467,7 @@ python 2.7
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Game maker：Extend Blend Mode]]></title>
+    <title type="html"><![CDATA[Game maker：Extend blend mode]]></title>
     <link href="http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode"/>
     <updated>2017-10-29T23:00:17+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode</id>
@@ -780,7 +780,7 @@ dest是指：<code>the colour that's already in the pixel we're drawing to</code
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[Cocos2dx游戏性能优化技巧]]></title>
+    <title type="html"><![CDATA[cocos2dx游戏性能优化技巧]]></title>
     <link href="http://www.newtomato.me/blog/2017/10/06/cocos2dxxing-neng-you-hua"/>
     <updated>2017-10-06T22:09:58+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/10/06/cocos2dxxing-neng-you-hua</id>

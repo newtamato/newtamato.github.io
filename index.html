@@ -1,11 +1,15 @@
+
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>番茄手册</title>
   <meta name="author" content="newtomato">
 
   
+  <meta name="description" content="鉴于我们一般都是在https://learnopengl-cn.github.io这里学习opengl。这个开源的工程的example是非常好的学习工程。但是在mac上运行起来还是很麻烦。上面提到了glew，glfw以及glad等还不足以运行这些工程，手动安装其他依赖也是很痛苦的过程。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,72 +19,69 @@
 
   
   <link rel="canonical" href="http://www.newtomato.me/">
-  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-
-  <!-- http://opengraphprotocol.org/ -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="http://www.newtomato.me/">
-  <meta property="og:title" content="番茄手册">
-  
-
-  <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
-
-<link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="/assets/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
-
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
-  
-  <link href="/stylesheets/screen.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
 
 </head>
 
-  <body   >
-    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
-    <div id="wrap">
-      
-      <div id="banner-image">
-        <div class="layer">
-          <div id="banner-text">
-            <h1 class="page-title">番茄手册</h1>
-            <p class="page-desc">
-              <br>
-            </p>
-            <br>
-            <br>
-            <div class="page-links center">
-              <ul class="index-nav">
-                  <li ><a href="/">首页</a></li>
-<li ><a href="/blog/archives">文章列表</a></li>
-<li ><a href="/about2">关于我</a></li>
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">sihugh</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
 
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
       
-      <div id="main" role="main" class="container">
-        <div id="content">
-          <div class="row">
-  <div class="page-content">
-    <div class="blog-index" itemscope itemtype="http://schema.org/Blog">
-    <meta itemprop="name" content="番茄手册" />
+  <header>
     
-    <meta itemprop="url" content="http://www.newtomato.me" />
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/12/03/opengl-glitter">在xcode上运行opengl工程-使用Glitter</a></h1>
       
-      
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
     
-      <p class="meta text-muted text-uppercase">
+    
+      <p class="meta">
         
 
 
@@ -90,21 +91,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-12-03T19:52:27+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年12 月3 日</time>
+<time datetime="2017-12-03T19:52:27+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/12/03/opengl-glitter" itemprop="url">在xcode上运行opengl工程-使用Glitter</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>鉴于我们一般都是在<code>https://learnopengl-cn.github.io</code>这里学习opengl。这个开源的工程的example是非常好的学习工程。但是在mac上运行起来还是很麻烦。上面提到了glew，glfw以及glad等还不足以运行这些工程，手动安装其他依赖也是很痛苦的过程。<br />
+  <div class="entry-content"><p>鉴于我们一般都是在<code>https://learnopengl-cn.github.io</code>这里学习opengl。这个开源的工程的example是非常好的学习工程。但是在mac上运行起来还是很麻烦。上面提到了glew，glfw以及glad等还不足以运行这些工程，手动安装其他依赖也是很痛苦的过程。<br />
 但是<code>glitter</code>帮助我们把这些依赖全部都管理起来了。</p>
 
 <p>githud地址<a href="https://github.com/Polytonic/Glitter">在此</a>.</p>
@@ -113,19 +110,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/12/03/opengl-glitter">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/12/03/opengl-glitter">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行openGL工程</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -135,21 +137,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-12-03T17:36:47+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年12 月3 日</time>
+<time datetime="2017-12-03T17:36:47+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/12/03/macshang-openglhuan-jing" itemprop="url">在xcode上运行openGL工程</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>学习opengl最基础的方法就是将新手教程的工程先运行起来，实战才能收获经验。<br />
+  <div class="entry-content"><p>学习opengl最基础的方法就是将新手教程的工程先运行起来，实战才能收获经验。<br />
 先介绍我的工作环境。<code>MAC Sierra 10.12.6</code>,<code>xcode 9.2</code>。</p>
 
 <h2 id="section">手动安装依赖库，配置各种环境变量。</h2>
@@ -171,19 +169,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/12/03/macshang-openglhuan-jing">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/12/03/macshang-openglhuan-jing">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -193,21 +196,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-11-21T16:50:21+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年11 月21 日</time>
+<time datetime="2017-11-21T16:50:21+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/11/21/pygraphviz" itemprop="url">安装pygraphviz遇到的问题</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><h2 id="section">环境：</h2>
+  <div class="entry-content"><h2 id="section">环境：</h2>
 
 <pre><code>MacOS sierra
 python 2.7
@@ -217,19 +216,24 @@ python 2.7
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/11/21/pygraphviz">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/11/21/pygraphviz">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -239,21 +243,17 @@ python 2.7
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-11-12T15:04:27+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年11 月12 日</time>
+<time datetime="2017-11-12T15:04:27+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian" itemprop="url">ETC格式图片最佳实践</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>最近整理android资源，发现有不少可以采用etc格式图片进行优化的地方。所以针对这块技术点进行了一下整理总结。分享给大家。</p>
+  <div class="entry-content"><p>最近整理android资源，发现有不少可以采用etc格式图片进行优化的地方。所以针对这块技术点进行了一下整理总结。分享给大家。</p>
 
 <p><strong>etc是纹理压缩格式，可以不用cpu解压缩对齐像素而直接上传给GPU读取。GPU可以通过位置索引得到像素信息。也就意味着可以随机读取，快速准确。</strong></p>
 
@@ -269,19 +269,24 @@ python 2.7
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -291,21 +296,17 @@ python 2.7
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-11-05T22:29:12+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年11 月5 日</time>
+<time datetime="2017-11-05T22:29:12+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo" itemprop="url">Game Maker：blend Mode遮挡效果</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>在FEZ游戏中，经常会有这样的效果。人物移动到某些物品之后，只有形状可见。</p>
+  <div class="entry-content"><p>在FEZ游戏中，经常会有这样的效果。人物移动到某些物品之后，只有形状可见。</p>
 
 <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-05-15098910326144.jpg" alt="=" /></p>
 
@@ -322,19 +323,24 @@ python 2.7
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/10/29/gamemakerblendmode">Game maker：Extend Blend Mode</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -344,21 +350,17 @@ python 2.7
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-10-29T23:00:17+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年10 月29 日</time>
+<time datetime="2017-10-29T23:00:17+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/10/29/gamemakerblendmode" itemprop="url">Game maker：Extend Blend Mode</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>最近看到一款游戏，使用了<code>Extend blend mode</code>做了一个非常牛叉的特效。<br />
+  <div class="entry-content"><p>最近看到一款游戏，使用了<code>Extend blend mode</code>做了一个非常牛叉的特效。<br />
 特效在此，大家先欣赏一下：<br />
 <img src="http://www.davetech.co.uk/pages/gamemakersurfacedamage//twitter3.gif" alt="" /></p>
 
@@ -368,19 +370,24 @@ python 2.7
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/10/29/gamemakerblendmode">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/10/29/gamemakerblendmode">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/10/08/hui-fang">为游戏增加记录回放功能</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -390,21 +397,17 @@ python 2.7
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-10-08T17:29:29+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年10 月8 日</time>
+<time datetime="2017-10-08T17:29:29+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/10/08/hui-fang" itemprop="url">为游戏增加记录回放功能</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>为游戏增加回放功能的主要目的是可以将原来的操作重新播放一遍，很快的定位问题。尤其的不易复现的问题。<br />
+  <div class="entry-content"><p>为游戏增加回放功能的主要目的是可以将原来的操作重新播放一遍，很快的定位问题。尤其的不易复现的问题。<br />
 早先定位不易复现的问题采用的方法是让服务器记录玩家的操作请求。<br />
 如果发生问题，可以根据请求日志做分析。<br />
 这种方案一般是用在游戏上线之后。在上线之前，只能靠开发和测试同学大量的测试。<br />
@@ -415,19 +418,24 @@ python 2.7
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/10/08/hui-fang">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/10/08/hui-fang">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/10/06/cocos2dxxing-neng-you-hua">Cocos2dx游戏性能优化技巧</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -437,21 +445,17 @@ python 2.7
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-10-06T22:09:58+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年10 月6 日</time>
+<time datetime="2017-10-06T22:09:58+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/10/06/cocos2dxxing-neng-you-hua" itemprop="url">Cocos2dx游戏性能优化技巧</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>手机游戏性能优化主要有两个方面。一个CPU，一个GPU。</p>
+  <div class="entry-content"><p>手机游戏性能优化主要有两个方面。一个CPU，一个GPU。</p>
 
 <p>GPU主要用于图像渲染方面。由于现在显卡发展迅速。原本CPU的部分功能，可以转移到GPU上计算运行。这样大大的减轻了CPU的运算压力。提升效率。</p>
 
@@ -462,19 +466,24 @@ python 2.7
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/10/06/cocos2dxxing-neng-you-hua">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/10/06/cocos2dxxing-neng-you-hua">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">[gamemaker]BounceMover代码阅读</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -484,21 +493,17 @@ python 2.7
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-09-03T21:10:41+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年9 月3 日</time>
+<time datetime="2017-09-03T21:10:41+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du" itemprop="url">[gamemaker]BounceMover代码阅读</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>先来看看效果是怎么样的：</p>
+  <div class="entry-content"><p>先来看看效果是怎么样的：</p>
 
 <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-09-03-aa.gif" alt="aa" /></p>
 
@@ -507,19 +512,24 @@ python 2.7
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/09/03/hao-you-xi">什么才算是好游戏？</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -529,21 +539,17 @@ python 2.7
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-09-03T16:10:26+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年9 月3 日</time>
+<time datetime="2017-09-03T16:10:26+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/09/03/hao-you-xi" itemprop="url">什么才算是好游戏？</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>距今为止，我最喜欢玩的游戏，有《Limbo》，《风之旅人》，《the last of us》。也有很多其他优秀的游戏，比如《Fez》，《纪念碑谷》，《kingdom rush》，《血源》，《饥荒》，《肉食男孩》，《terrian》等等。这些确实很优秀，至今都是我推荐给其他人必玩的列表。<br />
+  <div class="entry-content"><p>距今为止，我最喜欢玩的游戏，有《Limbo》，《风之旅人》，《the last of us》。也有很多其他优秀的游戏，比如《Fez》，《纪念碑谷》，《kingdom rush》，《血源》，《饥荒》，《肉食男孩》，《terrian》等等。这些确实很优秀，至今都是我推荐给其他人必玩的列表。<br />
 但是我脑海中最忘不掉的就是上面那三款。<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-09-03-15044260160679.jpg" alt="" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-09-03-15044260351285.jpg" alt="" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-09-03-15044260553045.jpg" alt="" /></p>
 
@@ -551,42 +557,180 @@ python 2.7
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/09/03/hao-you-xi">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/09/03/hao-you-xi">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
-      
-    </div>
-
-    <ul class="pager">
-      
-        <li class="previous"><a href="/posts/2">&larr;&nbsp;Older</a></li>
-      
-      <li><a href="/blog/archives">Blog Archives</a></li>
-      
-        <li class="next disabled"><a href="#">Newer&nbsp;&rarr;</a></li>
-      
-    </ul>
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="2">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
   </div>
 </div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/opengl-glitter">在xcode上运行opengl工程-使用Glitter</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行openGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (2)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (6)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
+<li class='category'><a href='/blog/categories/atom/'>atom (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/blend/'>blend (1)</a></li>
+<li class='category'><a href='/blog/categories/bm-subtract/'>bm_subtract (1)</a></li>
+<li class='category'><a href='/blog/categories/box2d/'>box2d (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (6)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/djnago-blog-zinnia/'>djnago-blog-zinnia (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
+<li class='category'><a href='/blog/categories/game/'>game (2)</a></li>
+<li class='category'><a href='/blog/categories/gdscript/'>gdscript (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (5)</a></li>
+<li class='category'><a href='/blog/categories/godot/'>godot (1)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/gradle/'>gradle (1)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
+<li class='category'><a href='/blog/categories/jekins/'>jekins (1)</a></li>
+<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
+<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
+<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/linter-luacheck/'>linter-luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/liquidfunc/'>liquidfunc (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
+<li class='category'><a href='/blog/categories/luabing/'>luabing (2)</a></li>
+<li class='category'><a href='/blog/categories/luacheck/'>luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (2)</a></li>
+<li class='category'><a href='/blog/categories/maker/'>maker (2)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/mode/'>mode (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (3)</a></li>
+<li class='category'><a href='/blog/categories/quaternion/'>quaternion (1)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/sublime/'>sublime (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
+<li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/人物控制移动/'>人物控制移动 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/胡思乱想/'>胡思乱想 (1)</a></li>
+<li class='category'><a href='/blog/categories/脚本/'>脚本 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化/'>自动化 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/问题/'>问题 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (2)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
 
-        </div>
-      </div>
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
     </div>
-    <footer role="contentinfo"><div class="container">
-    <p class="text-muted credits">
-  Copyright &copy; 2017 - newtomato<br>
-  <small>
-      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>,
-      <span class="credit">customized with <a href="https://github.com/bhrigu123/abacus">abacus theme</a></span>.
-  </small>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-</div>
 </footer>
-    
+  
 
 
 
@@ -599,15 +743,14 @@ python 2.7
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
 
 
-<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="/javascripts/modernizr.js"></script>
 
 
-  </body>
+
+</body>
 </html>

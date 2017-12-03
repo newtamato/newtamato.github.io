@@ -1,11 +1,19 @@
+
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>番茄手册</title>
   <meta name="author" content="newtomato">
 
   
+  <meta name="description" content="在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？
+我们从简入手，开始说一下怎么控制镜头的移动。
+这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！ 开始入手 镜头移动是需要控制镜头的位置随着英雄的位置变动而变动。
+因此有下面的代码：
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,72 +23,69 @@
 
   
   <link rel="canonical" href="http://www.newtomato.me/posts/3/">
-  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-
-  <!-- http://opengraphprotocol.org/ -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="http://www.newtomato.me/posts/3/">
-  <meta property="og:title" content="番茄手册">
-  
-
-  <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
-
-<link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="/assets/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
-
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
-  
-  <link href="/stylesheets/screen.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
 
 </head>
 
-  <body   >
-    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
-    <div id="wrap">
-      
-      <div id="banner-image">
-        <div class="layer">
-          <div id="banner-text">
-            <h1 class="page-title">番茄手册</h1>
-            <p class="page-desc">
-              <br>
-            </p>
-            <br>
-            <br>
-            <div class="page-links center">
-              <ul class="index-nav">
-                  <li ><a href="/">首页</a></li>
-<li ><a href="/blog/archives">文章列表</a></li>
-<li ><a href="/about2">关于我</a></li>
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">sihugh</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
 
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div class="blog-index">
+  
+  
+  
+    <article>
       
-      <div id="main" role="main" class="container">
-        <div id="content">
-          <div class="row">
-  <div class="page-content">
-    <div class="blog-index" itemscope itemtype="http://schema.org/Blog">
-    <meta itemprop="name" content="番茄手册" />
+  <header>
     
-    <meta itemprop="url" content="http://www.newtomato.me" />
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a></h1>
       
-      
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
     
-      <p class="meta text-muted text-uppercase">
+    
+      <p class="meta">
         
 
 
@@ -90,21 +95,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-05-14T17:48:56+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年5 月14 日</time>
+<time datetime="2017-05-14T17:48:56+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui" itemprop="url">怎么控制镜头跟随人物移动</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？<br />
+  <div class="entry-content"><p>在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？<br />
 我们从简入手，开始说一下怎么控制镜头的移动。<br />
 这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！<br />
 <img src="http://wx2.sinaimg.cn/mw690/805c3d47ly1fevq3bkj1mg206y06y4ql.gif" alt="" /></p>
@@ -117,19 +118,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/04/15/requirehe-re-geng">Require机制和自动更新之间的爱恨情仇</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -139,21 +145,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-04-15T15:02:02+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年4 月15 日</time>
+<time datetime="2017-04-15T15:02:02+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/04/15/requirehe-re-geng" itemprop="url">Require机制和自动更新之间的爱恨情仇</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>lua之所以能够做自动更新，和require的特殊机制有很大的关系。<br />
+  <div class="entry-content"><p>lua之所以能够做自动更新，和require的特殊机制有很大的关系。<br />
 通过阅读require相关的代码，我们得知，require的原理是先从<code>package.loaded</code>当中先检查是否存在要加载的lua文件，如果不存在则读取之后放入到<code>package.loaded</code>中，如果存在直接将从<code>package.loaded</code>中读取即可。<br />
 因此我们热更新之后，为了能够让新的文件生效，会将<code>package.loaded</code>直接清空。这样按照上面的逻辑，<code>require</code>进来得文件肯定都是新的文件了。</p>
 
@@ -164,19 +166,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/04/15/requirehe-re-geng">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/04/15/requirehe-re-geng">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">记最近遇到最头疼的一个Bug</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -186,21 +193,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-03-12T16:15:46+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年3 月12 日</time>
+<time datetime="2017-03-12T16:15:46+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug" itemprop="url">记最近遇到最头疼的一个Bug</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><h3 id="section">前记</h3>
+  <div class="entry-content"><h3 id="section">前记</h3>
 
 <p><img src="https://cdn.ruguoapp.com/FkHR-5cSU8UK1upmG4x67UQCKWZI" alt="" /><br />
 这个将要说的bug并不复杂，但是却影响了一大波的用户。后果很严重。而引发这个问题的原因却是错综复杂，千丝万缕。<br />
@@ -209,19 +212,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -231,21 +239,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-01-10T20:24:50+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年1 月10 日</time>
+<time datetime="2017-01-10T20:24:50+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao" itemprop="url">使用Android Studio制作多个渠道包</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>以前制作多个渠道包的方法是这样子的，在AndroidMenifest.xml里面放置一个的变量。例如</p>
+  <div class="entry-content"><p>以前制作多个渠道包的方法是这样子的，在AndroidMenifest.xml里面放置一个的变量。例如</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class=""><span class="line">&lt;meta-data android:name="dksdk_channel" android:value="CHANNEL_CHANNEL_VALUES" /&gt;
@@ -258,19 +262,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong">常用工具网站汇集-不定期更新中</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -280,21 +289,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-01-09T15:08:23+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年1 月9 日</time>
+<time datetime="2017-01-09T15:08:23+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong" itemprop="url">常用工具网站汇集-不定期更新中</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><ol>
+  <div class="entry-content"><ol>
   <li><a href="https://apptut.gitbooks.io/android-note/content/common_tools/use_gradle.html">Android笔记</a></li>
   <li><a href="http://www.liaoxuefeng.com/">廖雪峰的官方网站</a></li>
   <li><a href="https://leohxj.gitbooks.io/a-programmer-prepares/content/index.html">程序员的自我修养</a></li>
@@ -307,14 +312,19 @@
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">Keytool的基本用法以及检查apk签名</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -324,21 +334,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-01-09T14:38:22+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年1 月9 日</time>
+<time datetime="2017-01-09T14:38:22+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming" itemprop="url">Keytool的基本用法以及检查apk签名</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>要导出正式的android的apk，就需要用得到一个keystore的文件。这个文件就是由keytool生成的一个文件。</p>
+  <div class="entry-content"><p>要导出正式的android的apk，就需要用得到一个keystore的文件。这个文件就是由keytool生成的一个文件。</p>
 
 <p><code>Keytool</code> 是一个JAVA环境下的安全钥匙与证书的管理工具，用于生成一个证书管理库，用于管理私钥公钥验证相关的一个证书keystore。<br />
 你可以把keystore看成是一个数据库，里面存储的是证书，keytool就是用来操作这个数据库的工具！<br />
@@ -346,19 +352,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/01/09/keytoolde-ji-ben-yong-fa-yi-ji-jian-cha-apkqian-ming">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/01/07/android-facebookdeng-lu-wen-ti">Android Facebook登录问题</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -368,21 +379,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-01-07T19:31:06+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年1 月7 日</time>
+<time datetime="2017-01-07T19:31:06+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2017/01/07/android-facebookdeng-lu-wen-ti" itemprop="url">Android Facebook登录问题</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>如果应用通过web方式登录fb，没有出现问题，但是通过fb应用登录反而报错，报错信息如下：<br />
+  <div class="entry-content"><p>如果应用通过web方式登录fb，没有出现问题，但是通过fb应用登录反而报错，报错信息如下：<br />
 <code>Android hash key always does not match any stored key hashes</code></p>
 
 <p>这个时候，怎么解决呢？<br />
@@ -390,19 +397,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2017/01/07/android-facebookdeng-lu-wen-ti">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2017/01/07/android-facebookdeng-lu-wen-ti">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/11/20/jni">JNI,java和C++之间的桥梁</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -412,21 +424,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-11-20T19:32:36+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年11 月20 日</time>
+<time datetime="2016-11-20T19:32:36+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/11/20/jni" itemprop="url">JNI,java和C++之间的桥梁</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-image002.png" alt="image002" /></p>
+  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-image002.png" alt="image002" /></p>
 
 <p>阅读cocos2dx的代码，我们会发现它里面有很多看似很奇怪的代码，比如<code>cocos2dx/platform/android/jni/</code>下面的c++文件。</p>
 
@@ -438,19 +446,24 @@
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2016/11/20/jni">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2016/11/20/jni">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -460,21 +473,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-11-20T18:04:13+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年11 月20 日</time>
+<time datetime="2016-11-20T18:04:13+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong" itemprop="url">Cocos2dx和OBB的结合使用</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
+  <div class="entry-content"><p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
 有两种方法可以使用OBB文件。<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
 
@@ -495,19 +504,24 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
+    </article>
+  
+  
+    <article>
       
-      
-        <article class="post" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
-          
-  <header class="page-header">
+  <header>
     
-      <p class="meta text-muted text-uppercase">
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a></h1>
+      
+    
+    
+      <p class="meta">
         
 
 
@@ -517,21 +531,17 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2016-11-20T16:13:41+08:00"  data-updated="true" itemprop="datePublished dateCreated">2016 年11 月20 日</time>
+<time datetime="2016-11-20T16:13:41+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-      <h2 class="entry-title" itemprop="name headline"><a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong" itemprop="url">Google Android 扩展文件OBB的使用</a></h2>
     
   </header>
 
 
-  <div class="entry-content clearfix" itemprop="articleBody description"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
+  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
 
 <p>我们提交应用到Google Store的时候，Google要求应用的大小不能够超过100M，那么超过100M怎么办呢？<br />
 那就用到了本章将要讲的东西<strong>OBB</strong>（扩展二进制文件）。</p>
@@ -541,42 +551,182 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
   
   
     <footer>
-      <a class="read-more btn btn-default" href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">阅读全文&rarr;</a>
+      <a rel="full-article" href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">阅读全文&rarr;</a>
     </footer>
   
 
 
-        </article>
-      
-    </div>
-
-    <ul class="pager">
-      
-        <li class="previous"><a href="/posts/4">&larr;&nbsp;Older</a></li>
-      
-      <li><a href="/blog/archives">Blog Archives</a></li>
-      
-        <li class="next"><a href="/posts/2">Newer&nbsp;&rarr;</a></li>
-      
-    </ul>
+    </article>
+  
+  <div class="pagination">
+    
+      <a class="prev" href="4">&larr; Older</a>
+    
+    <a href="/blog/archives">Blog Archives</a>
+    
+    <a class="next" href="2">Newer &rarr;</a>
+    
   </div>
 </div>
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/opengl-glitter">在xcode上运行opengl工程-使用Glitter</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行openGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (2)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (6)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
+<li class='category'><a href='/blog/categories/atom/'>atom (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/blend/'>blend (1)</a></li>
+<li class='category'><a href='/blog/categories/bm-subtract/'>bm_subtract (1)</a></li>
+<li class='category'><a href='/blog/categories/box2d/'>box2d (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (6)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/djnago-blog-zinnia/'>djnago-blog-zinnia (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
+<li class='category'><a href='/blog/categories/game/'>game (2)</a></li>
+<li class='category'><a href='/blog/categories/gdscript/'>gdscript (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (5)</a></li>
+<li class='category'><a href='/blog/categories/godot/'>godot (1)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/gradle/'>gradle (1)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
+<li class='category'><a href='/blog/categories/jekins/'>jekins (1)</a></li>
+<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
+<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
+<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/linter-luacheck/'>linter-luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/liquidfunc/'>liquidfunc (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
+<li class='category'><a href='/blog/categories/luabing/'>luabing (2)</a></li>
+<li class='category'><a href='/blog/categories/luacheck/'>luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (2)</a></li>
+<li class='category'><a href='/blog/categories/maker/'>maker (2)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/mode/'>mode (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (3)</a></li>
+<li class='category'><a href='/blog/categories/quaternion/'>quaternion (1)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/sublime/'>sublime (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
+<li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/人物控制移动/'>人物控制移动 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/胡思乱想/'>胡思乱想 (1)</a></li>
+<li class='category'><a href='/blog/categories/脚本/'>脚本 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化/'>自动化 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/问题/'>问题 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (2)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
 
-        </div>
-      </div>
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
     </div>
-    <footer role="contentinfo"><div class="container">
-    <p class="text-muted credits">
-  Copyright &copy; 2017 - newtomato<br>
-  <small>
-      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>,
-      <span class="credit">customized with <a href="https://github.com/bhrigu123/abacus">abacus theme</a></span>.
-  </small>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-</div>
 </footer>
-    
+  
 
 
 
@@ -589,15 +739,14 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
 
 
-<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="/javascripts/modernizr.js"></script>
 
 
-  </body>
+
+</body>
 </html>

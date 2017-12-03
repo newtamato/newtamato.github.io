@@ -1,11 +1,15 @@
+
 <!DOCTYPE html>
-<html class="no-js" lang="en">
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
   <title>Unity UGUI控件 - 番茄手册</title>
   <meta name="author" content="newtomato">
 
   
+  <meta name="description" content="Unity的UI控件有以下几种。 今天我们主要说一下常用的Text，Image，Button，InputField，ScrollView。因为这些组件需要在一个容器里面因此还有Canvas和Panel。 Text Text的创建方式，可以是是用Unity编辑器直接创建，另外就是用代码生成。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -15,90 +19,66 @@
 
   
   <link rel="canonical" href="http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian">
-  <link href="/favicon.png" type="image/png" rel="icon">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
   <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
-
-  <!-- http://opengraphprotocol.org/ -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian">
-  <meta property="og:title" content="Unity UGUI控件 - 番茄手册">
-  
-
-  <script src="/javascripts/libs/jquery/jquery-2.1.3.min.js"></script>
-
-<link href="/assets/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css">
-<link href="/assets/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css">
-
-<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-
-
-  
-  <link href="/stylesheets/screen.css" media="screen, projection, print" rel="stylesheet" type="text/css">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
 
   
 
 </head>
 
-  <body   >
-    <a href="#content" class="sr-only sr-only-focusable">Skip to main content</a>
-    <div id="wrap">
-      
-        <header role="banner">
-          <nav class="navbar navbar-default" role="navigation">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle" title="toggle navbar" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="/">番茄手册</a>
-        </div>
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">sihugh</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
 
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li ><a href="/">首页</a></li>
-<li ><a href="/blog/archives">文章列表</a></li>
-<li ><a href="/about2">关于我</a></li>
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+</ul>
 
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li>
-                    <a class="subscribe-rss" href="/atom.xml" title="subscribe via RSS">
-                        <span class="visible-xs">RSS</span>
-                        <img class="hidden-xs" src="/images/rss.png" alt="RSS">
-                    </a>
-                </li>
-                
-            </ul>
-            
-                <form class="navbar-form navbar-right" action="https://www.google.com/search" method="GET">
-                    <input type="hidden" name="sitesearch" value="www.newtomato.me">
-                    <div class="form-group">
-                        <input class="form-control" type="text" name="q" placeholder="Search">
-                    </div>
-                </form>
-            
-        </div>
-    </div>
 </nav>
-
-
-        </header>
-      
-      <div id="main" role="main" class="container">
-        <div id="content">
-          <div class="row">
-  <div class="page-content" itemscope itemtype="http://schema.org/Blog">
-    <meta itemprop="name" content="番茄手册" />
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
     
-    <meta itemprop="url" content="http://www.newtomato.me" />
-    <article class="hentry" role="article" itemprop="blogPost" itemscope itemtype="http://schema.org/BlogPosting">
       
-  <header class="page-header">
+        <h1 class="entry-title">Unity UGUI控件</h1>
+      
     
-      <p class="meta text-muted text-uppercase">
+    
+      <p class="meta">
         
 
 
@@ -108,24 +88,17 @@
 
 
 
+  
 
 
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-05-14T23:49:02+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年5 月14 日</time>
+<time datetime="2017-05-14T23:49:02+08:00" pubdate data-updated="true"></time>
         
       </p>
-    
-    
-    <h1 class="entry-title" itemprop="name headline">
-        Unity UGUI控件
-        
-    </h1>
     
   </header>
 
 
-<div class="entry-content clearfix" itemprop="articleBody description"><p>Unity的UI控件有以下几种。<br />
+<div class="entry-content"><p>Unity的UI控件有以下几种。<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947687801645_1.jpg" alt="=w130" /><br />
 今天我们主要说一下常用的Text，Image，Button，InputField，ScrollView。因为这些组件需要在一个容器里面因此还有Canvas和Panel。</p>
 
@@ -254,139 +227,213 @@ object处选择当前的对象，然后在后面选择objectController选择对�
 </div>
 
 
-      <footer class="post-footer">
-        <p class="meta text-muted">
-          
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
   
 
 
+<time datetime="2017-05-14T23:49:02+08:00" pubdate data-updated="true"></time>
+      
 
-<figure class="author-image">
-    <span class="img" href="/about" style="background-image: url(/images/avatar.jpg)"><span class="hidden">Picture</span></span>
-</figure>
 
-<section class="author">
-    <h4><span class="byline author vcard" itemprop="author" itemscope itemtype="http://schema.org/Person"><span class="fn" itemprop="name">newtomato</span></span></h4>
-
-    <div class="author-meta">
-        <span class="author-link icon-link"><i class="fa fa-link" aria-hidden="true"></i> <a href="http://www.newtomato.me">http://www.newtomato.me</a></span>
-    </div>
-</section>
-
-<hr>
-
-<section class="share">
+    </p>
     
-    <h4>Share this post</h4>
-    
-    <a class="fa fa-twitter" href="https://twitter.com/intent/tweet?url=http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian;" 
-        onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-        <span class="hidden">Twitter</span>
-    </a>
-    <a class="fa fa-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-        <span class="hidden">Facebook</span>
-    </a>
-    <a class="fa fa-google-plus" href="https://plus.google.com/share?url=http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-        <span class="hidden">Google+</span>
-    </a>
-    
-</section>
-
-
-
-
-<!--
-<footer class="post-footer">
-
-
-            <section class="share">
-                <h4>Share this post</h4>
-                <a class="icon-twitter" href="https://twitter.com/intent/tweet?text=Instant%20Movie%20Streamer%20v3%20Release&amp;url=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'twitter-share', 'width=550,height=235');return false;">
-                    <span class="hidden">Twitter</span>
-                </a>
-                <a class="icon-facebook" href="https://www.facebook.com/sharer/sharer.php?u=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'facebook-share','width=580,height=296');return false;">
-                    <span class="hidden">Facebook</span>
-                </a>
-                <a class="icon-google-plus" href="https://plus.google.com/share?url=http://iyask.me/instant-movie-streamer-v3-release/" onclick="window.open(this.href, 'google-plus-share', 'width=490,height=530');return false;">
-                    <span class="hidden">Google+</span>
-                </a>
-            </section>
-
-
-        </footer>
-
-
-&#8211;>
-          
-
-
-
-
-
-
-
-
-
-
-
-
-<span class="glyphicon glyphicon-calendar"></span> <time datetime="2017-05-14T23:49:02+08:00"  data-updated="true" itemprop="datePublished dateCreated">2017 年5 月14 日</time>
-          <br>
-
-
-        </p>
-        
-          <div class="pager">
-            
-            
-              
-                <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui" class="col-xs-12 col-md-4 btn btn-default" title="Previous Post: 怎么控制镜头跟随人物移动"> 
-                  <div class="text-muted">
-                    <small>Previous Post</small>
-                  </div>
-                  <div class="pager-title">
-                    <h4>怎么控制镜头跟随人物移动</h4>
-                  </div>
-                </a>
-              
-            
-            
-            
-              
-              <a href="/blog/2017/05/23/shi-yong-godot" class="col-xs-12 col-md-4 btn btn-default pull-right" title="Next Post: 使用GoDot引擎制作一款mini小游戏">
-                <div class="text-muted">
-                  <small>Next Post</small>
-                </div>
-                <div class="pager-title">
-                  <h4>使用GoDot引擎制作一款mini小游戏</h4>
-                </div>
-              </a>
-              
-            
-            
-          </div>
-        
-      </footer>
-    </article>
-    
-  </div>
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian" data-via="" data-counturl="http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian" >Tweet</a>
+  
+  
+  
 </div>
 
-        </div>
-      </div>
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui" title="Previous Post: 怎么控制镜头跟随人物移动">&laquo; 怎么控制镜头跟随人物移动</a>
+      
+      
+        <a class="basic-alignment right articlenav" href="/blog/2017/05/23/shi-yong-godot" title="Next Post: 使用GoDot引擎制作一款mini小游戏">使用GoDot引擎制作一款mini小游戏 &raquo;</a>
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/opengl-glitter">在xcode上运行opengl工程-使用Glitter</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行openGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (2)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (6)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
+<li class='category'><a href='/blog/categories/atom/'>atom (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/blend/'>blend (1)</a></li>
+<li class='category'><a href='/blog/categories/bm-subtract/'>bm_subtract (1)</a></li>
+<li class='category'><a href='/blog/categories/box2d/'>box2d (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (6)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/djnago-blog-zinnia/'>djnago-blog-zinnia (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
+<li class='category'><a href='/blog/categories/game/'>game (2)</a></li>
+<li class='category'><a href='/blog/categories/gdscript/'>gdscript (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (5)</a></li>
+<li class='category'><a href='/blog/categories/godot/'>godot (1)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/gradle/'>gradle (1)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
+<li class='category'><a href='/blog/categories/jekins/'>jekins (1)</a></li>
+<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
+<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
+<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/linter-luacheck/'>linter-luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/liquidfunc/'>liquidfunc (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
+<li class='category'><a href='/blog/categories/luabing/'>luabing (2)</a></li>
+<li class='category'><a href='/blog/categories/luacheck/'>luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (2)</a></li>
+<li class='category'><a href='/blog/categories/maker/'>maker (2)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/mode/'>mode (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (3)</a></li>
+<li class='category'><a href='/blog/categories/quaternion/'>quaternion (1)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/sublime/'>sublime (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
+<li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/人物控制移动/'>人物控制移动 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/胡思乱想/'>胡思乱想 (1)</a></li>
+<li class='category'><a href='/blog/categories/脚本/'>脚本 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化/'>自动化 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/问题/'>问题 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (2)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
+
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
     </div>
-    <footer role="contentinfo"><div class="container">
-    <p class="text-muted credits">
-  Copyright &copy; 2017 - newtomato<br>
-  <small>
-      <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>,
-      <span class="credit">customized with <a href="https://github.com/bhrigu123/abacus">abacus theme</a></span>.
-  </small>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2017 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
-</div>
 </footer>
-    
+  
 
 
 
@@ -399,15 +446,14 @@ object处选择当前的对象，然后在后面选择objectController选择对�
       var twitterWidgets = document.createElement('script');
       twitterWidgets.type = 'text/javascript';
       twitterWidgets.async = true;
-      twitterWidgets.src = '//platform.twitter.com/widgets.js';
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
       document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
     })();
   </script>
 
 
-<script src="/assets/bootstrap/dist/js/bootstrap.min.js"></script>
-<script src="/javascripts/modernizr.js"></script>
 
 
-  </body>
+
+</body>
 </html>
