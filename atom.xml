@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-03T19:53:57+08:00</updated>
+  <updated>2017-12-03T20:29:20+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -18,7 +18,8 @@
     <link href="http://www.newtomato.me/blog/2017/12/03/opengl-glitter"/>
     <updated>2017-12-03T19:52:27+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/03/opengl-glitter</id>
-    <content type="html"><![CDATA[<p>鉴于我们一般都是在<code>https://learnopengl-cn.github.io</code>这里学习opengl。这个开源的工程的example是非常好的学习工程。但是在mac上运行起来还是很麻烦。上面提到了glew，glfw以及glad等还不足以运行这些工程，手动安装其他依赖也是很痛苦的过程。</p>
+    <content type="html"><![CDATA[<p>鉴于我们一般都是在<code>https://learnopengl-cn.github.io</code>这里学习opengl。这个开源的工程的example是非常好的学习工程。但是在mac上运行起来还是很麻烦。上面提到了glew，glfw以及glad等还不足以运行这些工程，手动安装其他依赖也是很痛苦的过程。<br />
+但是<code>glitter</code>帮助我们把这些依赖全部都管理起来了。</p>
 
 <p>githud地址<a href="https://github.com/Polytonic/Glitter">在此</a>.</p>
 
