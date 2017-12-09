@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-03T23:21:04+08:00</updated>
+  <updated>2017-12-09T20:32:40+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,194 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[opengl基础之矩阵和坐标]]></title>
+    <link href="http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi"/>
+    <updated>2017-12-09T20:07:39+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi</id>
+    <content type="html"><![CDATA[<p>作为游戏开发者，我们将任何显示对象放到舞台上的时候，可能都没有想到在这后面有一套复杂又快速的东西保证了我们能够立马看到想要的效果。而这里背后的东西，我们称之为渲染引擎。</p>
+
+<p><code>cocos2dx</code>使用便是<code>opengl</code>的图形编程接口。我们想要彻底搞懂cocos2dx，就需要了解opengl。而这里会介绍<code>opengl</code>矩阵和坐标的基础知识，最后搞明白上面提到的问题，一张图片是怎么渲染到舞台上的。</p>
+
+<!--more-->
+
+<h2 id="section">齐次坐标</h2>
+
+<p>cocos2dx和opengl中，有大量的数学计算。例如比如位置的变化。通过代码我们知道，这些计算使用都是矩阵。<br />
+这些矩阵有什么特别的？他们特别的在于都是4维矩阵。<br />
+而cocos2dx最多是3维，opengl也是为3维设计的接口，为什么会有4维？</p>
+
+<p>因为这样的坐标更容易进行矩阵乘法，他们被称之为齐次坐标。</p>
+
+<blockquote>
+  <p>在数学里，齐次坐标（homogeneous coordinates），或投影坐标（projective coordinates）是指一个用于投影几何里的坐标系统，如同用于欧氏几何里的笛卡儿坐标一般。该词由奥古斯特·费迪南德·莫比乌斯于1827年在其著作《Der barycentrische Calcul》一书内引入[1][2]。齐次坐标可让包括无穷远点的点坐标以有限坐标表示。使用齐次坐标的公式通常会比用笛卡儿坐标表示更为简单，且更为对称。齐次坐标有着广泛的应用，包括电脑图形及3D电脑视觉。使用齐次坐标可让电脑进行仿射变换，并通常，其投影变换能简单地使用矩阵来表示。<br />
+如一个点的齐次坐标乘上一个非零标量，则所得之坐标会表示同一个点。因为齐次坐标也用来表示无穷远点，为此一扩展而需用来标示坐标之数值比投影空间之维度多一。例如，在齐次坐标里，需要两个值来表示在投影线上的一点，需要三个值来表示投影平面上的一点。</p>
+</blockquote>
+
+<p>上述介绍来源自维基百科对<strong>齐次坐标</strong>的介绍.<br />
+注意，齐次坐标可以比笛卡尔坐标更为简单，且更为对称。事实上也的确如此。</p>
+
+<h3 id="section-1">齐次坐标的特征</h3>
+
+<p>我们举例说明什么是齐次坐标。一个二维坐标（x,y）,如果转为齐次坐标就是（kx,ky,k）。<br />
+<code>规律就是他比原来坐标多一维。且有相同的系数。</code><br />
+在这个规律下，(3,4)对应的齐次坐标可以是（3，4，1），（6，8，2），（9，12，3）等等。</p>
+
+<h3 id="section-2">齐次坐标如何区分点和向量</h3>
+
+<p>我们向量的表示和点的是一样的。（3，4）可以认为是一个点，也可以认为是从原点出发的一个指向(3,4)的向量。<br />
+那么在齐次坐标中，是如何区分这两种不同的表示呢？<br />
+向量的意义最重要的不是他的数值而是他的方向。而点没有方向，只有位置。所以上面提到的<code>k=0</code>，则表示此是向量坐标，而<code>k=1</code>表示这是一个点坐标.<br />
+[3，4，0]是一个方向向量，而[3,4,1]则是一个位置。</p>
+
+<h2 id="section-3">仿射变换</h2>
+<p>向量或者点经过矩阵线性变化加平移之后，转换为另一个向量或者点。<br />
+放射变化可以表示成为如下的公式：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115125390754949.jpg" alt="-w300" /></p>
+
+<p>这个公式是通过矩阵的缩放旋转以及平移之后计算得到的。所以仿射变换是复合变换。是基本矩阵变换相乘得来的。<br />
+因此我们先得知道基本的矩阵变换。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-15128224606470.jpg" alt="" /></p>
+
+<p>有了上述公式，我们可以基本写仿射变化的公式了。</p>
+
+<p><code>P' = M(平移)*M(旋转) * M(缩放) * P</code></p>
+
+<p><code>P</code>代表原先的坐标，经过缩放，旋转，平移之后转换成了新坐标<code>P'</code>。这里需要注意的一点是矩阵的乘法规则是从右到左，也就是对P坐标先做缩放，在做旋转，最后做平移。</p>
+
+<p>根据矩阵的特性，我们可以知道矩阵平移其实可以做成矩阵相加。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">M0 = M1 + M2(M均是3维矩阵)</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>而其缩放和旋转都是矩阵相乘，做成4位齐次坐标最大的好处是将相加的矩阵也可以以相乘的方式来计算。统一的操作方法会带来很多便利。</p>
+
+<p>上面的矩阵转换能够让我们在不同坐标系的点进行转换。举例说明，你在办公室的位置是相对办公室这个房间而言的。房间的原点假设在前台。此时你距离前台位置是（100，200，0）。0代表层级，都是同一层办公室，自然为0。此时如果要计算你在地球上的位置，怎么计算？<br />
+自然已经知道地球原点在哪里，按照这个原点计算你的位置。</p>
+
+<p>最简单的方法自然是直接计算，地球原点到你之间的物理距离。<br />
+如此自然可以，可是不是最好的，也不是最快的。如果又求你在这个国家的位置，国家的原点在首都。再求你在这一条街的位置，再求你在这个地区的位置，这么多的需求，是不是觉得这个方法不是特别有效？</p>
+
+<p>最有效的方法，就是使用仿射矩阵。</p>
+
+<p>知道自己在办公室的位置，那么直接求办公室前台（办公室原点）对一楼门卫（大楼原点）之间的矩阵转换M1。套用公式就能知道自己在大楼里面的位置。然后在一条街的位置，那就求一楼门卫在这条街原点的矩阵转换M2。剩下的大家举一反三就知道了。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">P' = M(n)*M(n-1)*M(n-2)*...*M1*P</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>因此可以推论得知，空间坐标转换最重要的就是求解一个仿射矩阵。</p>
+
+<p>在opengl的世界中，我们将要接触到很多空间转换的事情。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">本地屏幕坐标-&gt;世界坐标-&gt;观察坐标(摄像机坐标，eye坐标)-&gt;裁剪坐标-&gt;投影坐标-&gt;标准设备坐标-&gt;屏幕坐标
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128146409840.png" alt="-w350" /><br />
+因此在opengl中他的最终的参见坐标公式如下：</p>
+
+<math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
+  <msub>
+    <mi>V</mi>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mi>c</mi>
+      <mi>l</mi>
+      <mi>i</mi>
+      <mi>p</mi>
+    </mrow>
+  </msub>
+  <mo>=</mo>
+  <msub>
+    <mi>M</mi>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mi>p</mi>
+      <mi>r</mi>
+      <mi>o</mi>
+      <mi>j</mi>
+      <mi>e</mi>
+      <mi>c</mi>
+      <mi>t</mi>
+      <mi>i</mi>
+      <mi>o</mi>
+      <mi>n</mi>
+    </mrow>
+  </msub>
+  <mo>&#x22C5;<!-- ⋅ --></mo>
+  <msub>
+    <mi>M</mi>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mi>v</mi>
+      <mi>i</mi>
+      <mi>e</mi>
+      <mi>w</mi>
+    </mrow>
+  </msub>
+  <mo>&#x22C5;<!-- ⋅ --></mo>
+  <msub>
+    <mi>M</mi>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mi>m</mi>
+      <mi>o</mi>
+      <mi>d</mi>
+      <mi>e</mi>
+      <mi>l</mi>
+    </mrow>
+  </msub>
+  <mo>&#x22C5;<!-- ⋅ --></mo>
+  <msub>
+    <mi>V</mi>
+    <mrow class="MJX-TeXAtom-ORD">
+      <mi>l</mi>
+      <mi>o</mi>
+      <mi>c</mi>
+      <mi>a</mi>
+      <mi>l</mi>
+    </mrow>
+  </msub>
+</math>
+
+<h2 id="section-4">坐标</h2>
+
+<p>坐标是相对了坐标系而言的，坐标系最重要就是定义了原点。<br />
+对于游戏中的模型或者显示对象，他们都有自己的坐标系。比如我们物体A里面有一个子节点B在位置（100，100）处，那么这里的（100，100）就是相对于A的<strong>本地坐标</strong>计算的来。使用本地坐标是最直观的。<br />
+在这个游戏世界中，还有一个<strong>世界坐标系，或者是View坐标系。也可以理解成舞台坐标系</strong>。舞台的物体很多，他们每一个都有相对于舞台原点的坐标。甚至嵌套的子节点也会拥有一个唯一的舞台坐标。计算方法，对应思考上面的仿射矩阵变换。<br />
+假设舞台很大，玩家会通过拖拽的方式移动屏幕看到其他部分。<br />
+舞台移动之后会影响opengl显示的图像。按照上面的公式，其实变化的只有<code>M(view)</code>。后面和前面的矩阵都没有变化，因此计算位置就会很快。<br />
+而这里计算<code>M(view)</code>矩阵，通过摄像机来计算会更快。因为移动物体其实就是反向移动摄像机。</p>
+
+<p>裁剪空间是对世界空间的的范围裁剪。只有在规定范围内的才会被显示出来。这种就是投影。有正交投影和透视投影。<br />
+正交投影产生的效果就是前后一致的裁剪。主要用于2D游戏。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128184208022.png" alt="-w250" />(正交投影)</p>
+
+<p>透视投影会出现近大远小的效果。主要在3D游戏中使用。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128184007944.png" alt="-w250" />(透视投影)</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128185556038.png" alt="-w250" />(图1)<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128157278548.jpg" alt="-w150" />(右手坐标系)</p>
+
+<p>投影裁剪之后，只保留在视椎体内的坐标，然后将坐标转换为opengl要求的[-1，1]标准化设备坐标。<br />
+最后<code>opengl</code>通过<code>glViewPort()</code>设定的屏幕分辨率将坐标有转换为屏幕坐标。</p>
+
+<p>在这里使用opengl右手坐标系，因此上面(图1)中所示的坐标系就是opengl的坐标。在视椎体的正中心。因此x的坐标都会标准化成[-1,1]的范围。而y也同样如此。至于z，适用于深度测试来使用的，同一个z轴上的点，具体就是离near面近的点就可能直接使用，而其他的点可能被直接抛弃掉。</p>
+
+<h2 id="section-5">接下来，扩展点什么</h2>
+
+<p>这些矩阵变换和opengl坐标系的基础知识，能够更好的帮助我们理解接下来的矩阵推导。<br />
+我们将要涉及的View矩阵(观察矩阵)和投影矩阵推导。<br />
+而理解这两种矩阵推导又能帮助我们理解游戏引擎是如何将顶点数据传递给opengl，opengl又是如何处理这些顶点数据，展示到屏幕上来。</p>
+
+<p>最后通过这些，我们会将cocos2dx的opengl渲染流程疏通一遍。更好去理解cocos2dx是如何运作的。</p>
+
+<h2 id="section-6">参考链接</h2>
+
+<ol>
+  <li><a href="http://www.songho.ca/opengl/gl_projectionmatrix.html">OpenGL Projection Matrix</a></li>
+  <li><a href="https://learnopengl-cn.readthedocs.io/zh/latest/01%20Getting%20started/08%20Coordinate%20Systems/">learnopengl-cn</a></li>
+  <li><a href="https://oncemore2020.github.io/blog/homogeneous/">齐次坐标系入门级思考</a></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在xcode上运行opengl工程-使用Glitter]]></title>
@@ -2057,140 +2245,6 @@ console的样式如下：<br />
 <p>这个游戏大致的结构和核心的代码差不多已经讲完。可以看到godot将一切都看成是node，node绑定脚本。脚本负责逻辑。因此脚本可能会非常大。不方便维护，不像是unity组件化的思想，逻辑拆分成不同组件。方便维护。<br />
 相对unity，godot显得有点小众。不过，对于开发一个独立游戏，除了rpgMaker，GMS之外，又多了一个这样的开源引擎，还是不错的。<br />
 感兴趣的同学们，移步到官方<a href="https://godotengine.org/news">网站</a>去看看，他们一直在努力做新的东西。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Unity UGUI控件]]></title>
-    <link href="http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian"/>
-    <updated>2017-05-14T23:49:02+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/05/14/unity-uguikong-jian</id>
-    <content type="html"><![CDATA[<p>Unity的UI控件有以下几种。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947687801645_1.jpg" alt="=w130" /><br />
-今天我们主要说一下常用的Text，Image，Button，InputField，ScrollView。因为这些组件需要在一个容器里面因此还有Canvas和Panel。</p>
-
-<h2 id="text">Text</h2>
-
-<p>Text的创建方式，可以是是用Unity编辑器直接创建，另外就是用代码生成。<br />
-在我们首次创建的时候，Unity会自动给我们另外两个东西，一个是Canvas，一个是EventSystem。<br />
-而接下来我们创建其他组件的时候，EventSystem都不会创建。Canvas则看你的需求了。也就是说EventSystem是UI管理的一个单例。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-QQ20170514-223354-HD.gif" alt="QQ20170514-223354-HD" /><br />
-<!--more--><br />
-他是负责什么功能？通过看他的Inspector，可知他是一个Empty GameObject，但是有两个脚本<code>Standalone Input Module</code>，<code>Event System</code>。前一个用于接受玩家的输入。点击触摸手柄等。后一个呢，是对用户的输入进行处理，比如点击button事件传递。<br />
-Unity运行之后，可以观察到EventSystem下面的输出：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947734607623_1.jpg" alt="=w200" /><br />
-这里面使用的是RayCast的方法检查是否碰撞到了某一个组件。</p>
-
-<p>上面说到使用Unity编辑器创建，使用代码的方式如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">GameObject go2 = new GameObject("newLabel");    
-</span><span class="line">go2.layer = LayerMask.NameToLayer("UI");
-</span><span class="line">
-</span><span class="line">Text labelName = go2.AddComponent&lt;Text&gt;();
-</span><span class="line">labelName.text = "start";
-</span><span class="line">
-</span><span class="line">labelName.font = Resources.Load("font/fontName",typeof(Font)) as Font;
-</span><span class="line">labelName.fontSize = 32;
-</span><span class="line">labelName.alignment = TextAnchor.MiddleCenter;
-</span><span class="line">go2.transform.parent = parentTransform;
-</span><span class="line">
-</span><span class="line">go2.transform.localPosition = Vector3.zero;
-</span><span class="line">go2.transform.localScale = Vector3.one;
-</span><span class="line">go2.transform.localRotation = new Quaternion();</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<h2 id="image">Image</h2>
-
-<p>Image就是展示一张图片。这个和cocos2dx中的精灵是一个概念。给组件一张图片，它就可以显示出来。<br />
-通过Unity编辑器，创建一个Image，然后修改他的Source Image。选择你要的<strong>Sprite</strong>。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947742976727_1.jpg" alt="=w250" /><br />
-这里的Sprite是Unity里面的概念。导入一张图片到Unity中，然后将图片的类型选择成Sprite即可。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947745422670_1.jpg" alt="=w250" /><br />
-这样Image就展示出来了。</p>
-
-<p>代码的方式创建：</p>
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">GameObject go = new GameObject("newImage");
-</span><span class="line">go.layer = LayerMask.NameToLayer("UI");
-</span><span class="line">Image image = go.AddComponent&lt;Image&gt;();
-</span><span class="line">string name = "ImagePrefab";
-</span><span class="line">image.sprite = Resources.Load&lt;GameObject&gt;(name).GetComponent&lt;SpriteRenderer&gt;().sprite;
-</span><span class="line">image.SetNativeSize();
-</span><span class="line">go.transform.SetParent(parentTransform,false);  
-</span><span class="line">go.transform.localPosition = Vector3.zero;  
-</span><span class="line">go.transform.localScale = Vector3.one;   
-</span><span class="line">go.transform.localRotation = new Quaternion();  
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<h2 id="button">Button</h2>
-
-<p>出去用source image来更变button的样式，和改变lable的文案。button最关键的就是他的点击回调函数的处理。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">void Start()
-</span><span class="line">{
-</span><span class="line">   Button btn = yourButton.GetComponent&lt;Button&gt;();
-</span><span class="line">	 btn.onClick.AddListener(delegate() { StartGame(); });
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">void StartGame()
-</span><span class="line">{
-</span><span class="line">    Debug.Log("You have clicked the button!");
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>另外就是在Unity编辑器那里<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947752981359_1.jpg" alt="=w250" /><br />
-增加一个object对应的脚本objectController.cs文件。<br />
-object处选择当前的对象，然后在后面选择objectController选择对应的public类型的函数。</p>
-
-<h2 id="inputfield">InputField</h2>
-
-<p>输入文本框，如何展示输入文本的提示，如果得到输入文本，如果做输入限制等。<br />
-<code>Placeholder</code>就是用来做提示的。我们需要得到的是他的<strong>Text组件</strong>，对他赋值即可。<br />
-他的<code>OnSubmit（What to do when the event system sends a submit Event）</code>.函数用来接收提交。<br />
-<code>onValueChange</code>就是用户每次输入的监听。</p>
-
-<h2 id="scrollview">ScrollView</h2>
-
-<p>Unity里面拥有的其实是Scroll Rect。<br />
-他就是用于滑动滚动的组件。但是做的并不好。需要我们自己做一些优化。在cocos中这些事已经替我们做了，Unity中似乎还需要我们自己手动管理。通过对象池原理循环使用这些组件。降低创建组件的开销。</p>
-
-<p>例如我们做一个垂直的上下滑动的scrollView。首先在Inspector选择他他的方向。然后关闭另一个方向的滑动滚动条。scroll view有一个遮罩mask，外加一个content，content是用来add子控件，显示区域就是遮罩区域。因此需要给content增加一个垂直布局。这样我们只要添加道具进来，他会负责替我们自动布局。<br />
-最终的效果是这样。但是content需要我们代码中自动调整height。</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-QQ20170514-234643-HD.gif" alt="QQ20170514-234643-HD" /></p>
 
 ]]></content>
   </entry>
