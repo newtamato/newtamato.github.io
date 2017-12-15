@@ -4,7 +4,7 @@
   <title><![CDATA[分类:opengl | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/opengl/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-09T20:32:40+08:00</updated>
+  <updated>2017-12-16T00:04:11+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,11 +14,142 @@
 
   
   <entry>
+    <title type="html"><![CDATA[OpenGL基础之模板缓存]]></title>
+    <link href="http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun"/>
+    <updated>2017-12-15T23:50:52+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun</id>
+    <content type="html"><![CDATA[<p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：</p>
+
+<ul>
+  <li>多达四个颜色缓存</li>
+  <li>一个深度缓存</li>
+  <li>一个模板缓存</li>
+  <li>一个多重采样（MSAA）缓存</li>
+  <li>一个或多个辅助缓存</li>
+</ul>
+
+<p>我们今天主要讨论模板缓存。<br />
+模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
+
+<p>通过对cocos2dx里面遮罩裁剪功能的分析，对模板缓存有个初步认识。<br />
+<!--more--></p>
+
+<h2 id="cocos2dx-">cocos2dx 遮罩的实现</h2>
+
+<pre><code>local TestClippingScene  = class("TestClippingScene",cc.load("mvc").ViewBase)
+
+function TestClippingScene:onCreate(event)
+	local mask = display.newSprite("MainSceneBg.jpg")
+	local sencialnode = display.newSprite("BugSpider.png")
+
+	local clippingNode = cc.ClippingNode:create(sencialnode)
+	
+            -- clippingNode:setInverted(true) --注释1
+            -- clippingNode:setAlphaThreshold(0)--注释2
+            clippingNode:addChild(mask)
+
+            self:addChild(clippingNode)
+            clippingNode:setPosition(display.center)
+            
+end
+
+return TestClippingScene
+</code></pre>
+<p>运行上面的代码得到的如下图像。由于没有Alpha测试，导致以图片的矩形为准做遮罩。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1426.png" alt="IMG_1426" /><br />
+将<strong>注释2</strong>的取消掉。就会如下所示。透明区域不起作用。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1427.png" alt="IMG_1427" /></p>
+
+<p>将<strong>注释1</strong>的取消掉，则得到如下的效果:<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1428.png" alt="IMG_1428" /></p>
+
+<p>具体的原理是什么呢？我们需要深入到cocos2dx的源码中。</p>
+
+<h2 id="cocos2dx">cocos2dx中遮罩裁剪的原理</h2>
+
+<h3 id="section">源码阅读</h3>
+
+<p>我们通过阅读ClippingNode.cpp的代码知道，真正实现裁剪的代码是：<code>StencilStateManager::onBeforeVisit()</code></p>
+
+<pre><code>void StencilStateManager::onBeforeVisit()
+{
+	...
+
+	glDepthMask(GL_FALSE);
+	RenderState::StateBlock::_defaultState-&gt;setDepthWrite(false);
+	
+	glStencilFunc(GL_NEVER, mask_layer, mask_layer);
+	//这里的意思是无论什么像素都不会通过模板测试，也就是全部像素都会失败。
+	glStencilOp(!_inverted ? GL_ZERO : GL_REPLACE, GL_KEEP, GL_KEEP);
+	//如果不是_inverted模式，模板填充0，如果是则填充mask_layer。
+	//因为上面失败，所以这里如果是普通遮罩，_inverted为false，则模板缓存里面会全部设置成0。
+	//那么也就意味着什么都画不上去。
+	drawFullScreenQuadClearStencil();    
+	//画一个全屏的矩形，整理模板缓存。上面代码执行之后，模板缓存的样子如(图1)
+	
+	glStencilFunc(GL_NEVER, mask_layer, mask_layer);
+	glStencilOp(!_inverted ? GL_REPLACE : GL_ZERO, GL_KEEP, GL_KEEP);
+	//如果是普通遮罩，那么像素上面因为失败，这里会全部替换成mask_layer（glStencilFunc的第二个参数）的值。可参考（图2）
+	
+	//下面是Alpha Test。
+	if (_alphaThreshold &lt; 1) {
+	#if !CC_CLIPPING_NODE_OPENGLES
+	    _currentAlphaTestEnabled = glIsEnabled(GL_ALPHA_TEST);
+	    glGetIntegerv(GL_ALPHA_TEST_FUNC, (GLint *)&amp;_currentAlphaTestFunc);
+	    glGetFloatv(GL_ALPHA_TEST_REF, &amp;_currentAlphaTestRef);
+	    glEnable(GL_ALPHA_TEST);
+	    CHECK_GL_ERROR_DEBUG();
+	    glAlphaFunc(GL_GREATER, _alphaThreshold);
+	#endif
+	}
+}
+
+//渲染结束，之后把模板状态还原，_currentStencilFunc值都是在执行visit之前从opengl里面获取的值。
+void StencilStateManager::onAfterVisit()
+{
+    glStencilFunc(_currentStencilFunc, _currentStencilRef, _currentStencilValueMask);
+    glStencilOp(_currentStencilFail, _currentStencilPassDepthFail, _currentStencilPassDepthPass);
+    glStencilMask(_currentStencilWriteMask);
+    if (!_currentStencilEnabled)
+    {
+        glDisable(GL_STENCIL_TEST);
+    }
+    s_layer--;
+}
+</code></pre>
+
+<h3 id="section-1">关键函数：</h3>
+
+<ol>
+  <li><code>glStencilFunc</code>:用来规定是否通过了 <code>stencil test</code> 的规则。<br />
+<code>glStencilFunc</code>的原形是: <code>glStencilFunc( GLenum func, GLint ref, GLuint mask)</code>;<br />
+函数意义：指定模板测试比较函数，<strong>模板值</strong>与要写入的<strong>像素值</strong>做与操作，然后得到的结果，用第一个参数指定的函数和第二参数进行比较。如果满足则通过了模板测试。可以写入。否则不满足。</li>
+  <li><code>glStencilOp</code>:向<code>stencil buffer</code> 中写内容的规则。<br />
+<code>glStencilOp</code>(GLenum fail , GLenum zfail, GLenum zPss );<br />
+函数意义：当某些图元在绘制的时候,如果模板测试失败(或者深度测试失败),它怎么修改其打算写入的位置的模板值</li>
+</ol>
+
+<p>如果是不调用了<code>setInverted</code>的话。就如下图所示。<br />
+(图1)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-1.png" alt="1" />(图2)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-0.png" alt="0" /></p>
+
+<p>调用<code>setInverted(true)</code>则如下图所示：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-a.png" alt="a" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-b.png" alt="b" /></p>
+
+<p>鉴于此，我们知道将要draw上去的不会通过模板测试，但是却会将模板留下他的形状（凡是为1的地方才会被绘制）。接下来在绘制其他形状的东西时候。在模板测试这里，直接就会按照模板的样子draw出来。<br />
+因此遮罩效果就有了！</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[opengl基础之矩阵和坐标]]></title>
     <link href="http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi"/>
     <updated>2017-12-09T20:07:39+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi</id>
-    <content type="html"><![CDATA[<p>作为游戏开发者，我们将任何显示对象放到舞台上的时候，可能都没有想到在这后面有一套复杂又快速的东西保证了我们能够立马看到想要的效果。而这里背后的东西，我们称之为渲染引擎。</p>
+    <content type="html"><![CDATA[<p>[TOC]</p>
+
+<p>作为游戏开发者，我们将任何显示对象放到舞台上的时候，可能都没有想到在这后面有一套复杂又快速的东西保证了我们能够立马看到想要的效果。而这里背后的东西，我们称之为渲染引擎。</p>
 
 <p><code>cocos2dx</code>使用便是<code>opengl</code>的图形编程接口。我们想要彻底搞懂cocos2dx，就需要了解opengl。而这里会介绍<code>opengl</code>矩阵和坐标的基础知识，最后搞明白上面提到的问题，一张图片是怎么渲染到舞台上的。</p>
 

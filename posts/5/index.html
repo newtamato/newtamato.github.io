@@ -9,11 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="无意间看到漫威原来也提供了开放API接口。真是让我惊喜意外。
-简单了看了一下他们的文档，看样子很简单就能够调用。不需要额外的登录和授权。
-API接口文档在此
-请求结构文档在此 因此要调用他们接口，需要提供如下三个参数即可
-">
+  <meta name="description" content="上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。 当然，使用FB的SDK，同样也需要翻墙。 首先我们先到FB的官方网站上面注册自己的应用。
+然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +72,55 @@ API接口文档在此
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie">整合FB广告步骤总结</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-07-30T12:09:50+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。</p>
+
+<p>当然，使用FB的SDK，同样也需要翻墙。</p>
+
+<p>首先我们先到FB的官方网站上面注册自己的应用。<br />
+然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。<br />
+最后能够得到一个placementId，这个是我们最终需要用到的东西。<br />
+然后开始集成 Facebook Audience Network 的SDK。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -509,64 +555,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/05/29/zi-dong-hua-ce-shi">关于自动化测试的一些思考</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-05-29T17:12:45+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-05-29-%E6%9C%BA%E5%99%A8%E4%BA%BA.jpg" alt="机器人-w300" /></p>
-
-<p>之所以想到自动化测试，是因为想要能够从技术的角度解决一些我们经常的重复性的工作。<br />
-重复性的工作特别多，如果能够有一套合适的工具，比如有一个智能一点的机器人，辅助我们，而我们只要在喝一杯咖啡的时间，回来就能够看到测试的结果，那么能够省去我们不少的精力和时间。</p>
-
-<p>对于游戏开发测试而言，我们经常要做的就是对某个功能不断的测试。比如如下的情况。</p>
-
-<blockquote>
-  <p>购买一个道具。<br />
-点击按钮触发面板弹出，触发相关动画和界面数据的相关初始化操作。此次为一个二次确认面板。<br />
-点击购买。<br />
-开始发出通讯请求。<br />
-然后响应回来。根据服务器发来的数据决定此次操作是否合法。<br />
-如果合法，则弹出相关的面板和动画。<br />
-如果不合法，则也是弹出面板提示用户。</p>
-</blockquote>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/05/29/zi-dong-hua-ce-shi">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="6">&larr; Older</a>
@@ -584,6 +572,10 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi">Opengl基础之矩阵和坐标</a>
       </li>
     
@@ -597,10 +589,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
     
       <li class="post">
         <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
       </li>
     
   </ul>
@@ -656,7 +644,7 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 <li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
 <li class='category'><a href='/blog/categories/mode/'>mode (1)</a></li>
 <li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
-<li class='category'><a href='/blog/categories/opengl/'>opengl (1)</a></li>
+<li class='category'><a href='/blog/categories/opengl/'>opengl (2)</a></li>
 <li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
 <li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
 <li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>

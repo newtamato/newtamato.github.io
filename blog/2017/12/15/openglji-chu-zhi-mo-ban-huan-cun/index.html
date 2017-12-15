@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>分类:模拟器 - 番茄手册</title>
+  <title>OpenGL基础之模板缓存 - 番茄手册</title>
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="Category: 模拟器">
-  
+  <meta name="description" content="通过cocos2dx的ClippingNode介绍opengl的模板缓存">
+  <meta name="keywords" content="opengl 模板缓存 ClippingNode cocos2dx">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://www.newtomato.me/blog/categories/mo-ni-qi/">
+  <link rel="canonical" href="http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -70,35 +70,267 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">分类:模拟器</h1>
+    
+      
+        <h1 class="entry-title">OpenGL基础之模板缓存</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-12-15T23:50:52+08:00" pubdate data-updated="true"></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：</p>
 
-  
-  <h2>2016</h2>
+<ul>
+  <li>多达四个颜色缓存</li>
+  <li>一个深度缓存</li>
+  <li>一个模板缓存</li>
+  <li>一个多重采样（MSAA）缓存</li>
+  <li>一个或多个辅助缓存</li>
+</ul>
 
-<article>
-  
-<h1><a href="/blog/2016/06/08/hai-ma-mo-ni-qi">在海马模拟器上运行并测试游戏</a></h1>
-<time datetime="2016-06-08T16:34:12+08:00" pubdate><span class='month'>Jun</span> <span class='day'>08</span> <span class='year'>2016</span></time>
+<p>我们今天主要讨论模板缓存。<br />
+模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/android/'>android</a>, <a class='category' href='/blog/categories/shell/'>shell</a>, <a class='category' href='/blog/categories/mo-ni-qi/'>模拟器</a></span>
-</footer>
+<p>通过对cocos2dx里面遮罩裁剪功能的分析，对模板缓存有个初步认识。<br />
+<!--more--></p>
 
+<h2 id="cocos2dx-">cocos2dx 遮罩的实现</h2>
 
-</article>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local TestClippingScene  = class("TestClippingScene",cc.load("mvc").ViewBase)
+</span><span class="line">
+</span><span class="line">function TestClippingScene:onCreate(event)
+</span><span class="line">	local mask = display.newSprite("MainSceneBg.jpg")
+</span><span class="line">	local sencialnode = display.newSprite("BugSpider.png")
+</span><span class="line">
+</span><span class="line">	local clippingNode = cc.ClippingNode:create(sencialnode)
+</span><span class="line">	
+</span><span class="line">            -- clippingNode:setInverted(true) --注释1
+</span><span class="line">            -- clippingNode:setAlphaThreshold(0)--注释2
+</span><span class="line">            clippingNode:addChild(mask)
+</span><span class="line">
+</span><span class="line">            self:addChild(clippingNode)
+</span><span class="line">            clippingNode:setPosition(display.center)
+</span><span class="line">            
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">return TestClippingScene</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>运行上面的代码得到的如下图像。由于没有Alpha测试，导致以图片的矩形为准做遮罩。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1426.png" alt="IMG_1426" /><br />
+将<strong>注释2</strong>的取消掉。就会如下所示。透明区域不起作用。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1427.png" alt="IMG_1427" /></p>
+
+<p>将<strong>注释1</strong>的取消掉，则得到如下的效果:<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1428.png" alt="IMG_1428" /></p>
+
+<p>具体的原理是什么呢？我们需要深入到cocos2dx的源码中。</p>
+
+<h2 id="cocos2dx">cocos2dx中遮罩裁剪的原理</h2>
+
+<h3 id="section">源码阅读</h3>
+
+<p>我们通过阅读ClippingNode.cpp的代码知道，真正实现裁剪的代码是：<code>StencilStateManager::onBeforeVisit()</code></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void StencilStateManager::onBeforeVisit()
+</span><span class="line">{
+</span><span class="line">	...
+</span><span class="line">
+</span><span class="line">	glDepthMask(GL_FALSE);
+</span><span class="line">	RenderState::StateBlock::_defaultState-&gt;setDepthWrite(false);
+</span><span class="line">	
+</span><span class="line">	glStencilFunc(GL_NEVER, mask_layer, mask_layer);
+</span><span class="line">	//这里的意思是无论什么像素都不会通过模板测试，也就是全部像素都会失败。
+</span><span class="line">	glStencilOp(!_inverted ? GL_ZERO : GL_REPLACE, GL_KEEP, GL_KEEP);
+</span><span class="line">	//如果不是_inverted模式，模板填充0，如果是则填充mask_layer。
+</span><span class="line">	//因为上面失败，所以这里如果是普通遮罩，_inverted为false，则模板缓存里面会全部设置成0。
+</span><span class="line">	//那么也就意味着什么都画不上去。
+</span><span class="line">	drawFullScreenQuadClearStencil();    
+</span><span class="line">	//画一个全屏的矩形，整理模板缓存。上面代码执行之后，模板缓存的样子如(图1)
+</span><span class="line">	
+</span><span class="line">	glStencilFunc(GL_NEVER, mask_layer, mask_layer);
+</span><span class="line">	glStencilOp(!_inverted ? GL_REPLACE : GL_ZERO, GL_KEEP, GL_KEEP);
+</span><span class="line">	//如果是普通遮罩，那么像素上面因为失败，这里会全部替换成mask_layer（glStencilFunc的第二个参数）的值。可参考（图2）
+</span><span class="line">	
+</span><span class="line">	//下面是Alpha Test。
+</span><span class="line">	if (_alphaThreshold &lt; 1) {
+</span><span class="line">	#if !CC_CLIPPING_NODE_OPENGLES
+</span><span class="line">	    _currentAlphaTestEnabled = glIsEnabled(GL_ALPHA_TEST);
+</span><span class="line">	    glGetIntegerv(GL_ALPHA_TEST_FUNC, (GLint *)&amp;_currentAlphaTestFunc);
+</span><span class="line">	    glGetFloatv(GL_ALPHA_TEST_REF, &amp;_currentAlphaTestRef);
+</span><span class="line">	    glEnable(GL_ALPHA_TEST);
+</span><span class="line">	    CHECK_GL_ERROR_DEBUG();
+</span><span class="line">	    glAlphaFunc(GL_GREATER, _alphaThreshold);
+</span><span class="line">	#endif
+</span><span class="line">	}
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">//渲染结束，之后把模板状态还原，_currentStencilFunc值都是在执行visit之前从opengl里面获取的值。
+</span><span class="line">void StencilStateManager::onAfterVisit()
+</span><span class="line">{
+</span><span class="line">    glStencilFunc(_currentStencilFunc, _currentStencilRef, _currentStencilValueMask);
+</span><span class="line">    glStencilOp(_currentStencilFail, _currentStencilPassDepthFail, _currentStencilPassDepthPass);
+</span><span class="line">    glStencilMask(_currentStencilWriteMask);
+</span><span class="line">    if (!_currentStencilEnabled)
+</span><span class="line">    {
+</span><span class="line">        glDisable(GL_STENCIL_TEST);
+</span><span class="line">    }
+</span><span class="line">    s_layer--;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h3 id="section-1">关键函数：</h3>
+
+<ol>
+  <li><code>glStencilFunc</code>:用来规定是否通过了 <code>stencil test</code> 的规则。<br />
+<code>glStencilFunc</code>的原形是: <code>glStencilFunc( GLenum func, GLint ref, GLuint mask)</code>;<br />
+函数意义：指定模板测试比较函数，<strong>模板值</strong>与要写入的<strong>像素值</strong>做与操作，然后得到的结果，用第一个参数指定的函数和第二参数进行比较。如果满足则通过了模板测试。可以写入。否则不满足。</li>
+  <li><code>glStencilOp</code>:向<code>stencil buffer</code> 中写内容的规则。<br />
+<code>glStencilOp</code>(GLenum fail , GLenum zfail, GLenum zPss );<br />
+函数意义：当某些图元在绘制的时候,如果模板测试失败(或者深度测试失败),它怎么修改其打算写入的位置的模板值</li>
+</ol>
+
+<p>如果是不调用了<code>setInverted</code>的话。就如下图所示。<br />
+(图1)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-1.png" alt="1" />(图2)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-0.png" alt="0" /></p>
+
+<p>调用<code>setInverted(true)</code>则如下图所示：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-a.png" alt="a" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-b.png" alt="b" /></p>
+
+<p>鉴于此，我们知道将要draw上去的不会通过模板测试，但是却会将模板留下他的形状（凡是为1的地方才会被绘制）。接下来在绘制其他形状的东西时候。在模板测试这里，直接就会按照模板的样子draw出来。<br />
+因此遮罩效果就有了！</p>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-12-15T23:50:52+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/opengl/'>opengl</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun" data-via="" data-counturl="http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi" title="Previous Post: opengl基础之矩阵和坐标">&laquo; opengl基础之矩阵和坐标</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>

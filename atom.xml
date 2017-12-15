@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-09T20:32:40+08:00</updated>
+  <updated>2017-12-16T00:04:11+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,11 +14,203 @@
 
   
   <entry>
+    <title type="html"><![CDATA[OpenGL基础之模板缓存]]></title>
+    <link href="http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun"/>
+    <updated>2017-12-15T23:50:52+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun</id>
+    <content type="html"><![CDATA[<p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：</p>
+
+<ul>
+  <li>多达四个颜色缓存</li>
+  <li>一个深度缓存</li>
+  <li>一个模板缓存</li>
+  <li>一个多重采样（MSAA）缓存</li>
+  <li>一个或多个辅助缓存</li>
+</ul>
+
+<p>我们今天主要讨论模板缓存。<br />
+模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
+
+<p>通过对cocos2dx里面遮罩裁剪功能的分析，对模板缓存有个初步认识。<br />
+<!--more--></p>
+
+<h2 id="cocos2dx-">cocos2dx 遮罩的实现</h2>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local TestClippingScene  = class("TestClippingScene",cc.load("mvc").ViewBase)
+</span><span class="line">
+</span><span class="line">function TestClippingScene:onCreate(event)
+</span><span class="line">	local mask = display.newSprite("MainSceneBg.jpg")
+</span><span class="line">	local sencialnode = display.newSprite("BugSpider.png")
+</span><span class="line">
+</span><span class="line">	local clippingNode = cc.ClippingNode:create(sencialnode)
+</span><span class="line">	
+</span><span class="line">            -- clippingNode:setInverted(true) --注释1
+</span><span class="line">            -- clippingNode:setAlphaThreshold(0)--注释2
+</span><span class="line">            clippingNode:addChild(mask)
+</span><span class="line">
+</span><span class="line">            self:addChild(clippingNode)
+</span><span class="line">            clippingNode:setPosition(display.center)
+</span><span class="line">            
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">return TestClippingScene</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>运行上面的代码得到的如下图像。由于没有Alpha测试，导致以图片的矩形为准做遮罩。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1426.png" alt="IMG_1426" /><br />
+将<strong>注释2</strong>的取消掉。就会如下所示。透明区域不起作用。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1427.png" alt="IMG_1427" /></p>
+
+<p>将<strong>注释1</strong>的取消掉，则得到如下的效果:<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1428.png" alt="IMG_1428" /></p>
+
+<p>具体的原理是什么呢？我们需要深入到cocos2dx的源码中。</p>
+
+<h2 id="cocos2dx">cocos2dx中遮罩裁剪的原理</h2>
+
+<h3 id="section">源码阅读</h3>
+
+<p>我们通过阅读ClippingNode.cpp的代码知道，真正实现裁剪的代码是：<code>StencilStateManager::onBeforeVisit()</code></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+<span class="line-number">41</span>
+<span class="line-number">42</span>
+<span class="line-number">43</span>
+<span class="line-number">44</span>
+<span class="line-number">45</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">void StencilStateManager::onBeforeVisit()
+</span><span class="line">{
+</span><span class="line">	...
+</span><span class="line">
+</span><span class="line">	glDepthMask(GL_FALSE);
+</span><span class="line">	RenderState::StateBlock::_defaultState-&gt;setDepthWrite(false);
+</span><span class="line">	
+</span><span class="line">	glStencilFunc(GL_NEVER, mask_layer, mask_layer);
+</span><span class="line">	//这里的意思是无论什么像素都不会通过模板测试，也就是全部像素都会失败。
+</span><span class="line">	glStencilOp(!_inverted ? GL_ZERO : GL_REPLACE, GL_KEEP, GL_KEEP);
+</span><span class="line">	//如果不是_inverted模式，模板填充0，如果是则填充mask_layer。
+</span><span class="line">	//因为上面失败，所以这里如果是普通遮罩，_inverted为false，则模板缓存里面会全部设置成0。
+</span><span class="line">	//那么也就意味着什么都画不上去。
+</span><span class="line">	drawFullScreenQuadClearStencil();    
+</span><span class="line">	//画一个全屏的矩形，整理模板缓存。上面代码执行之后，模板缓存的样子如(图1)
+</span><span class="line">	
+</span><span class="line">	glStencilFunc(GL_NEVER, mask_layer, mask_layer);
+</span><span class="line">	glStencilOp(!_inverted ? GL_REPLACE : GL_ZERO, GL_KEEP, GL_KEEP);
+</span><span class="line">	//如果是普通遮罩，那么像素上面因为失败，这里会全部替换成mask_layer（glStencilFunc的第二个参数）的值。可参考（图2）
+</span><span class="line">	
+</span><span class="line">	//下面是Alpha Test。
+</span><span class="line">	if (_alphaThreshold &lt; 1) {
+</span><span class="line">	#if !CC_CLIPPING_NODE_OPENGLES
+</span><span class="line">	    _currentAlphaTestEnabled = glIsEnabled(GL_ALPHA_TEST);
+</span><span class="line">	    glGetIntegerv(GL_ALPHA_TEST_FUNC, (GLint *)&amp;_currentAlphaTestFunc);
+</span><span class="line">	    glGetFloatv(GL_ALPHA_TEST_REF, &amp;_currentAlphaTestRef);
+</span><span class="line">	    glEnable(GL_ALPHA_TEST);
+</span><span class="line">	    CHECK_GL_ERROR_DEBUG();
+</span><span class="line">	    glAlphaFunc(GL_GREATER, _alphaThreshold);
+</span><span class="line">	#endif
+</span><span class="line">	}
+</span><span class="line">}
+</span><span class="line">
+</span><span class="line">//渲染结束，之后把模板状态还原，_currentStencilFunc值都是在执行visit之前从opengl里面获取的值。
+</span><span class="line">void StencilStateManager::onAfterVisit()
+</span><span class="line">{
+</span><span class="line">    glStencilFunc(_currentStencilFunc, _currentStencilRef, _currentStencilValueMask);
+</span><span class="line">    glStencilOp(_currentStencilFail, _currentStencilPassDepthFail, _currentStencilPassDepthPass);
+</span><span class="line">    glStencilMask(_currentStencilWriteMask);
+</span><span class="line">    if (!_currentStencilEnabled)
+</span><span class="line">    {
+</span><span class="line">        glDisable(GL_STENCIL_TEST);
+</span><span class="line">    }
+</span><span class="line">    s_layer--;
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<h3 id="section-1">关键函数：</h3>
+
+<ol>
+  <li><code>glStencilFunc</code>:用来规定是否通过了 <code>stencil test</code> 的规则。<br />
+<code>glStencilFunc</code>的原形是: <code>glStencilFunc( GLenum func, GLint ref, GLuint mask)</code>;<br />
+函数意义：指定模板测试比较函数，<strong>模板值</strong>与要写入的<strong>像素值</strong>做与操作，然后得到的结果，用第一个参数指定的函数和第二参数进行比较。如果满足则通过了模板测试。可以写入。否则不满足。</li>
+  <li><code>glStencilOp</code>:向<code>stencil buffer</code> 中写内容的规则。<br />
+<code>glStencilOp</code>(GLenum fail , GLenum zfail, GLenum zPss );<br />
+函数意义：当某些图元在绘制的时候,如果模板测试失败(或者深度测试失败),它怎么修改其打算写入的位置的模板值</li>
+</ol>
+
+<p>如果是不调用了<code>setInverted</code>的话。就如下图所示。<br />
+(图1)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-1.png" alt="1" />(图2)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-0.png" alt="0" /></p>
+
+<p>调用<code>setInverted(true)</code>则如下图所示：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-a.png" alt="a" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-b.png" alt="b" /></p>
+
+<p>鉴于此，我们知道将要draw上去的不会通过模板测试，但是却会将模板留下他的形状（凡是为1的地方才会被绘制）。接下来在绘制其他形状的东西时候。在模板测试这里，直接就会按照模板的样子draw出来。<br />
+因此遮罩效果就有了！</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[opengl基础之矩阵和坐标]]></title>
     <link href="http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi"/>
     <updated>2017-12-09T20:07:39+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi</id>
-    <content type="html"><![CDATA[<p>作为游戏开发者，我们将任何显示对象放到舞台上的时候，可能都没有想到在这后面有一套复杂又快速的东西保证了我们能够立马看到想要的效果。而这里背后的东西，我们称之为渲染引擎。</p>
+    <content type="html"><![CDATA[<p>[TOC]</p>
+
+<p>作为游戏开发者，我们将任何显示对象放到舞台上的时候，可能都没有想到在这后面有一套复杂又快速的东西保证了我们能够立马看到想要的效果。而这里背后的东西，我们称之为渲染引擎。</p>
 
 <p><code>cocos2dx</code>使用便是<code>opengl</code>的图形编程接口。我们想要彻底搞懂cocos2dx，就需要了解opengl。而这里会介绍<code>opengl</code>矩阵和坐标的基础知识，最后搞明白上面提到的问题，一张图片是怎么渲染到舞台上的。</p>
 
@@ -2010,241 +2202,6 @@ BEGIN failed--compilation aborted at /usr/local/git/libexec/git-core/git-svn lin
 6. 场景加载。<br />
 7. 实例化面板。<br />
 8. 事件通知。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用GoDot引擎制作一款mini小游戏]]></title>
-    <link href="http://www.newtomato.me/blog/2017/05/23/shi-yong-godot"/>
-    <updated>2017-05-23T16:33:36+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/05/23/shi-yong-godot</id>
-    <content type="html"><![CDATA[<p>Godot是一款高级，多功能，跨平台的2D和3D开源游戏引擎。其基本功能和Unity类似。<br />
-他采用GDScript脚本语言，语法类似Python。简单易学。开发IDE工具体积很小，支持功能复杂，包括UI编辑，动画编辑，光照，Shader，寻路导航。不同类型碰撞检测等。</p>
-
-<p>今天我们就通过一个小游戏来熟悉一下这个引擎。小游戏的效果如下</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-hunter.gif" alt="hunte" /></p>
-
-<p>这是个2D的游戏，玩家控制英雄四处移动旋转，控制开枪，消灭包围过来的敌人。<br />
-<!--more--></p>
-
-<p>需要考虑的问题有</p>
-
-<ol>
-  <li>制作UI，上面有是哪个lable。</li>
-  <li>多点触摸，如何同时控制两个左右两个控制器。左边控制移动旋转，右侧控制开枪</li>
-  <li>敌人的生成和目标追踪。</li>
-  <li>数据更新。例如上面杀死的敌人数量是有变化的。</li>
-</ol>
-
-<h3 id="section">游戏结构介绍</h3>
-
-<p>游戏的场景结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955237845110.jpg" alt="=w300" /></p>
-
-<p>整个root下面有一个大的节点Node2D,TextureFrame被我用来做背景。Player就是我们将要控制的英雄。<br />
-animal_layer是敌人层。所有敌人都被放到这里，便于管理和控制。Timer是用来计时，用于每隔1秒开始生成新的敌人逻辑。info和info2以及fps都是界面上UI的展示。console就是我们的控制器。<br />
-在这张图上可以看到有三个节点绑定了脚本，一个是Node2D，用于管理和生成敌人。一个是Player，另外一个是console。</p>
-
-<p>Player上多一个影片剪辑一样的图标，这表示他里面还有子元件，双击它打开，里面的样式如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955241457399.jpg" alt="=w300" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955244267190.jpg" alt="=w100" /></p>
-
-<p>AnimatedSprite是一个类似序列帧一样的动画，可以程序控制固定展示第几张图片。我这里有三张图片，一张是表示idel状态，一张是奔跑状态，还有一张是开枪状态。默认是第一张，开枪则会设置set_frame(2)这样展示第三种状态了。</p>
-
-<p>firePosition是一个点，用来占位。开枪之后，子弹会从这个地方发射。</p>
-
-<h3 id="section-1">英雄控制</h3>
-
-<p>OK，下面我们来说一下，最有意思的地方，那就是如何控制移动和旋转英雄。<br />
-移动的函数是<code>set_pos()</code>,<code>translate()</code>。旋转的函数是<code>set_rot(),set_rotd()</code>,一个是控制弧度，一个是控制角度。</p>
-
-<p>我采用的是set_pos()，和set_rot(),</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">angle = 玩家触摸的目标点和当前位置之间的夹角
-</span><span class="line">directionVector = 当前位置到玩家触摸点的方向向量
-</span><span class="line">get_node("Player").set_pos(directionVector * SPEED * delta)
-</span><span class="line">get_node("Player").set_rot(angle)</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>上述代码需要求得angle和directionVector，有了这两个变量，Player就可以受我们的控制了。而这两个变量刚好是<code>console</code>这个节点负责提供的。<br />
-console的样式如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955248782400.jpg" alt="=w300" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955248919593.jpg" alt="=w300" /></p>
-
-<p>玩家触摸左边的控制器，（确切说是整个控制器一分为2，触摸整个左侧任何位置），根据触摸的点，和圆中心的点，可以计算得到angle和directionVector。<br />
-触摸右边的控制器，控制开火。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">func _input(event):
-</span><span class="line">	if event.type == InputEvent.MOUSE_BUTTON:
-</span><span class="line">		if event.is_pressed():
-</span><span class="line">			pass
-</span><span class="line">		else:
-</span><span class="line">			get_node("touch").set_pos(Vector2(0,0))
-</span><span class="line">			get_parent().get_node("Player").set_walking(false);
-</span><span class="line">	if event.type == InputEvent.MOUSE_MOTION :
-</span><span class="line">		if Input.is_mouse_button_pressed(BUTTON_LEFT) :
-</span><span class="line">			if event.pos.x &gt; get_viewport_rect().size.width/2:
-</span><span class="line">				return
-</span><span class="line">			get_parent().get_node("Player").set_walking(true);
-</span><span class="line">			var localPos = get_local_mouse_pos() 
-</span><span class="line">			var maxRadius = self.get_texture().get_width()/2;
-</span><span class="line">			var minRadius = self.get_node("touch").get_texture().get_width()/2;
-</span><span class="line">			var offset = maxRadius - minRadius
-</span><span class="line">			var startPos = Vector2(0,0)
-</span><span class="line">			var distance = localPos.distance_to(startPos)
-</span><span class="line">			var direction = (localPos - startPos).normalized()
-</span><span class="line">			if distance &gt;= offset:
-</span><span class="line">				localPos = direction * offset;
-</span><span class="line">	
-</span><span class="line">			get_node("touch").set_pos(localPos);
-</span><span class="line">			
-</span><span class="line">			var angle = localPos.angle_to_point(startPos);
-</span><span class="line">			get_parent().get_node("Player").set_rot(angle)
-</span><span class="line">			get_parent().get_node("Player").set_direction(direction);
-</span><span class="line">			
-</span><span class="line">	if event.type == InputEvent.SCREEN_TOUCH:
-</span><span class="line">		#_point[event.index] = {pressed = event.pressed,pos = event.pos}
-</span><span class="line">		var event2 = get_node("aim").make_input_local(event)
-</span><span class="line">		if get_node("aim").get_item_and_children_rect().has_point(event2.pos):
-</span><span class="line">			if event2.pressed == true:
-</span><span class="line">				#get_node("aim").set_scale(Vector2(0.5,0.5))
-</span><span class="line">				get_parent().get_node("Player").startToShoot()
-</span><span class="line">			else:
-</span><span class="line">				get_node("aim").set_scale(Vector2(1,1))
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这里我用的是mouse_motion来计算玩家的对左侧控制器的控制。由于是多点触摸InputEvent.SCREEN_TOUCH会派发多次，程序可以通过event.index来追踪用的是那个点被点击了。index=0，表示第一个点被点击，index=1，表示第二个点被点击，然后通过event.is_pressed()来检查是否是玩家松开了手指。</p>
-
-<p>至于怎么打开多点触摸，在godot这里模拟器中还没有找到合适的方法，我的做法是编译好pck，运行到ios的模拟器上，这样测试。比较麻烦一些吧。</p>
-
-<h3 id="section-2">敌人的生成</h3>
-
-<p>为了简单，敌人的生成是没有做缓存池机制的。通过Timer,每隔一秒创建一个敌人，然后添加到animal_layer上面。将Player节点传递给敌人。敌人通过updater函数去追踪player的位置。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">var enemy = preload("res://hunter/AnimalArea2D.tscn").instance()
-</span><span class="line">enemy.connect("enemy_dead_signal",self,"_on_enemy_dead_handler");
-</span><span class="line">enemy.set_target(get_node("Player"))
-</span><span class="line">_index += 1
-</span><span class="line">enemy.set_name("animal_%d" % _index)
-</span><span class="line">get_node("animal_layer").add_child(enemy)
-</span><span class="line">enemy.set_pos(pos)</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>敌人的追踪代码如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">func _process(delta):
-</span><span class="line">	if _target != null and _target extends preload("res://hunter/Player.gd"):
-</span><span class="line">		var pos = _target.get_global_pos()
-</span><span class="line">		look_at(pos)
-</span><span class="line">		if _isDead == true:
-</span><span class="line">			return
-</span><span class="line">
-</span><span class="line">		var distance = pos - get_global_pos()
-</span><span class="line">		if distance.length() &lt; 80:
-</span><span class="line">			return
-</span><span class="line">		translate(distance.normalized() * delta * SPEED)</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>敌人的结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955257583598.jpg" alt="=w200" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955257655740.jpg" alt="=w300" /></p>
-
-<p>敌人里面多了几个UI组件。一个是进度条，用于控制血量的展示。一个是爆炸效果。被子弹击中之后，触发这个效果。name的Lable组件。还有一个就是碰撞区域，上面蓝色的圆形区域。用于检测子弹是否碰撞到敌人身上。<br />
-子弹的结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955260774599.jpg" alt="" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955260863005.jpg" alt="=w300" /></p>
-
-<p>因此当子弹进入到敌人的圆形区域后，会触发body_enter事件。我们可以通过这个事件判定是否被击中了。</p>
-
-<p>上面创建敌人的时候，敌人connect了一个<strong>信号</strong>（事件），就是<code>enemy_dead_signal</code>，这个事件如果触发了会被<code>_on_enemy_dead_handler</code>接收到然后处理。</p>
-
-<p>这个信号怎么派发的？和事件一样，那么怎么携带参数呢？</p>
-
-<p>下面我们就开始说一下第四条，怎么处理数据更新。</p>
-
-<h3 id="section-3">数据更新</h3>
-<p><code>enemy_dead_signal</code>是一个信号，而不是一个简单的字符串。在GDScript语法中，定义一个信号的语法如下：</p>
-
-<p><code>signal enemy_dead_signal</code></p>
-
-<p>这样enemy_dead_signal就被做成了信号，但是也只有定义它的组件可以派发。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">emit_signal("enemy_dead_signal"）</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>这里派发信号，用的又是字符串enemy_dead_signal，因此在我看来，enemy_dead_signal是相当于信号的name，具有唯一性。信号名不能再同一个对象上重复。它应该是挂在对象这个空间里，根据信号名找到真正的信号。然后把信号发射出去。</p>
-
-<p>如何携带参数呢？那就需要修改信号的定义了。修改如下</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">signal enemy_dead_signal(val1,val2,...)</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这样我们发射信号就将参数放在后面即可。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">emit_signal("enemy_dead_signal",参数1，参数2）</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这样当我们收到敌人死亡的信号，将数据更新。然后 get_node(“info2”).set_text( 死亡敌人数 : num_dead)</p>
-
-<h3 id="section-4">结语</h3>
-
-<p>这个游戏大致的结构和核心的代码差不多已经讲完。可以看到godot将一切都看成是node，node绑定脚本。脚本负责逻辑。因此脚本可能会非常大。不方便维护，不像是unity组件化的思想，逻辑拆分成不同组件。方便维护。<br />
-相对unity，godot显得有点小众。不过，对于开发一个独立游戏，除了rpgMaker，GMS之外，又多了一个这样的开源引擎，还是不错的。<br />
-感兴趣的同学们，移步到官方<a href="https://godotengine.org/news">网站</a>去看看，他们一直在努力做新的东西。</p>
 
 ]]></content>
   </entry>
