@@ -5,20 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>怎么控制镜头跟随人物移动 - 番茄手册</title>
+  <title>openGL基础之透视投影矩阵 - 番茄手册</title>
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？
-我们从简入手，开始说一下怎么控制镜头的移动。
-这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！ 开始入手 镜头移动是需要控制镜头的位置随着英雄的位置变动而变动。
-因此有下面的代码： 1
-2
-3
-4
-5
-6 &hellip;">
-  
+  <meta name="description" content="将透视投影矩阵一步一步推导出来">
+  <meta name="keywords" content="openGL 透视投影矩阵">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -26,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">
+  <link rel="canonical" href="http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -83,7 +75,7 @@
   <header>
     
       
-        <h1 class="entry-title">怎么控制镜头跟随人物移动</h1>
+        <h1 class="entry-title">openGL基础之透视投影矩阵</h1>
       
     
     
@@ -100,102 +92,105 @@
   
 
 
-<time datetime="2017-05-14T17:48:56+08:00" pubdate data-updated="true"></time>
+<time datetime="2017-12-16T18:12:54+08:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p>在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？<br />
-我们从简入手，开始说一下怎么控制镜头的移动。<br />
-这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！<br />
-<img src="http://wx2.sinaimg.cn/mw690/805c3d47ly1fevq3bkj1mg206y06y4ql.gif" alt="" /></p>
+<div class="entry-content"><p>今天我们来讲解一下怎么推导投影矩阵。投影矩阵的作用是剔除不在锥视体内的坐标，同时将锥视体内的坐标转换为标准化设备坐标。</p>
 
-<h2 id="section">开始入手</h2>
+<p>投影矩阵分为两种，一种是2D常用的正交投影，另外一种就是3D游戏常用的透视投影，透视投影更符合我们对现实世界的模拟。</p>
 
-<p>镜头移动是需要控制镜头的位置随着英雄的位置变动而变动。<br />
-因此有下面的代码：<br />
-<!--more--></p>
+<p>正如上篇博文说道坐标转换的过程。如下图所示：</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15128199931966.jpg" alt="-" /></p>
+
+<p>而<strong>透视矩阵</strong>是透视除法的核心。<br />
+按照 <code>P(NDC) = M(透视矩阵) * P(C)</code>的公式如（图1），就能将裁剪坐标转为规范化坐标。</p>
+
+<!--more-->
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126253778019_1.jpg" alt="-w150" /><br />
+(图1)</p>
+
+<p>带e下标的表示摄像机坐标，即通过<code>模型矩阵*摄像机矩阵*物体本地坐标</code>计算得来的坐标<br />
+带c下标的标示剪裁坐标，P是投影矩阵。<br />
+带n下标的是设备标准化坐标，标准化坐标的范围在[-1,1]内，所以需要将裁剪坐标归一化处理。<br />
+最终根据<code>glViewPort()</code>传递过来的屏幕大小和上面的标准化坐标，便能转换成屏幕标准。</p>
+
+<h3 id="section">透视锥视体</h3>
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126256321092.jpg" alt="-w300" /><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126418783276.jpg" alt="-w300" /><br />
+锥视体有<strong>near，far，宽高比以及fov(field of view，可以看成是视角)</strong>来决定箱体的大小。<br />
+只要控制任何一个变量，都能让锥视体变化。<br />
+上图中，坐标原点假设在（0，0，0）,那么近平面的中心点在(0,0,near),远平面的中心同理在（0，0，far）</p>
+
+<h2 id="section-1">透视矩阵推导</h2>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126252106319.jpg" alt="-w350" /><br />
+在上图，对near进行划分，l=&gt;left,t=&gt;top,r=&gt;right,b=&gt;bottom。<br />
+则如果我们从上面往下看这个锥视体。只有<strong>xz</strong>这个平面。</p>
+
+<p>有三角形相似性，我们得知：<code>Ze/Zp = Xe/Xp</code>。<br />
+我们使用的是near平面。所以Zp的大小是near。方向是z负轴，所有<code>Zp=-n</code>，带入到上面公式，<code>Xp = -n* Xe/Ze</code>。如下图所示：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134146322302.png" alt="-w200" /><br />
+同理，我们可以求得<code>Yp</code>（从X轴看向去，只有YZ平面）。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134147063339.png" alt="" /><br />
+因此将一个点投影到锥视体的近平面的坐标（Xp,Yp,Zp）便计算出来。接下来计算这个P点坐标和规范化设备坐标的转换。P坐标的x,y最终要转换成[-1,1]区间。如下图所示，横轴是以Xp为轴，纵轴是Xn。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134159083184.jpg" alt="-w200" /><br />
+因此他们满足的关系是二元一次方程:<code>Xn = k*Xp + b</code></p>
+
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 <span class="line-number">2</span>
 <span class="line-number">3</span>
 <span class="line-number">4</span>
 <span class="line-number">5</span>
 <span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">public class SimpleFollower : MonoBehaviour {
-</span><span class="line">	public Transform target;
-</span><span class="line">	void Update () {
-</span><span class="line">		transform.position = target.position;
-</span><span class="line">	}
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>target就是英雄，把这个组件拖到英雄身上。移动英雄。看看效果。<br />
-是不是发现镜头嵌在了英雄身上，英雄的position的中心点在身体重心上，这是镜头也在这。因为出现嵌入感。所以应该增加一个偏移量offset。</p>
-
-<p>一般我们在场景中先设置好镜头和英雄的偏移。在代码中可以计算得到。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">private Vector3 _deltaPosition；
-</span><span class="line">void Start () {
-</span><span class="line">	_deltaPosition = transform.position - target.position;
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>英雄在移动中需要将这个偏移量也一并计算在内。</p>
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">transform.position = target.position + _deltaPosition;</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>此时运行unity，镜头跟随没问题了。但是还有个问题就是此时玩家如果左右移动，镜头就又出现问题了。我们需要镜头一直在人身后做跟随。即使人物左右移动，镜头也要左右移动才更好。<br />
-因此代码还需要优化。就是增加旋转的考虑。</p>
-
-<p>假设我们只考虑玩家左右渲染，即围绕Y轴的旋转。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">float yAngle = target.rotation.eulerAngles.y;
-</span><span class="line">Quaternion quat = Quaternion.Euler (0, yAngle, 0);
-</span><span class="line">transform.position = target.position + _deltaPosition * quat;</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这样运行之后，镜头确实随着移动，但是表现不够自然。因此就需要用到Lerp函数。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">transform.position = Vector3.Lerp(transform.position,target.position + _deltaPosition * quat,Time.deltaTime);</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>同样的上面计算的旋转角度也可以使用Lerp函数。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">float yAngle = Mathf.Lerp (transform.rotation.eulerAngles.y,target.rotation.eulerAngles.y,Time.deltaTime * damping);
-</span><span class="line">Quaternion quat = Quaternion.Euler (0, yAngle, 0);
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">1  = k*r + b
+</span><span class="line">-1 = k*l + b
 </span><span class="line">
-</span><span class="line">transform.position = Vector3.Lerp(transform.position,target.position + _deltaPosition * quat,Time.deltaTime);
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+</span><span class="line">k = 2/(r -l)
+</span><span class="line">b = -k(r+l)/2
+</span><span class="line">
+</span><span class="line">Xn = 2/(r-l)*Xp - (r+l)/(r-l)</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<h2 id="section-1">可选阅读</h2>
-
-<p>在FPS游戏中，有输入设备可控制英雄的移动，例如手柄，键盘等。我们这里使用鼠标控制英雄的旋转。</p>
+<p>同理Yn和Yp之间的关系也是如此。</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">_horizontalRotation += Mathf.Clamp(Input.GetAxis("Mouse X"), -1, 1)* rotateSpeed * Time.deltaTime;
-</span><span class="line">_horizontalRotation = Mathf.Clamp (_horizontalRotation, -90, 90);
-</span><span class="line">target.transform.rotation = Quaternion.Euler (0, _horizontalRotation, 0);</span></code></pre></td></tr></table></div></figure></notextile></div>
+</pre></td><td class="code"><pre><code class=""><span class="line">Yn = 2/(t-b) * Yp - (t+b)/(t-b)</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p>此处_horizontalRotation用于记录英雄的旋转角度。这里做了个限制，英雄旋转不能超过左转90度和右转90度。<br />
-rotateSpeed是旋转速度。每秒钟旋转多少。<br />
-通过Quaternion.Euler计算一个旋转四元数，用来控制英雄的旋转。</p>
+<p>将上面Xp,Yp的公式带入到Xn,Yn中。如果下图所示：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134168329201_2.jpg" alt="-w200" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134168191851_2.jpg" alt="-w200" /><br />
+在最上面的公式，我们知道<code>Xn=Xc/Wc</code>,所以设<code>Wc=Ze</code>。推导出矩阵如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134170212170.jpg" alt="" /><br />
+矩阵中第三行还没有解决。<br />
+Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
+我们对上面的矩阵进行修改，用来计算Zn和Ze之间的关系。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134174579880.jpg" alt="" /><br />
+在摄像机矩阵中We等于1，因此上面公式可以简化。<br />
+同时Zp=-near的时候，Zn=-1，Zp=-far的时候，Zn=1。<br />
+通过上述条件。我们计算得知：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134176793143.jpg" alt="-w200" /></p>
 
-<h2 id="section-2">结语</h2>
-<p>上面旋转用到了矩阵和向量的乘法运算。将一个坐标转换到另一个坐标。其他的都是通过Lerp和Clamp对数据进行处理。</p>
+<p>所以投影矩阵最终的样子如下：</p>
 
-<p>总体来说，为了达到那种顺畅的动作，需要增加其他Vector3的转换以及fieldOfView来增加动感。如有兴趣大家可以把Unity官方的镜头跟随代码打开看看。</p>
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134182206777_2.png" alt="" /><br />
+由于锥视体都是对称的。因此r和l的值相等。t和b的值相等。上面的公式又可以转化为：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134184015016_2.jpg" alt="" /></p>
+
+<p>到此投影矩阵的推导基本完成。</p>
+
+<p>工作中常用到投影，却很少为此深入了解。知其然最好能知其所以然。为此研读各类资料，在此整理出来，既是对自己的一个总结，也希望借此捋一捋这方面的知识。了解之后，对opengl以及图像学会有不同看问题的角度。如上面有误，还请不吝指出。</p>
+
+<h2 id="section-2">参考文档</h2>
+
+<ol>
+  <li><a href="https://www.cnblogs.com/graphics/archive/2012/07/25/2582119.html">透视投影详解</a></li>
+  <li><a href="http://www.songho.ca/opengl/gl_projectionmatrix.html">OpenGL Projection Matrix</a></li>
+</ol>
 
 </div>
 
@@ -219,12 +214,12 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
   
 
 
-<time datetime="2017-05-14T17:48:56+08:00" pubdate data-updated="true"></time>
+<time datetime="2017-12-16T18:12:54+08:00" pubdate data-updated="true"></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/quaternion/'>quaternion</a>, <a class='category' href='/blog/categories/unity/'>unity</a>, <a class='category' href='/blog/categories/vector3/'>vector3</a>
+    <a class='category' href='/blog/categories/opengl/'>opengl</a>
   
 </span>
 
@@ -233,7 +228,7 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui" data-via="" data-counturl="http://www.newtomato.me/blog/2017/05/14/kong-zhi-jing-tou-gen-sui" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen" data-via="" data-counturl="http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen" >Tweet</a>
   
   
   
@@ -242,10 +237,8 @@ rotateSpeed是旋转速度。每秒钟旋转多少。<br />
     
     <p class="meta">
       
-        <a class="basic-alignment left articlenav" href="/blog/2017/04/15/requirehe-re-geng" title="Previous Post: require机制和自动更新之间的爱恨情仇">&laquo; require机制和自动更新之间的爱恨情仇</a>
+        <a class="basic-alignment left articlenav" href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun" title="Previous Post: OpenGL基础之模板缓存">&laquo; OpenGL基础之模板缓存</a>
       
-      
-        <a class="basic-alignment right articlenav" href="/blog/2017/05/14/unity-uguikong-jian" title="Next Post: Unity UGUI控件">Unity UGUI控件 &raquo;</a>
       
     </p>
   </footer>

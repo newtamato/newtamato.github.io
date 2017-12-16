@@ -4,7 +4,7 @@
   <title><![CDATA[分类:opengl | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/opengl/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-16T00:04:11+08:00</updated>
+  <updated>2017-12-16T18:25:57+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,101 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[openGL基础之透视投影矩阵]]></title>
+    <link href="http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen"/>
+    <updated>2017-12-16T18:12:54+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen</id>
+    <content type="html"><![CDATA[<p>今天我们来讲解一下怎么推导投影矩阵。投影矩阵的作用是剔除不在锥视体内的坐标，同时将锥视体内的坐标转换为标准化设备坐标。</p>
+
+<p>投影矩阵分为两种，一种是2D常用的正交投影，另外一种就是3D游戏常用的透视投影，透视投影更符合我们对现实世界的模拟。</p>
+
+<p>正如上篇博文说道坐标转换的过程。如下图所示：</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15128199931966.jpg" alt="-" /></p>
+
+<p>而<strong>透视矩阵</strong>是透视除法的核心。<br />
+按照 <code>P(NDC) = M(透视矩阵) * P(C)</code>的公式如（图1），就能将裁剪坐标转为规范化坐标。</p>
+
+<!--more-->
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126253778019_1.jpg" alt="-w150" /><br />
+(图1)</p>
+
+<p>带e下标的表示摄像机坐标，即通过<code>模型矩阵*摄像机矩阵*物体本地坐标</code>计算得来的坐标<br />
+带c下标的标示剪裁坐标，P是投影矩阵。<br />
+带n下标的是设备标准化坐标，标准化坐标的范围在[-1,1]内，所以需要将裁剪坐标归一化处理。<br />
+最终根据<code>glViewPort()</code>传递过来的屏幕大小和上面的标准化坐标，便能转换成屏幕标准。</p>
+
+<h3 id="section">透视锥视体</h3>
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126256321092.jpg" alt="-w300" /><br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126418783276.jpg" alt="-w300" /><br />
+锥视体有<strong>near，far，宽高比以及fov(field of view，可以看成是视角)</strong>来决定箱体的大小。<br />
+只要控制任何一个变量，都能让锥视体变化。<br />
+上图中，坐标原点假设在（0，0，0）,那么近平面的中心点在(0,0,near),远平面的中心同理在（0，0，far）</p>
+
+<h2 id="section-1">透视矩阵推导</h2>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126252106319.jpg" alt="-w350" /><br />
+在上图，对near进行划分，l=&gt;left,t=&gt;top,r=&gt;right,b=&gt;bottom。<br />
+则如果我们从上面往下看这个锥视体。只有<strong>xz</strong>这个平面。</p>
+
+<p>有三角形相似性，我们得知：<code>Ze/Zp = Xe/Xp</code>。<br />
+我们使用的是near平面。所以Zp的大小是near。方向是z负轴，所有<code>Zp=-n</code>，带入到上面公式，<code>Xp = -n* Xe/Ze</code>。如下图所示：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134146322302.png" alt="-w200" /><br />
+同理，我们可以求得<code>Yp</code>（从X轴看向去，只有YZ平面）。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134147063339.png" alt="" /><br />
+因此将一个点投影到锥视体的近平面的坐标（Xp,Yp,Zp）便计算出来。接下来计算这个P点坐标和规范化设备坐标的转换。P坐标的x,y最终要转换成[-1,1]区间。如下图所示，横轴是以Xp为轴，纵轴是Xn。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134159083184.jpg" alt="-w200" /><br />
+因此他们满足的关系是二元一次方程:<code>Xn = k*Xp + b</code></p>
+
+<pre><code>1  = k*r + b
+-1 = k*l + b
+
+k = 2/(r -l)
+b = -k(r+l)/2
+
+Xn = 2/(r-l)*Xp - (r+l)/(r-l)
+</code></pre>
+
+<p>同理Yn和Yp之间的关系也是如此。</p>
+
+<pre><code>Yn = 2/(t-b) * Yp - (t+b)/(t-b)
+</code></pre>
+
+<p>将上面Xp,Yp的公式带入到Xn,Yn中。如果下图所示：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134168329201_2.jpg" alt="-w200" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134168191851_2.jpg" alt="-w200" /><br />
+在最上面的公式，我们知道<code>Xn=Xc/Wc</code>,所以设<code>Wc=Ze</code>。推导出矩阵如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134170212170.jpg" alt="" /><br />
+矩阵中第三行还没有解决。<br />
+Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
+我们对上面的矩阵进行修改，用来计算Zn和Ze之间的关系。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134174579880.jpg" alt="" /><br />
+在摄像机矩阵中We等于1，因此上面公式可以简化。<br />
+同时Zp=-near的时候，Zn=-1，Zp=-far的时候，Zn=1。<br />
+通过上述条件。我们计算得知：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134176793143.jpg" alt="-w200" /></p>
+
+<p>所以投影矩阵最终的样子如下：</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134182206777_2.png" alt="" /><br />
+由于锥视体都是对称的。因此r和l的值相等。t和b的值相等。上面的公式又可以转化为：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134184015016_2.jpg" alt="" /></p>
+
+<p>到此投影矩阵的推导基本完成。</p>
+
+<p>工作中常用到投影，却很少为此深入了解。知其然最好能知其所以然。为此研读各类资料，在此整理出来，既是对自己的一个总结，也希望借此捋一捋这方面的知识。了解之后，对opengl以及图像学会有不同看问题的角度。如上面有误，还请不吝指出。</p>
+
+<h2 id="section-2">参考文档</h2>
+
+<ol>
+  <li><a href="https://www.cnblogs.com/graphics/archive/2012/07/25/2582119.html">透视投影详解</a></li>
+  <li><a href="http://www.songho.ca/opengl/gl_projectionmatrix.html">OpenGL Projection Matrix</a></li>
+</ol>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OpenGL基础之模板缓存]]></title>
@@ -138,6 +233,14 @@ void StencilStateManager::onAfterVisit()
 
 <p>鉴于此，我们知道将要draw上去的不会通过模板测试，但是却会将模板留下他的形状（凡是为1的地方才会被绘制）。接下来在绘制其他形状的东西时候。在模板测试这里，直接就会按照模板的样子draw出来。<br />
 因此遮罩效果就有了！</p>
+
+<h2 id="section-2">参考文档</h2>
+
+<ol>
+  <li><a href="http://www.jianshu.com/p/bed926e53517">OpenGL模板缓存</a></li>
+  <li><a href="http://www.lxway.com/929242951.htm">对模板缓存的一些个人理解</a></li>
+  <li><a href="http://blog.csdn.net/zenny_chen/article/details/5903925">深入了解OpenGL——帧缓存</a></li>
+</ol>
 
 ]]></content>
   </entry>
