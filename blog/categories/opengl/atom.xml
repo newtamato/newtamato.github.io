@@ -4,7 +4,7 @@
   <title><![CDATA[分类:opengl | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/opengl/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-16T18:25:57+08:00</updated>
+  <updated>2017-12-16T18:32:20+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[openGL基础之透视投影矩阵]]></title>
+    <title type="html"><![CDATA[OpenGL基础之透视投影矩阵]]></title>
     <link href="http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen"/>
     <updated>2017-12-16T18:12:54+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen</id>
@@ -113,18 +113,9 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
     <link href="http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun"/>
     <updated>2017-12-15T23:50:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun</id>
-    <content type="html"><![CDATA[<p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：</p>
+    <content type="html"><![CDATA[<p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：多达四个颜色缓存,深度缓存,模板缓存,多重采样（MSAA）缓存,辅助缓存。</p>
 
-<ul>
-  <li>多达四个颜色缓存</li>
-  <li>一个深度缓存</li>
-  <li>一个模板缓存</li>
-  <li>一个多重采样（MSAA）缓存</li>
-  <li>一个或多个辅助缓存</li>
-</ul>
-
-<p>我们今天主要讨论模板缓存。<br />
-模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
+<p>我们今天主要讨论模板缓存。模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
 
 <p>通过对cocos2dx里面遮罩裁剪功能的分析，对模板缓存有个初步认识。<br />
 <!--more--></p>
@@ -246,7 +237,7 @@ void StencilStateManager::onAfterVisit()
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[opengl基础之矩阵和坐标]]></title>
+    <title type="html"><![CDATA[OpenGL基础之矩阵和坐标]]></title>
     <link href="http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi"/>
     <updated>2017-12-09T20:07:39+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi</id>
@@ -431,6 +422,120 @@ void StencilStateManager::onAfterVisit()
   <li><a href="https://learnopengl-cn.readthedocs.io/zh/latest/01%20Getting%20started/08%20Coordinate%20Systems/">learnopengl-cn</a></li>
   <li><a href="https://oncemore2020.github.io/blog/homogeneous/">齐次坐标系入门级思考</a></li>
 </ol>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在xcode上运行OpenGL工程-使用Glitter]]></title>
+    <link href="http://www.newtomato.me/blog/2017/12/03/opengl-glitter"/>
+    <updated>2017-12-03T19:52:27+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/12/03/opengl-glitter</id>
+    <content type="html"><![CDATA[<p>鉴于我们一般都是在<code>https://learnopengl-cn.github.io</code>这里学习opengl。这个开源的工程的example是非常好的学习工程。但是在mac上运行起来还是很麻烦。上面提到了glew，glfw以及glad等还不足以运行这些工程，手动安装其他依赖也是很痛苦的过程。<br />
+但是<code>glitter</code>帮助我们把这些依赖全部都管理起来了。</p>
+
+<p>githud地址<a href="https://github.com/Polytonic/Glitter">在此</a>.</p>
+
+<!--more-->
+
+<p>git clone之后，在终端中输入：</p>
+
+<pre><code>git clone --recursive https://github.com/Polytonic/Glitter
+cd Glitter
+mkdir Build
+cd Build
+cmake -G "Xcode" ..
+</code></pre>
+
+<p>就可以在Build中生成一个xcode工程。</p>
+
+<p>这里我遇到最大的问题就是clone花费了很长时间，但是没有遇到安装失败的情况。<br />
+但是这个工程只是一个壳，我们还需要把learnopengl的源码发进来。<br />
+mac上使用的opengl版本过高以及一些屏幕分辨率的问题，我最终尝试到如下工程的修改刚好适合我的测试。作者对learnopengl的源码做了注释和部分修改。在他职业readme上说明了修改的地方：</p>
+
+<p><code>https://github.com/THISISAGOODNAME/learnopengl-glitter</code></p>
+
+<h2 id="learnopengl">如何运行learnopengl</h2>
+
+<p>为了能够运行这些example工程，我们先创建一个<code>target</code>，例如<code>hello_window</code>，然后将hello_window里面的文件全部都拖放进来。<br />
+此刻的target的hello_window需要配置很多才能运行，为了方便起见，我们直接复制<code>Glitter</code>出来一份，然后改名为hello_window。<br />
+在<code>complie source</code>这里将hello window的文件全部包含进来。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15123014609016.jpg" alt="" /><br />
+然后在scheme中选择hello_window，运行即可。</p>
+
+<h2 id="section">需要注意的问题</h2>
+
+<p>在mac创建一个矩阵对象，默认初始化似乎不正确。<br />
+为了能够正确展示，凡是出现<code>glm::mat4 trans;</code>这样默认初始化的地方，请一律改为了<code>glm::mat4 trans = glm::mat4(1);</code>.</p>
+
+<p>只有这样才能让矩阵转换生效。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-Untitled.gif" alt="" /></p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[在xcode上运行OpenGL工程]]></title>
+    <link href="http://www.newtomato.me/blog/2017/12/03/macshang-openglhuan-jing"/>
+    <updated>2017-12-03T17:36:47+08:00</updated>
+    <id>http://www.newtomato.me/blog/2017/12/03/macshang-openglhuan-jing</id>
+    <content type="html"><![CDATA[<p>学习opengl最基础的方法就是将新手教程的工程先运行起来，实战才能收获经验。<br />
+先介绍我的工作环境。<code>MAC Sierra 10.12.6</code>,<code>xcode 9.2</code>。</p>
+
+<h2 id="section">手动安装依赖库，配置各种环境变量。</h2>
+
+<h3 id="glfwglew">glfw以及glew安装</h3>
+
+<p>自己安装各种依赖工具包，主要有<code>glfw</code>和<code>glew</code>,以及<code>glad</code>。</p>
+
+<p><code>glfw</code>和<code>glew</code>最简单安装方法就是通过<code>brew</code>。</p>
+
+<pre><code>brew install glfw
+brew install glew
+</code></pre>
+
+<p>安装完成之后，会在被存放在<code>/usr/local/Cellar/glew/</code>以及<code>/usr/local/Cellar/glfw</code>这里。</p>
+
+<!--more-->
+
+<h3 id="glad">安装glad</h3>
+
+<p>glad是非常重要的一个工具库，缺失这个库，即使你的工程能够编译通过，也运行不起来。因为opengl的接口函数是需要调用<code>gladLoadGL();</code>被加载进来。</p>
+
+<p>安装的方法：<br />
+	1. 到<a href="http://glad.dav1d.de/">http://glad.dav1d.de/</a>选择,3.3版本的opengl，Profile选择<code>Core</code><br />
+	2. generate a loader。下载zip文件。<br />
+	3. 解压缩之后，待会放到项目中。</p>
+
+<h3 id="xcode">创建一个xcode工程开始配置</h3>
+
+<ol>
+  <li>
+    <p>选择生成一个command line tool工程。</p>
+
+    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122917458581.jpg" alt="=w300" /></p>
+  </li>
+  <li>然后打开<code>Preference-&gt;Locations-&gt;Custom Pathes</code>,设置变量如下：<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122918927071.jpg" alt="" /></li>
+  <li>
+    <p>然后打开<code>Project</code>的基础配置，在<code>Header search paths</code> 和<code>Library search paths</code>这里设置</p>
+
+    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122921103307.jpg" alt="" /></p>
+  </li>
+  <li>
+    <p>最后将上面的glad文件放入到项目中。</p>
+
+    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122933160778.jpg" alt="" /></p>
+  </li>
+  <li>最后配置要编译的库文件</li>
+</ol>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122933998643.jpg" alt="" /><br />
+6. 修改你的main.cpp文件。例如我这边使用<a href="https://pan.baidu.com/s/1bp548Bd">main.cpp 密码:yud8</a>在此。运行工程你应该可以看到一个三角形。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122935323107.jpg" alt="=" /></p>
+
+<p>至此第一种方法，配置mac上opengl的环境已经结束。虽然很费时间。但是这趟流程走下来确实也是值得的。<br />
+下一遍文章我将介绍一个稍微简单的方法。</p>
 
 ]]></content>
   </entry>

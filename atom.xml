@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-16T18:25:57+08:00</updated>
+  <updated>2017-12-16T18:32:20+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,7 +14,7 @@
 
   
   <entry>
-    <title type="html"><![CDATA[openGL基础之透视投影矩阵]]></title>
+    <title type="html"><![CDATA[OpenGL基础之透视投影矩阵]]></title>
     <link href="http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen"/>
     <updated>2017-12-16T18:12:54+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen</id>
@@ -119,18 +119,9 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
     <link href="http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun"/>
     <updated>2017-12-15T23:50:52+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun</id>
-    <content type="html"><![CDATA[<p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：</p>
+    <content type="html"><![CDATA[<p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：多达四个颜色缓存,深度缓存,模板缓存,多重采样（MSAA）缓存,辅助缓存。</p>
 
-<ul>
-  <li>多达四个颜色缓存</li>
-  <li>一个深度缓存</li>
-  <li>一个模板缓存</li>
-  <li>一个多重采样（MSAA）缓存</li>
-  <li>一个或多个辅助缓存</li>
-</ul>
-
-<p>我们今天主要讨论模板缓存。<br />
-模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
+<p>我们今天主要讨论模板缓存。模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
 
 <p>通过对cocos2dx里面遮罩裁剪功能的分析，对模板缓存有个初步认识。<br />
 <!--more--></p>
@@ -313,7 +304,7 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[opengl基础之矩阵和坐标]]></title>
+    <title type="html"><![CDATA[OpenGL基础之矩阵和坐标]]></title>
     <link href="http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi"/>
     <updated>2017-12-09T20:07:39+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi</id>
@@ -503,7 +494,7 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[在xcode上运行opengl工程-使用Glitter]]></title>
+    <title type="html"><![CDATA[在xcode上运行OpenGL工程-使用Glitter]]></title>
     <link href="http://www.newtomato.me/blog/2017/12/03/opengl-glitter"/>
     <updated>2017-12-03T19:52:27+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/03/opengl-glitter</id>
@@ -555,7 +546,7 @@ mac上使用的opengl版本过高以及一些屏幕分辨率的问题，我最�
   </entry>
   
   <entry>
-    <title type="html"><![CDATA[在xcode上运行openGL工程]]></title>
+    <title type="html"><![CDATA[在xcode上运行OpenGL工程]]></title>
     <link href="http://www.newtomato.me/blog/2017/12/03/macshang-openglhuan-jing"/>
     <updated>2017-12-03T17:36:47+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/12/03/macshang-openglhuan-jing</id>
