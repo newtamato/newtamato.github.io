@@ -1,0 +1,419 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>OpenGL基础之普通光照 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="opengl中有三种光照，环境光，漫反射以及镜面光源。
+所有不同物体可以通过的材质（Material）对光照的参数的设置能够达到模拟真实的效果。 三种光照的基本知识，推导公式，以及Material是干什么用的均在learnopengl的教程中已经有详细的介绍， &hellip;">
+  <meta name="keywords" content="OpenGL 光照 Material">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">think</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+   <li><a href="/about2">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">OpenGL基础之普通光照</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-01-07T18:33:45+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>opengl中有三种光照，环境光，漫反射以及镜面光源。<br />
+所有不同物体可以通过的材质（Material）对光照的参数的设置能够达到模拟真实的效果。</p>
+
+<p>三种光照的基本知识，推导公式，以及Material是干什么用的均在<strong>learnopengl</strong>的教程中已经有详细的介绍，我将在这篇博文里面将按照自己的理解整理一下，也好加深自己的理解。</p>
+
+<p>光照对物体的影响是通过他对物体颜色变量的加成而达到效果的。也就是说光照并没有带来新的元素，只是影响了颜色。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">object_color = new_light_color * object_color</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<!--more-->
+<p>对环境光而言，因为大家都收到这个光照的影响。所以环境光ambient是一个常量。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">new_light_color = ambient * light_color * 特殊材质变量</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>对漫反射而言，需要参考下面的图计算发射之后颜色。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-01-07-15153188795257.jpg" alt="" /><br />
+光源的位置<code>light_pos</code>以及当前照射那点的法线向量<code>N</code>（此法线在顶点数据中已经设定好了，一般是出模型Mesh的时候已经包含了进来），他们之间的角度决定这一点的亮度，角度越小，光照越垂直于此点。所以求两个向量之间的夹角。使用向量的点乘。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vec3 light_dir = light_pos - frag_pos
+</span><span class="line">float diff = max(dot(norm, light_dir), 0.0);
+</span><span class="line">vec3 new_light_color = diff * light_color * 特殊材质漫反射变量</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>对于镜面反射而言，和漫反射不同的时候，不仅仅有光源和法线还需要有观察者的位置。因为镜面反射对观察者有影响。观察者位置不同看到的镜面反射也不同。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-01-07-15153193377520.jpg" alt="" /></p>
+
+<p>镜面反射求的是反射光线对观察者的影响，因此就是观察者向量在反射光线向量上的投影。也就是这两个向量之间的夹角。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vec3 eye_dir = normalize(eye_pos - FragPos);
+</span><span class="line">//此处注意，为了便于理解，我这里的light_dir向量方向是从光源到点的方向。因为reflect函数，第一个参数要求就是光源到点的方向。教程中使用的-lightDir，是因为lightDir是从点到光源。
+</span><span class="line">vec3 reflectDir = reflect(light_dir, norm);
+</span><span class="line">float spec = pow(max(dot(reflectDir,eye_dir),0),特殊材质反光度变量)
+</span><span class="line">vec3 new_light_color = spec * light_color * 特殊材质镜面光变量
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>上面三种光照，会产生新的<code>new_light_color</code>，此时全部都作用到object身上就是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vec3 result = (ambient(环境光) + diffuse（漫反射光） + specular（镜面光）) * objectColor;
+</span><span class="line">FragColor = vec4(result, 1.0);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>上面每个光照的公式中均有一个特殊材质变量，这些变量就是材质Material的控制变量。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">struct Material {
+</span><span class="line">    vec3 ambient;
+</span><span class="line">    vec3 diffuse;
+</span><span class="line">    vec3 specular;
+</span><span class="line">    float shininess;
+</span><span class="line">}; 
+</span><span class="line">
+</span><span class="line">uniform Material material;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>通过对三种光照公式的分析，抽取除了材质这样的数据结构。所以在游戏引擎中，我们只要对object选择不同材质，光照就会发生变化，原因仅在于此。<br />
+另外上面还有一个很重要的点需要提出来说一下，就是在计算向量加减的时候，使用的是世界坐标系。<br />
+尤其是在计算法线向量的转换的时候，我们需要将法线向量从模型坐标系转为世界坐标系。使用专门的法线矩阵。也就是模型矩阵左上角3x3矩阵的逆矩阵的转置矩阵。非常拗口的概念。<br />
+对应opengl函数就是<code>normal = mat3(transpose(inverse(model))) * aNormal</code>;<br />
+不对法线向量进行坐标转换，则会导致上面向量不在同一个坐标系，因而加减会出现问题。<br />
+如果不是世界坐标系，是观察者坐标系，则需要将里面的<code>model</code>变为<code>view*mode</code>。</p>
+
+<p>这里分享的是光照的基础知识，还有光照引申出来的不同灯光效果，光照贴图将放到下一章节总结。</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-01-07T18:33:45+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/opengl/'>opengl</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao" data-via="" data-counturl="http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou" title="Previous Post: OpenGL基础之常用调用接口">&laquo; OpenGL基础之常用调用接口</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">OpenGL基础之普通光照</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi">OpenGL基础之矩阵和坐标</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (2)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (6)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
+<li class='category'><a href='/blog/categories/atom/'>atom (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/blend/'>blend (1)</a></li>
+<li class='category'><a href='/blog/categories/bm-subtract/'>bm_subtract (1)</a></li>
+<li class='category'><a href='/blog/categories/box2d/'>box2d (2)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (6)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/djnago-blog-zinnia/'>djnago-blog-zinnia (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
+<li class='category'><a href='/blog/categories/game/'>game (2)</a></li>
+<li class='category'><a href='/blog/categories/gdscript/'>gdscript (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (5)</a></li>
+<li class='category'><a href='/blog/categories/godot/'>godot (1)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/gradle/'>gradle (1)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
+<li class='category'><a href='/blog/categories/jekins/'>jekins (1)</a></li>
+<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
+<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
+<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/linter-luacheck/'>linter-luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/liquidfunc/'>liquidfunc (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
+<li class='category'><a href='/blog/categories/luabing/'>luabing (2)</a></li>
+<li class='category'><a href='/blog/categories/luacheck/'>luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (2)</a></li>
+<li class='category'><a href='/blog/categories/maker/'>maker (2)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/mode/'>mode (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/opengl/'>opengl (7)</a></li>
+<li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (3)</a></li>
+<li class='category'><a href='/blog/categories/quaternion/'>quaternion (1)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/sublime/'>sublime (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
+<li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/人物控制移动/'>人物控制移动 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/胡思乱想/'>胡思乱想 (1)</a></li>
+<li class='category'><a href='/blog/categories/脚本/'>脚本 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化/'>自动化 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/问题/'>问题 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (2)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
+
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

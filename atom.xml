@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2017-12-16T18:32:20+08:00</updated>
+  <updated>2018-01-07T18:40:29+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,324 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[OpenGL基础之普通光照]]></title>
+    <link href="http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao"/>
+    <updated>2018-01-07T18:33:45+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao</id>
+    <content type="html"><![CDATA[<p>opengl中有三种光照，环境光，漫反射以及镜面光源。<br />
+所有不同物体可以通过的材质（Material）对光照的参数的设置能够达到模拟真实的效果。</p>
+
+<p>三种光照的基本知识，推导公式，以及Material是干什么用的均在<strong>learnopengl</strong>的教程中已经有详细的介绍，我将在这篇博文里面将按照自己的理解整理一下，也好加深自己的理解。</p>
+
+<p>光照对物体的影响是通过他对物体颜色变量的加成而达到效果的。也就是说光照并没有带来新的元素，只是影响了颜色。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">object_color = new_light_color * object_color</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<!--more-->
+<p>对环境光而言，因为大家都收到这个光照的影响。所以环境光ambient是一个常量。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">new_light_color = ambient * light_color * 特殊材质变量</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>对漫反射而言，需要参考下面的图计算发射之后颜色。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-01-07-15153188795257.jpg" alt="" /><br />
+光源的位置<code>light_pos</code>以及当前照射那点的法线向量<code>N</code>（此法线在顶点数据中已经设定好了，一般是出模型Mesh的时候已经包含了进来），他们之间的角度决定这一点的亮度，角度越小，光照越垂直于此点。所以求两个向量之间的夹角。使用向量的点乘。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vec3 light_dir = light_pos - frag_pos
+</span><span class="line">float diff = max(dot(norm, light_dir), 0.0);
+</span><span class="line">vec3 new_light_color = diff * light_color * 特殊材质漫反射变量</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>对于镜面反射而言，和漫反射不同的时候，不仅仅有光源和法线还需要有观察者的位置。因为镜面反射对观察者有影响。观察者位置不同看到的镜面反射也不同。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-01-07-15153193377520.jpg" alt="" /></p>
+
+<p>镜面反射求的是反射光线对观察者的影响，因此就是观察者向量在反射光线向量上的投影。也就是这两个向量之间的夹角。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vec3 eye_dir = normalize(eye_pos - FragPos);
+</span><span class="line">//此处注意，为了便于理解，我这里的light_dir向量方向是从光源到点的方向。因为reflect函数，第一个参数要求就是光源到点的方向。教程中使用的-lightDir，是因为lightDir是从点到光源。
+</span><span class="line">vec3 reflectDir = reflect(light_dir, norm);
+</span><span class="line">float spec = pow(max(dot(reflectDir,eye_dir),0),特殊材质反光度变量)
+</span><span class="line">vec3 new_light_color = spec * light_color * 特殊材质镜面光变量
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>上面三种光照，会产生新的<code>new_light_color</code>，此时全部都作用到object身上就是</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">vec3 result = (ambient(环境光) + diffuse（漫反射光） + specular（镜面光）) * objectColor;
+</span><span class="line">FragColor = vec4(result, 1.0);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>上面每个光照的公式中均有一个特殊材质变量，这些变量就是材质Material的控制变量。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">struct Material {
+</span><span class="line">    vec3 ambient;
+</span><span class="line">    vec3 diffuse;
+</span><span class="line">    vec3 specular;
+</span><span class="line">    float shininess;
+</span><span class="line">}; 
+</span><span class="line">
+</span><span class="line">uniform Material material;</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>通过对三种光照公式的分析，抽取除了材质这样的数据结构。所以在游戏引擎中，我们只要对object选择不同材质，光照就会发生变化，原因仅在于此。<br />
+另外上面还有一个很重要的点需要提出来说一下，就是在计算向量加减的时候，使用的是世界坐标系。<br />
+尤其是在计算法线向量的转换的时候，我们需要将法线向量从模型坐标系转为世界坐标系。使用专门的法线矩阵。也就是模型矩阵左上角3x3矩阵的逆矩阵的转置矩阵。非常拗口的概念。<br />
+对应opengl函数就是<code>normal = mat3(transpose(inverse(model))) * aNormal</code>;<br />
+不对法线向量进行坐标转换，则会导致上面向量不在同一个坐标系，因而加减会出现问题。<br />
+如果不是世界坐标系，是观察者坐标系，则需要将里面的<code>model</code>变为<code>view*mode</code>。</p>
+
+<p>这里分享的是光照的基础知识，还有光照引申出来的不同灯光效果，光照贴图将放到下一章节总结。</p>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[OpenGL基础之常用调用接口]]></title>
+    <link href="http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou"/>
+    <updated>2018-01-07T17:13:16+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou</id>
+    <content type="html"><![CDATA[<p>学习opengl的时候，我们经常用到的函数大致有如下几个，这些函数之间奇怪的命名方式一开始总让我们摸不着头脑。例如<code>glGenVertexArrays</code>之后，怎么传递了数据，怎么使用了这些数据？</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">glGenVertexArrays(1, &amp;VAO)
+</span><span class="line">glGenBuffers(1, &amp;VBO);
+</span><span class="line">glBindVertexArray(VAO);
+</span><span class="line">glBindBuffer(GL_ARRAY_BUFFER, VBO);
+</span><span class="line">glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+</span><span class="line">glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+</span><span class="line">glDrawArrays(GL_TRIANGLES, 0, 36);</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>今天我们就梳理一下这些函数的含义。从我理解的角度讲解一下，增加大家对他的印象。<br />
+<!--more--></p>
+
+<p>首先opengl的函数都从<code>glGen*(GLsizei n​, GLuint *objects​)</code>的函数开始，这个函数创建了一个opengl对象，第二个参数就是这个对象的引用。<br />
+对象创建结束之后，还需要给他数据，并且告诉他这个数据的结构。例如我们上面创建的<code>VBO</code>。<br />
+<code>VBO(vertical buffer object)</code>是顶点数据，创建<code>glGenBuffers</code>和激活<code>glBindBuffer</code>之后，我们就可以传递数据<code>(glBufferData)</code>，同时对这个数据进行结构说明<code>(glVertexAttribPointer)指针从哪里开始，步长多少，获取多少数据等</code>。<br />
+这样我们的顶点缓冲数据都会存在VBO这个引用中。<br />
+顶点缓冲数据如此，纹理也是如此，创建<code>glGenTextures</code>，激活<code>glBindTexture</code>以及数据传递<code>glTexImage2D</code>。</p>
+
+<p>经过这些函数数据设置OK，然后调用<code>glDrawArrays</code>，就可以将图像的骨和皮画出来。</p>
+
+<p>接下来说细节，纹理相对简单一些放在后面，顶点数据既然有了<code>VBO</code>，为什么要使用<code>VAO（Vertex Array Object）</code>呢？因为一般情况下，一个显示物体不仅仅有一个或者一种VBO，还有有<code>EBO（他另一个名字是IBO）</code>。因此开发者考虑能不能将一个物体用到的所有缓冲对象都包裹在一切，用到的时候，直接这一个用。因此他们就开发出了<code>VAO</code>。</p>
+
+<p>VAO创建了之后，不需要给他任何数据，只要在激活他之后，对VBO操作就可以了，opengl内部会自动将这个VBO绑定到VAO上面。只需要操作这个VAO就可以了。这段话的意思并不是说VAO可以脱离VBO，而是说创建多个VBO之后，如果挂靠在一个VAO上会更容易管理。如果没有<code>VBO</code>，VAO则没有任何用处。</p>
+
+<p>例如在漫反射贴图的opengl教程中，有下面一段代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+<span class="line-number">31</span>
+<span class="line-number">32</span>
+<span class="line-number">33</span>
+<span class="line-number">34</span>
+<span class="line-number">35</span>
+<span class="line-number">36</span>
+<span class="line-number">37</span>
+<span class="line-number">38</span>
+<span class="line-number">39</span>
+<span class="line-number">40</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">// 顶点输入
+</span><span class="line">GLfloat vertices[] = {
+</span><span class="line">		// 顶点             // 法线              // 纹理坐标
+</span><span class="line">		-0.5f, -0.5f, -0.5f,  0.0f,  0.0f, -1.0f,  0.0f,  0.0f,
+</span><span class="line">		.....
+</span><span class="line">}；
+</span><span class="line">
+</span><span class="line">//--------------设置containerVAO开始--------------------------
+</span><span class="line">GLuint VBO, containerVAO;
+</span><span class="line">glGenVertexArrays(1, &amp;containerVAO);
+</span><span class="line">glGenBuffers(1, &amp;VBO);
+</span><span class="line">
+</span><span class="line">// 把顶点数组复制到缓冲中供OpenGL使用
+</span><span class="line">glBindBuffer(GL_ARRAY_BUFFER, VBO);
+</span><span class="line">glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+</span><span class="line">// !!! Bind the Vertex Array Object first, then bind and set vertex buffer(s) and attribute pointer(s).
+</span><span class="line">glBindVertexArray(containerVAO);
+</span><span class="line">glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0);
+</span><span class="line">glEnableVertexAttribArray(0);
+</span><span class="line">glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+</span><span class="line">glEnableVertexAttribArray(1);
+</span><span class="line">glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)(6 * sizeof(GLfloat)));
+</span><span class="line">glEnableVertexAttribArray(2);
+</span><span class="line">glBindVertexArray(0);
+</span><span class="line">//--------------设置containerVAO结束--------------------------
+</span><span class="line">
+</span><span class="line">
+</span><span class="line">//--------------设置lightVAO开始------------------------------
+</span><span class="line">// 设置光照的顶点数组对象(VAO)，顶点缓冲对象(VBO)共用
+</span><span class="line">GLuint lightVAO;
+</span><span class="line">glGenVertexArrays(1, &amp;lightVAO);
+</span><span class="line">glBindVertexArray(lightVAO);
+</span><span class="line">// 只需要绑定VBO不用再次设置VBO的数据，因为容器(物体)的VBO数据中已经包含了正确的立方体顶点数据
+</span><span class="line">glBindBuffer(GL_ARRAY_BUFFER, VBO);
+</span><span class="line">// 设置灯立方体的顶点属性指针(仅设置灯的顶点数据)
+</span><span class="line">glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 8 * sizeof(GLfloat), (GLvoid*)0); // Note that we skip over the other data in our buffer object (we don't need the normals/textures, only positions).
+</span><span class="line">glEnableVertexAttribArray(0);
+</span><span class="line">glBindVertexArray(0);
+</span><span class="line">//--------------设置lightVAO结束------------------------------
+</span><span class="line">// 读取贴图
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>我们并没有给VAO数据，<code>glBufferData</code>之后数据还是在VBO中，所以VAO只是包裹了这个VBO。<br />
+上面对opengl所需要的数据先做处理，这些是静态数据不会发生变化，会变化的的数据则放在了下面while循环里面。下面我们对while循环函数进行分析。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">...
+</span><span class="line">// 渲染指令
+</span><span class="line">glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+</span><span class="line">glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+</span><span class="line">
+</span><span class="line">....
+</span><span class="line">箱子使用的shader进行参数get和set。
+</span><span class="line">....
+</span><span class="line">
+</span><span class="line">// 激活纹理
+</span><span class="line">glActiveTexture(GL_TEXTURE0);
+</span><span class="line">glBindTexture(GL_TEXTURE_2D, diffuseMap);
+</span><span class="line">
+</span><span class="line">//使用上面创建的containerVAO对象
+</span><span class="line">glBindVertexArray(containerVAO);
+</span><span class="line">glDrawArrays(GL_TRIANGLES, 0, 36);
+</span><span class="line">glBindVertexArray(0); //清理VAO对象，但不是释放。
+</span><span class="line">
+</span><span class="line">...
+</span><span class="line">灯的shader进行参数get和set。
+</span><span class="line">...
+</span><span class="line">//激活灯的lightVAO对象。上面已经创建，这里直接使用即可。如果在while循环里面不断创建会浪费内存。
+</span><span class="line">glBindVertexArray(lightVAO);
+</span><span class="line">glDrawArrays(GL_TRIANGLES, 0, 36);
+</span><span class="line">glBindVertexArray(0);
+</span><span class="line">
+</span><span class="line">// 交换缓冲,一般采用前后双缓冲，这样屏幕变化玩家几乎看不到中间的切换。
+</span><span class="line">glfwSwapBuffers(window);
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>上面分析下来，可以看出VAO至少是包裹了VBO，且VBO还可以被重用。箱子和灯都是立方体，所以一份VBO对象给箱子使用也给灯使用。<br />
+这样VBO重用减少了内存的开销，VAO则方便了顶点数据的管理。</p>
+
+<p>说完顶点数据相关的VAO，VBO，在来看看纹理。</p>
+
+<p>但上面代码，texture的数据映射关系是在<strong>vertices</strong>中，但是具体的纹理并不受VAO的管理。纹理数据被传递给diffuseMap引用。而diffuseMap虽然在VAO后面，但是没有挂靠于VAO，这些实现全都是OpenGL内部实现的。也就是说VAO只能管理VBO和EBO，其他的依然是自己管理自己。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">// 读取贴图
+</span><span class="line">GLuint diffuseMap;
+</span><span class="line">glGenTextures(1, &amp;diffuseMap);
+</span><span class="line">//int width, height;
+</span><span class="line">unsigned char* image;
+</span><span class="line">// 漫反射贴图
+</span><span class="line">image = stbi_load("container2.jpg", &amp;width, &amp;height, 0, 0);
+</span><span class="line">glBindTexture(GL_TEXTURE_2D, diffuseMap);
+</span><span class="line">glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+</span><span class="line">glGenerateMipmap(GL_TEXTURE_2D);
+</span><span class="line">stbi_image_free(image);
+</span><span class="line">glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+</span><span class="line">glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+</span><span class="line">glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
+</span><span class="line">glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST_MIPMAP_NEAREST);
+</span><span class="line">glBindTexture(GL_TEXTURE_2D, 0);</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>上面代码创建了diffuseMap引用，读取硬盘上jpg图片，将数据通过glTexImage2D传递给GL_TEXTURE_2D目标，其实GL_TEXTURE_2D目标已经和diffuseMap引用绑定在了一起。所以你可以理解diffuseMap里面有一个GL_TEXTURE_2D目标，我们对GL_TEXTURE_2D进行<code>glTexParameteri</code>设置就是对diffuseMap的设置。<br />
+最后，<code>glBindTexture(GL_TEXTURE_2D, 0);</code>并不是释放diffuseMap引用。而是opengl纹理绑定的状态进行了清理。以便于在while循环中重新设置。<br />
+这一局不调用也不会出问题，因为下面被重新设置了。不过这样做比较清晰不容易出问题。</p>
+
+<p>while循环中在上面的代码已经有，可在读一遍。</p>
+
+<p>总的来说，opengl看似复杂，实则简单清楚，只要我们对常用的几个函数了熟于心。以此为突破口，就不会被他复杂的表面欺骗。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[OpenGL基础之透视投影矩阵]]></title>
@@ -2134,151 +2452,6 @@ lua用久了，绝对离不开这样的神兵利器。</p>
 <h2 id="section">参考链接</h2>
 
 <p>1.<a href="https://segmentfault.com/a/1190000000631630">Cocos2d-x下Lua调用自定义C++类和函数的最佳实践</a></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[认识liquidFun（流体物理引擎）]]></title>
-    <link href="http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun"/>
-    <updated>2017-06-25T23:24:41+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-06-25-14984044203691.png" alt="" /></p>
-
-<h2 id="section">初识</h2>
-
-<p>在一款名为<a href="http://fingerlab.net/portfolio/yuri">《yuri》</a>的游戏中，发现了点有意思的东西，于是乎各种搜索，终于找到了相关的技术，那就是由google开源的物理引擎<a href="http://google.github.io/liquidfun/">liquidFun</a>。</p>
-
-<p><code>liquidFunc</code>的demo地址<a href="http://google.github.io/liquidfun/testbed/index.html">在此</a>。相信我你看到这个demo之后，绝对会对<code>liquidFun</code>这个引擎产生无比的喜欢。（这里不需要翻墙，只要能打的开github，就能够看得到这个演示。）</p>
-
-<p>先来一睹为快！<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-Untitled.gif" alt="" /></p>
-
-<!--more-->
-
-<p><strong>他</strong>继承自<strong>Box2D</strong>，是Box2D的扩展版本，但增加了粒子的流体和柔软性效果。<br />
-<a href="http://google.github.io/liquidfun/API-Ref.html">相关的API文档</a><br />
-<a href="http://docs.google.com/presentation/d/1fEAb4-lSyqxlVGNPog3G1LZ7UgtvxfRAwR0dwd19G4g/edit?usp=sharing">具体的实现细节在这里</a></p>
-
-<p>因为支持C++, Java, or JavaScript，因此可以整合到cocos2dx引擎中。方便我们使用。当我想到这里的时候，立马去github上搜索了一下。果然触控已经开始考虑到这点了。</p>
-
-<h2 id="section-1">了解</h2>
-
-<p>于是在github触控这里，找到了一份<a href="https://github.com/cocos2d/cocos2d-x-samples">cocos2dx整合liquidFunc的实例工程。</a></p>
-
-<p>安装方法如下:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git clone https://github.com/cocos2d/cocos2d-x-samples
-</span><span class="line">cd cocos2d-x-samples
-</span><span class="line">python download-engine.py
-</span><span class="line">git submodule init
-</span><span class="line">git submodule update</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>执行完上述步骤，就可以在sample中打开<code>LiquidFun - EyeCandy</code>工程了。效果也是震撼。<br />
-完全足够我们的使用了。</p>
-
-<p>这个工程的作者<a href="https://github.com/ricardoquesada">Ricardo Quesada</a>在他的的博客中有两篇文章，讲解了整合cocos2dx和liquidFun的细节。</p>
-
-<ul>
-  <li>
-    <p><a href="https://retro.moe/2014/04/23/integrating-liquidfun-with-cocos2d-x-part-i/">Integrating LiquidFun with Cocos2d-x: Part I</a></p>
-  </li>
-  <li>
-    <p><a href="https://retro.moe/2014/07/30/integrating-liquidfun-with-cocos2d-x-part-ii/">Integrating LiquidFun with Cocos2d-x: Part II</a></p>
-  </li>
-</ul>
-
-<p>感兴趣的各位同学不妨移步去看看，加深对liquidFunc的理解。</p>
-
-<h2 id="section-2">下一步</h2>
-
-<p>由于我们的项目使用的cocos2dx + lua，因此下一步要考虑的就是通过luabing将<strong>Box2D</strong>和<strong>liquidFunc</strong>的代码注册到lua虚拟机中使用。这部分我将在下一篇文章中讲解。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[MAC上安装git-svn未生效的办法]]></title>
-    <link href="http://www.newtomato.me/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa"/>
-    <updated>2017-06-11T20:47:57+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa</id>
-    <content type="html"><![CDATA[<h2 id="git-svn-">git svn 介绍</h2>
-
-<p>git svn的原理就是服务器端还是svn服务器，但是本地使用git，这样可以本地保留git所有的功能，但是代码提交是需要提交给svn服务器的。<br />
-git svn的命令可以认为和git是一样的。部分命令有些不同。</p>
-
-<p><img src="https://git-scm.com/images/logo@2x.png" alt="" /> + <img src="https://tortoisesvn.net/assets/img/tortoisesvn_logo_hor468x64.5e0587de.svg" alt="svn" /></p>
-
-<!--more-->
-<p>例如克隆代码：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git svn clone xxxx.git</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>初始化仓库：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git svn init</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>提交代码到服务器：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git svn dcommit</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>平时开发需要用到的命令，创建分支，本地提交，切换分支，合并分支都和git的命令相同。</p>
-
-<h2 id="git-svn">安装git svn</h2>
-<p>MAC上默认安装的git，理论上应该自带git svn的功能。但是这只是理论上，验证是否支持svn，只要在terminal测试下。<br />
-输入<code>git svn --help</code>没有报错。那恭喜你了，不需要经历我这一番折腾了。</p>
-
-<p>如果不是，请继续往下看。</p>
-
-<p>先说一下我的工作环境，我的操作系统是<code>MAC OS Sierra</code>。Git的版本是通过<code>homebrew</code>安装的，安装版本是<code>2.11.1</code>。<br />
-这个版本的git，竟然不支持git svn的命令的。于是到Git的<a href="https://git-scm.com/docs/git-svn/1.8.5">官方网站</a>，搜索了一下，他们从1.8.5版本之后就开始支持这个命令了。<br />
-所以我分析有可能brew安装的git只是一个不完整版本。于是我在官方网站重新下载了Git。开始安装。</p>
-
-<p>安装完成之后，通过命令行检查版本，还是老版本。没有变化。于是通过<code>which git</code>发现使用的位置是<code>/usr/local/bin/git</code>，于是将我安装的git做了一个软连接覆盖了这里的git。我安装之后的位置在<code>/usr/local/git</code>。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">ln -s /usr/local/git /usr/local/bin/git
-</span><span class="line">git --version</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>输出就是最新的安装版本了。<code>git version 2.13.0</code>。</p>
-
-<h2 id="section">安装完成却遇到了另一个问题</h2>
-
-<p><code>git svn --help</code>之后没有出现我预期的输出，反而报错了。</p>
-
-<p>错误如下：</p>
-
-<pre><code>Can't locate SVN/Core.pm in @INC (you may need to install the SVN::Core module) (@INC contains: /usr/local/git/lib/perl5/site_perl/5.18.2/darwin-thread-multi-2level /usr/local/git/lib/perl5/site_perl/5.18.2 /usr/local/git/lib/perl5/site_perl /Library/Perl/5.18/darwin-thread-multi-2level /Library/Perl/5.18 /Network/Library/Perl/5.18/darwin-thread-multi-2level /Network/Library/Perl/5.18 /Library/Perl/Updates/5.18.2 /System/Library/Perl/5.18/darwin-thread-multi-2level /System/Library/Perl/5.18 /System/Library/Perl/Extras/5.18/darwin-thread-multi-2level /System/Library/Perl/Extras/5.18 .) at /usr/local/git/lib/perl5/site_perl/Git/SVN/Utils.pm line 6.
-BEGIN failed--compilation aborted at /usr/local/git/lib/perl5/site_perl/Git/SVN/Utils.pm line 6.
-Compilation failed in require at /usr/local/git/lib/perl5/site_perl/Git/SVN.pm line 25.
-BEGIN failed--compilation aborted at /usr/local/git/lib/perl5/site_perl/Git/SVN.pm line 32.
-Compilation failed in require at /usr/local/git/libexec/git-core/git-svn line 21.
-BEGIN failed--compilation aborted at /usr/local/git/libexec/git-core/git-svn line 21.
-</code></pre>
-
-<p>这一坨报错消息让人摸不着头脑，于是Google一下，果然有人和我报一样的错误。</p>
-
-<p>解决方案<a href="https://stackoverflow.com/questions/16578465/on-osx-using-sourcetree-git-svn-getting-cant-locate-svn-core-pm-in-inc">在此</a>,如果你打不开，那就按照我下面的命令设置一下。看看效果吧！</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">sudo mkdir /Library/Perl/5.18/auto
-</span><span class="line">sudo ln -s /Applications/Xcode.app/Contents/Developer/Library/Perl/5.18/darwin-thread-multi‌-2level/SVN /Library/Perl/5.18/darwin-thread-multi-2level
-</span><span class="line">sudo ln -s /Applications/Xcode.app/Contents/Developer/Library/Perl/5.18/darwin-thread-multi‌-2level/auto/SVN /Library/Perl/5.18/auto/</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<h2 id="section-1">结语</h2>
-
-<p>幸运的话，<code>git svn --help</code>就会正确工作了。好了开始享受用Git方式管理svn仓库吧！</p>
 
 ]]></content>
   </entry>

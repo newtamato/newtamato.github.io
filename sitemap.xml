@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao</loc>
+<lastmod>2018-01-07T18:33:45+08:00</lastmod>
+</url>
+<url>
+<loc>http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou</loc>
+<lastmod>2018-01-07T17:13:16+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen</loc>
 <lastmod>2017-12-16T18:12:54+08:00</lastmod>
 </url>
@@ -698,6 +706,30 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/opengl/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/2/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/3/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/4/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/5/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/6/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/7/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/8/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/9/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

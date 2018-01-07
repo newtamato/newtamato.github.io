@@ -9,9 +9,12 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="早在一年前，使用octpress的时候，就在网上看到过Typecho。
-但是当时查找到的octpress的资料更多一些，于是就没有选择Typecho。今天无意间的看到别人的Typecho网站，真是不错。简洁，清晰。
-相对于Octpress，他具有的优点如下 提供完整的网站功能。可以用户注册。 &hellip;">
+  <meta name="description" content="最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。
+算法都是没有问题的，但是计算出来的结果却总是出现问题。这让我们一点摸不着头脑。
+后来经过严格的多双眼睛的考察，发现，原来是打印出来的配置欺骗了我们。 伪代码如下： 1
+2
+3
+for _,itemConfig in pairs( &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +76,111 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/06/07/lua-tablede-keng">记录Lua中排序的一种坑</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-06-07T20:26:28+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>最近我们做一个功能，此功能需要前后端都对一套配置进行一个算法的处理。<br />
+算法都是没有问题的，但是计算出来的结果却总是出现问题。这让我们一点摸不着头脑。<br />
+后来经过严格的多双眼睛的考察，发现，原来是打印出来的配置欺骗了我们。</p>
+
+<p>伪代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">for _,itemConfig in pairs(config) do
+</span><span class="line">	--算法逻辑(itemConfig)
+</span><span class="line">end</span></code></pre></td></tr></table></div></figure></notextile></div>
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/07/lua-tablede-keng">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/06/06/zu-jian-hua-guan-li-shu-ju-he-xiang-guan-zhan-shi">组件化管理数据和相关的展示</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-06-06T00:28:50+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="section">这是个什么东西？</h2>
+
+<p>首先，这是我很早就想到的一个想法。只是前期项目工期紧张，只是专注于功能的实现，虽然有想法，但是没有付出实现。<br />
+现在回头来想，大部分功能都有相似的地方，就是数值物品获得和展示的地方，这种地方是完全可以抽象出来做成一个通用的模块。</p>
+
+<p>奖励如果占据背包格子，需要给予提示，或者根据条件（即参数）决定是否要清理背包。或者得到数据达到了上限，是否要弹出提示等等。如果顺利得到物品或者数值，就要播放相关的动画。<br />
+比如物品获得，默认有一套自己的动画，除非有特殊需求（即参数）来播放其他动画。<br />
+比如数值获得，默认也是有自己的动画。<br />
+这些基本的东西，在早期的时候，应该是有策划产品那边就已经有了一些定论的。</p>
+
+<p>而这个模块就是解决上述需求。可想而知，一旦完成这个功能，不论多少功能，都只需要调用它即可。省时省力。低碳环保！<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/06/06/zu-jian-hua-guan-li-shu-ju-he-xiang-guan-zhan-shi">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -446,92 +554,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/04/02/missing-ios-distribution">Xcode 7 Error: “Missing iOS Distribution Signing Identity for …”</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-04-02T14:25:05+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近准备重新打包一次我们的游戏，提交苹果，但是却遇到如下的问题。<br />
-<img src="/images/error.png" alt="Alt text" /><br />
-这是个怎么回事？难道我的证书出问题了。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/04/02/missing-ios-distribution">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/04/02/zi-dong-geng-xin-de">自动更新的一些思考</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-04-02T14:06:28+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>自动更新，也称作热更新，是现在手机游戏最常用的一种做法。类似于当年的页游。打开游戏就能看到最新的游戏。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/04/02/zi-dong-geng-xin-de">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="7">&larr; Older</a>
@@ -549,6 +571,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">OpenGL基础之普通光照</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
       </li>
     
@@ -558,14 +588,6 @@
     
       <li class="post">
         <a href="/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi">OpenGL基础之矩阵和坐标</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/03/opengl-glitter">在xcode上运行OpenGL工程-使用Glitter</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行OpenGL工程</a>
       </li>
     
   </ul>
@@ -621,7 +643,7 @@
 <li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
 <li class='category'><a href='/blog/categories/mode/'>mode (1)</a></li>
 <li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
-<li class='category'><a href='/blog/categories/opengl/'>opengl (5)</a></li>
+<li class='category'><a href='/blog/categories/opengl/'>opengl (7)</a></li>
 <li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
 <li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
 <li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
@@ -696,7 +718,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2017 - newtomato -
+  Copyright &copy; 2018 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 
