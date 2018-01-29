@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-01-07T18:40:29+08:00</updated>
+  <updated>2018-01-29T10:13:12+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -14,12 +14,90 @@
 
   
   <entry>
+    <title type="html"><![CDATA[opengl基础之glDrawArrays和glDrawElements之间的区别]]></title>
+    <link href="http://www.newtomato.me/blog/2018/01/29/openglgldrawarrays"/>
+    <updated>2018-01-29T10:12:07+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/01/29/openglgldrawarrays</id>
+    <content type="html"><![CDATA[<p>我们首先来绘制一个矩形。矩形的顶点数据和材质数据如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GLfloat vertices[] = {
+</span><span class="line">				0.0f,0.0f,0.0f,0.0f,0.0f,
+</span><span class="line">				0.5f,0.0f,0.0f,0.5f,0.0f,
+</span><span class="line">				0.5f,0.5f,0.0f,0.5f,0.5f,
+</span><span class="line">				0.0f,0.5f,0.0f,0.0f,0.5f
+</span><span class="line">				};</span></code></pre></td></tr></table></div></figure></notextile></div>
+<!--more-->
+<p>前三位是顶点位置信息，后两位是纹理坐标位置。<br />
+此时我们如果绘制矩形，使用如下命令：<code>glDrawArrays(GL_TRIANGLE_STRIP,0,5);</code><br />
+这里我使用的是<code>GL_TRIANGLE_STRIP</code>模式，这种模式的是<strong>每相邻三个顶点组成一个三角形</strong>。因此我提供四个点即可。<br />
+如果是<code>GL_TRIANGLES</code>,仅仅提供四个点，就只能绘制出一个三角形。所以需要对vertices进行扩展，提供6个点的位置。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GLfloat vertices2[] = {
+</span><span class="line">				0.0f,0.0f,0.0f,0.0f,0.0f,
+</span><span class="line">				0.5f,0.0f,0.0f,0.5f,0.0f,
+</span><span class="line">				0.0f,0.5f,0.0f,0.0f,0.5f,
+</span><span class="line">				0.5f,0.0f,0.0f,0.5f,0.0f,
+</span><span class="line">				0.0f,0.5f,0.0f,0.0f,0.5f,
+</span><span class="line">				0.5f,0.5f,0.0f,0.5f,0.5f
+</span><span class="line">				};</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>但是，这样你会看到数据变多了，实际就是点重复了。<br />
+那么怎么解决数据冗余的问题呢？如果每个点的数据知道，绘制三角形的时候，告诉他取那个位置的点就好了。<code>glDrawElements</code>就是这么解决问题的！<br />
+有了vertices数据之后，我们还需要提供一个索引数据。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GLuint indices[] = { 
+</span><span class="line">    0, 1, 3,
+</span><span class="line">    1, 2, 3 
+</span><span class="line">};</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>在现代opengl编程中，需要将索引数据绑定到<code>GL_ELEMENT_ARRAY_BUFFER</code></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">Gluint EBO;
+</span><span class="line">glGenBuffers(1, &amp;EBO); 
+</span><span class="line">glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+</span><span class="line">glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+</span><span class="line">
+</span><span class="line">...
+</span><span class="line">//绘制三角形，6个顶点，使用索引数据。数据的类型是GL_UNSIGNED_INT。
+</span><span class="line">glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+]]></content>
+  </entry>
+  
+  <entry>
     <title type="html"><![CDATA[OpenGL基础之普通光照]]></title>
     <link href="http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao"/>
     <updated>2018-01-07T18:33:45+08:00</updated>
     <id>http://www.newtomato.me/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao</id>
     <content type="html"><![CDATA[<p>opengl中有三种光照，环境光，漫反射以及镜面光源。<br />
-所有不同物体可以通过的材质（Material）对光照的参数的设置能够达到模拟真实的效果。</p>
+不同物体可以通过的材质（Material）对光照的参数的设置能够达到模拟真实的效果。</p>
 
 <p>三种光照的基本知识，推导公式，以及Material是干什么用的均在<strong>learnopengl</strong>的教程中已经有详细的介绍，我将在这篇博文里面将按照自己的理解整理一下，也好加深自己的理解。</p>
 
@@ -2369,89 +2447,6 @@ lua用久了，绝对离不开这样的神兵利器。</p>
 
 <p>如果你看到这里，基本上可以搭建一个可以使用的jekins了。但是Jenkins还有很多有意思的东西可以整合进来，比如上面提到的邮件。比如如何把参数，传递给gradle配置。<br />
 这些都是需要我们在实践中慢慢理解了。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[如何为第三方c++库导出luabinding (Part One)]]></title>
-    <link href="http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding"/>
-    <updated>2017-07-02T20:26:16+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding</id>
-    <content type="html"><![CDATA[<p>上一篇文章讲到怎么使用<code>liquidfunc</code>,本章节讲述怎么将liquidfun通过luabinding的方式导出给lua使用。</p>
-
-<p>cocos2dx在早期2.x时代，是通过tolua++和pkg的方式，导出成luabinding。现在已经是 3.x版本了，cocos2dx改进了这种导出方式，我们只需要增加一个.ini的配置文件就可以了。</p>
-
-<p>两种方式各有优劣。第一种方式最大的弊病就是花费很多时间在重复做一些事情，麻烦。<br />
-第二种方法，看似节省了我们不少时间，但是如果对<code>genbindings.py</code>的原理不熟悉，会让我们对出的错误一头雾水。</p>
-
-<!--more-->
-<p>第一种方法按照如下原则，将头文件转为pkg文件即可。</p>
-
-<pre><code>1.    enum keeps the same
-2.    remove CC_DLL for the class defines, pay attention to multi inherites
-3.    remove inline keyword for declaration and implementation
-4.    remove public protect and private
-5.    remove the decalration of class member variable
-6.    keep static keyword
-7.    remove memeber functions that declared as private or protected
-</code></pre>
-
-<p>在导出liquidfun的过程中，我采用了第二种方法。在此记录一下过程和遇到的问题。</p>
-
-<h2 id="genbindingspy">使用<code>genbindings.py</code>的方式导出。</h2>
-
-<p>在<code>cocos2d-x/tools/tolua</code>文件夹下面有genbindings.py文件。如果没有，有可能你用的cocos2dx的版本不在3.x以内。</p>
-
-<p>执行py之前，请阅读此处文档，安装相关的工具。<a href="https://github.com/cocos2d/bindings-generator">Requirements</a></p>
-
-<ul>
-  <li>先将liquidfun仓库提供的Box2D覆盖cocos2dx原先的Box2D，有一些文件有变化。</li>
-  <li>在<code>cocos2d-x/tools/tolua</code>里增加一个<code>cocos2dx_box2d.ini</code>的文件。（因为liquidfun依赖于box2D，因此我们需要先导出box2D）这里提供box2d.ini文件。<a href="media/14989759807211/cocos2dx_box2d.ini">cocos2dx_box2d.ini</a></li>
-  <li>修改genbindings.py文件如下：</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">cmd_args = {'cocos2dx_box2d.ini':('cocos2dx_box2d','lua_cocos2dx_box2d_auto')}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>运行如下命令：</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">cd cocos2d-x/tools/tolua
-</span><span class="line">./genbindings.py</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>最后看到生成了如下文件</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">cocos/scripting/lua-bindings/auto/lua_cocos2dx_box2d_auto.cpp
-</span><span class="line">cocos/scripting/lua-bindings/auto/lua_cocos2dx_box2d_auto.hpp</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<h2 id="cpp">使用生成的cpp文件</h2>
-
-<p>将他们添加到工程中，<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-14989852241192.jpg" alt="=w250" /><br />
-同时在cocos2d_lua_binding工程中<code>building setting-&gt;search paths</code>添加一条搜索路径。<code>$(SRCROOT)/../../../../external/Box2D</code></p>
-
-<p>编译运行一下。</p>
-
-<p>遇到的问题：</p>
-
-<pre><code>1. `luaval_to_object`导出了5个参数，导致不兼容。
-2.  enmu没有导出
-3.  编译成功，链接失败。
-</code></pre>
-
-<p>第一个问题可以通过手动删除第五个参数解决。<br />
-第二个问题，可以通过修改lua代码解决。<br />
-第三个问题暂时没有找到原因。不知道哪里丢失了路径，导致link总是失败。此处留个坑，待下回处理。</p>
-
-<h2 id="section">参考链接</h2>
-
-<p>1.<a href="https://segmentfault.com/a/1190000000631630">Cocos2d-x下Lua调用自定义C++类和函数的最佳实践</a></p>
 
 ]]></content>
   </entry>

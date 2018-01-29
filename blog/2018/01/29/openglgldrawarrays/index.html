@@ -5,11 +5,17 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>分类:神秘海域4 - 番茄手册</title>
+  <title>opengl基础之glDrawArrays和glDrawElements之间的区别 - 番茄手册</title>
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="Category: 神秘海域4">
+  <meta name="description" content="我们首先来绘制一个矩形。矩形的顶点数据和材质数据如下： 1
+2
+3
+4
+5
+6
+GLfloat vertices[] = { 0.0f,0.0f,0.0f,0.0f,0.0f, 0.5f,0.0f,0.0f,0.5f,0.0f, 0.5f,0.5f,0.0f,0.5f,0.5f, 0.0f,0. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -18,7 +24,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://www.newtomato.me/blog/categories/shen-mi-hai-yu-4/">
+  <link rel="canonical" href="http://www.newtomato.me/blog/2018/01/29/openglgldrawarrays">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -70,35 +76,149 @@
   <div id="main">
     <div id="content">
       <div>
-<article role="article">
+<article class="hentry" role="article">
   
   <header>
-    <h1 class="entry-title">分类:神秘海域4</h1>
+    
+      
+        <h1 class="entry-title">opengl基础之glDrawArrays和glDrawElements之间的区别</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-01-29T10:12:07+08:00" pubdate data-updated="true"></time>
+        
+      </p>
     
   </header>
-  
-  <div id="blog-archives" class="category">
 
 
+<div class="entry-content"><p>我们首先来绘制一个矩形。矩形的顶点数据和材质数据如下：</p>
 
-  
-  <h2>2016</h2>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GLfloat vertices[] = {
+</span><span class="line">				0.0f,0.0f,0.0f,0.0f,0.0f,
+</span><span class="line">				0.5f,0.0f,0.0f,0.5f,0.0f,
+</span><span class="line">				0.5f,0.5f,0.0f,0.5f,0.5f,
+</span><span class="line">				0.0f,0.5f,0.0f,0.0f,0.5f
+</span><span class="line">				};</span></code></pre></td></tr></table></div></figure></notextile></div>
+<!--more-->
+<p>前三位是顶点位置信息，后两位是纹理坐标位置。<br />
+此时我们如果绘制矩形，使用如下命令：<code>glDrawArrays(GL_TRIANGLE_STRIP,0,5);</code><br />
+这里我使用的是<code>GL_TRIANGLE_STRIP</code>模式，这种模式的是<strong>每相邻三个顶点组成一个三角形</strong>。因此我提供四个点即可。<br />
+如果是<code>GL_TRIANGLES</code>,仅仅提供四个点，就只能绘制出一个三角形。所以需要对vertices进行扩展，提供6个点的位置。</p>
 
-<article>
-  
-<h1><a href="/blog/2016/05/22/shen-mi-hai-yu-4">《神秘海域4》通关纪念</a></h1>
-<time datetime="2016-05-22T21:20:30+08:00" pubdate><span class='month'>May</span> <span class='day'>22</span> <span class='year'>2016</span></time>
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GLfloat vertices2[] = {
+</span><span class="line">				0.0f,0.0f,0.0f,0.0f,0.0f,
+</span><span class="line">				0.5f,0.0f,0.0f,0.5f,0.0f,
+</span><span class="line">				0.0f,0.5f,0.0f,0.0f,0.5f,
+</span><span class="line">				0.5f,0.0f,0.0f,0.5f,0.0f,
+</span><span class="line">				0.0f,0.5f,0.0f,0.0f,0.5f,
+</span><span class="line">				0.5f,0.5f,0.0f,0.5f,0.5f
+</span><span class="line">				};</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<footer>
-  <span class="categories">posted in <a class='category' href='/blog/categories/shen-mi-hai-yu-4/'>神秘海域4</a>, <a class='category' href='/blog/categories/wan-pi-gou/'>顽皮狗</a></span>
-</footer>
+<p>但是，这样你会看到数据变多了，实际就是点重复了。<br />
+那么怎么解决数据冗余的问题呢？如果每个点的数据知道，绘制三角形的时候，告诉他取那个位置的点就好了。<code>glDrawElements</code>就是这么解决问题的！<br />
+有了vertices数据之后，我们还需要提供一个索引数据。</p>
 
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">GLuint indices[] = { 
+</span><span class="line">    0, 1, 3,
+</span><span class="line">    1, 2, 3 
+</span><span class="line">};</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-</article>
+<p>在现代opengl编程中，需要将索引数据绑定到<code>GL_ELEMENT_ARRAY_BUFFER</code></p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">Gluint EBO;
+</span><span class="line">glGenBuffers(1, &amp;EBO); 
+</span><span class="line">glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+</span><span class="line">glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
+</span><span class="line">
+</span><span class="line">...
+</span><span class="line">//绘制三角形，6个顶点，使用索引数据。数据的类型是GL_UNSIGNED_INT。
+</span><span class="line">glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 </div>
 
+
+  <footer>
+    <p class="meta">
+      
   
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-01-29T10:12:07+08:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2018/01/29/openglgldrawarrays" data-via="" data-counturl="http://www.newtomato.me/blog/2018/01/29/openglgldrawarrays" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao" title="Previous Post: OpenGL基础之普通光照">&laquo; OpenGL基础之普通光照</a>
+      
+      
+    </p>
+  </footer>
 </article>
 
 </div>
