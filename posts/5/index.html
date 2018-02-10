@@ -9,7 +9,10 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="创建方法 IOS 9 自上周发布以来，开始支持一种类似微信的表情包功能，对于怎么打包苹果官方网站有详细的介绍，这里我们也稍微介绍一下，并且列举一些我们项目中遇到问题。 首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码，称之为sticker pack，另外一种可以编写代码 &hellip;">
+  <meta name="description" content="自从16年6月份开始，苹果要求提交的应用一定要支持ipv6。ipv6是做什么用呢？和ipv4有什么区别？
+其实这个教科书上已经和我们解释过了，只是这一天来得太快。
+ipv4的是32位长度，而ipv6是128位，是ipv4的4倍。能够大大的解决ip地址不够用的问题。
+ipv4能用提供2^32 - &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +74,111 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">搭建ipv6环境和问题记录</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-09-18T20:15:26+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742018443262.png" alt="" /><br />
+自从16年6月份开始，苹果要求提交的应用一定要支持ipv6。ipv6是做什么用呢？和ipv4有什么区别？<br />
+其实这个教科书上已经和我们解释过了，只是这一天来得太快。<br />
+ipv4的是32位长度，而ipv6是128位，是ipv4的4倍。能够大大的解决ip地址不够用的问题。<br />
+ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
+所以苹果在这个地方加入这个限制条件，就是为了推广ipv6的使用。</p>
+
+<p>而对于我们开发者要做的事情，就是搭建一个ipv6的网络地址。<br />
+同时将我们项目中那些用ipv4的网络框架改为支持两种协议。</p>
+
+<p>我分享这篇文章主要介绍怎么搭建一个ipv6的网络。我们在这个地方摔进了个大深坑。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">快速打包测试提交苹果审核的流程</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-09-18T17:22:24+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><blockquote>
+  <p>天下武功，唯快不破。加快时间是制胜王道。</p>
+</blockquote>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-1.jpg" alt="1" /></p>
+
+<p>对于出一次大包，是一件很费时费力的事情。具体包括以下步骤：</p>
+
+<ol>
+  <li>加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同，小的项目会很快，大的项目则慢的多。</li>
+  <li>打包ipa或者apk文件。此时依赖于项目的复杂度，有依赖的项目库也会重新build，不修改依赖库，也就是使用缓存的build文件会加快速度。一般需要30分钟左右。</li>
+  <li>上传ipa或者apk文件。这个过程依赖网络速度。我们网络上传速度是100~200k/s的速度，一般需要20分钟左右。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -445,92 +553,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/06/19/dong-hua-gong-ju-zong-jie">Cocos2dx动画制作的方式总结整理</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-06-19T20:38:04+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h1 id="fhttp7xuepccom1z0glbclouddncom2016-06-19-fljpg"><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-19-fl.jpg" alt="f" /></h1>
-
-<p>制作动画是一个前端工程师的基本功，并且有的时候需要通过代码的编写来实现一些比较复杂的展示。那么是否有一个更好一点的方式，最好能够让更擅长的人完成这样的工作，比如美术工作者。让工程师只负责逻辑就行了呢？我相信是有的。但是在达到这条路之前，我们先将自己常用的方式先列举一下。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/06/19/dong-hua-gong-ju-zong-jie">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie">节省开发时间的几种方案总结</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-06-09T14:31:39+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我们框架使用的是cocos2d-x。它支持ios和Android的开发。传统的开发，肯定是ios使用xcode，Android使用eclipse。eclipse同时还要配置一些模拟器。如果环境搭配的好，并且配置的电脑性能高，运行起来是可以接受的。但是我们的环境略微艰苦一点。使用Mac Mini，启动xcode很慢，更别提启动eclipse了。更是慢上加慢。为此浪费了我们不少时间。并且一直在想怎么样能够缩减开发时间。最后功夫不负有心人吧。找到了几种方法。分享出来给大家，希望也能解决你遇到这个问题。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="6">&larr; Older</a>
@@ -548,6 +570,14 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
       </li>
     
@@ -557,14 +587,6 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
     
       <li class="post">
         <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
       </li>
     
   </ul>
@@ -638,7 +660,7 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 <li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
 <li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
 <li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
-<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (2)</a></li>
 <li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
 <li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
@@ -661,7 +683,7 @@ API接口文档<a href="http://developer.marvel.com/docs">在此</a><br />
 <li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
 <li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
 <li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (2)</a></li>
 <li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
 <li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
 <li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>

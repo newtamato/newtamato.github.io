@@ -9,8 +9,7 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content=" 今年年初的时候，在同事那里听说了the last of us的这款游戏，同事说的眉飞色舞，吹捧拔高至此毫不吝啬，甚至不惜把他家里的PS3拿给我让我玩。当时的我甚至没有买过一台PS3，或者一张游戏碟片。
-自然一点想玩的想法都没有，婉言谢绝了同事的好意。 ">
+  <meta name="description" content="转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1 现在，越来越多的C++服务器和客户端融入了脚本的支持，尤其在网游领域，脚本语言已经渗透到了方方面面，比如你可以在你的客户端增加一个脚本， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +71,97 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2015/11/12/lua-deep">Lua脚本在C++下的舞步(入门指引)（转）</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-12T21:46:51+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
+
+<p>现在，越来越多的C++服务器和客户端融入了脚本的支持，尤其在网游领域，脚本语言已经渗透到了方方面面，比如你可以在你的客户端增加一个脚本，这个脚本将会帮你在界面上显示新的数据，亦或帮你完成某些任务，亦或帮你查看别的玩家或者NPC的状态。。。如此等等。</p>
+
+<p>但是我觉得，其实脚本语言与C++的结合，远远比你在游戏中看到的特效要来的迅猛。它可以运用到方方面面的领域，比如你最常见的应用领域。比如，你可以用文本编辑器，写一个脚本语言，然后用你的程序加载一下，就会产生出很绚丽的界面。亦或一两句文本语言，就会让你的程序发送数据给服务器，是不是很酷呢？</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/11/12/lua-deep">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2015/11/11/function-closure-upvalue">Function, Closures, Up Values</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-11-11T19:01:05+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>未找到原文出处，从网络博客<a href="http://blog.chinaunix.net/uid-52437-id-2108789.html">天道酬勤,重剑无锋</a>上转载。</p>
+
+<p>Lua 中的函数是一阶类型值(first-class value)，定义函数就象创建普通类型值一样(只不过函数类型值的数据主要是一条条指令而已)，所以在函数体中仍然可以定义函数。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2015/11/11/function-closure-upvalue">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -466,134 +556,9 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase">Git命令行总结-rebase</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:11:24+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
-
-<p>使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
-
-<p>rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。</p>
-
-<p>##rebase的命令格式如下:</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="o">|</span> <span class="o">--</span><span class="n">interactive</span><span class="p">]</span> <span class="p">[</span><span class="n">options</span><span class="p">][</span><span class="o">--</span><span class="k">exec</span> <span class="o">&lt;</span><span class="n">cmd</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">onto</span> <span class="o">&lt;</span><span class="n">newbase</span><span class="o">&gt;</span><span class="p">][</span><span class="o">&lt;</span><span class="n">upstream</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">branch</span><span class="o">&gt;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code><br />
-它的工作原理：从dev_branch和master的共同祖先开始，后续所有在dev_branch上面的提交都将以master当前最新的提交为新的基准点再次挨个提交。这是重新生成新的提交而非做合并。你会发现在dev_branch上的同样的commit在master上的SHA1校验码是不一样的。</p>
-
-<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？<br />
-我们用到的命令就是｀git rebase –onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
-
-</div>
-  
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log">Git命令行总结-log</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2015-10-17T22:08:49+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><ul>
-  <li>git 输入部分提交的log日志</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git log --name-only --oneline 8692a53f1..HEAD| grep -v '.{7} '  | uniq </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>格式化文件输出</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%Creset' --abbrev-commit --date=relative --name-status</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>将某一个commit之后的提交做成patch</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git format-patch -M HEAD~1</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>将patch打到我们的开发分支</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git am xxx.patch</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<ul>
-  <li>vim中格式化json</li>
-</ul>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">:%!python -m json.tool       </span></code></pre></td></tr></table></div></figure></notextile></div>
-
-</div>
-  
-  
-
-
-    </article>
-  
   <div class="pagination">
+    
+      <a class="prev" href="10">&larr; Older</a>
     
     <a href="/blog/archives">Blog Archives</a>
     
@@ -608,6 +573,14 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
       </li>
     
@@ -617,14 +590,6 @@
     
       <li class="post">
         <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
       </li>
     
   </ul>
@@ -698,7 +663,7 @@
 <li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
 <li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
 <li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
-<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (2)</a></li>
 <li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
 <li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
@@ -721,7 +686,7 @@
 <li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
 <li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
 <li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (2)</a></li>
 <li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
 <li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
 <li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>

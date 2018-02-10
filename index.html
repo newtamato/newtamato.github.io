@@ -9,13 +9,9 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="我们首先来绘制一个矩形。矩形的顶点数据和材质数据如下： 1
-2
-3
-4
-5
-6
-GLfloat vertices[] = { 0.0f,0.0f,0.0f,0.0f,0.0f, 0.5f,0.0f,0.0f,0.5f,0.0f, 0.5f,0.5f,0.0f,0.5f,0.5f, 0.0f,0. &hellip;">
+  <meta name="description" content="我们知道在unity中tiling和offset是用来设置纹理的重复，也就是俗称的贴瓷砖。
+只要我们将tiling设置为（2，2）那么效果如下： 此时，对这个GameObject添加shader，正确读取具体的uv坐标就要用到TRANSFORM_TEX函数。
+（如果纹理的tiling=1， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -77,6 +73,117 @@ GLfloat vertices[] = { 0.0f,0.0f,0.0f,0.0f,0.0f, 0.5f,0.0f,0.0f,0.5f,0.0f, 0.5f,
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-02-11T00:30:09+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们知道在unity中tiling和offset是用来设置纹理的重复，也就是俗称的贴瓷砖。<br />
+只要我们将tiling设置为（2，2）那么效果如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-07-15180039093865.jpg" alt="=w300" /></p>
+
+<p>此时，对这个GameObject添加shader，正确读取具体的uv坐标就要用到<code>TRANSFORM_TEX</code>函数。<br />
+（如果纹理的tiling=1，offset=1的情况下，可以不使用这个函数）</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">#define TRANSFORM_TEX(tex,name) (tex.xy * name##_ST.xy + name##_ST.zw)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>语法问题，不是我们的重点。大家可以自行搜索。<br />
+这个函数的意思就是对<strong>texture的uv坐标进行一个缩放操作和位移操作</strong>。<br />
+那么<code>tex.xy</code>作为关键的参数，他的范围是多少，这个公式操作之后，生成的uv范围又是多少？</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2018/02/11/unity-transform-tex">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-02-11T00:15:49+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-11-15182797972761.jpg" alt="=w200" /><br />
+一直以来，有个想法，希望能够将开发测试工作变得简单。通过简单配置，达到对功能一键测试的目的。<br />
+这种测试不是常说的接口测试，而是UI触发测试。</p>
+
+<h2 id="section">场景描述</h2>
+
+<pre><code>例如:
+比如说，邮箱系统，领取奖励功能。点击邮箱-&gt;弹开界面-&gt;随机选择一个（可能涉及列表滑动）或者
+选择全部领取-&gt;领取成功之后，界面刷新达到的效果是数据正确，界面正确。
+一个完整的领取邮箱奖励功能。
+</code></pre>
+
+<p>尤其是配置测试部分，做到类似流程图那样的效果。整个流程走完，就能看到直观的看到效果。</p>
+
+<p>但是调研发现，实现起来非常复杂。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2018/02/11/ui-ai">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -493,106 +600,6 @@ GLfloat vertices[] = { 0.0f,0.0f,0.0f,0.0f,0.0f, 0.5f,0.0f,0.0f,0.5f,0.0f, 0.5f,
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-11-21T16:50:21+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="section">环境：</h2>
-
-<pre><code>MacOS sierra
-python 2.7
-</code></pre>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/11/21/pygraphviz">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-11-12T15:04:27+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>最近整理android资源，发现有不少可以采用etc格式图片进行优化的地方。所以针对这块技术点进行了一下整理总结。分享给大家。</p>
-
-<p><strong>etc是纹理压缩格式，可以不用cpu解压缩对齐像素而直接上传给GPU读取。GPU可以通过位置索引得到像素信息。也就意味着可以随机读取，快速准确。</strong></p>
-
-<p>一张1024x1024的RGBA格式的图片，内存占用大约是1024x1024x4 = 4M。但是etc的每个像素占用0.5个字节。所以是0.5M。从这一点就有很多大的内存节约。</p>
-
-<p>优点如上。</p>
-
-<p>缺点就是不支持透明像素，而且图片的大小会变大很多。<br />
-对于透明，我们可以采用shader的方式，对一张图片的像素处理让他能够呈现出透明。</p>
-
-<p>具体的方案可以看<a href="http://malideveloper.arm.com/develop-for-mali/sample-code/etcv1-texture-compression-and-alpha-channels/">这里</a><br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -608,6 +615,14 @@ python 2.7
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
       </li>
     
@@ -617,14 +632,6 @@ python 2.7
     
       <li class="post">
         <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
       </li>
     
   </ul>
@@ -698,7 +705,7 @@ python 2.7
 <li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
 <li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
 <li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
-<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (2)</a></li>
 <li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
 <li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
@@ -721,7 +728,7 @@ python 2.7
 <li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
 <li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
 <li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (2)</a></li>
 <li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
 <li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
 <li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>

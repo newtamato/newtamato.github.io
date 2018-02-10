@@ -9,7 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="上一篇文章讲到怎么使用liquidfunc,本章节讲述怎么将liquidfun通过luabinding的方式导出给lua使用。 cocos2dx在早期2.x时代，是通过tolua++和pkg的方式，导出成luabinding。现在已经是 3.x版本了，cocos2dx改进了这种导出方式， &hellip;">
+  <meta name="description" content="linter-luacheck是一款很酷的插件，它能够检查lua的语法以及对lua未使用过的变量进行提示。 还有这样: 因此这款能够实时提醒我们帮助我们的插件，你心动了么？
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +72,107 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/07/17/install-luacheck">为Atom,Sublime增加linter-luacheck插件</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-07-17T13:21:18+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><code>linter-luacheck</code>是一款很酷的插件，它能够检查lua的语法以及对lua未使用过的变量进行提示。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679036933.jpg" alt="=" /></p>
+
+<p>还有这样:<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679458003.jpg" alt="=" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679724165.jpg" alt="=" /></p>
+
+<p>因此这款能够实时提醒我们帮助我们的插件，你心动了么？<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/07/17/install-luacheck">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/07/15/jekins">使用jekins打造一个自动化编译流程</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-07-15T20:34:07+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="jekins">为什么要使用jekins？</h2>
+
+<p>我们假设有这样一种情况，项目有个打包的工作或者导出策划给的配置文件。<br />
+这项任务，交给了A同学，A把写了脚本，进行了测试，把里面的坑都填好了。但是每次做这个事情，都需要占用A的时间。<br />
+有一天A请假不在，交给B做，B电脑上没有A那样的工作环境，虽然有脚本工具，但是怎么也执行不起来。<br />
+这下怎么办好？</p>
+
+<p>解决这个痛点，就是使用jekins。在他这里稍作配置，就可以将A从繁琐重复的劳作中解脱出来。也能让其他人无缝切换的使用它。</p>
+
+<p>这就是jekins的好处。</p>
+
+<p>甚至我们可以通过设置jekins定时开启某个服务。比如我经常使用的使用tomcat启动。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/07/15/jekins">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -464,102 +566,6 @@ git svn的命令可以认为和git是一样的。部分命令有些不同。</p>
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">记最近遇到最头疼的一个Bug</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-03-12T16:15:46+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h3 id="section">前记</h3>
-
-<p><img src="https://cdn.ruguoapp.com/FkHR-5cSU8UK1upmG4x67UQCKWZI" alt="" /><br />
-这个将要说的bug并不复杂，但是却影响了一大波的用户。后果很严重。而引发这个问题的原因却是错综复杂，千丝万缕。<br />
-只能说一坑还有一坑深。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-01-10T20:24:50+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>以前制作多个渠道包的方法是这样子的，在AndroidMenifest.xml里面放置一个的变量。例如</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">&lt;meta-data android:name="dksdk_channel" android:value="CHANNEL_CHANNEL_VALUES" /&gt;
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>然后对生成的apk分析，替换里面的SETTING_UMENG_CHANNEL_CHANNELID_VALUES，重新打包就可以了。</p>
-
-<p>这段时间从Eclipse迁移到android studio上面，发现android studio里面有<code>flavor</code>的一个特殊存在，不太了解，Google了一下，发现这个东西正好可以解决我们多平台制作apk的需求。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-10-14840497981415.jpg" alt="-w250" /><br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="4">&larr; Older</a>
@@ -577,6 +583,14 @@ git svn的命令可以认为和git是一样的。部分命令有些不同。</p>
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
       </li>
     
@@ -586,14 +600,6 @@ git svn的命令可以认为和git是一样的。部分命令有些不同。</p>
     
       <li class="post">
         <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
       </li>
     
   </ul>
@@ -667,7 +673,7 @@ git svn的命令可以认为和git是一样的。部分命令有些不同。</p>
 <li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
 <li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
 <li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
-<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (2)</a></li>
 <li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
 <li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
@@ -690,7 +696,7 @@ git svn的命令可以认为和git是一样的。部分命令有些不同。</p>
 <li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
 <li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
 <li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (2)</a></li>
 <li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
 <li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
 <li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>

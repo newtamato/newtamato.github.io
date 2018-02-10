@@ -4,7 +4,7 @@
   <title><![CDATA[分类:unity | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/unity/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-01-29T10:13:12+08:00</updated>
+  <updated>2018-02-11T00:32:04+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,67 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Unity Shader基础函数：TRANSFORM_TEX]]></title>
+    <link href="http://www.newtomato.me/blog/2018/02/11/unity-transform-tex"/>
+    <updated>2018-02-11T00:30:09+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/02/11/unity-transform-tex</id>
+    <content type="html"><![CDATA[<p>我们知道在unity中tiling和offset是用来设置纹理的重复，也就是俗称的贴瓷砖。<br />
+只要我们将tiling设置为（2，2）那么效果如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-07-15180039093865.jpg" alt="=w300" /></p>
+
+<p>此时，对这个GameObject添加shader，正确读取具体的uv坐标就要用到<code>TRANSFORM_TEX</code>函数。<br />
+（如果纹理的tiling=1，offset=1的情况下，可以不使用这个函数）</p>
+
+<pre><code>#define TRANSFORM_TEX(tex,name) (tex.xy * name##_ST.xy + name##_ST.zw)
+</code></pre>
+
+<p>语法问题，不是我们的重点。大家可以自行搜索。<br />
+这个函数的意思就是对<strong>texture的uv坐标进行一个缩放操作和位移操作</strong>。<br />
+那么<code>tex.xy</code>作为关键的参数，他的范围是多少，这个公式操作之后，生成的uv范围又是多少？</p>
+
+<!--more-->
+
+<p>在Shader中通过对顶点函数的修改：</p>
+
+<pre><code>v2f vert(a2v v) {
+	v2f o;
+	o.pos = UnityObjectToClipPos(v.vertex);
+	
+	o.worldNormal = UnityObjectToWorldNormal(v.normal);
+	
+	o.worldPos = mul(unity_ObjectToWorld, v.vertex).xyz;
+
+	//o.uv = TRANSFORM_TEX(v.texcoord, _MainTex);
+	//无论外面的tiling和offset怎么修改，这里一直就是v.texcoord
+	o.uv = v.texcoord;
+	
+	return o;
+}
+</code></pre>
+
+<p>此时发现，外面的渲染并没有出问题。表现就是tiling(1,1),offset(0,0)的样子。因此可以得知，<code>v.texcoord</code>的u，v范围均是（0，1）<br />
+那么通过公式可以推算，如果tiling是（2，2）,计算出来的uv的范围就是（0，2），如此超过了纹理的坐标范围，拿不到纹理才对，怎么实现的贴图？</p>
+
+<p>如果你和我有同样的困惑，那么希望我的回答能让你茅塞顿开！</p>
+
+<p>答案就是纹理设置了贴图方式，这种方式使用opengl的<code>glTexParameteri</code>函数进行设置。(只看opengl，D3D原理相似)</p>
+
+<pre><code>glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+</code></pre>
+
+<p>如果纹理坐标超过（0，1）范围，则开始从头开始寻址。也就是说原先纹理坐标是(0，0.5),此时经过放大2倍，变成（0，1），那么重新开始读取纹理的（0，0）位置。<br />
+至此重复贴出的效果就实现了。</p>
+
+<p>另外在unity中纹理贴图方式是在如下位置设置的：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-07-15180058478883.jpg" alt="=w300" /></p>
+
+<p>如果你把Wrap Mode设置为<code>Clamp</code>，纹理寻址找不到直接就不显示了。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[怎么控制镜头跟随人物移动]]></title>

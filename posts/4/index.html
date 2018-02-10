@@ -9,7 +9,9 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content=" Android笔记 廖雪峰的官方网站 程序员的自我修养 子龙山人 GIT手册 ">
+  <meta name="description" content="前记 这个将要说的bug并不复杂，但是却影响了一大波的用户。后果很严重。而引发这个问题的原因却是错综复杂，千丝万缕。
+只能说一坑还有一坑深。
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +73,102 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">记最近遇到最头疼的一个Bug</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-03-12T16:15:46+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h3 id="section">前记</h3>
+
+<p><img src="https://cdn.ruguoapp.com/FkHR-5cSU8UK1upmG4x67UQCKWZI" alt="" /><br />
+这个将要说的bug并不复杂，但是却影响了一大波的用户。后果很严重。而引发这个问题的原因却是错综复杂，千丝万缕。<br />
+只能说一坑还有一坑深。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-01-10T20:24:50+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>以前制作多个渠道包的方法是这样子的，在AndroidMenifest.xml里面放置一个的变量。例如</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">&lt;meta-data android:name="dksdk_channel" android:value="CHANNEL_CHANNEL_VALUES" /&gt;
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>然后对生成的apk分析，替换里面的SETTING_UMENG_CHANNEL_CHANNELID_VALUES，重新打包就可以了。</p>
+
+<p>这段时间从Eclipse迁移到android studio上面，发现android studio里面有<code>flavor</code>的一个特殊存在，不太了解，Google了一下，发现这个东西正好可以解决我们多平台制作apk的需求。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-10-14840497981415.jpg" alt="-w250" /><br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -451,111 +549,6 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">搭建ipv6环境和问题记录</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-09-18T20:15:26+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742018443262.png" alt="" /><br />
-自从16年6月份开始，苹果要求提交的应用一定要支持ipv6。ipv6是做什么用呢？和ipv4有什么区别？<br />
-其实这个教科书上已经和我们解释过了，只是这一天来得太快。<br />
-ipv4的是32位长度，而ipv6是128位，是ipv4的4倍。能够大大的解决ip地址不够用的问题。<br />
-ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
-所以苹果在这个地方加入这个限制条件，就是为了推广ipv6的使用。</p>
-
-<p>而对于我们开发者要做的事情，就是搭建一个ipv6的网络地址。<br />
-同时将我们项目中那些用ipv4的网络框架改为支持两种协议。</p>
-
-<p>我分享这篇文章主要介绍怎么搭建一个ipv6的网络。我们在这个地方摔进了个大深坑。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">快速打包测试提交苹果审核的流程</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-09-18T17:22:24+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><blockquote>
-  <p>天下武功，唯快不破。加快时间是制胜王道。</p>
-</blockquote>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-1.jpg" alt="1" /></p>
-
-<p>对于出一次大包，是一件很费时费力的事情。具体包括以下步骤：</p>
-
-<ol>
-  <li>加密资源。正常情况下，每个团队对自己做的项目都有这样的要求，而加密可以借助于工具或者使用脚本。一般是10~20分钟。项目大小不同，小的项目会很快，大的项目则慢的多。</li>
-  <li>打包ipa或者apk文件。此时依赖于项目的复杂度，有依赖的项目库也会重新build，不修改依赖库，也就是使用缓存的build文件会加快速度。一般需要30分钟左右。</li>
-  <li>上传ipa或者apk文件。这个过程依赖网络速度。我们网络上传速度是100~200k/s的速度，一般需要20分钟左右。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/09/18/kuai-su-da-bao-ce-shi-ti-jiao-ping-guo-shen-he-de-liu-cheng">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="5">&larr; Older</a>
@@ -573,6 +566,14 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
       </li>
     
@@ -582,14 +583,6 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
     
       <li class="post">
         <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
       </li>
     
   </ul>
@@ -663,7 +656,7 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 <li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
 <li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
 <li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
-<li class='category'><a href='/blog/categories/unity/'>unity (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (2)</a></li>
 <li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
 <li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
 <li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
@@ -686,7 +679,7 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 <li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
 <li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
 <li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
-<li class='category'><a href='/blog/categories/游戏/'>游戏 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (2)</a></li>
 <li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
 <li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
 <li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
