@@ -4,7 +4,7 @@
   <title><![CDATA[分类:cocos2dx | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/cocos2dx/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-02-11T00:32:04+08:00</updated>
+  <updated>2018-03-09T18:05:01+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,94 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[大富翁项目总结]]></title>
+    <link href="http://www.newtomato.me/blog/2018/03/09/2017xiang-mu-zong-jie"/>
+    <updated>2018-03-09T17:53:10+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/03/09/2017xiang-mu-zong-jie</id>
+    <content type="html"><![CDATA[<p>年前1月份我们上线了一款大富翁游戏。他的玩法是传统的大富翁玩法+实时多人在线+陌生人匹配。这款游戏从立项到上线，设计思路变化过一次。小变化无数。历时半年左右。虽未取得大成功。但是对于我们团队而言，是一次很好的磨合历练。</p>
+
+<p>之所以采用实时socket连接，就是希望玩家能够真实的感受有人在和他一起玩。希望通过玩家产生内容。增加黏性。提到socket实时游戏，常见的比如魔兽世界，王者荣耀以及绝地求生等（他们使用的实时技术是帧同步或者状态同步，均比我们自己项目中的同步要复杂的多，大富翁的规则是每个回合只有一个人才能够摇筛子，因此需要数据量相对轻量级）。如果大家怎么更好的实时同步感兴趣，建议去腾讯学院查找些干货，这里就不展开说了。</p>
+
+<p>我这里主要总结项目的架构和遇到的问题。<br />
+<!--more--></p>
+
+<h2 id="section">概要介绍</h2>
+
+<p>大富翁有很多系统杂糅一起。基础系统是土地买卖，更新归属权。玩家金钱，玩家状态变化。其他系统，股票系统，神仙系统，新闻命运等道路事件系统都是通过影响基础系统来增加玩法的趣味性。所以当玩家摇筛子走到一块没有任何归属土地的时候，需要判断很多情况。</p>
+
+<ul>
+  <li>是否有足够的金币。有，准备数据告诉服务器可以购买。（A数据包）</li>
+  <li>否，是否有土地公。有，准备数据告诉服务器，我有土地公加成。（A数据包）</li>
+  <li>有无恶狗等土地事件。有，准备数据，告诉服务器，恶狗附身。（B数据包）</li>
+</ul>
+
+<p>上述简单分析，也就是在这个WaitHere的逻辑中，我们需要调用Player模块，神仙模块，以及道路事件模块，最终将分析出的结果A，B包发给服务器。</p>
+
+<p>在我们的逻辑中，数据模块是耦合在一起的（数据模块自身有对应的接口测试）。而对应逻辑模块自身会通过我们下面提到的自动化测试来验证正确性。</p>
+
+<p>使用的模式有，观察者模式，代理模式，单例模式，状态模式等。使用MVC的思想对业务进行分离。</p>
+
+<h2 id="section-1">请求响应同步模块</h2>
+
+<p>把大富翁的客户端看成一个黑盒子，只有输入输出的话。输出是发出去的请求Request。输入是来自服务器的响应Response。</p>
+
+<p>输出是将玩家的操作整理成请求数据。这个模块暂称之为<strong>“玩家操作模块”</strong>例如摇筛子，购地，升级，使用卡片等。<strong>“响应模块”</strong>就是处理请求，将“决定之后的结果”同步给所有玩家。摇出筛子数字，决定了购地，地块归属发生了变化等。这部分采用状态模式，根据服务器发来的不同状态，进入不同模块，更新数据，更新显示。</p>
+
+<p>这样做的好处在于，数据最终都是以服务器为准。（客户端也会保存一份数据，用于展示。）请求出现问题，在服务器那边会进行校验判定。然后以错误码的形式发送过来。</p>
+
+<p>服务器的响应一个同步队列。比如既能够土地归属发生变化（状态101+数据），又能让神仙附身（状态102+数据）等等。此处便采用状态模式。每种状态处理器各自分开互不影响。状态处理器挨个存到队列中，一个执行结束，执行下一个。知道全都执行结束。然后通知游戏，此次同步结束。解冻“玩家操作模块”，允许玩家继续操作游戏。另外每个状态处理还可以定制自己需要的参数。和服务器开发同学将协议商定下来就行。</p>
+
+<h2 id="section-2">寻路模块</h2>
+
+<p>大富翁类型的地图有自己的特殊性。首先地图有顺时针逆时针的方向要求。有多条主路和部分支路的区分。每条主路会成为一个闭环。玩家不能主动进入支路，只能被动进入。所以对策划同学给的地图我们需要按照顺时针方向制作号码标记。1，2，3，4等。在主路分叉路口上增加协议，例如2_main_1_1,2_main_1_2,2_main_1_3,…主路第一条岔路从主路编号2开始，2_main_2_1，2_main_2_2，2_main_2_3,…这是主路的第二条岔路也是主路编号2开始。说明在主路2号这里有两条岔路。<br />
+至于分支，将main改为branch。<br />
+按照这样的协议，就可以通过深度优先算法，求算出一条主路的路径。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-03-09-15201639745417.jpg" alt="=w300" /></p>
+
+<h2 id="section-3">断线重连模块</h2>
+
+<p>由于网络环境的问题，游戏会经常断线。但是实际房间并未销毁。所以当玩家重新进入游戏。理论上应该可以重新加入游戏。<br />
+此时最大的问题，就是玩家进入游戏需要初始游戏，但是此刻服务器有可能已经开始又数据发送多个更新包过来。所以此刻并不能够立马开始更新游戏。因此这些数据先暂存起来等待初始化完成在更新游戏。</p>
+
+<p>这样数据不会丢失。但是如果缓存的数据过多，又会在更新的时候，造成播放时间较长。伤害了用户体验。因此这里可以将缓存数据做“压缩”处理。直接整合数据，将最后结果更新出来就行，而不用挨个更新。</p>
+
+<p>断线重连遇到一个棘手的问题:<br />
+玩家ABCD正处于某一个第三方模块中。模块的初始化时机在进入模块开始。离开模块的时候做清理操作。<br />
+此时，某个玩家C突然掉线，待他断线重进的时候，这个第三方模块并未结束。但是服务器不在派发C的进入通知，导致C客户端并不会初始化模块的事件监听。于是游戏模块内做的数据更新通知，在C断线重连之后都不会再做。导致C的数据和其他玩家数据不一致。<br />
+为此，只能讲第三方模块所需要用到的初始化都放在主模块中。</p>
+
+<h2 id="section-4">自动测试模块</h2>
+
+<p>这里的自动测试是通过对输入模块进行封装。原先由于用户决定的点击转成系统随机选择。<br />
+对任何地块，均可有对应的决策。例如：<br />
+	空地。他的决策是是否购地。<br />
+	不是自己的土地，但是有归属，则决策是缴纳过路费。<br />
+	是自己的土地，决策就是是否升级。<br />
+	是自己的研究所，决策是是否要开始研究卡片。<br />
+	不是自己的土地，但是身上有土地公。决策就是先付过路费，在占领别人的土地。<br />
+以上的例子，均可证明自动测试中，决策可以有系统来做。一旦明确如此，就可以配置测试。</p>
+
+<p>所以流程就是：摇筛子，寻目标地，然后进行决策。更新结果，继续摇筛子，如此循环往复。<br />
+这种方式帮助我们测试功能模块是否正确。也节省了大量的测试工作。</p>
+
+<h2 id="section-5">遇到的问题</h2>
+
+<p>大富翁看似简单，实际上在开发中，我们遇到了不少问题。举几个例子：</p>
+
+<ul>
+  <li>玩家状态切换，在线和离线状态切换。</li>
+  <li>控制权切换，以及在A控制关卡的同时，使用了陷害卡导致B触发了被动卡操作，A的操作倒计时停止，且不能操作关卡，B开始操作倒计时。直到B选择了结果，A的操作倒计时才继续。</li>
+  <li>玩家断线重连。这里包括玩家自己杀死游戏重新进入。也包括玩家压入后台，在进入游戏之后，游戏session失效，重新自动登录。两种情况不同在于，第一种是开启了新的游戏进程。第二种是在当前游戏进程，需要清空数据和事件。</li>
+  <li>闭包函数当中的upvalue属性要注意。</li>
+  <li>场景资源在制作的时候，关卡宽高大约4000x3000，如果使用RGBA8888加载，大约内存会暴涨48M以上。为了能够在低端机上加载进来。所以裁成4张图，逐帧加载。采用pvr(ios)和pkm(android)来分别加载。会有明显改观。</li>
+  <li>背景静态图片会带来内存带来压力。而建筑和玩家形象。使用骨骼动画制作，他们带来CPU的压力。初期测试，fps均值在30以上。但是卡顿的感受也存在。为此将建筑替换成序列帧动画。但是为此增加了包体。同屏的顶点数和drawcall有降低。</li>
+  <li>美术资源维护出现问题，造成cocos动画工程丢失。只剩下导出文件。为此专门写了一个工具。用于将cocos工程还原。并支持序列帧的导出（部分导出有bug，以后改进。）。但是只能在手机上运行。电脑上总是出现黑边。使用的cocos3.6版本。未深入研究原因。</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[为游戏增加记录回放功能]]></title>
@@ -389,70 +477,6 @@ s_pZipFile = new ZipFile(resourcePath, "assets/");
 <p>这里面设计到JNI传递数据。其实这对于我们只要仿照APK路径传递就可以了。关于JNI具体的实现，还请看下一章节内容。</p>
 
 <p>感谢你的阅读！</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[cocos2dx 增加Google移动广告]]></title>
-    <link href="http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads"/>
-    <updated>2016-07-18T22:13:43+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/07/18/zheng-he-google-ads</id>
-    <content type="html"><![CDATA[<p>Google 提供一套广告的SDK，方便开发者将自己在自己应用中植入广告。国内不少的厂家也在做这样的SDK，比较有名的就是触控下面的AnySDK。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-any.jpeg" alt="any" /></p>
-
-<p>但是AnySDK是一个大而全的东西，而我们只需要广告接入这一小块儿的东西。同时，我们的cocos2dx的版本是2.2.6，相对于触控的3.18，已经有很大差别。</p>
-
-<p>于是我们需要自己在重新造一遍轮子，幸运的是网上有不少这样的材料。</p>
-
-<ol>
-  <li>Firebase提供的文档刚好有与cocos2x相关的资料，<a href="https://firebase.google.com/docs/admob/android/games?hl=zh-cn">移步至此</a>,</li>
-  <li>还有热心的同学贴出了更详细的步骤<a href="http://www.cnblogs.com/qianyuming/p/5023018.html">cocos2dx-3.9 集成admob</a>。</li>
-  <li>
-    <p><a href="https://firebase.google.com/docs/admob/ios/quick-start?hl=zh-cn">入门基础指导</a><br />
-<!--more--><br />
-参考了上面的资料，我还是遇到了不少问题。</p>
-  </li>
-  <li>
-    <p>首当其冲的就是<strong>安装CocoaPods</strong> ，可以参考下面两篇文章。</p>
-
-    <ol>
-      <li><a href="http://blog.csdn.net/wuquan0625/article/details/47401235">pod install速度慢的终极解决方案</a>。</li>
-      <li><a href="http://www.cnblogs.com/qianyuming/p/5012578.html">cocoapod安装过程中的幺蛾子</a></li>
-    </ol>
-  </li>
-  <li>一定要下载最新的googlemobilesdk版本，<a href="https://firebase.google.com/docs/admob/ios/download?hl=zh-cn">地址在此处</a>,我当前用的是v7.9.0。</li>
-  <li>我们的项目不仅仅会依赖上面的<code>GoogleMobileAds.framework</code>，还依赖一下的framework，请在target-&gt; build phase -&gt; frameworks中找出来。此处我也是被坑到了，总是提示类似<code>"_OBJC_CLASS_$_SFSafariViewController", referenced from: "_CMTimeMakeWithSeconds", referenced from: l3880 in GoogleMobileAds(flat-arm64)"</code>这样的错误，究其原因就是没有找到对应的framework。</li>
-</ol>
-
-<pre><code>CoreMideia.framework,SafariServices.framework,
-CoreBluetooth.framework,MessageUI.framework,
-AdSupport.framework,EventKit.framework,EventKitUI.framework,
-AudioToolbox.framework,MediaPlayer.framework,
-StoreKit.framework,SystemConfiguration.framework,
-CoreTelephony.framework,CoreGraphics.framework,
-AVFoundation.framework
-</code></pre>
-
-<ol>
-  <li>clean-&gt;build project</li>
-  <li>在模拟器上运行，Google Ads会自动加载测试的广告。但是如果要在真机上测试，需要打开真机上关闭广告跟踪的功能。在手机的设置-&gt;隐私-&gt;广告里面。关闭即可。</li>
-  <li>运行项目从输出控制台先拿到测试设备号。然后填写到下面的位置。再次运行。</li>
-</ol>
-
-<pre><code>GADRequest *request = [GADRequest request];
-request.testDevices = @[@"测试设备号"];
-</code></pre>
-<ol>
-  <li>设备上测试，还要考虑装一个VPN。</li>
-  <li>如果首次没有显示出来，并且控制台也没有报错，估计就是网络响应慢导致的问题。可以多次尝试即可。</li>
-  <li>Google 提供了一个example工程。<a href="git@github.com:googleads/googleads-mobile-ios-examples.git">地址</a>,可以先调通这个工程，那么整合到cocos2dx中也就不是什么事儿了！</li>
-</ol>
-
-<p>上述是我花费了大半天的时间，踩了不少坑，才将这套流程走通。并且仅仅是展示了Banner广告。<br />
-先看一下效果吧。接下来的计划就是调通控制广告播时长的接口。</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-18-IMG_0511.png" alt="IMG_0511" /></p>
 
 ]]></content>
   </entry>

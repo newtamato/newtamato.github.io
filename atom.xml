@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-02-11T00:32:04+08:00</updated>
+  <updated>2018-03-09T18:03:25+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,94 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[大富翁项目总结]]></title>
+    <link href="http://www.newtomato.me/blog/2018/03/09/2017xiang-mu-zong-jie"/>
+    <updated>2018-03-09T17:53:10+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/03/09/2017xiang-mu-zong-jie</id>
+    <content type="html"><![CDATA[<p>年前1月份我们上线了一款大富翁游戏。他的玩法是传统的大富翁玩法+实时多人在线+陌生人匹配。这款游戏从立项到上线，设计思路变化过一次。小变化无数。历时半年左右。虽未取得大成功。但是对于我们团队而言，是一次很好的磨合历练。</p>
+
+<p>之所以采用实时socket连接，就是希望玩家能够真实的感受有人在和他一起玩。希望通过玩家产生内容。增加黏性。提到socket实时游戏，常见的比如魔兽世界，王者荣耀以及绝地求生等（他们使用的实时技术是帧同步或者状态同步，均比我们自己项目中的同步要复杂的多，大富翁的规则是每个回合只有一个人才能够摇筛子，因此需要数据量相对轻量级）。如果大家怎么更好的实时同步感兴趣，建议去腾讯学院查找些干货，这里就不展开说了。</p>
+
+<p>我这里主要总结项目的架构和遇到的问题。<br />
+<!--more--></p>
+
+<h2 id="section">概要介绍</h2>
+
+<p>大富翁有很多系统杂糅一起。基础系统是土地买卖，更新归属权。玩家金钱，玩家状态变化。其他系统，股票系统，神仙系统，新闻命运等道路事件系统都是通过影响基础系统来增加玩法的趣味性。所以当玩家摇筛子走到一块没有任何归属土地的时候，需要判断很多情况。</p>
+
+<ul>
+  <li>是否有足够的金币。有，准备数据告诉服务器可以购买。（A数据包）</li>
+  <li>否，是否有土地公。有，准备数据告诉服务器，我有土地公加成。（A数据包）</li>
+  <li>有无恶狗等土地事件。有，准备数据，告诉服务器，恶狗附身。（B数据包）</li>
+</ul>
+
+<p>上述简单分析，也就是在这个WaitHere的逻辑中，我们需要调用Player模块，神仙模块，以及道路事件模块，最终将分析出的结果A，B包发给服务器。</p>
+
+<p>在我们的逻辑中，数据模块是耦合在一起的（数据模块自身有对应的接口测试）。而对应逻辑模块自身会通过我们下面提到的自动化测试来验证正确性。</p>
+
+<p>使用的模式有，观察者模式，代理模式，单例模式，状态模式等。使用MVC的思想对业务进行分离。</p>
+
+<h2 id="section-1">请求响应同步模块</h2>
+
+<p>把大富翁的客户端看成一个黑盒子，只有输入输出的话。输出是发出去的请求Request。输入是来自服务器的响应Response。</p>
+
+<p>输出是将玩家的操作整理成请求数据。这个模块暂称之为<strong>“玩家操作模块”</strong>例如摇筛子，购地，升级，使用卡片等。<strong>“响应模块”</strong>就是处理请求，将“决定之后的结果”同步给所有玩家。摇出筛子数字，决定了购地，地块归属发生了变化等。这部分采用状态模式，根据服务器发来的不同状态，进入不同模块，更新数据，更新显示。</p>
+
+<p>这样做的好处在于，数据最终都是以服务器为准。（客户端也会保存一份数据，用于展示。）请求出现问题，在服务器那边会进行校验判定。然后以错误码的形式发送过来。</p>
+
+<p>服务器的响应一个同步队列。比如既能够土地归属发生变化（状态101+数据），又能让神仙附身（状态102+数据）等等。此处便采用状态模式。每种状态处理器各自分开互不影响。状态处理器挨个存到队列中，一个执行结束，执行下一个。知道全都执行结束。然后通知游戏，此次同步结束。解冻“玩家操作模块”，允许玩家继续操作游戏。另外每个状态处理还可以定制自己需要的参数。和服务器开发同学将协议商定下来就行。</p>
+
+<h2 id="section-2">寻路模块</h2>
+
+<p>大富翁类型的地图有自己的特殊性。首先地图有顺时针逆时针的方向要求。有多条主路和部分支路的区分。每条主路会成为一个闭环。玩家不能主动进入支路，只能被动进入。所以对策划同学给的地图我们需要按照顺时针方向制作号码标记。1，2，3，4等。在主路分叉路口上增加协议，例如2_main_1_1,2_main_1_2,2_main_1_3,…主路第一条岔路从主路编号2开始，2_main_2_1，2_main_2_2，2_main_2_3,…这是主路的第二条岔路也是主路编号2开始。说明在主路2号这里有两条岔路。<br />
+至于分支，将main改为branch。<br />
+按照这样的协议，就可以通过深度优先算法，求算出一条主路的路径。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-03-09-15201639745417.jpg" alt="=w300" /></p>
+
+<h2 id="section-3">断线重连模块</h2>
+
+<p>由于网络环境的问题，游戏会经常断线。但是实际房间并未销毁。所以当玩家重新进入游戏。理论上应该可以重新加入游戏。<br />
+此时最大的问题，就是玩家进入游戏需要初始游戏，但是此刻服务器有可能已经开始又数据发送多个更新包过来。所以此刻并不能够立马开始更新游戏。因此这些数据先暂存起来等待初始化完成在更新游戏。</p>
+
+<p>这样数据不会丢失。但是如果缓存的数据过多，又会在更新的时候，造成播放时间较长。伤害了用户体验。因此这里可以将缓存数据做“压缩”处理。直接整合数据，将最后结果更新出来就行，而不用挨个更新。</p>
+
+<p>断线重连遇到一个棘手的问题:<br />
+玩家ABCD正处于某一个第三方模块中。模块的初始化时机在进入模块开始。离开模块的时候做清理操作。<br />
+此时，某个玩家C突然掉线，待他断线重进的时候，这个第三方模块并未结束。但是服务器不在派发C的进入通知，导致C客户端并不会初始化模块的事件监听。于是游戏模块内做的数据更新通知，在C断线重连之后都不会再做。导致C的数据和其他玩家数据不一致。<br />
+为此，只能讲第三方模块所需要用到的初始化都放在主模块中。</p>
+
+<h2 id="section-4">自动测试模块</h2>
+
+<p>这里的自动测试是通过对输入模块进行封装。原先由于用户决定的点击转成系统随机选择。<br />
+对任何地块，均可有对应的决策。例如：<br />
+	空地。他的决策是是否购地。<br />
+	不是自己的土地，但是有归属，则决策是缴纳过路费。<br />
+	是自己的土地，决策就是是否升级。<br />
+	是自己的研究所，决策是是否要开始研究卡片。<br />
+	不是自己的土地，但是身上有土地公。决策就是先付过路费，在占领别人的土地。<br />
+以上的例子，均可证明自动测试中，决策可以有系统来做。一旦明确如此，就可以配置测试。</p>
+
+<p>所以流程就是：摇筛子，寻目标地，然后进行决策。更新结果，继续摇筛子，如此循环往复。<br />
+这种方式帮助我们测试功能模块是否正确。也节省了大量的测试工作。</p>
+
+<h2 id="section-5">遇到的问题</h2>
+
+<p>大富翁看似简单，实际上在开发中，我们遇到了不少问题。举几个例子：</p>
+
+<ul>
+  <li>玩家状态切换，在线和离线状态切换。</li>
+  <li>控制权切换，以及在A控制关卡的同时，使用了陷害卡导致B触发了被动卡操作，A的操作倒计时停止，且不能操作关卡，B开始操作倒计时。直到B选择了结果，A的操作倒计时才继续。</li>
+  <li>玩家断线重连。这里包括玩家自己杀死游戏重新进入。也包括玩家压入后台，在进入游戏之后，游戏session失效，重新自动登录。两种情况不同在于，第一种是开启了新的游戏进程。第二种是在当前游戏进程，需要清空数据和事件。</li>
+  <li>闭包函数当中的upvalue属性要注意。</li>
+  <li>场景资源在制作的时候，关卡宽高大约4000x3000，如果使用RGBA8888加载，大约内存会暴涨48M以上。为了能够在低端机上加载进来。所以裁成4张图，逐帧加载。采用pvr(ios)和pkm(android)来分别加载。会有明显改观。</li>
+  <li>背景静态图片会带来内存带来压力。而建筑和玩家形象。使用骨骼动画制作，他们带来CPU的压力。初期测试，fps均值在30以上。但是卡顿的感受也存在。为此将建筑替换成序列帧动画。但是为此增加了包体。同屏的顶点数和drawcall有降低。</li>
+  <li>美术资源维护出现问题，造成cocos动画工程丢失。只剩下导出文件。为此专门写了一个工具。用于将cocos工程还原。并支持序列帧的导出（部分导出有bug，以后改进。）。但是只能在手机上运行。电脑上总是出现黑边。使用的cocos3.6版本。未深入研究原因。</li>
+</ul>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Unity Shader基础函数：TRANSFORM_TEX]]></title>
@@ -2174,252 +2262,6 @@ DNSPod负责将这个域名和ip地址或者另一个域名绑定起来。ip地�
 <h3 id="section-3">后续</h3>
 
 <p>如果还对网站搭建感兴趣的读者，可以看看我前几篇文章。有静态网站，动态网站的。不同方式任君挑选！</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[使用djnago-blog-zinnia搭建一个博客网站]]></title>
-    <link href="http://www.newtomato.me/blog/2017/08/05/djnago-blog-zinnia"/>
-    <updated>2017-08-05T18:32:15+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/08/05/djnago-blog-zinnia</id>
-    <content type="html"><![CDATA[<p>搭建网站的方法有很多，大致有如下几种方法：</p>
-
-<ol>
-  <li>
-    <p>在godaddy上申请一个全套的建站服务，从域名到空间，再到网站内容编辑工具。全部都是一步到位。网站的基本要素都是有的。最受大家喜欢的就是<code>WordPress</code>这样的博客网站了。</p>
-  </li>
-  <li>小白搭建博客必备技能。静态网站搭建。现在比较流行的方法，例如在github上申请一个账户，用github，octpress就可以搭建一个简单的静态网站。虽然是“静态”，但是也可以有很多功能。利用markdown的强大能力，你可以做出漂亮的排版。还可以使用第三方的留言，统计，转发，分享，点赞等功能。我们常常头疼的是怎么找一个合适的插件。有很多插件已经失效。</li>
-  <li>最后一种，搭建一个动态网站。简而言之就是，自己申请域名和购买服务器。然后在服务器上架设网站服务，提交和部署代码。将域名和服务器绑定起来，这套流程说是简单，但是一般都是有一定计算机网络知识的同学才能熟练操作的技能。</li>
-</ol>
-
-<p>这三种方法都可以将我们网站开放到互联网。没有哪一种是好的，只有适合你的才是好的。我个人常用的是第二种，简单快捷，而且效率高。<br />
-但是今天我要要说的是第三种方式。按照我的步骤，你很快就能搭建一个可以访问的网站。</p>
-
-<!--more-->
-
-<h2 id="section">申请域名</h2>
-
-<p>付费域名申请网站<code>godaddy.com</code>。同时他还提供域名隐私服务。不过需要付费。当然也可以申请免费域名。<br />
-国内到<code>万网域名申请</code>，需要备案。<br />
-我使用的是<a href="http://www.freenom.com/zh/freeandpaiddomains.html">Freenom</a>，免费域名提供商。<br />
-只需要注册个账户，然后就可以领走你想要的域名。</p>
-
-<h2 id="section-1">申请空间</h2>
-
-<p>到<a href="https://www.pythonanywhere.com/">pythonanywhere</a>,注册账号。就有免费的空间供你使用。同时他已经实现安装了一套python的库，这对于我们后面搭建博客系统方便了需要。<br />
-注册完账户，进入首页,选择web选项卡<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501923895242.jpg" alt="=w300" /></p>
-
-<p>此时可以<strong>Add a new web app</strong>.<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019239387431.jpg" alt="=w300" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019240064418.jpg" alt="=w300" /></p>
-
-<p>最终你会看到如下的界面。这个<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019242449324.jpg" alt="" /></p>
-
-<p>点击<code>xxx.pythonanywhere.com</code>链接,打开的就是你的网站<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019243247447.jpg" alt="=w300" /></p>
-
-<p>但是是不是少点什么？<br />
-是的，那就是这个域名不是你想要的，你的个性化域名还没有和网站有什么关系啊！<br />
-接下来就要发生点关系了。</p>
-
-<h2 id="section-2">绑定域名和空间</h2>
-
-<p>我们刚刚申请的域名，需要绑定到空间映射的一个地址。所以我们要得到这个地址。<br />
-还得找一个来解析域名和地址对应关系的中间服务。（假设我们现在已经有了这个空间的地址）<br />
-<code>DNSPod</code>刚好为我们做了这些。当然我们在申请域名服务的地方,就是上面提到的freenom也可以做这件事。<br />
-freenom是个国外的网站，解析起来没有国内的快。所以我选择了DNSPod。<br />
-注册DNSPod之后，<strong>添加域名</strong>，在域名解析里面添加记录<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019251536702.jpg" alt="=w400" /><br />
-其中的记录值需要改成你的空间地址。</p>
-
-<p>获取空间地址的方法:</p>
-
-<p>打开你的终端，然后输入</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">ping xxx.pythonanywhere.com</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019252613848.jpg" alt="=w400" /></p>
-
-<p>然后等下，访问你的域名试试。是不是打开了<code>It's work</code>的网页！</p>
-
-<h2 id="section-3">在服务器上部署一套博客系统</h2>
-
-<p>此时到这里，就差网站搭建了。我选择<code>djnago-blog-zinnia</code>框架。<br />
-最后的效果如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019256268930.jpg" alt="=w300" /></p>
-
-<ol>
-  <li>进入我们的空间后台<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501925720319.jpg" alt="=w300" /></li>
-  <li>在终端输入，安装我们需要的模块：
-    <ol>
-      <li><code>virtualenv --python=python2.7 myvenv</code></li>
-      <li><code>source myvenv/bin/activate</code></li>
-      <li><code>pip install django whitenoise</code></li>
-      <li><code>pip install django-blog-zinnia</code></li>
-      <li><code>django-admin startproject mysite .</code></li>
-      <li><code>python manage.py migrate</code></li>
-      <li><code>python manage.py collectstatic</code></li>
-    </ol>
-  </li>
-  <li>进入mysite文件夹，<code>cd mysite</code>，修改setting.py</li>
-</ol>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">		INSTALLED_APPS = (
-</span><span class="line">		  ...
-</span><span class="line">		  'django_comments',
-</span><span class="line">		  'mptt',
-</span><span class="line">		  'tagging',
-</span><span class="line">		  'zinnia',
-</span><span class="line">		)	
-</span><span class="line">		
-</span><span class="line">		TEMPLATES = [
-</span><span class="line">		 {
-</span><span class="line">		    'BACKEND': 'django.template.backends.django.DjangoTemplates',
-</span><span class="line">		    'APP_DIRS': True,
-</span><span class="line">		    'OPTIONS': {
-</span><span class="line">		      'context_processors': [
-</span><span class="line">		       ...
-</span><span class="line">		        'zinnia.context_processors.version',  # Optional
-</span><span class="line">		      ]
-</span><span class="line">		    }
-</span><span class="line">		  }
-</span><span class="line">		]
-</span><span class="line">		</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>然后修改<code>urls.py</code></p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">	url(r'', include('zinnia.urls')),
-</span><span class="line">	url(r'^comments/', include('django_comments.urls'))	</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>最后配置一个WGSI文件，点击 “WSGI configuration file” 链接。将下面的代码替换进去。</p>
-
-<pre><code>```
-import os
-import sys
-
-path = 'mysite所在的父文件夹'  # use your own username here
-if path not in sys.path:
-    sys.path.append(path)
-
-os.environ['DJANGO_SETTINGS_MODULE'] = 'mysite.settings'
-
-from django.core.wsgi import get_wsgi_application
-from whitenoise.django import DjangoWhiteNoise
-application = DjangoWhiteNoise(get_wsgi_application())
-
-``` 另外，设置virtualenv，我们在上面已经选择了python2.7，这里配置一下，以后进入后台中断，生效的就是这个python，而不是系统给的python。
-</code></pre>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019275863573.jpg" alt="=w300" /><br />
-将你的myvenv的目录写在此处。<code>/home/yourname/myvenv</code></p>
-
-<p>所有的步骤基本完成。运行试试看。<code>python manager.py runserver</code></p>
-
-<p>此时的博客看起来，不是很美观，因此我们还需要给他提供一个主题。</p>
-
-<h2 id="section-4">主题安装</h2>
-
-<p>进入虚拟环境终端。输入</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">pip install django-app-namespace-template-loader
-</span><span class="line">pip install zinnia-theme-bootstrap
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>打开<code>settings.py</code>修改</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">INSTALLED_APPS = [
-</span><span class="line">    ...
-</span><span class="line">    'zinnia_bootstrap',
-</span><span class="line">    'zinnia',
-</span><span class="line">]
-</span><span class="line">
-</span><span class="line">TEMPLATES = [
-</span><span class="line">    {
-</span><span class="line">        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-</span><span class="line">        'DIRS': [],        
-</span><span class="line">        'APP_DIRS': False,
-</span><span class="line">        'OPTIONS': {
-</span><span class="line">            'context_processors': [
-</span><span class="line">                ...
-</span><span class="line">                'zinnia.context_processors.version',  # Optional
-</span><span class="line">            ],
-</span><span class="line">
-</span><span class="line">            'loaders': [
-</span><span class="line">               'app_namespace.Loader',
-</span><span class="line">               'django.template.loaders.filesystem.Loader',
-</span><span class="line">               'django.template.loaders.app_directories.Loader',
-</span><span class="line">            ],
-</span><span class="line">
-</span><span class="line">        },
-</span><span class="line">    },
-</span><span class="line">]
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>OK,主题安装成功。这次在重新运行看看吧！</p>
-
-<h2 id="section-5">参考文章</h2>
-<ol>
-  <li><a href="http://blog.csdn.net/fujianfafu/article/details/58239434">zinnia-theme-bootstrap 使用过程中的问题</a></li>
-  <li><a href="http://blog.csdn.net/u014792107/article/details/52458333?locationNum=9"> 使用 django-blog-zinnia 搭建个人博客</a></li>
-  <li><a href="http://docs.django-blog-zinnia.com/en/develop/getting-started/install.html">django blog zinnia</a></li>
-  <li><a href="https://tutorial.djangogirls.org/zh/deploy/">djangogirls</a></li>
-</ol>
 
 ]]></content>
   </entry>

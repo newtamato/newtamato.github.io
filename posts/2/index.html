@@ -9,8 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="环境： MacOS sierra
-python 2.7 ">
+  <meta name="description" content="学习opengl最基础的方法就是将新手教程的工程先运行起来，实战才能收获经验。
+先介绍我的工作环境。MAC Sierra 10.12.6,xcode 9.2。 手动安装依赖库，配置各种环境变量。 glfw以及glew安装 自己安装各种依赖工具包，主要有glfw和glew,以及glad。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,65 @@ python 2.7 ">
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行OpenGL工程</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-12-03T17:36:47+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>学习opengl最基础的方法就是将新手教程的工程先运行起来，实战才能收获经验。<br />
+先介绍我的工作环境。<code>MAC Sierra 10.12.6</code>,<code>xcode 9.2</code>。</p>
+
+<h2 id="section">手动安装依赖库，配置各种环境变量。</h2>
+
+<h3 id="glfwglew">glfw以及glew安装</h3>
+
+<p>自己安装各种依赖工具包，主要有<code>glfw</code>和<code>glew</code>,以及<code>glad</code>。</p>
+
+<p><code>glfw</code>和<code>glew</code>最简单安装方法就是通过<code>brew</code>。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">brew install glfw
+</span><span class="line">brew install glew</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>安装完成之后，会在被存放在<code>/usr/local/Cellar/glew/</code>以及<code>/usr/local/Cellar/glfw</code>这里。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/12/03/macshang-openglhuan-jing">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -508,60 +567,6 @@ python 2.7
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/08/05/djnago-blog-zinnia">使用djnago-blog-zinnia搭建一个博客网站</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-08-05T18:32:15+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>搭建网站的方法有很多，大致有如下几种方法：</p>
-
-<ol>
-  <li>
-    <p>在godaddy上申请一个全套的建站服务，从域名到空间，再到网站内容编辑工具。全部都是一步到位。网站的基本要素都是有的。最受大家喜欢的就是<code>WordPress</code>这样的博客网站了。</p>
-  </li>
-  <li>小白搭建博客必备技能。静态网站搭建。现在比较流行的方法，例如在github上申请一个账户，用github，octpress就可以搭建一个简单的静态网站。虽然是“静态”，但是也可以有很多功能。利用markdown的强大能力，你可以做出漂亮的排版。还可以使用第三方的留言，统计，转发，分享，点赞等功能。我们常常头疼的是怎么找一个合适的插件。有很多插件已经失效。</li>
-  <li>最后一种，搭建一个动态网站。简而言之就是，自己申请域名和购买服务器。然后在服务器上架设网站服务，提交和部署代码。将域名和服务器绑定起来，这套流程说是简单，但是一般都是有一定计算机网络知识的同学才能熟练操作的技能。</li>
-</ol>
-
-<p>这三种方法都可以将我们网站开放到互联网。没有哪一种是好的，只有适合你的才是好的。我个人常用的是第二种，简单快捷，而且效率高。<br />
-但是今天我要要说的是第三种方式。按照我的步骤，你很快就能搭建一个可以访问的网站。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/08/05/djnago-blog-zinnia">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="3">&larr; Older</a>
@@ -579,6 +584,10 @@ python 2.7
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
       </li>
     
@@ -592,10 +601,6 @@ python 2.7
     
       <li class="post">
         <a href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">OpenGL基础之普通光照</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
       </li>
     
   </ul>
@@ -619,7 +624,7 @@ python 2.7
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
 <li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
-<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (6)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (7)</a></li>
 <li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
 <li class='category'><a href='/blog/categories/djnago-blog-zinnia/'>djnago-blog-zinnia (1)</a></li>
 <li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>

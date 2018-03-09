@@ -9,9 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="前记 这个将要说的bug并不复杂，但是却影响了一大波的用户。后果很严重。而引发这个问题的原因却是错综复杂，千丝万缕。
-只能说一坑还有一坑深。
-">
+  <meta name="description" content="lua之所以能够做自动更新，和require的特殊机制有很大的关系。
+通过阅读require相关的代码，我们得知，require的原理是先从package.loaded当中先检查是否存在要加载的lua文件，如果不存在则读取之后放入到package.loaded中，如果存在直接将从package. &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -73,6 +72,54 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/04/15/requirehe-re-geng">Require机制和自动更新之间的爱恨情仇</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-04-15T15:02:02+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>lua之所以能够做自动更新，和require的特殊机制有很大的关系。<br />
+通过阅读require相关的代码，我们得知，require的原理是先从<code>package.loaded</code>当中先检查是否存在要加载的lua文件，如果不存在则读取之后放入到<code>package.loaded</code>中，如果存在直接将从<code>package.loaded</code>中读取即可。<br />
+因此我们热更新之后，为了能够让新的文件生效，会将<code>package.loaded</code>直接清空。这样按照上面的逻辑，<code>require</code>进来得文件肯定都是新的文件了。</p>
+
+<p>事实是，总有意想不到的事情发生。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-04-15-805c3d47ly1fdoys4g14mg209q05g4jr.gif" alt="805c3d47ly1fdoys4g14mg209q05g4j" /></p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/04/15/requirehe-re-geng">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -506,49 +553,6 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">支付宝微信接入</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-10-23T14:28:52+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>一般情况下，想要在国内上Android平台，比如百度，360，小米等，都需要接入他们自己的SDK，里面集成了不少第三方的支付。所以只需要一次接入，就能搞定所有的支付接口，确实方便的很。（同时也有不少负面问题，接触就知道了）。但是一些小众平台，并不会提供这样的SDK，所以需要我们自己接入。PS：注意小众并不意味着市场小，反而他们提供的AUP值和留存率非常高。</p>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/10/23/zhi-fu-bao-wei-xin-jie-ru">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="5">&larr; Older</a>
@@ -566,6 +570,10 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
       </li>
     
@@ -579,10 +587,6 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
     
       <li class="post">
         <a href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">OpenGL基础之普通光照</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
       </li>
     
   </ul>
@@ -606,7 +610,7 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
 <li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
-<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (6)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (7)</a></li>
 <li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
 <li class='category'><a href='/blog/categories/djnago-blog-zinnia/'>djnago-blog-zinnia (1)</a></li>
 <li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
