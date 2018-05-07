@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-03-09T18:03:25+08:00</updated>
+  <updated>2018-05-07T15:54:49+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[补充在android如何使用dumpsys导出FPS]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps"/>
+    <updated>2018-05-07T13:14:08+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps</id>
+    <content type="html"><![CDATA[<p>前几日在网上看到一则怎么在android上测试fps的方法。 <a href="https://blog.csdn.net/wpyily/article/details/52593826">链接在此</a>。</p>
+
+<p>第三种方式，通过<code>dumpsys</code>记录fps日志，然后通过脚本对日志分析，形成直观的图表。还是比较实用的。<br />
+于是尝试搭建这个工具的环境。<br />
+工具链接<a href="https://pan.baidu.com/s/13d7OQEMSQIh4fgq6KbE6TA">在此</a>，此处非常感谢<code>sandman</code>的无私付出。</p>
+
+<!--more-->
+
+<h2 id="section">具体使用方法：</h2>
+
+<ol>
+  <li>工具有一个<strong>执行说明.txt</strong>,按照他的指示，将busybox和fps.sh放入到手机里面。</li>
+  <li>然后执行命令将fps日志保存到check.csv中。</li>
+  <li>最后是将日志取出来。adb pull /sdcard/check.csv . (我这里将check.csv最好放在FPS_Test_1.6(刚刚解压缩出来的文件夹)同一级父目录下面。)</li>
+  <li>执行如下命令 python FPS_Test_1.6/FPStoHTML.py check.csv</li>
+  <li>最终生成了check文件夹。里面head中的data.js便是我们的fps真正的数据所在。</li>
+  <li>运行FPS_result.html即可。</li>
+  <li>我的运行环境是: Mac Python 2.7.10</li>
+</ol>
+
+<p>效果图：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-07-15256696433353.jpg" alt="" /></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[大富翁项目总结]]></title>
@@ -2216,52 +2247,6 @@ limbo不同，他设计的难点的目的是让玩家自己去解谜。飞之旅
 <p>讲故事是为了让人从他人的经历中感受一些什么，向聆听者表达一些什么。游戏只是想让聆听者更强烈的感受这些故事吧！<br />
 并非所有的游戏都是为了讲故事，但是在我心里能够做到这样才是一款非常游戏的游戏吧！<br />
 相比于现在的游戏市场，我更期待以后的游戏市场会是什么情况？可能真的是一家公司独大，也可能是细化游戏品类，深耕游戏市场。有许许多多的游戏公司，他们各自有自己的竞争优势。小众游戏有小众的市场，大众有大众的品牌。游戏生态健康一点。让有梦想的人有机会实现自己的梦想，开心快乐的做游戏。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[域名和ip之绑定]]></title>
-    <link href="http://www.newtomato.me/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding"/>
-    <updated>2017-09-02T18:55:22+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding</id>
-    <content type="html"><![CDATA[<h3 id="section">原由</h3>
-
-<p>之前帮朋友弄了几个域名和搭建网站，但是最近接连几个朋友遇到域名过期，丢失的情况。<br />
-之前为了节省成本用地都是免费域名。<br />
-重新注册回来就行。但是总是前后麻烦，也没有很好的和他们解释清楚。弄得自己很疲惫。<br />
-域名和ip之间的爱恨情仇不是三言两语就可以解释清楚的。而我自己也不是这方面的专家，只能将自己的理解以通俗的语言说一下。希望能让初次接触互联网的人们有个大概的认识。<br />
-<!--more--></p>
-
-<h3 id="section-1">初识</h3>
-
-<p>先分清几个概念，域名注册商和DNS服务商，是可以分开的。<br />
-可以在域名注册商那里注册域名，到DNS服务商这里做域名解析的。<br />
-当然很多域名注册商也有一条龙服务器，注册域名完了之后，直接帮你做域名解析。但是免费的域名一般都是国外网站，用国外的域名解析有的时候会比较慢。因此可以考虑用国内。比如DNSPod。</p>
-
-<h3 id="section-2">相知</h3>
-
-<p>可是如何让DNSpod知道我们域名在哪里注册的呢？</p>
-
-<p>首先DNSPod有自己的域名解析服务器</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">F1G1NS2.DNSPOD.NET
-</span><span class="line">F1G1NS1.DNSPOD.NET</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>我们在域名注册商哪里，先找到域名解析服务(Nameservers)，然后在这里填写上面两个地址。</p>
-
-<p>这样，我们访问一个域名的时候，他找到Nameservers指向的地址，然后就开始让DNSPod来负责解析这个域名。<br />
-DNSPod负责将这个域名和ip地址或者另一个域名绑定起来。ip地址就是我们申请空间的时候，空间服务商提供的ip地址。</p>
-
-<p>到此ip地址和我们的域名就绑定起来了。</p>
-
-<p>接下来的事情，就是等待域名生效了。因为修改Nameservers，需要花费10分钟左右的时间才能生效。</p>
-
-<h3 id="section-3">后续</h3>
-
-<p>如果还对网站搭建感兴趣的读者，可以看看我前几篇文章。有静态网站，动态网站的。不同方式任君挑选！</p>
 
 ]]></content>
   </entry>

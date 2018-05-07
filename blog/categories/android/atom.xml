@@ -4,7 +4,7 @@
   <title><![CDATA[分类:android | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-03-09T18:05:01+08:00</updated>
+  <updated>2018-05-07T16:58:02+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,37 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[补充在android如何使用dumpsys导出FPS]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps"/>
+    <updated>2018-05-07T13:14:08+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps</id>
+    <content type="html"><![CDATA[<p>前几日在网上看到一则怎么在android上测试fps的方法。 <a href="https://blog.csdn.net/wpyily/article/details/52593826">链接在此</a>。</p>
+
+<p>文章提到的第三种方式，非常实用。通过<code>dumpsys</code>记录fps日志，然后通过脚本对日志分析，形成直观的图表。<br />
+于是尝试搭建这个工具的环境。<br />
+工具链接<a href="https://pan.baidu.com/s/13d7OQEMSQIh4fgq6KbE6TA">在此</a>，此处非常感谢<code>sandman</code>的无私付出。</p>
+
+<!--more-->
+
+<h2 id="section">具体使用方法：</h2>
+
+<ol>
+  <li>工具有一个<strong>执行说明.txt</strong>,按照他的指示，将busybox和fps.sh放入到手机里面。</li>
+  <li>然后执行命令将fps日志保存到check.csv中。</li>
+  <li>最后是将日志取出来。adb pull /sdcard/check.csv . (我这里将check.csv最好放在FPS_Test_1.6(刚刚解压缩出来的文件夹)同一级父目录下面。)</li>
+  <li>执行如下命令 python FPS_Test_1.6/FPStoHTML.py check.csv</li>
+  <li>最终生成了check文件夹。里面head中的data.js便是我们的fps真正的数据所在。</li>
+  <li>运行FPS_result.html即可。</li>
+  <li>我的运行环境是: Mac Python 2.7.10</li>
+</ol>
+
+<p>效果图：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-07-15256696433353.jpg" alt="" /></p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[ETC格式图片最佳实践]]></title>
@@ -249,49 +280,6 @@ adb install xxx.apk
 <p>走通这个流程中，我们遇到了不少奇怪的问题，比如Google无法验证身份，（检查是否加入了测试组，设备上的Google账号是否正确等，缓存是否清理），比如没有检测到obb文件，（网络是否正常，能否连接到Google play Store等），文件的下载之后大小有问题等。因此建议你们，手里要有一个可以翻墙的VPN才是事半功倍的利器啊。</p>
 
 <p>至此OBB的工作已经完成，站在Google巨人的肩膀上，省去了我们不少力气。下篇文章，我将结合cocos2dx来讲一下怎么使用下载下来的obb文件。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[节省开发时间的几种方案总结]]></title>
-    <link href="http://www.newtomato.me/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie"/>
-    <updated>2016-06-09T14:31:39+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/06/09/jie-sheng-kai-fa-shi-jian-de-ji-chong-fang-an-zong-jie</id>
-    <content type="html"><![CDATA[<p>我们框架使用的是cocos2d-x。它支持ios和Android的开发。传统的开发，肯定是ios使用xcode，Android使用eclipse。eclipse同时还要配置一些模拟器。如果环境搭配的好，并且配置的电脑性能高，运行起来是可以接受的。但是我们的环境略微艰苦一点。使用Mac Mini，启动xcode很慢，更别提启动eclipse了。更是慢上加慢。为此浪费了我们不少时间。并且一直在想怎么样能够缩减开发时间。最后功夫不负有心人吧。找到了几种方法。分享出来给大家，希望也能解决你遇到这个问题。<br />
-<!--more--></p>
-
-<blockquote>
-  <p>使用触控官方提供的Player模拟器。</p>
-</blockquote>
-
-<p><strong>优点：</strong><br />
-配置简单。只要配置Quick的环境变量，就可以运行，然后设置我们的工程目录，就可以运行我们的项目了。而且这个运行起来相对于ios的模拟器还快一些。并且能够调整屏幕分辨率。</p>
-
-<p><strong>缺点：</strong><br />
-展示解决了ios模拟器的问题，Android模拟器还是需要在eclipse上测试。<br />
-自从mac升级到10.11之后，player就不能够正常运行了。即使用源码重新编译也是无法运行。</p>
-
-<blockquote>
-  <p>由于lua的特性，我们在平时开发中就采用这种更新机制。讲修改的代码文件拷贝到更新文件夹下面。</p>
-</blockquote>
-
-<p><strong>优点：</strong><br />
-不用每次都重新启动模拟器。在我们游戏中，重新加载新代码的时机是用户某一次面板切换。因此copy完之后，切换一次面板就ok。<br />
-这样省去了一次项目启动的时间。不管是ios还是Android</p>
-
-<p><strong>缺点：</strong><br />
-这样做，需要开发同学手动拷贝代码，在ios上面的更新文件夹，有的时候是变化的。不小心在模拟器上卸载之后，或者切换模拟器之后，文件夹位置就变了。踩这个坑也是让人心酸哦。</p>
-
-<blockquote>
-  <p>直接在Android模拟器上做测试。我此处推荐的是海马模拟器。安装海马模拟器是我见过最简单的过程。比Genymotion简单许多。安装了他之后，可以设置一个共享文件夹。就是这个共享文件夹让我灵光一闪。将我们项目做成共享文件夹。然后在海马模拟器上找到更新文件夹，将assets做成共享文件夹的一个软链。代码也做成共享文件夹的一个软链接。这样只要项目变化了，能直接变化更新文件。在海马上启动我们的模拟器</p>
-</blockquote>
-
-<p><strong>优点：</strong><br />
-启动快，不用拷贝代码，节省时间。且直接在Android模拟器上测试。开发完成之后，直接就可以上发布给QA同学测试了。</p>
-
-<p><strong>缺点：</strong><br />
-暂时没有发现，如果有，我后续更新！</p>
 
 ]]></content>
   </entry>
