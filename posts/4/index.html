@@ -9,11 +9,7 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="在第三人称射击游戏中，镜头是跟随英雄的移动而移动的。这是如何实现的呢？
-我们从简入手，开始说一下怎么控制镜头的移动。
-这算是很基础的unity入门了。但是我却没有给我朋友讲清楚。丢人哦！ 开始入手 镜头移动是需要控制镜头的位置随着英雄的位置变动而变动。
-因此有下面的代码：
-">
+  <meta name="description" content="Unity的UI控件有以下几种。 今天我们主要说一下常用的Text，Image，Button，InputField，ScrollView。因为这些组件需要在一个容器里面因此还有Canvas和Panel。 Text Text的创建方式，可以是是用Unity编辑器直接创建，另外就是用代码生成。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -75,6 +71,57 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-05-14T23:49:02+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>Unity的UI控件有以下几种。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-14947687801645_1.jpg" alt="=w130" /><br />
+今天我们主要说一下常用的Text，Image，Button，InputField，ScrollView。因为这些组件需要在一个容器里面因此还有Canvas和Panel。</p>
+
+<h2 id="text">Text</h2>
+
+<p>Text的创建方式，可以是是用Unity编辑器直接创建，另外就是用代码生成。<br />
+在我们首次创建的时候，Unity会自动给我们另外两个东西，一个是Canvas，一个是EventSystem。<br />
+而接下来我们创建其他组件的时候，EventSystem都不会创建。Canvas则看你的需求了。也就是说EventSystem是UI管理的一个单例。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-14-QQ20170514-223354-HD.gif" alt="QQ20170514-223354-HD" /><br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/05/14/unity-uguikong-jian">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -512,53 +559,6 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">Google Android 扩展文件OBB的使用</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-11-20T16:13:41+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
-
-<p>我们提交应用到Google Store的时候，Google要求应用的大小不能够超过100M，那么超过100M怎么办呢？<br />
-那就用到了本章将要讲的东西<strong>OBB</strong>（扩展二进制文件）。</p>
-
-<p>OBB文件，你可以看成是一个ZIP文件。我们提交母包APK的时候，在界面上也有提价扩展文件的地方。假设我们的母包APK是100M，OBB扩展是100M，用户在Google Store上看到或者下载的大小将是二者之和。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="5">&larr; Older</a>
@@ -576,6 +576,10 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps">补充在android如何使用dumpsys导出FPS</a>
       </li>
     
@@ -589,10 +593,6 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
     
       <li class="post">
         <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
       </li>
     
   </ul>
@@ -616,7 +616,7 @@ CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAn
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
 <li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
-<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (7)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (8)</a></li>
 <li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
 <li class='category'><a href='/blog/categories/djnago-blog-zinnia/'>djnago-blog-zinnia (1)</a></li>
 <li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>

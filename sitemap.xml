@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2018/05/13/tableviewcelldong-tai-kuan-gao</loc>
+<lastmod>2018-05-13T16:46:54+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps</loc>
 <lastmod>2018-05-07T13:14:08+08:00</lastmod>
 </url>
@@ -726,6 +730,33 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/opengl/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/2/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/3/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/4/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/5/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/6/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/7/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/8/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/9/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/10/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

@@ -4,7 +4,7 @@
   <title><![CDATA[分类:cocos2dx | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/cocos2dx/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-05-07T16:58:02+08:00</updated>
+  <updated>2018-05-13T16:49:06+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,65 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[如何使用tableView制作一个高度可以变化的列表]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/13/tableviewcelldong-tai-kuan-gao"/>
+    <updated>2018-05-13T16:46:54+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/13/tableviewcelldong-tai-kuan-gao</id>
+    <content type="html"><![CDATA[<h2 id="section">前面的话</h2>
+
+<p>cocos引擎中提供的CCTableView组件，这个组件由于使用缓存池，创建可见对象，因此性能上相比后来的ListView高出很多。因此在做列表的时候，我一直偏向于使用TableView，但是在一次讨论中发现他有一个缺点就是只能创建cell宽高一致的列表。对于变化的cell则支持不那么友好。</p>
+
+<p>于是抽时间看了一下TableView的实现。就有了几天的这篇分享。<br />
+今天我要分享的主题就是如何使用TableView制作一个TablewCell高度变化的列表。<br />
+闲话不多说，直接进入正题吧。</p>
+
+<h2 id="section-1">正题</h2>
+
+<p>列表是有很多Cell组成，一般情况下Cell都是相同的显示对象。例如你手机里面的通讯录。或者微信里面好友列表。但是也会有Cell高度不一样的列表。例如微信的朋友圈。他也是TableView，不是cocos的，应该是OC的，或者是swift。但是每个Cell会根据内容自动适配宽高。然后影响列表。</p>
+
+<p>cocos的TableView也可以实现这个效果。而且不需要修改c++的任何代码。听我道来。<br />
+从TableView的代码我们可知，他能做到快速滑动是因为它将所有cell的位置先计算出来。在滑动的时候，根据位置计算index然后获取数据，渲染这个cell。<br />
+而计算位置，是根据每一个cell的index外加这个cell的宽高。<br />
+这些规则并未限制，cell的宽高一定要相同。</p>
+
+<p>在创建Cell的时候，TableView会提前向我们询问这个cell的宽高。</p>
+
+<pre><code>tableView:registerScriptHandler(handler(self,self.onCellSizeForTable),cc.TABLECELL_SIZE_FOR_INDEX)
+</code></pre>
+
+<p>因此我们要做的就是在内容尚未确定的情况下就要计算出宽高，然后传递给TableView。<br />
+就是这个样子。现在让我们看看，这样的TableView能做出的效果。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
+
+<p>好像还可以，并且触摸事件也不受一点影响。</p>
+
+<p>实际上计算出宽高的方法并不复杂。从性能角度考虑可能会有一些浪费。具体需要根据情况来判断。<br />
+cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中变化的是文本内容。我们只需要根据文本的变化，然后加上图片的宽高就可以计算出来cell最终的高度。<br />
+而文本框的宽高和字体，确切说渲染文本框的引擎相关。我们仅需要接触引擎帮我们渲染一次文本，但是并不把他添加到舞台上。渲染结束之后直接就能拿到宽高。内存即可回收。</p>
+
+<p>代码如下：</p>
+
+<pre><code>local text = cc.LabelTTF:create("",fontName, fontSize)
+text:setDimensions(cc.size(400,0)) --400是我这里设计的要求。
+text:setString(items[i].msg)
+local size = text:getContentSize()
+</code></pre>
+
+<p>此时的size就是我们要求出来的宽高。剩下的工作就简单了。<br />
+接下来，可以看看我们动态增加cell之后的效果吧。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height3.gif" alt="tableview_different_height3" /></p>
+
+<p>使用<code>insertCellAtIndex</code>函数，外加<code>setContentOffset</code>即可实现上述效果。</p>
+
+<h2 id="section-2">结语</h2>
+
+<p>分享到这结束，我提供的是一种思路。里面还涉及一些cell元件的位置动态计算。比较细节，就没有特意说明。如果大家有更好的方法，还希望多多交流！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[大富翁项目总结]]></title>
@@ -375,108 +434,6 @@ git submodule update
 <h2 id="section-2">下一步</h2>
 
 <p>由于我们的项目使用的cocos2dx + lua，因此下一步要考虑的就是通过luabing将<strong>Box2D</strong>和<strong>liquidFunc</strong>的代码注册到lua虚拟机中使用。这部分我将在下一篇文章中讲解。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Cocos2dx和OBB的结合使用]]></title>
-    <link href="http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong"/>
-    <updated>2016-11-20T18:04:13+08:00</updated>
-    <id>http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong</id>
-    <content type="html"><![CDATA[<p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
-有两种方法可以使用OBB文件。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
-
-<h3 id="section">方法比较</h3>
-
-<ul>
-  <li>第一种方法，obb文件也是一种ZIP文件，我们可以解压缩obb文件，</li>
-  <li>第二种方法，直接读取obb文件。<code>getFileDataFromZip</code>这样的方法就可以。</li>
-</ul>
-
-<p>这两种方法各有优缺点。<br />
-第一种方法将文件解压缩到<code>getWritablePath()</code>文件夹下面。然后此路径<code>addSearchPath</code>到搜索路径中，我们不需要修改其他的代码就可以读取了。缺点是我们需要有一个解压缩的过程。尤其是obb过大的时候，解压缩耗费的时间也会很长。另外解压缩之后，请不要删除obb文件，否则下次进入，又要重新下载。另外这种方式还破坏了obb的加密性。另外这种方法是可行的，但Google并不推荐这种方式。<br />
-第二种方式则需要修改部分c++代码。</p>
-
-<p>因此我采用了第二种方法，对CCFileUtil做了一些修改。（主要说一下除了音效音乐之外的使用。）<br />
-CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAndroid.cpp文件。<br />
-<!--more--><br />
-### 方法梳理</p>
-
-<p>CCFileUtil主要功能是检查一个文件是否存在，能否读取文件的内容。而我们把部分资源文件放到了obb之中，CCFileUtil需要知道这个地方，才能够从那里读取。</p>
-
-<p>在java层，我们知道我们的obb存储的位置是在</p>
-
-<pre><code>	int versionCode = "项目的versionCode"
-	String apkName = Helpers.getExpansionAPKFileName(sContext,true,versionCode);
-	return Helpers.generateSaveFileName(sContext,apkName);
-</code></pre>
-
-<p>通过JNI，将这个路径${obbPath}传递给c++，可以参考<code>CCFileAndroid.cpp</code>里面的<code>getApkPath()</code>函数。</p>
-
-<pre><code>std::string resourcePath = getApkPath();
-s_pZipFile = new ZipFile(resourcePath, "assets/");        
-</code></pre>
-<p>类似s_pZipFile，我们也生成一个${obbZipFile}，用于文件的查找。</p>
-
-<p>然后将此路径<code>addSearchPath</code>到搜索路径中。通过阅读CCFileUtil.cpp文件我们得知检查一个文件的全路径主要是检测<code>isFileExist</code>函数。如果他证明存在此文件，就能获取到全路径。</p>
-
-<pre><code>fullPathForFilename--&gt;getPathForFilename--&gt;getFullPathForDirectoryAndFilename--&gt;isFileExist
-</code></pre>
-
-<p>因此我们修改isFileExist文件，在里面根据文件的路径检查是否在。伪代码如下：</p>
-
-<pre><code>bool CCFileUtilsAndroid::isFileExist(const std::string&amp; strFilePath)
-{
-	...
-    bool bFound = false;
-
-    if (strFilePath.find(${obbPath}) != std::string::npos)
-    {
-        if (${obbZipFile} &amp;&amp; ${obbZipFile}-&gt;fileExists(strPath))
-        {
-            bFound = true;
-        } 
-    }
-	...
-}
-</code></pre>
-
-<p>上面我们把obb文件做成了ZipFile对象，因此在doGetFileData中，就很容易得到文件的内容。伪代码如下：</p>
-
-<pre><code>unsigned char* CCFileUtilsAndroid::doGetFileData(const char* pszFileName, const char* pszMode, unsigned long * pSize, bool forAsync)
-{
-    unsigned char * pData = 0;
-    
-...
-    string fullPath = fullPathForFilename(pszFileName);
-   
-    // 获取obb文件
-    if (${obbZipFile} &amp;&amp; fullPath.find(${obbPath}) != std::string::npos){
-        
-        if (forAsync)
-        {
-            pData = ${obbZipFile}-&gt;getFileData(fullPath.c_str(), pSize, ${obbZipFile}-&gt;_dataThread);
-        }
-        else
-        {
-            pData = ${obbZipFile}-&gt;getFileData(fullPath.c_str(), pSize);
-        }
-    }
-    ...
-  }
-
-</code></pre>
-
-<h3 id="section-1">总结语</h3>
-
-<p>至此我们就能够读取obb里面的内容了。<br />
-我的方法基于将obb看成了ZIP，模仿apk的方式去读取文件。将obb位置放到了搜索路径。ZIP对象存在且能够从里面读取文件，则表明文件存在。就可以读取他了。</p>
-
-<p>这里面设计到JNI传递数据。其实这对于我们只要仿照APK路径传递就可以了。关于JNI具体的实现，还请看下一章节内容。</p>
-
-<p>感谢你的阅读！</p>
 
 ]]></content>
   </entry>

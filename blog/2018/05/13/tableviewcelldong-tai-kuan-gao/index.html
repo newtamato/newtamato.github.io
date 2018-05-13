@@ -5,12 +5,12 @@
 <!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
 <head>
   <meta charset="utf-8">
-  <title>Git命令行总结-rebase - 番茄手册</title>
+  <title>如何使用tableView制作一个高度可以变化的列表 - 番茄手册</title>
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="原文 使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。 rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。 ## &hellip;">
-  
+  <meta name="description" content="前面的话 cocos引擎中提供的CCTableView组件，这个组件由于使用缓存池，创建可见对象，因此性能上相比后来的ListView高出很多。因此在做列表的时候，我一直偏向于使用TableView，但是在一次讨论中发现他有一个缺点就是只能创建cell宽高一致的列表。 &hellip;">
+  <meta name="keywords" content="tableview 动态宽高">
 
   <!-- http://t.co/dKP3o1e -->
   <meta name="HandheldFriendly" content="True">
@@ -18,7 +18,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   
-  <link rel="canonical" href="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase">
+  <link rel="canonical" href="http://www.newtomato.me/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">
   <link href="/favicon.png" rel="icon">
   <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
   <script src="/javascripts/modernizr-2.0.js"></script>
@@ -75,7 +75,7 @@
   <header>
     
       
-        <h1 class="entry-title">Git命令行总结-rebase</h1>
+        <h1 class="entry-title">如何使用tableView制作一个高度可以变化的列表</h1>
       
     
     
@@ -92,30 +92,66 @@
   
 
 
-<time datetime="2015-10-17T22:11:24+08:00" pubdate data-updated="true"></time>
+<time datetime="2018-05-13T16:46:54+08:00" pubdate data-updated="true"></time>
         
       </p>
     
   </header>
 
 
-<div class="entry-content"><p><a href="http://git-scm.com/book/zh/Git-%E5%88%86%E6%94%AF-%E5%88%86%E6%94%AF%E7%9A%84%E8%A1%8D%E5%90%88">原文</a></p>
+<div class="entry-content"><h2 id="section">前面的话</h2>
 
-<p>使用git rebase的有一条不能去违背的rule，那就是已经提交的commit，不要做rebase操作。</p>
+<p>cocos引擎中提供的CCTableView组件，这个组件由于使用缓存池，创建可见对象，因此性能上相比后来的ListView高出很多。因此在做列表的时候，我一直偏向于使用TableView，但是在一次讨论中发现他有一个缺点就是只能创建cell宽高一致的列表。对于变化的cell则支持不那么友好。</p>
 
-<p>rebase，就是衍合，就是将一个已经committed的commit重新在另一处做提交。它的意义在于将提交记录显得清晰，有条理，切整洁。这是他和merge最大的区别。</p>
+<p>于是抽时间看了一下TableView的实现。就有了几天的这篇分享。<br />
+今天我要分享的主题就是如何使用TableView制作一个TablewCell高度变化的列表。<br />
+闲话不多说，直接进入正题吧。</p>
 
-<p>##rebase的命令格式如下:</p>
+<h2 id="section-1">正题</h2>
 
-<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">rebase</span> <span class="p">[</span><span class="o">-</span><span class="n">i</span> <span class="o">|</span> <span class="o">--</span><span class="n">interactive</span><span class="p">]</span> <span class="p">[</span><span class="n">options</span><span class="p">][</span><span class="o">--</span><span class="k">exec</span> <span class="o">&lt;</span><span class="n">cmd</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">--</span><span class="n">onto</span> <span class="o">&lt;</span><span class="n">newbase</span><span class="o">&gt;</span><span class="p">][</span><span class="o">&lt;</span><span class="n">upstream</span><span class="o">&gt;</span><span class="p">]</span> <span class="p">[</span><span class="o">&lt;</span><span class="n">branch</span><span class="o">&gt;</span><span class="p">]</span>
-</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>列表是有很多Cell组成，一般情况下Cell都是相同的显示对象。例如你手机里面的通讯录。或者微信里面好友列表。但是也会有Cell高度不一样的列表。例如微信的朋友圈。他也是TableView，不是cocos的，应该是OC的，或者是swift。但是每个Cell会根据内容自动适配宽高。然后影响列表。</p>
 
-<p>如果我们的开发分支dev_branch从master开出来，那么rebase的命令如下：<code>git rebase master dev_branch</code><br />
-它的工作原理：从dev_branch和master的共同祖先开始，后续所有在dev_branch上面的提交都将以master当前最新的提交为新的基准点再次挨个提交。这是重新生成新的提交而非做合并。你会发现在dev_branch上的同样的commit在master上的SHA1校验码是不一样的。</p>
+<p>cocos的TableView也可以实现这个效果。而且不需要修改c++的任何代码。听我道来。<br />
+从TableView的代码我们可知，他能做到快速滑动是因为它将所有cell的位置先计算出来。在滑动的时候，根据位置计算index然后获取数据，渲染这个cell。<br />
+而计算位置，是根据每一个cell的index外加这个cell的宽高。<br />
+这些规则并未限制，cell的宽高一定要相同。</p>
 
-<p>此外rebase还可以做很多别的有意思的操作，假设如下的一种情况，我们有一个dev1分支，dev1-1分支，和master分支。dev1来源于master的A点，它上面有B，C，D三处提交，dev1-1则是来源于dev1的B点，它上面有E，F两处提交。当我们要将dev1－1 提交到master，而不提交dev1的时候，应该如何使用rebase呢？<br />
-我们用到的命令就是｀git rebase –onto master dev1 dev1-1`。这个命令就是从dev1-1和dev1的共同祖先开始之后的所有提交依次重新提交到master分支上。因此我们就跳过了dev1，直接将dev1-1合并回到master。</p>
+<p>在创建Cell的时候，TableView会提前向我们询问这个cell的宽高。</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">tableView:registerScriptHandler(handler(self,self.onCellSizeForTable),cc.TABLECELL_SIZE_FOR_INDEX)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>因此我们要做的就是在内容尚未确定的情况下就要计算出宽高，然后传递给TableView。<br />
+就是这个样子。现在让我们看看，这样的TableView能做出的效果。</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height.gif" alt="tableview_different_height" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
+
+<p>好像还可以，并且触摸事件也不受一点影响。</p>
+
+<p>实际上计算出宽高的方法并不复杂。从性能角度考虑可能会有一些浪费。具体需要根据情况来判断。<br />
+cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中变化的是文本内容。我们只需要根据文本的变化，然后加上图片的宽高就可以计算出来cell最终的高度。<br />
+而文本框的宽高和字体，确切说渲染文本框的引擎相关。我们仅需要接触引擎帮我们渲染一次文本，但是并不把他添加到舞台上。渲染结束之后直接就能拿到宽高。内存即可回收。</p>
+
+<p>代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local text = cc.LabelTTF:create("",fontName, fontSize)
+</span><span class="line">text:setDimensions(cc.size(400,0)) --400是我这里设计的要求。
+</span><span class="line">text:setString(items[i].msg)
+</span><span class="line">local size = text:getContentSize()</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此时的size就是我们要求出来的宽高。剩下的工作就简单了。<br />
+接下来，可以看看我们动态增加cell之后的效果吧。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height3.gif" alt="tableview_different_height3" /></p>
+
+<p>使用<code>insertCellAtIndex</code>函数，外加<code>setContentOffset</code>即可实现上述效果。</p>
+
+<h2 id="section-2">结语</h2>
+
+<p>分享到这结束，我提供的是一种思路。里面还涉及一些cell元件的位置动态计算。比较细节，就没有特意说明。如果大家有更好的方法，还希望多多交流！</p>
 
 </div>
 
@@ -139,12 +175,12 @@
   
 
 
-<time datetime="2015-10-17T22:11:24+08:00" pubdate data-updated="true"></time>
+<time datetime="2018-05-13T16:46:54+08:00" pubdate data-updated="true"></time>
       
 
 <span class="categories">
   
-    <a class='category' href='/blog/categories/git/'>git</a>, <a class='category' href='/blog/categories/rebase/'>rebase</a>
+    <a class='category' href='/blog/categories/cocos2dx/'>cocos2dx</a>
   
 </span>
 
@@ -153,7 +189,7 @@
     
       <div class="sharing">
   
-  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase" data-via="" data-counturl="http://www.newtomato.me/blog/2015/10/17/gitming-ling-xing-zong-jie-rebase" >Tweet</a>
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2018/05/13/tableviewcelldong-tai-kuan-gao" data-via="" data-counturl="http://www.newtomato.me/blog/2018/05/13/tableviewcelldong-tai-kuan-gao" >Tweet</a>
   
   
   
@@ -162,10 +198,8 @@
     
     <p class="meta">
       
-        <a class="basic-alignment left articlenav" href="/blog/2015/10/17/gitming-ling-xing-zong-jie-log" title="Previous Post: git命令行总结-log">&laquo; git命令行总结-log</a>
+        <a class="basic-alignment left articlenav" href="/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps" title="Previous Post: 补充在android如何使用dumpsys导出FPS">&laquo; 补充在android如何使用dumpsys导出FPS</a>
       
-      
-        <a class="basic-alignment right articlenav" href="/blog/2015/10/17/xiang-mu-guan-li-xin-de" title="Next Post: 项目管理心得">项目管理心得 &raquo;</a>
       
     </p>
   </footer>
