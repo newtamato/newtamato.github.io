@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[分类:bug | 番茄手册]]></title>
+  <link href="http://www.newtomato.me/blog/categories/bug/atom.xml" rel="self"/>
+  <link href="http://www.newtomato.me/"/>
+  <updated>2018-05-17T18:59:05+08:00</updated>
+  <id>http://www.newtomato.me/</id>
+  <author>
+    <name><![CDATA[newtomato]]></name>
+    
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[记一个华为手机上声音突然消失不见的bug]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/17/bugji-lu"/>
+    <updated>2018-05-17T18:57:53+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/17/bugji-lu</id>
+    <content type="html"><![CDATA[<p>背景是这样的。我们的项目需要播放许多声音。只是在部分华为的设备上声音会突然消失，然后过一会儿声音又再次出现。<br />
+这个问题没有什么规律可循。<br />
+一开始针对华为手机的MediaPlayer进行查找。找到的原因在<a href="https://blog.csdn.net/jiangtianhao13269230/article/details/78821932">此处</a>，认为是MediaPlayer没有被释放导致内存泄漏。但是我们及时调用了释放函数，还是没有解决问题。<br />
+<!--more--></p>
+
+<p>后来，通过monitor打印的日志，对正确播放声音和没有播放声音的日志进行对比发现了如下不同之处：</p>
+
+<pre><code>05-17 17:19:43.658: E/AudioFlinger(685): no more track names available
+05-17 17:19:43.658: E/AudioFlinger(685): createTrack_l() initCheck failed -12; no control block?
+05-17 17:19:43.658: W/AudioFlinger(685): AudioException  mNotificationClients.keyAt(i)  pid=551
+05-17 17:19:43.658: W/AudioFlinger(685): AudioException  mNotificationClients.keyAt(i)  pid=685
+05-17 17:19:43.658: W/AudioFlinger(685): AudioException  mNotificationClients.keyAt(i)  pid=1200
+</code></pre>
+
+<p>google这个<strong>no more track names available</strong>关键词。果然有所发现。<br />
+在Stack Overflow上有个相似的<a href="https://stackoverflow.com/questions/8388053/soundpool-error-no-more-track-names-available">问题</a>。</p>
+
+<pre><code>For audio, there's a hard limit of 32 active AudioTrack objects per device (not per app: you need to share those 32 with rest of the system)
+</code></pre>
+
+<p>也就是说音效要共享32个AudioTrack对象。如果超过了32个，是不是就出现声音消失了呢？于是想到对游戏内那些已经播放完毕的音效做处理，卸载掉。</p>
+
+<p>问题果然得到解决！</p>
+
+]]></content>
+  </entry>
+  
+</feed>

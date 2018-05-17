@@ -9,7 +9,9 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="前面的话 cocos引擎中提供的CCTableView组件，这个组件由于使用缓存池，创建可见对象，因此性能上相比后来的ListView高出很多。因此在做列表的时候，我一直偏向于使用TableView，但是在一次讨论中发现他有一个缺点就是只能创建cell宽高一致的列表。 &hellip;">
+  <meta name="description" content="背景是这样的。我们的项目需要播放许多声音。只是在部分华为的设备上声音会突然消失，然后过一会儿声音又再次出现。
+这个问题没有什么规律可循。
+一开始针对华为手机的MediaPlayer进行查找。找到的原因在此处，认为是MediaPlayer没有被释放导致内存泄漏。但是我们及时调用了释放函数， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -78,6 +80,50 @@
   <header>
     
       <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-05-17T18:57:53+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>背景是这样的。我们的项目需要播放许多声音。只是在部分华为的设备上声音会突然消失，然后过一会儿声音又再次出现。<br />
+这个问题没有什么规律可循。<br />
+一开始针对华为手机的MediaPlayer进行查找。找到的原因在<a href="https://blog.csdn.net/jiangtianhao13269230/article/details/78821932">此处</a>，认为是MediaPlayer没有被释放导致内存泄漏。但是我们及时调用了释放函数，还是没有解决问题。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2018/05/17/bugji-lu">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
         <h1 class="entry-title"><a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a></h1>
       
     
@@ -108,56 +154,13 @@
 
 <p>于是抽时间看了一下TableView的实现。就有了几天的这篇分享。<br />
 今天我要分享的主题就是如何使用TableView制作一个TablewCell高度变化的列表。<br />
-闲话不多说，直接进入正题吧。</p>
-
-<h2 id="section-1">正题</h2>
-
-<p>列表是有很多Cell组成，一般情况下Cell都是相同的显示对象。例如你手机里面的通讯录。或者微信里面好友列表。但是也会有Cell高度不一样的列表。例如微信的朋友圈。他也是TableView，不是cocos的，应该是OC的，或者是swift。但是每个Cell会根据内容自动适配宽高。然后影响列表。</p>
-
-<p>cocos的TableView也可以实现这个效果。而且不需要修改c++的任何代码。听我道来。<br />
-从TableView的代码我们可知，他能做到快速滑动是因为它将所有cell的位置先计算出来。在滑动的时候，根据位置计算index然后获取数据，渲染这个cell。<br />
-而计算位置，是根据每一个cell的index外加这个cell的宽高。<br />
-这些规则并未限制，cell的宽高一定要相同。</p>
-
-<p>在创建Cell的时候，TableView会提前向我们询问这个cell的宽高。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">tableView:registerScriptHandler(handler(self,self.onCellSizeForTable),cc.TABLECELL_SIZE_FOR_INDEX)</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>因此我们要做的就是在内容尚未确定的情况下就要计算出宽高，然后传递给TableView。<br />
-就是这个样子。现在让我们看看，这样的TableView能做出的效果。</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height.gif" alt="tableview_different_height" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
-
-<p>好像还可以，并且触摸事件也不受一点影响。</p>
-
-<p>实际上计算出宽高的方法并不复杂。从性能角度考虑可能会有一些浪费。具体需要根据情况来判断。<br />
-cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中变化的是文本内容。我们只需要根据文本的变化，然后加上图片的宽高就可以计算出来cell最终的高度。<br />
-而文本框的宽高和字体，确切说渲染文本框的引擎相关。我们仅需要接触引擎帮我们渲染一次文本，但是并不把他添加到舞台上。渲染结束之后直接就能拿到宽高。内存即可回收。</p>
-
-<p>代码如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">local text = cc.LabelTTF:create("",fontName, fontSize)
-</span><span class="line">text:setDimensions(cc.size(400,0)) --400是我这里设计的要求。
-</span><span class="line">text:setString(items[i].msg)
-</span><span class="line">local size = text:getContentSize()</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>此时的size就是我们要求出来的宽高。剩下的工作就简单了。<br />
-接下来，可以看看我们动态增加cell之后的效果吧。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height3.gif" alt="tableview_different_height3" /></p>
-
-<p>使用<code>insertCellAtIndex</code>函数，外加<code>setContentOffset</code>即可实现上述效果。</p>
-
-<h2 id="section-2">结语</h2>
-
-<p>分享到这结束，我提供的是一种思路。里面还涉及一些cell元件的位置动态计算。比较细节，就没有特意说明。如果大家有更好的方法，还希望多多交流！</p>
-
+闲话不多说，直接进入正题吧。<br />
 </div>
   
+  
+    <footer>
+      <a rel="full-article" href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">阅读全文&rarr;</a>
+    </footer>
   
 
 
@@ -584,52 +587,6 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-12-15T23:50:52+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：多达四个颜色缓存,深度缓存,模板缓存,多重采样（MSAA）缓存,辅助缓存。</p>
-
-<p>我们今天主要讨论模板缓存。模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
-
-<p>通过对cocos2dx里面遮罩裁剪功能的分析，对模板缓存有个初步认识。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -645,6 +602,10 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
       </li>
     
@@ -658,10 +619,6 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
     
       <li class="post">
         <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
       </li>
     
   </ul>
@@ -681,6 +638,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 <li class='category'><a href='/blog/categories/blend/'>blend (1)</a></li>
 <li class='category'><a href='/blog/categories/bm-subtract/'>bm_subtract (1)</a></li>
 <li class='category'><a href='/blog/categories/box2d/'>box2d (2)</a></li>
+<li class='category'><a href='/blog/categories/bug/'>bug (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>

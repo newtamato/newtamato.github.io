@@ -9,7 +9,7 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="[TOC] 作为游戏开发者，我们将任何显示对象放到舞台上的时候，可能都没有想到在这后面有一套复杂又快速的东西保证了我们能够立马看到想要的效果。而这里背后的东西，我们称之为渲染引擎。 cocos2dx使用便是opengl的图形编程接口。我们想要彻底搞懂cocos2dx，就需要了解opengl。 &hellip;">
+  <meta name="description" content="一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：多达四个颜色缓存,深度缓存,模板缓存,多重采样（MSAA）缓存,辅助缓存。 我们今天主要讨论模板缓存。模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素, &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,52 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-12-15T23:50:52+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：多达四个颜色缓存,深度缓存,模板缓存,多重采样（MSAA）缓存,辅助缓存。</p>
+
+<p>我们今天主要讨论模板缓存。模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素,从而可以达到一些特殊的效果。</p>
+
+<p>通过对cocos2dx里面遮罩裁剪功能的分析，对模板缓存有个初步认识。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -521,52 +567,6 @@ python 2.7
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">[gamemaker]BounceMover代码阅读</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-09-03T21:10:41+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>先来看看效果是怎么样的：</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-09-03-aa.gif" alt="aa" /></p>
-
-<p>上代码：<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="3">&larr; Older</a>
@@ -584,6 +584,10 @@ python 2.7
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
       </li>
     
@@ -597,10 +601,6 @@ python 2.7
     
       <li class="post">
         <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
       </li>
     
   </ul>
@@ -620,6 +620,7 @@ python 2.7
 <li class='category'><a href='/blog/categories/blend/'>blend (1)</a></li>
 <li class='category'><a href='/blog/categories/bm-subtract/'>bm_subtract (1)</a></li>
 <li class='category'><a href='/blog/categories/box2d/'>box2d (2)</a></li>
+<li class='category'><a href='/blog/categories/bug/'>bug (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>

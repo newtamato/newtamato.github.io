@@ -9,8 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="我们提交应用到Google Store的时候，Google要求应用的大小不能够超过100M，那么超过100M怎么办呢？
-那就用到了本章将要讲的东西OBB（扩展二进制文件）。 OBB文件，你可以看成是一个ZIP文件。我们提交母包APK的时候，在界面上也有提价扩展文件的地方。 &hellip;">
+  <meta name="description" content="上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。
+有两种方法可以使用OBB文件。 方法比较 第一种方法，obb文件也是一种ZIP文件，我们可以解压缩obb文件， 第二种方法，直接读取obb文件。getFileDataFromZip这样的方法就可以。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +72,64 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">Cocos2dx和OBB的结合使用</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2016-11-20T18:04:13+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
+有两种方法可以使用OBB文件。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
+
+<h3 id="section">方法比较</h3>
+
+<ul>
+  <li>第一种方法，obb文件也是一种ZIP文件，我们可以解压缩obb文件，</li>
+  <li>第二种方法，直接读取obb文件。<code>getFileDataFromZip</code>这样的方法就可以。</li>
+</ul>
+
+<p>这两种方法各有优缺点。<br />
+第一种方法将文件解压缩到<code>getWritablePath()</code>文件夹下面。然后此路径<code>addSearchPath</code>到搜索路径中，我们不需要修改其他的代码就可以读取了。缺点是我们需要有一个解压缩的过程。尤其是obb过大的时候，解压缩耗费的时间也会很长。另外解压缩之后，请不要删除obb文件，否则下次进入，又要重新下载。另外这种方式还破坏了obb的加密性。另外这种方法是可行的，但Google并不推荐这种方式。<br />
+第二种方式则需要修改部分c++代码。</p>
+
+<p>因此我采用了第二种方法，对CCFileUtil做了一些修改。（主要说一下除了音效音乐之外的使用。）<br />
+CCFileUtil是一个基类，在Android平台我们主要关注的是CCFileUtilAndroid.cpp文件。<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -496,55 +554,6 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie">整合FB广告步骤总结</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-07-30T12:09:50+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>上一篇讲到整合Google广告到项目中，这次我们讲讲如何将FB的广告整合进来。</p>
-
-<p>当然，使用FB的SDK，同样也需要翻墙。</p>
-
-<p>首先我们先到FB的官方网站上面注册自己的应用。<br />
-然后找到Facebook Audience Network的入口。在这里注册自己项目的基本信息。<br />
-最后能够得到一个placementId，这个是我们最终需要用到的东西。<br />
-然后开始集成 Facebook Audience Network 的SDK。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/07/30/zheng-he-fbyan-gao-bu-zou-zong-jie">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="6">&larr; Older</a>
@@ -562,6 +571,10 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
       </li>
     
@@ -575,10 +588,6 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
     
       <li class="post">
         <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
       </li>
     
   </ul>
@@ -598,6 +607,7 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 <li class='category'><a href='/blog/categories/blend/'>blend (1)</a></li>
 <li class='category'><a href='/blog/categories/bm-subtract/'>bm_subtract (1)</a></li>
 <li class='category'><a href='/blog/categories/box2d/'>box2d (2)</a></li>
+<li class='category'><a href='/blog/categories/bug/'>bug (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
 <li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
 <li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>

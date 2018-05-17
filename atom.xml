@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-05-13T16:47:42+08:00</updated>
+  <updated>2018-05-17T18:59:05+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,38 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[记一个华为手机上声音突然消失不见的bug]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/17/bugji-lu"/>
+    <updated>2018-05-17T18:57:53+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/17/bugji-lu</id>
+    <content type="html"><![CDATA[<p>背景是这样的。我们的项目需要播放许多声音。只是在部分华为的设备上声音会突然消失，然后过一会儿声音又再次出现。<br />
+这个问题没有什么规律可循。<br />
+一开始针对华为手机的MediaPlayer进行查找。找到的原因在<a href="https://blog.csdn.net/jiangtianhao13269230/article/details/78821932">此处</a>，认为是MediaPlayer没有被释放导致内存泄漏。但是我们及时调用了释放函数，还是没有解决问题。<br />
+<!--more--></p>
+
+<p>后来，通过monitor打印的日志，对正确播放声音和没有播放声音的日志进行对比发现了如下不同之处：</p>
+
+<pre><code>05-17 17:19:43.658: E/AudioFlinger(685): no more track names available
+05-17 17:19:43.658: E/AudioFlinger(685): createTrack_l() initCheck failed -12; no control block?
+05-17 17:19:43.658: W/AudioFlinger(685): AudioException  mNotificationClients.keyAt(i)  pid=551
+05-17 17:19:43.658: W/AudioFlinger(685): AudioException  mNotificationClients.keyAt(i)  pid=685
+05-17 17:19:43.658: W/AudioFlinger(685): AudioException  mNotificationClients.keyAt(i)  pid=1200
+</code></pre>
+
+<p>google这个<strong>no more track names available</strong>关键词。果然有所发现。<br />
+在Stack Overflow上有个相似的<a href="https://stackoverflow.com/questions/8388053/soundpool-error-no-more-track-names-available">问题</a>。</p>
+
+<pre><code>For audio, there's a hard limit of 32 active AudioTrack objects per device (not per app: you need to share those 32 with rest of the system)
+</code></pre>
+
+<p>也就是说音效要共享32个AudioTrack对象。如果超过了32个，是不是就出现声音消失了呢？于是想到对游戏内那些已经播放完毕的音效做处理，卸载掉。</p>
+
+<p>问题果然得到解决！</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[如何使用tableView制作一个高度可以变化的列表]]></title>
@@ -24,7 +56,8 @@
 
 <p>于是抽时间看了一下TableView的实现。就有了几天的这篇分享。<br />
 今天我要分享的主题就是如何使用TableView制作一个TablewCell高度变化的列表。<br />
-闲话不多说，直接进入正题吧。</p>
+闲话不多说，直接进入正题吧。<br />
+<!--more--></p>
 
 <h2 id="section-1">正题</h2>
 
@@ -43,7 +76,7 @@
 <p>因此我们要做的就是在内容尚未确定的情况下就要计算出宽高，然后传递给TableView。<br />
 就是这个样子。现在让我们看看，这样的TableView能做出的效果。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height.gif" alt="tableview_different_height" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
 
 <p>好像还可以，并且触摸事件也不受一点影响。</p>
 
@@ -2033,233 +2066,6 @@ gl vertical不常用，但是也是优化指标之一，他表示当前有多少
   <li>早期手机部分不支持npot，为了统一资源，都做成了pot的格式，浪费了资源。现在手机大都已经支持npot。所以texturepacker导出可以选择npot，最新的npot的版本已经是anysize了。</li>
   <li>数字字体尽量使用bmffont。</li>
 </ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[[gamemaker]BounceMover代码阅读]]></title>
-    <link href="http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du"/>
-    <updated>2017-09-03T21:10:41+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du</id>
-    <content type="html"><![CDATA[<p>先来看看效果是怎么样的：</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-09-03-aa.gif" alt="aa" /></p>
-
-<p>上代码：<br />
-<!--more--><br />
-create代码：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">vx = 0;
-</span><span class="line">vy = 0;
-</span><span class="line">
-</span><span class="line">cx = 0;
-</span><span class="line">cy = 0;
-</span><span class="line">
-</span><span class="line">playerAbove = place_meeting(x, y - 1, oPlayer);
-</span><span class="line">
-</span><span class="line">// Initial fallspeed when player makes contact
-</span><span class="line">fallSpd = 8;
-</span><span class="line">
-</span><span class="line">xscale = 1;
-</span><span class="line">yscale = 1;
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>step代码：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">var playerAbovePrev = playerAbove;
-</span><span class="line">playerAbove         = place_meeting(x, y - 1, oPlayer);
-</span><span class="line">
-</span><span class="line">// If it's the first frame of player contact
-</span><span class="line">if (playerAbove &amp;&amp; !playerAbovePrev) {
-</span><span class="line">    xscale = 1.34;
-</span><span class="line">    yscale = 0.67;
-</span><span class="line">    
-</span><span class="line">    vy = fallSpd;
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>step_end代码：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-<span class="line-number">35</span>
-<span class="line-number">36</span>
-<span class="line-number">37</span>
-<span class="line-number">38</span>
-<span class="line-number">39</span>
-<span class="line-number">40</span>
-<span class="line-number">41</span>
-<span class="line-number">42</span>
-<span class="line-number">43</span>
-<span class="line-number">44</span>
-<span class="line-number">45</span>
-<span class="line-number">46</span>
-<span class="line-number">47</span>
-<span class="line-number">48</span>
-<span class="line-number">49</span>
-<span class="line-number">50</span>
-<span class="line-number">51</span>
-<span class="line-number">52</span>
-<span class="line-number">53</span>
-<span class="line-number">54</span>
-<span class="line-number">55</span>
-<span class="line-number">56</span>
-<span class="line-number">57</span>
-<span class="line-number">58</span>
-<span class="line-number">59</span>
-<span class="line-number">60</span>
-<span class="line-number">61</span>
-<span class="line-number">62</span>
-<span class="line-number">63</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">var vxNew, vyNew;
-</span><span class="line">
-</span><span class="line">// Handle sub-pixel movement
-</span><span class="line">cx += vx;
-</span><span class="line">cy += vy;
-</span><span class="line">vxNew = round(cx);
-</span><span class="line">vyNew = round(cy);
-</span><span class="line">cx -= vxNew;
-</span><span class="line">cy -= vyNew;
-</span><span class="line">
-</span><span class="line">repeat (abs(vyNew)) {
-</span><span class="line">    if ((y + sign(vyNew) &gt;= ystart) &amp;&amp; (y + sign(vyNew) &lt;= (ystart + abs(vy)))) {
-</span><span class="line">        with (oParEntity) {
-</span><span class="line">            if (place_meeting(x, y + 1, other.id)) {
-</span><span class="line">                if (!PlaceMeetingException(x, y + sign(vyNew), oParSolid, other.id))
-</span><span class="line">                    y += sign(vyNew);
-</span><span class="line">            }
-</span><span class="line">            
-</span><span class="line">            if (place_meeting(x, y - 1, other.id))
-</span><span class="line">                y += sign(vyNew);
-</span><span class="line">            
-</span><span class="line">        }
-</span><span class="line">        y += sign(vyNew);
-</span><span class="line">    }
-</span><span class="line">    else {
-</span><span class="line">        if (vy &gt;= 0)
-</span><span class="line">            vy *= -1;
-</span><span class="line">        else
-</span><span class="line">            vy *= -0.75;
-</span><span class="line">        break;
-</span><span class="line">    }
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">repeat(abs(vxNew)) {
-</span><span class="line">    if (!place_meeting(x + sign(vxNew), y, oParSolid)) {
-</span><span class="line">        with (oParEntity) {
-</span><span class="line">            if (place_meeting(x - sign(vxNew), y, other.id))
-</span><span class="line">                x += sign(vxNew);
-</span><span class="line">                
-</span><span class="line">            if (place_meeting(x + sign(vxNew), y, other.id) &amp;&amp; wallTarget == other.id)
-</span><span class="line">                x += sign(vxNew);    
-</span><span class="line">            
-</span><span class="line">            if (platformTarget != other.id)
-</span><span class="line">                continue;
-</span><span class="line">                
-</span><span class="line">            if (!platformTarget) {
-</span><span class="line">                if (place_meeting(x, y + 1, other.id))
-</span><span class="line">                    platformTarget = other.id;
-</span><span class="line">            }
-</span><span class="line">            
-</span><span class="line">            if (!place_meeting(x + sign(vxNew), y, oParSolid) &amp;&amp; platformTarget == other.id)
-</span><span class="line">                x += sign(vxNew);
-</span><span class="line">        }
-</span><span class="line">        x += sign(vxNew);
-</span><span class="line">    }
-</span><span class="line">    else
-</span><span class="line">        vx *= -1;
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">/// Procedural Animation
-</span><span class="line">
-</span><span class="line">xscale = Approach(xscale, 1, 0.033);
-</span><span class="line">yscale = Approach(yscale, 1, 0.033);</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这个物体就是检查当人物或者<code>oParEntity</code>类型的任何物体，在它上面的时候，就会触发这个上下抖动的效果。<br />
-上面最重要的代码在<code>step_end</code>中，由于他可以垂直方向上下抖动（此处忽略水平抖动），也就意味着要修改y值。</p>
-
-<p>修改物体的y，同时也要修改oParEntity类型物体的y值。<br />
-此处<code>oParEntity</code>踩到这个物体上，会触发vy变量的变化。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">cy+=vy
-</span><span class="line">
-</span><span class="line">//将cy的近似值给vyNew
-</span><span class="line">vyNew = round(cy); 
-</span><span class="line">
-</span><span class="line">//cy保留一份vy和vyNew之间的差异，用于下一个step事件,保留这个cy的目的是让每一帧变化不同，显得更加自然一些。
-</span><span class="line">cy-=vyNew				</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p><code>vyNew</code>就是每个<code>step事件</code>中y要变化的次数。repeat多少次。<br />
-如果要偏移的位置在<code>开始ystart</code>和<code>最大偏移（ystart + vy）</code>之间的一个数值。就检查是不是<code>oParEntity</code>是不是只碰到了这个物体，如果是则，跟着<code>vyNew</code>的方向移动1一个像素。如果<code>oParEntity</code>向上移动也碰到了这个物体，则也跟着向上移动。<br />
-如果这个物体偏移的位置在偏移范围之外，则让vy开始转变方向。每转一次方向，则缩小可以偏移的距离0.75倍。<br />
-这样就达到了这个效果。<br />
-而<code>xscale</code>，<code>yscale</code>在step事件中减少或增加0.033，达到缩小放大的目的。<br />
-在draw事件中又重新<code>draw_sprite_ext</code></p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">draw_sprite_ext(sprite_index, image_index, x, y, xscale, yscale, 0, c_white, image_alpha);</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 ]]></content>
   </entry>
