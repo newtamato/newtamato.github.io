@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-05-17T18:59:05+08:00</updated>
+  <updated>2018-05-19T23:17:52+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,107 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Godot基础知识之Transform坐标转换]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/19/godot-transform-1"/>
+    <updated>2018-05-19T21:45:56+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/19/godot-transform-1</id>
+    <content type="html"><![CDATA[<h2 id="section">为什么要介绍坐标矩阵 ？</h2>
+
+<p>Godot是一个开源的游戏引擎，支持2D和3D，如果你好奇Unity里面的那些炫酷特效是怎么实现的，又苦于没有unity3d的源码，那么可以考虑阅读Godot源码来帮助你梳理3D的知识库。</p>
+
+<p>从渲染的角度上看，3D和2D在差别不大，都是需要将Texture和顶点（Mesh）数据，位置信息，颜色，法线等数据提交到GPU那边。渲染采用语言有所不同，有的采用opengl也有用d3d。<br />
+现在渲染管线支持可编程，可以通过编写顶点片段着色器去修改图像最终的显示效果。</p>
+
+<p>但是从计算的角度而言，3D还比2D多一个轴，因为这个轴，涉及了很多坐标变化，矩阵转换可以说是3D开发过程中当之无愧的基础。点击事件最终会通过坐标转换，来决定是否点中某个带碰撞盒的物体，物理引擎模拟运动，也离不开矩阵转化。最普遍的碰撞事件，大量物体在场景中运动（暂且不考虑性能问题），最终检测两个物体是否碰撞，也是需要位置坐标等，比如基础的AABB盒碰撞。坐标矩阵的转换涉及到很多地方，例如投影矩阵的计算，常用的法线贴图是以切线空间为坐标系。存储也是3d坐标，最后还需要用模型的矩阵来获得法线转换矩阵。</p>
+
+<p>所以说矩阵非常重要。<br />
+而今天我们先来了解一下Godot中坐标是一个什么样子的？原点在何处？坐标如何转换。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-icon.png" alt="icon" /><br />
+<!--more--><br />
+## 进入正题</p>
+
+<p>废话不多说了。开始吧。<br />
+我们的目的是通过点击屏幕，得到他屏幕坐标，ViewPort坐标，以及里面Area坐标。</p>
+
+<p>首先我们创建一个空的godot工程，并且创建一个空的场景，里面放置一个Node。命名TestClick。<br />
+然后增加一个Area，并且为他添加一个Shape（用于碰撞），和Mesh用于展示他的样子的。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267174988040.jpg" alt="" /></p>
+
+<p>此时一定要增加一个Camera，否则运行之后场景里面看不到任何东西。</p>
+
+<p>然后在Area上绑定一个脚本。增加<code>_input(event)</code>和<code>_input_event(camera, event, click_position, click_normal, shape_idx)</code>两个函数。后一个需要connect一下。<br />
+代码如下：</p>
+
+<pre><code>func _input(event):
+	if event.is_pressed():
+		print("[_input]",event.get_instance_id())
+		print("[_input]",event.position)	
+func _on_Area_input_event(camera, event, click_position, click_normal, shape_idx):
+	if event.is_pressed():
+		print("[_input_event] ",event.get_instance_id())
+		print("[_input_event]",click_position)
+		print("[_input_event]",click_normal)
+		print("[_input_event]",shape_idx)
+		var newpos = global_transform.affine_inverse() * click_position
+		print("[_input_event]",newpos)
+		newpos.y = newpos.y * -1
+		newpos += Vector3(1,1,0)
+		newpos /= 2
+		print("[_input_event]",newpos)
+	pass # replace with function body
+</code></pre>
+
+<p>通过这些打印，可以得知，每次点击会触发这两个函数，但是传递的event并不是同一个对象。<br />
+event.position是屏幕坐标，根据你的屏幕分辨率计算出来的屏幕坐标，是一个Vector2类型。<br />
+而click_position则是一个Vector3类型的坐标，但是并不是Area的点击位置坐标，而是当前屏幕的点击坐标，是当前ViewPort的点击坐标。<br />
+这里说一下ViewPort的原点和坐标系。ViewPort的坐标系类似如下图片。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267189437356.jpg" alt="" /><br />
+ViewPort是屏幕以屏幕的正中心为原点，x向右为正方向，y向上为正方向。正交投影下，ViewPort的区间是[-1，1]。但是Camera选择是透视投影，调整Camera的视角和far，near之后，区间就会发生变化。点击屏幕四个角，输出坐标。比较一下即可。<br />
+但是我们需要的不是viewport坐标，而是Area的坐标，设置可以说是Area的屏幕坐标。</p>
+
+<p>因此需要将viewport坐标转换成Area，使用的函数就是如下函数：</p>
+
+<pre><code>var newpos = global_transform.affine_inverse() * click_position
+</code></pre>
+
+<p><code>global_transform</code>是Area的全局变换。我们求得他的逆转换。然后对<code>click_position</code>进行这个逆转换。就可以将viewport的坐标转成Area的本地坐标。这里注意的是：Area的坐标系和ViewPort一样，x,y的范围是[-1,1],也就是他的原点在Area的中心，为了转换成我们熟悉的原点坐标在左上角。还是需要对他进行特殊处理。</p>
+
+<pre><code>newpos.y = newpos.y * -1
+newpos += Vector3(1,1,0)
+newpos /= 2
+</code></pre>
+
+<p>此时newpos的x，y就是以左上角为原点的。</p>
+
+<p>另外一些提示，我们添加的是Node，那里有viewport呢？那么问题来了，TestClick是根节点么？<br />
+在它的_ready()函数中，我们添加如下代码，看看根到底是个什么对象。</p>
+
+<pre><code>print(get_node("root"))
+</code></pre>
+
+<p>打印出来是<strong>ViewPort</strong>,非常意外。原来我们增加的Node并不是根，而是根里面第一个子节点。</p>
+
+<h2 id="section-1">扩展</h2>
+
+<p>如果要将area里面的本地坐标转换成全局坐标怎么做呢？<br />
+调用他的to_global()函数即可。全局坐标转换为本地坐标呢？to_local()!<br />
+看看他的函数代码：</p>
+
+<pre><code>Vector3 Spatial::to_local(Vector3 p_global) const {
+	return get_global_transform().affine_inverse().xform(p_global);
+}
+Vector3 Spatial::to_global(Vector3 p_local) const {
+	return get_global_transform().xform(p_local);
+}
+</code></pre>
+
+<p>我们刚刚的工程里面刚好可以直接使用to_local()即可。不用非得自己用transform来转换了。<br />
+而上面这些矩阵转换和unity除了用法不同，原理是一样的。ViewPort的坐标原点不同，Unity中ViewPort的原点在左下角，右上角是（1，1）。并且转换世界坐标到本地坐标，和本地到世界坐标的转换。使用的Transform.transformPoint()以及InverseTransformPoint()。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[记一个华为手机上声音突然消失不见的bug]]></title>
@@ -1997,75 +2098,6 @@ dest是指：<code>the colour that's already in the pixel we're drawing to</code
 <p>至此这个工具的制作过程都讲完了。期间也掉进了坑中，幸运的是和其他同事交流下，脑袋就清晰了一些。慢慢的我的这个大坑也就填上了。<br />
 实践过程中也存在一些问题。也在慢慢优化中。期望有一天成熟起来，能给其他项目中带来便利。<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-15074549225204.jpg" alt="" /></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[cocos2dx游戏性能优化技巧]]></title>
-    <link href="http://www.newtomato.me/blog/2017/10/06/cocos2dxxing-neng-you-hua"/>
-    <updated>2017-10-06T22:09:58+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/10/06/cocos2dxxing-neng-you-hua</id>
-    <content type="html"><![CDATA[<p>手机游戏性能优化主要有两个方面。一个CPU，一个GPU。</p>
-
-<p>GPU主要用于图像渲染方面。由于现在显卡发展迅速。原本CPU的部分功能，可以转移到GPU上计算运行。这样大大的减轻了CPU的运算压力。提升效率。</p>
-
-<p>GPU和CPU都有各自的性能指标。我们最常优化的地方都是CPU，因此我先从这一部分讲起。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-06-15073018470041.jpg" alt="" /><br />
-我给你演示一下我做的项目！这…,肯定是环境的问题！<br />
-<!--more--></p>
-
-<h3 id="cpu">CPU有关的方法</h3>
-
-<p>cocos2dx在开启debug模式之后，在左下角有三行debug信息。<code>GL vertical</code>，<code>draw call</code>，以及<code>fps</code>.<br />
-fps是最常用的指标之一。数值越高游戏运行越流畅。他表示一秒钟能刷新多少帧。<br />
-draw call也是性能优化的指标。他表示需要几次draw才能把图片展示出来。<br />
-gl vertical不常用，但是也是优化指标之一，他表示当前有多少个顶点数据。</p>
-
-<p>所有的方法就是围绕这三个指标开始展开。</p>
-
-<ol>
-  <li>使用<code>batchnode</code>批处理的方式加载图片。因此cocos2dx在这方面做了优化，在同一个<code>batchnode</code>的图片会一次性draw到GPU上，从而降低<code>draw call</code>的调用。从cocos2dx 3.0以后的版本，cocos2dx自动使用batchnode技术，而不需要开发者自己创建。</li>
-  <li><code>fps</code>的降低是因为有大量数据的计算，例如对象的生成。因此考虑对象池技术。例如cocos2dx使用的<code>AnimaitonCache</code>，<code>TextureCache</code>，<code>SpriteFrameCache</code>等。例如我们创建很多敌人。敌人消亡之后又会重新创建。实际上可以放到对象池中，默认从池中获取，如果池子里面没有对象，在重新创建。</li>
-  <li>加载较大资源，瞬间fps会下降很多。那是因为这个过程是加载图片资源和解析动画数据创建对象。动画资源最好提前加载。
-    <ol>
-      <li>按照由大到小的顺序加载。加载大的资源会和内存申请资源2倍的内存。但加载完什么时候不会立即释放。接着在依次加载。此时内存已经被撑大，在加载资源也可能不在需要申请新的内存了。</li>
-      <li>io读取动画数据信息，使用缓存，这点在cocos studio制作的armature中已经使用。但是Spine动画并未如此。他会每次创建都会重新加载。</li>
-      <li>可以用序列帧动画代替复杂的需要计算的动画。序列帧动画资源比较大。加载后压力转嫁给gpu而非cpu。</li>
-    </ol>
-  </li>
-  <li>减少粒子动画的使用。</li>
-  <li>图片加载之后，为什么会占据那么高的内存？一张1024x1024的RGB8888，大小200k的图片，加载后，占内存4M，因为图片本身是压缩的数据。在内存中都会被解压缩膨胀起来。他先被CCImage读取解析（它实现了对于不同类型图片得读取、解析、像素信息保存），然后CCTexture2D在根据CCImage又创建了一份数据。因此内存会有2倍的开销，如果我们可以使用gpu直接解析的图片，比如ios平台的pvr tc4格式，或者android的etc格式，则内存只有1倍左右的开销。</li>
-  <li>上述提到的pvr tc4格式，也有自己的缺点，它是有损压缩。肉眼可以看得出来，因此只能用于细微的地方。比如特效或者粒子等。</li>
-</ol>
-
-<h3 id="gpu">GPU有关的方法</h3>
-
-<p>GPU的优化则要分情况而定。</p>
-
-<p>GPU早期的架构和PC相似，都是IMR（Immediate Mode Rendering），这种架构的GPU渲染有个问题，就是Overdraw过高。因为他将被遮挡的物体也被draw到显卡上。这明显是一种浪费。<br />
-现在的GPU在一定程度上可以避免这个问题，但是需要应用程序将物体按照z轴顺序从前往后的顺序提交给GPU，这是一种方案。<br />
-另外，现在GPU有三家大的厂商。分别是<code>powervr，高通Adreno，ARM mali</code>。他们采用的是TBR（分块渲染）的架构。在overdraw方面，<code>powervr</code>是做得最好的一家。他使用<code>TBDR（Tile Based DeferredRendering）</code>架构，他增加了一个<code>HSR（Hidden Surface Removal)</code>硬件单元，剔除掉被遮挡的三角形。</p>
-
-<p>因此说GPU的优化分情况而定。而为了降低遮挡，在我们开发游戏中可以通过TexturePacker的多边形裁剪来做到。<br />
-说着这个，最常见的情况是有透明的图片，透明也是像素，也需要被读取到显卡上，增加带宽的浪费。而多边形裁剪就是将透明的部分裁掉。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-06-15072972637518.jpg" alt="=w300" /></p>
-
-<p>使用cocos2dx打开<code>CC_SPRITE_DEBUG_DRAW</code>,此时你可以看到一个<code>Sprite</code>的三角形不再是两个。而是多个。<br />
-但同时，我们也发现他的<code>gl vertcail</code>也变得很大。顶点越多，cpu计算越多。而我们使用了这种多边形裁剪，期初是为了降低GPU的计算和渲染。却带来了另一个问题。</p>
-
-<p>因此又回到那种时间换取空间的问题。可根据具体情况考虑是否使用这种方法。<br />
-不过，经过测试这种方法在powervr型号的gpu设备上没有多少成效。</p>
-
-<h3 id="section">其他技巧</h3>
-
-<ol>
-  <li>善用dumpCachedTextureInfo，找到那些texture一直未被释放。</li>
-  <li>对于只是使用一次的texture，在加载到gpu之后，可以remove内存对他的引用。这不会产生问题。</li>
-  <li>善于使用九宫格，降低对同一种资源的频繁加载。</li>
-  <li>早期手机部分不支持npot，为了统一资源，都做成了pot的格式，浪费了资源。现在手机大都已经支持npot。所以texturepacker导出可以选择npot，最新的npot的版本已经是anysize了。</li>
-  <li>数字字体尽量使用bmffont。</li>
-</ol>
 
 ]]></content>
   </entry>

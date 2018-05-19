@@ -1,0 +1,433 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Godot基础知识之Transform坐标转换 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="为什么要介绍坐标矩阵 ？ Godot是一个开源的游戏引擎，支持2D和3D，如果你好奇Unity里面的那些炫酷特效是怎么实现的，又苦于没有unity3d的源码，那么可以考虑阅读Godot源码来帮助你梳理3D的知识库。 从渲染的角度上看，3D和2D在差别不大，都是需要将Texture和顶点（Mesh） &hellip;">
+  <meta name="keywords" content="godot transform unity">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2018/05/19/godot-transform-1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">think</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+   <li><a href="/about2">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Godot基础知识之Transform坐标转换</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-05-19T21:45:56+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2 id="section">为什么要介绍坐标矩阵 ？</h2>
+
+<p>Godot是一个开源的游戏引擎，支持2D和3D，如果你好奇Unity里面的那些炫酷特效是怎么实现的，又苦于没有unity3d的源码，那么可以考虑阅读Godot源码来帮助你梳理3D的知识库。</p>
+
+<p>从渲染的角度上看，3D和2D在差别不大，都是需要将Texture和顶点（Mesh）数据，位置信息，颜色，法线等数据提交到GPU那边。渲染采用语言有所不同，有的采用opengl也有用d3d。<br />
+现在渲染管线支持可编程，可以通过编写顶点片段着色器去修改图像最终的显示效果。</p>
+
+<p>但是从计算的角度而言，3D还比2D多一个轴，因为这个轴，涉及了很多坐标变化，矩阵转换可以说是3D开发过程中当之无愧的基础。点击事件最终会通过坐标转换，来决定是否点中某个带碰撞盒的物体，物理引擎模拟运动，也离不开矩阵转化。最普遍的碰撞事件，大量物体在场景中运动（暂且不考虑性能问题），最终检测两个物体是否碰撞，也是需要位置坐标等，比如基础的AABB盒碰撞。坐标矩阵的转换涉及到很多地方，例如投影矩阵的计算，常用的法线贴图是以切线空间为坐标系。存储也是3d坐标，最后还需要用模型的矩阵来获得法线转换矩阵。</p>
+
+<p>所以说矩阵非常重要。<br />
+而今天我们先来了解一下Godot中坐标是一个什么样子的？原点在何处？坐标如何转换。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-icon.png" alt="icon" /><br />
+<!--more--><br />
+## 进入正题</p>
+
+<p>废话不多说了。开始吧。<br />
+我们的目的是通过点击屏幕，得到他屏幕坐标，ViewPort坐标，以及里面Area坐标。</p>
+
+<p>首先我们创建一个空的godot工程，并且创建一个空的场景，里面放置一个Node。命名TestClick。<br />
+然后增加一个Area，并且为他添加一个Shape（用于碰撞），和Mesh用于展示他的样子的。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267174988040.jpg" alt="" /></p>
+
+<p>此时一定要增加一个Camera，否则运行之后场景里面看不到任何东西。</p>
+
+<p>然后在Area上绑定一个脚本。增加<code>_input(event)</code>和<code>_input_event(camera, event, click_position, click_normal, shape_idx)</code>两个函数。后一个需要connect一下。<br />
+代码如下：</p>
+
+<pre><code>func _input(event):
+	if event.is_pressed():
+		print("[_input]",event.get_instance_id())
+		print("[_input]",event.position)	
+func _on_Area_input_event(camera, event, click_position, click_normal, shape_idx):
+	if event.is_pressed():
+		print("[_input_event] ",event.get_instance_id())
+		print("[_input_event]",click_position)
+		print("[_input_event]",click_normal)
+		print("[_input_event]",shape_idx)
+		var newpos = global_transform.affine_inverse() * click_position
+		print("[_input_event]",newpos)
+		newpos.y = newpos.y * -1
+		newpos += Vector3(1,1,0)
+		newpos /= 2
+		print("[_input_event]",newpos)
+	pass # replace with function body
+</code></pre>
+
+<p>通过这些打印，可以得知，每次点击会触发这两个函数，但是传递的event并不是同一个对象。<br />
+event.position是屏幕坐标，根据你的屏幕分辨率计算出来的屏幕坐标，是一个Vector2类型。<br />
+而click_position则是一个Vector3类型的坐标，但是并不是Area的点击位置坐标，而是当前屏幕的点击坐标，是当前ViewPort的点击坐标。<br />
+这里说一下ViewPort的原点和坐标系。ViewPort的坐标系类似如下图片。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267189437356.jpg" alt="" /><br />
+ViewPort是屏幕以屏幕的正中心为原点，x向右为正方向，y向上为正方向。正交投影下，ViewPort的区间是[-1，1]。但是Camera选择是透视投影，调整Camera的视角和far，near之后，区间就会发生变化。点击屏幕四个角，输出坐标。比较一下即可。<br />
+但是我们需要的不是viewport坐标，而是Area的坐标，设置可以说是Area的屏幕坐标。</p>
+
+<p>因此需要将viewport坐标转换成Area，使用的函数就是如下函数：</p>
+
+<pre><code>var newpos = global_transform.affine_inverse() * click_position
+</code></pre>
+
+<p><code>global_transform</code>是Area的全局变换。我们求得他的逆转换。然后对<code>click_position</code>进行这个逆转换。就可以将viewport的坐标转成Area的本地坐标。这里注意的是：Area的坐标系和ViewPort一样，x,y的范围是[-1,1],也就是他的原点在Area的中心，为了转换成我们熟悉的原点坐标在左上角。还是需要对他进行特殊处理。</p>
+
+<pre><code>newpos.y = newpos.y * -1
+newpos += Vector3(1,1,0)
+newpos /= 2
+</code></pre>
+
+<p>此时newpos的x，y就是以左上角为原点的。</p>
+
+<p>另外一些提示，我们添加的是Node，那里有viewport呢？那么问题来了，TestClick是根节点么？<br />
+在它的_ready()函数中，我们添加如下代码，看看根到底是个什么对象。</p>
+
+<pre><code>print(get_node("root"))
+</code></pre>
+
+<p>打印出来是<strong>ViewPort</strong>,非常意外。原来我们增加的Node并不是根，而是根里面第一个子节点。</p>
+
+<h2 id="section-1">扩展</h2>
+
+<p>如果要将area里面的本地坐标转换成全局坐标怎么做呢？<br />
+调用他的to_global()函数即可。全局坐标转换为本地坐标呢？to_local()!<br />
+看看他的函数代码：</p>
+
+<pre><code>Vector3 Spatial::to_local(Vector3 p_global) const {
+	return get_global_transform().affine_inverse().xform(p_global);
+}
+Vector3 Spatial::to_global(Vector3 p_local) const {
+	return get_global_transform().xform(p_local);
+}
+</code></pre>
+
+<p>我们刚刚的工程里面刚好可以直接使用to_local()即可。不用非得自己用transform来转换了。<br />
+而上面这些矩阵转换和unity除了用法不同，原理是一样的。ViewPort的坐标原点不同，Unity中ViewPort的原点在左下角，右上角是（1，1）。并且转换世界坐标到本地坐标，和本地到世界坐标的转换。使用的Transform.transformPoint()以及InverseTransformPoint()。</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-05-19T21:45:56+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/godot/'>godot</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2018/05/19/godot-transform-1" data-via="" data-counturl="http://www.newtomato.me/blog/2018/05/19/godot-transform-1" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2018/05/17/bugji-lu" title="Previous Post: 记一个华为手机上声音突然消失不见的bug">&laquo; 记一个华为手机上声音突然消失不见的bug</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/05/19/godot-transform-1">Godot基础知识之Transform坐标转换</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps">补充在android如何使用dumpsys导出FPS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a>
+      </li>
+    
+  </ul>
+</section>
+<section>
+ <h1>Categories</h1>
+ <ul id="categories">
+  <li class='category'><a href='/blog/categories/2d/'>2d (2)</a></li>
+<li class='category'><a href='/blog/categories/ads/'>ads (1)</a></li>
+<li class='category'><a href='/blog/categories/android/'>android (7)</a></li>
+<li class='category'><a href='/blog/categories/androidstudio/'>androidstudio (1)</a></li>
+<li class='category'><a href='/blog/categories/android开发/'>android开发 (1)</a></li>
+<li class='category'><a href='/blog/categories/apache/'>apache (1)</a></li>
+<li class='category'><a href='/blog/categories/apk/'>apk (1)</a></li>
+<li class='category'><a href='/blog/categories/atom/'>atom (1)</a></li>
+<li class='category'><a href='/blog/categories/basic/'>basic (2)</a></li>
+<li class='category'><a href='/blog/categories/blend/'>blend (1)</a></li>
+<li class='category'><a href='/blog/categories/bm-subtract/'>bm_subtract (1)</a></li>
+<li class='category'><a href='/blog/categories/box2d/'>box2d (2)</a></li>
+<li class='category'><a href='/blog/categories/bug/'>bug (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c# (1)</a></li>
+<li class='category'><a href='/blog/categories/c-/'>c++ (4)</a></li>
+<li class='category'><a href='/blog/categories/ccfileutil/'>ccfileutil (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2d-x/'>cocos2d-x (1)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx/'>cocos2dx (8)</a></li>
+<li class='category'><a href='/blog/categories/cocos2dx骨骼动画换装/'>cocos2dx骨骼动画换装 (1)</a></li>
+<li class='category'><a href='/blog/categories/djnago-blog-zinnia/'>djnago-blog-zinnia (1)</a></li>
+<li class='category'><a href='/blog/categories/dns64/'>dns64 (1)</a></li>
+<li class='category'><a href='/blog/categories/facebook/'>facebook (1)</a></li>
+<li class='category'><a href='/blog/categories/flavors/'>flavors (1)</a></li>
+<li class='category'><a href='/blog/categories/game/'>game (2)</a></li>
+<li class='category'><a href='/blog/categories/gdscript/'>gdscript (1)</a></li>
+<li class='category'><a href='/blog/categories/git/'>git (5)</a></li>
+<li class='category'><a href='/blog/categories/godot/'>godot (2)</a></li>
+<li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
+<li class='category'><a href='/blog/categories/gradle/'>gradle (1)</a></li>
+<li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>
+<li class='category'><a href='/blog/categories/ios/'>ios (2)</a></li>
+<li class='category'><a href='/blog/categories/ipv6/'>ipv6 (1)</a></li>
+<li class='category'><a href='/blog/categories/java/'>java (1)</a></li>
+<li class='category'><a href='/blog/categories/jekins/'>jekins (1)</a></li>
+<li class='category'><a href='/blog/categories/jni/'>jni (1)</a></li>
+<li class='category'><a href='/blog/categories/keystore/'>keystore (1)</a></li>
+<li class='category'><a href='/blog/categories/keytool/'>keytool (1)</a></li>
+<li class='category'><a href='/blog/categories/limbo/'>limbo (1)</a></li>
+<li class='category'><a href='/blog/categories/linter-luacheck/'>linter-luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/liquidfunc/'>liquidfunc (1)</a></li>
+<li class='category'><a href='/blog/categories/log/'>log (1)</a></li>
+<li class='category'><a href='/blog/categories/lua/'>lua (9)</a></li>
+<li class='category'><a href='/blog/categories/luabing/'>luabing (2)</a></li>
+<li class='category'><a href='/blog/categories/luacheck/'>luacheck (1)</a></li>
+<li class='category'><a href='/blog/categories/mac/'>mac (2)</a></li>
+<li class='category'><a href='/blog/categories/maker/'>maker (2)</a></li>
+<li class='category'><a href='/blog/categories/mobile/'>mobile (1)</a></li>
+<li class='category'><a href='/blog/categories/mode/'>mode (1)</a></li>
+<li class='category'><a href='/blog/categories/obb/'>obb (2)</a></li>
+<li class='category'><a href='/blog/categories/opengl/'>opengl (7)</a></li>
+<li class='category'><a href='/blog/categories/platform/'>platform (1)</a></li>
+<li class='category'><a href='/blog/categories/profiles/'>profiles (2)</a></li>
+<li class='category'><a href='/blog/categories/provision/'>provision (2)</a></li>
+<li class='category'><a href='/blog/categories/python/'>python (3)</a></li>
+<li class='category'><a href='/blog/categories/quaternion/'>quaternion (1)</a></li>
+<li class='category'><a href='/blog/categories/rebase/'>rebase (1)</a></li>
+<li class='category'><a href='/blog/categories/require/'>require (1)</a></li>
+<li class='category'><a href='/blog/categories/restapi/'>restapi (1)</a></li>
+<li class='category'><a href='/blog/categories/serpent/'>serpent (1)</a></li>
+<li class='category'><a href='/blog/categories/shell/'>shell (1)</a></li>
+<li class='category'><a href='/blog/categories/sqlite3/'>sqlite3 (1)</a></li>
+<li class='category'><a href='/blog/categories/stickerpack/'>stickerpack (1)</a></li>
+<li class='category'><a href='/blog/categories/sublime/'>sublime (1)</a></li>
+<li class='category'><a href='/blog/categories/svn/'>svn (1)</a></li>
+<li class='category'><a href='/blog/categories/table/'>table (1)</a></li>
+<li class='category'><a href='/blog/categories/tolua-/'>tolua++ (1)</a></li>
+<li class='category'><a href='/blog/categories/typecho/'>typecho (1)</a></li>
+<li class='category'><a href='/blog/categories/unity/'>unity (2)</a></li>
+<li class='category'><a href='/blog/categories/unity2d/'>unity2d (1)</a></li>
+<li class='category'><a href='/blog/categories/vector3/'>vector3 (1)</a></li>
+<li class='category'><a href='/blog/categories/vim/'>vim (1)</a></li>
+<li class='category'><a href='/blog/categories/wwdr/'>wwdr (1)</a></li>
+<li class='category'><a href='/blog/categories/xcode/'>xcode (1)</a></li>
+<li class='category'><a href='/blog/categories/个人网站/'>个人网站 (1)</a></li>
+<li class='category'><a href='/blog/categories/人物控制移动/'>人物控制移动 (1)</a></li>
+<li class='category'><a href='/blog/categories/冒泡/'>冒泡 (1)</a></li>
+<li class='category'><a href='/blog/categories/加密/'>加密 (1)</a></li>
+<li class='category'><a href='/blog/categories/动画工具/'>动画工具 (1)</a></li>
+<li class='category'><a href='/blog/categories/命令行/'>命令行 (1)</a></li>
+<li class='category'><a href='/blog/categories/工作/'>工作 (2)</a></li>
+<li class='category'><a href='/blog/categories/快速/'>快速 (1)</a></li>
+<li class='category'><a href='/blog/categories/思维发散/'>思维发散 (1)</a></li>
+<li class='category'><a href='/blog/categories/总结/'>总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/排序/'>排序 (1)</a></li>
+<li class='category'><a href='/blog/categories/提交大包/'>提交大包 (1)</a></li>
+<li class='category'><a href='/blog/categories/插入/'>插入 (1)</a></li>
+<li class='category'><a href='/blog/categories/改进/'>改进 (1)</a></li>
+<li class='category'><a href='/blog/categories/效率/'>效率 (1)</a></li>
+<li class='category'><a href='/blog/categories/模块化/'>模块化 (1)</a></li>
+<li class='category'><a href='/blog/categories/模拟器/'>模拟器 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏/'>游戏 (2)</a></li>
+<li class='category'><a href='/blog/categories/游戏引擎/'>游戏引擎 (1)</a></li>
+<li class='category'><a href='/blog/categories/游戏测试/'>游戏测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/漫威/'>漫威 (1)</a></li>
+<li class='category'><a href='/blog/categories/热更/'>热更 (1)</a></li>
+<li class='category'><a href='/blog/categories/神秘海域4/'>神秘海域4 (1)</a></li>
+<li class='category'><a href='/blog/categories/第三方接入/'>第三方接入 (2)</a></li>
+<li class='category'><a href='/blog/categories/算法/'>算法 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理总结/'>管理总结 (1)</a></li>
+<li class='category'><a href='/blog/categories/管理-沟通/'>管理，沟通 (1)</a></li>
+<li class='category'><a href='/blog/categories/胡思乱想/'>胡思乱想 (1)</a></li>
+<li class='category'><a href='/blog/categories/脚本/'>脚本 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化/'>自动化 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动化测试/'>自动化测试 (1)</a></li>
+<li class='category'><a href='/blog/categories/自动更新/'>自动更新 (1)</a></li>
+<li class='category'><a href='/blog/categories/苹果审核被拒/'>苹果审核被拒 (1)</a></li>
+<li class='category'><a href='/blog/categories/选择/'>选择 (1)</a></li>
+<li class='category'><a href='/blog/categories/问题/'>问题 (1)</a></li>
+<li class='category'><a href='/blog/categories/项目/'>项目 (2)</a></li>
+<li class='category'><a href='/blog/categories/项目管理/'>项目管理 (1)</a></li>
+<li class='category'><a href='/blog/categories/顽皮狗/'>顽皮狗 (2)</a></li>
+
+ </ul>
+</section>
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

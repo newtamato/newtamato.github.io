@@ -4,7 +4,7 @@
   <title><![CDATA[分类:godot | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/godot/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-05-17T18:59:05+08:00</updated>
+  <updated>2018-05-19T23:17:52+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,107 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Godot基础知识之Transform坐标转换]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/19/godot-transform-1"/>
+    <updated>2018-05-19T21:45:56+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/19/godot-transform-1</id>
+    <content type="html"><![CDATA[<h2 id="section">为什么要介绍坐标矩阵 ？</h2>
+
+<p>Godot是一个开源的游戏引擎，支持2D和3D，如果你好奇Unity里面的那些炫酷特效是怎么实现的，又苦于没有unity3d的源码，那么可以考虑阅读Godot源码来帮助你梳理3D的知识库。</p>
+
+<p>从渲染的角度上看，3D和2D在差别不大，都是需要将Texture和顶点（Mesh）数据，位置信息，颜色，法线等数据提交到GPU那边。渲染采用语言有所不同，有的采用opengl也有用d3d。<br />
+现在渲染管线支持可编程，可以通过编写顶点片段着色器去修改图像最终的显示效果。</p>
+
+<p>但是从计算的角度而言，3D还比2D多一个轴，因为这个轴，涉及了很多坐标变化，矩阵转换可以说是3D开发过程中当之无愧的基础。点击事件最终会通过坐标转换，来决定是否点中某个带碰撞盒的物体，物理引擎模拟运动，也离不开矩阵转化。最普遍的碰撞事件，大量物体在场景中运动（暂且不考虑性能问题），最终检测两个物体是否碰撞，也是需要位置坐标等，比如基础的AABB盒碰撞。坐标矩阵的转换涉及到很多地方，例如投影矩阵的计算，常用的法线贴图是以切线空间为坐标系。存储也是3d坐标，最后还需要用模型的矩阵来获得法线转换矩阵。</p>
+
+<p>所以说矩阵非常重要。<br />
+而今天我们先来了解一下Godot中坐标是一个什么样子的？原点在何处？坐标如何转换。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-icon.png" alt="icon" /><br />
+<!--more--><br />
+## 进入正题</p>
+
+<p>废话不多说了。开始吧。<br />
+我们的目的是通过点击屏幕，得到他屏幕坐标，ViewPort坐标，以及里面Area坐标。</p>
+
+<p>首先我们创建一个空的godot工程，并且创建一个空的场景，里面放置一个Node。命名TestClick。<br />
+然后增加一个Area，并且为他添加一个Shape（用于碰撞），和Mesh用于展示他的样子的。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267174988040.jpg" alt="" /></p>
+
+<p>此时一定要增加一个Camera，否则运行之后场景里面看不到任何东西。</p>
+
+<p>然后在Area上绑定一个脚本。增加<code>_input(event)</code>和<code>_input_event(camera, event, click_position, click_normal, shape_idx)</code>两个函数。后一个需要connect一下。<br />
+代码如下：</p>
+
+<pre><code>func _input(event):
+	if event.is_pressed():
+		print("[_input]",event.get_instance_id())
+		print("[_input]",event.position)	
+func _on_Area_input_event(camera, event, click_position, click_normal, shape_idx):
+	if event.is_pressed():
+		print("[_input_event] ",event.get_instance_id())
+		print("[_input_event]",click_position)
+		print("[_input_event]",click_normal)
+		print("[_input_event]",shape_idx)
+		var newpos = global_transform.affine_inverse() * click_position
+		print("[_input_event]",newpos)
+		newpos.y = newpos.y * -1
+		newpos += Vector3(1,1,0)
+		newpos /= 2
+		print("[_input_event]",newpos)
+	pass # replace with function body
+</code></pre>
+
+<p>通过这些打印，可以得知，每次点击会触发这两个函数，但是传递的event并不是同一个对象。<br />
+event.position是屏幕坐标，根据你的屏幕分辨率计算出来的屏幕坐标，是一个Vector2类型。<br />
+而click_position则是一个Vector3类型的坐标，但是并不是Area的点击位置坐标，而是当前屏幕的点击坐标，是当前ViewPort的点击坐标。<br />
+这里说一下ViewPort的原点和坐标系。ViewPort的坐标系类似如下图片。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267189437356.jpg" alt="" /><br />
+ViewPort是屏幕以屏幕的正中心为原点，x向右为正方向，y向上为正方向。正交投影下，ViewPort的区间是[-1，1]。但是Camera选择是透视投影，调整Camera的视角和far，near之后，区间就会发生变化。点击屏幕四个角，输出坐标。比较一下即可。<br />
+但是我们需要的不是viewport坐标，而是Area的坐标，设置可以说是Area的屏幕坐标。</p>
+
+<p>因此需要将viewport坐标转换成Area，使用的函数就是如下函数：</p>
+
+<pre><code>var newpos = global_transform.affine_inverse() * click_position
+</code></pre>
+
+<p><code>global_transform</code>是Area的全局变换。我们求得他的逆转换。然后对<code>click_position</code>进行这个逆转换。就可以将viewport的坐标转成Area的本地坐标。这里注意的是：Area的坐标系和ViewPort一样，x,y的范围是[-1,1],也就是他的原点在Area的中心，为了转换成我们熟悉的原点坐标在左上角。还是需要对他进行特殊处理。</p>
+
+<pre><code>newpos.y = newpos.y * -1
+newpos += Vector3(1,1,0)
+newpos /= 2
+</code></pre>
+
+<p>此时newpos的x，y就是以左上角为原点的。</p>
+
+<p>另外一些提示，我们添加的是Node，那里有viewport呢？那么问题来了，TestClick是根节点么？<br />
+在它的_ready()函数中，我们添加如下代码，看看根到底是个什么对象。</p>
+
+<pre><code>print(get_node("root"))
+</code></pre>
+
+<p>打印出来是<strong>ViewPort</strong>,非常意外。原来我们增加的Node并不是根，而是根里面第一个子节点。</p>
+
+<h2 id="section-1">扩展</h2>
+
+<p>如果要将area里面的本地坐标转换成全局坐标怎么做呢？<br />
+调用他的to_global()函数即可。全局坐标转换为本地坐标呢？to_local()!<br />
+看看他的函数代码：</p>
+
+<pre><code>Vector3 Spatial::to_local(Vector3 p_global) const {
+	return get_global_transform().affine_inverse().xform(p_global);
+}
+Vector3 Spatial::to_global(Vector3 p_local) const {
+	return get_global_transform().xform(p_local);
+}
+</code></pre>
+
+<p>我们刚刚的工程里面刚好可以直接使用to_local()即可。不用非得自己用transform来转换了。<br />
+而上面这些矩阵转换和unity除了用法不同，原理是一样的。ViewPort的坐标原点不同，Unity中ViewPort的原点在左下角，右上角是（1，1）。并且转换世界坐标到本地坐标，和本地到世界坐标的转换。使用的Transform.transformPoint()以及InverseTransformPoint()。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[使用GoDot引擎制作一款mini小游戏]]></title>

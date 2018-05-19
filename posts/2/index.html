@@ -9,7 +9,7 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="一个支持OpenGL绘制的窗口（即一个默认的帧缓存）可以由以下一些组合构成：多达四个颜色缓存,深度缓存,模板缓存,多重采样（MSAA）缓存,辅助缓存。 我们今天主要讨论模板缓存。模版缓冲（STENCIL_BUFFER）通过设置模版缓冲每个像素的值,我们可以指定在渲染的时候只渲染某些像素, &hellip;">
+  <meta name="description" content="今天我们来讲解一下怎么推导投影矩阵。投影矩阵的作用是剔除不在锥视体内的坐标，同时将锥视体内的坐标转换为标准化设备坐标。 投影矩阵分为两种，一种是2D常用的正交投影，另外一种就是3D游戏常用的透视投影，透视投影更符合我们对现实世界的模拟。 正如上篇博文说道坐标转换的过程。如下图所示： &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +71,58 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-12-16T18:12:54+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>今天我们来讲解一下怎么推导投影矩阵。投影矩阵的作用是剔除不在锥视体内的坐标，同时将锥视体内的坐标转换为标准化设备坐标。</p>
+
+<p>投影矩阵分为两种，一种是2D常用的正交投影，另外一种就是3D游戏常用的透视投影，透视投影更符合我们对现实世界的模拟。</p>
+
+<p>正如上篇博文说道坐标转换的过程。如下图所示：</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15128199931966.jpg" alt="-" /></p>
+
+<p>而<strong>透视矩阵</strong>是透视除法的核心。<br />
+按照 <code>P(NDC) = M(透视矩阵) * P(C)</code>的公式如（图1），就能将裁剪坐标转为规范化坐标。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -519,54 +571,6 @@ python 2.7
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/10/06/cocos2dxxing-neng-you-hua">Cocos2dx游戏性能优化技巧</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-10-06T22:09:58+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>手机游戏性能优化主要有两个方面。一个CPU，一个GPU。</p>
-
-<p>GPU主要用于图像渲染方面。由于现在显卡发展迅速。原本CPU的部分功能，可以转移到GPU上计算运行。这样大大的减轻了CPU的运算压力。提升效率。</p>
-
-<p>GPU和CPU都有各自的性能指标。我们最常优化的地方都是CPU，因此我先从这一部分讲起。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-06-15073018470041.jpg" alt="" /><br />
-我给你演示一下我做的项目！这…,肯定是环境的问题！<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/10/06/cocos2dxxing-neng-you-hua">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="3">&larr; Older</a>
@@ -584,6 +588,10 @@ python 2.7
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2018/05/19/godot-transform-1">Godot基础知识之Transform坐标转换</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
       </li>
     
@@ -597,10 +605,6 @@ python 2.7
     
       <li class="post">
         <a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
       </li>
     
   </ul>
@@ -634,7 +638,7 @@ python 2.7
 <li class='category'><a href='/blog/categories/game/'>game (2)</a></li>
 <li class='category'><a href='/blog/categories/gdscript/'>gdscript (1)</a></li>
 <li class='category'><a href='/blog/categories/git/'>git (5)</a></li>
-<li class='category'><a href='/blog/categories/godot/'>godot (1)</a></li>
+<li class='category'><a href='/blog/categories/godot/'>godot (2)</a></li>
 <li class='category'><a href='/blog/categories/google/'>google (2)</a></li>
 <li class='category'><a href='/blog/categories/gradle/'>gradle (1)</a></li>
 <li class='category'><a href='/blog/categories/iap/'>iap (1)</a></li>

@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2018/05/19/godot-transform-1</loc>
+<lastmod>2018-05-19T21:45:56+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2018/05/17/bugji-lu</loc>
 <lastmod>2018-05-17T18:57:53+08:00</lastmod>
 </url>
