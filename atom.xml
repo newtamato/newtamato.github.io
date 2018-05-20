@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-05-20T00:14:51+08:00</updated>
+  <updated>2018-05-20T21:50:29+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,109 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Godot基础知识之事件穿透]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/20/godot-event-1"/>
+    <updated>2018-05-20T20:03:02+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/20/godot-event-1</id>
+    <content type="html"><![CDATA[<h2 id="section">什么是事件穿透</h2>
+
+<p>场景上有一个物体A，B，B被A挡住，也就是我们能看到B的一部分。此时我们点击A（只有A的部分，没有挡住B的那部分），A会收到点击事件的通知。但是此时如果我们点击A，B交汇处，会发生什么？这就需要我们具体想让什么先发生。<br />
+A，B均可以收到点击事件。收到事件会有一个先后顺序。一般会以显示顺序排序，前面的A会先收到。A收到之后，决定事件是否继续向下传递。如果传递了，就发生穿透。</p>
+
+<p>大部分情况下，我们看到UI下面遮挡场景。点击UI，只希望UI收到点击事件。而UI下面遮挡的场景并不希望收到事件。事件由引擎触发，而由我们来决定是否终止。</p>
+
+<p><code>EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)</code>(用在u3d中)函数检测是否是在UI层，在cocos中，我们使用<code>onTouchBegan()</code>的返回值来判定是否被他吞掉。而在godot中是怎么实现的呢？</p>
+
+<!--more-->
+
+<h2 id="section-1">进入正文</h2>
+
+<p>先来看看godot怎么解释他的input事件。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-152681301816391.png" alt="" /><br />
+User触发了点击事件之后，事件在SceneTree中一直被传递。执行格子_input函数。从图中可以看出，先要寻找_input,如果没有_input最后会寻找_unhandled_input函数。</p>
+
+<p>看这种图也不是很直观。我们来做一个测试。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268241267894.jpg" alt="w350" /><br />
+展示的样子是：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268237116454.jpg" alt="w350" /></p>
+
+<p>连个button，同时button下面还有一个Area。<strong>TestClick和Hud和Area均带有_input函数</strong>，当我点击button1的时候，输出的打印日志如下：</p>
+
+<pre><code>[Hud]_input
+[Area2]_input
+[Area]_input
+[TestClick]_input
+[Hud]_on_Button_pressed
+</code></pre>
+
+<p>事件流是<strong>Hud:_input-&gt;Area2:_input-&gt;Area:_input-&gt;TestClick:_input-&gt;Hud.btn1的点击回调</strong>。</p>
+
+<p>也就是在input事件发生的时候，Node只要有input函数，都会被执行一遍。<strong>注意这里只有button被执行，挡在后面的其他对象（他们都带有真正触发事件的_input_event函数）并没有触发。所以这里已经可以算是方案了</strong></p>
+
+<h3 id="section-2">问题</h3>
+
+<p><strong>如果想要在hud的input先发生，其他的input函数在后面执行，怎么办？</strong></p>
+
+<p>API文档中提供了一个函数：<code>accept_event</code>。我们放到hud的input函数内。</p>
+
+<pre><code>func _input(event):
+	if event.is_pressed():
+		print("[Hud]_input")
+		accept_event()
+</code></pre>
+
+<p>结果打印就是：</p>
+
+<pre><code>[Hud]_input
+</code></pre>
+
+<p>Button函数没有执行啊！这明显不是我们想要的。</p>
+
+<p>幸运的是，我们还有一个<code>_unhandled_input</code>函数。此时我们将Area和TestClick的input函数全部换成这个函数。然后再次点击btn1，看看输出结果。</p>
+
+<pre><code>[Hud]_input
+[Hud]_on_Button_pressed
+</code></pre>
+
+<p>哈！达到了我们的基本目的，只有hud收到了事件。那么如果此时点击非Hud的地方会怎么样？比如我们直接点击非HUD，非Area（蓝色块）的那个黑色地方，看看输出吧。</p>
+
+<pre><code>[Hud]_input
+[Area2]_unhandled_input
+[Area]_unhandled_input
+[TestClick]_unhandled_input
+</code></pre>
+
+<p>这样看来事件流便是 <strong>Hud:_input-&gt;Area2:_unhandled_input-&gt;Area:_unhandled_input-&gt;TestClick:_unhandled_input</strong>。</p>
+
+<p>此时在点击蓝色块的Area，他有一个_input_event()的函数，打印如下：</p>
+
+<pre><code>[Hud]_input
+[Area2]_unhandled_input
+[Area]_unhandled_input
+[TestClick]_unhandled_input
+[Area]_on_Area_input_event
+</code></pre>
+
+<p>上述打印一定要认真看他们的顺序。</p>
+
+<h2 id="section-3">结论</h2>
+
+<p>那么我们直接先来看看结论:</p>
+
+<p><strong>如果点击是发生在hud（control）上，他会触发所有的input函数。无论是control还是Area上的。如果不是发生在hud上的点击，则按照input先触发，在触发_unhandled_input的顺序去触发。</strong></p>
+
+<p>所以再来看我们原先的问题：</p>
+
+<p><strong>如何让hud的input优先级高于其他Node呢？</strong></p>
+
+<p>相信读到这里的读者已经有些答案了，那就是让hud拥有input函数，其他Node只有_unhandled_input。亦或者真正的事件发生不要写在input中，而是在input_event中。input_event是按照显示顺序，在前面的对象如果有这个函数，后面的对象则不触发了。</p>
+
+<p>好了，分享到此结束了。大家有更好的方法欢迎和我交流。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Godot基础知识之Transform坐标转换]]></title>
@@ -1906,198 +2009,6 @@ dest是指：<code>the colour that's already in the pixel we're drawing to</code
 
 <p>另外，在<code>reddit</code>上找了一份example工程，可以查看不同模式的组合带来不一样的体验哦。再次也分享给大家。<br />
 <a href="https://pan.baidu.com/s/1gf1WFyr">百度云盘链接</a>：https://pan.baidu.com/s/1gf1WFyr 密码: 8u98</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[为游戏增加记录回放功能]]></title>
-    <link href="http://www.newtomato.me/blog/2017/10/08/hui-fang"/>
-    <updated>2017-10-08T17:29:29+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/10/08/hui-fang</id>
-    <content type="html"><![CDATA[<p>为游戏增加回放功能的主要目的是可以将原来的操作重新播放一遍，很快的定位问题。尤其的不易复现的问题。<br />
-早先定位不易复现的问题采用的方法是让服务器记录玩家的操作请求。<br />
-如果发生问题，可以根据请求日志做分析。<br />
-这种方案一般是用在游戏上线之后。在上线之前，只能靠开发和测试同学大量的测试。<br />
-所以当我看到cocos2dx增加一个控制台（<code>Console</code>）类的时候，就突发奇想，是否可以在前端做一个简单的记录回放。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-柴犬.jpg" alt="柴犬" /><br />
-柴柴帮忙镇楼！<br />
-<!--more--></p>
-
-<h3 id="section">原理和问题</h3>
-
-<p>记录回放不是游戏业务逻辑，不需要增加额外的代码。它独立于游戏存在。记录玩家的点击操作。保存到本地文件中。然后在游戏启动之后，读取文件内容，挨个播放玩家的点击。以此实现回放功能。</p>
-
-<p>这里涉及到的问题是：</p>
-
-<ol>
-  <li>玩家上次操作的游戏和本次回放的游戏内容要一致。现在游戏为了增加趣味性，很多采用随机。比如道具物品的生成，如果不一致，回放肯定出问题。</li>
-  <li>记录的点击位置是以当前设备分辨率为准。如果回放设备和当前设备分辨率不一致。位置信息不对，点击也会出问题。</li>
-  <li>即使解决了上面两个问题，如果上次点击和这次点击之间用时10s钟（可能是网络卡住，可能是性能出现问题）。当回放的时候，挨个触发的点击之间时长小于10s中，那么点击就不能正确触发。依然会出现问题。</li>
-</ol>
-
-<p>这三个问题，最容易的是第二个，只要保证在同一分辨率的设备上播放即可。<br />
-第一个问题，我们需要和服务器同学沟通，让他对关卡做一个镜像。开发成本较高。只好放弃。<br />
-最后我们在开发模式下，通过客户端的缓存，将服务器的数据全部保存下来。回放的时候，完全是客户端在自己播放。将与服务器请求的数据也缓存起来。虽然开发成本高了，但是基于此，没有任何网络请求的压力，第三个问题也有了解决方案。<br />
-第三个问题还涉及性能问题，要快速解决，我们想到的是用一台高端配置的设备，或者直接在模拟器上播放。</p>
-
-<p>至此大问题都已经解决，剩下的就是如何实现回放了。</p>
-
-<h3 id="cocos2dxconsole">cocos2dx提供的console为基础</h3>
-
-<p>在cocos2dx 3.x版本，增加了一个<code>Console</code>功能。提供的基本功能如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">
-</span><span class="line">{
-</span><span class="line">    createCommandAllocator();
-</span><span class="line">    createCommandConfig();
-</span><span class="line">    createCommandDebugMsg();
-</span><span class="line">    createCommandDirector();
-</span><span class="line">    createCommandExit();
-</span><span class="line">    createCommandFileUtils();
-</span><span class="line">    createCommandFps();
-</span><span class="line">    createCommandHelp();
-</span><span class="line">    createCommandProjection();
-</span><span class="line">    createCommandResolution();
-</span><span class="line">    createCommandSceneGraph();
-</span><span class="line">    createCommandTexture();
-</span><span class="line">    createCommandTouch();
-</span><span class="line">    createCommandUpload();
-</span><span class="line">    createCommandVersion();
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-<p>在项目中增加对端口5678的监听即可。</p>
-
-<p>lua代码：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">cc.Director:getInstance():getConsole():listenOnTCP(5678)</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>c++代码</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">auto console = director-&gt;getConsole();
-</span><span class="line">console-&gt;listenOnTCP(5678);</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>项目启动之后，打开终端：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">nc localhost 5678</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>如果是在手机上启动，则需要手机和电脑连在同一个局域网之内。然后查看手机的ip地址。替换上面的localhost。</p>
-
-<p>敲入命令之后，终端显示connect success。然后输入<code>help</code>。此时cocos2dx提供的定制命令全会罗列出来。</p>
-
-<p>而我们要使用的就是<code>touch</code>命令。</p>
-
-<h3 id="section-1">保存点击位置和回放</h3>
-
-<p>保存的位置，应该是什么位置呢？</p>
-
-<p>因为我们使用的是touch命令，而他需要的位置信息，是以设备坐标系为准的。也就是原点坐标在左上角为准。而cocos2dx的坐标系是以opengl为准，左下角是原点。</p>
-
-<p>所以我们要将点击的opengl坐标转为设备坐标。<br />
-这个转换，cocos2dx也提供了对应的接口。代码如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">Vec2 Director::convertToGL(const Vec2&amp; uiPoint)
-</span><span class="line">{
-</span><span class="line">    Mat4 transform;
-</span><span class="line">    GLToClipTransform(&amp;transform);
-</span><span class="line">    ...
-</span><span class="line">    return Vec2(glCoord.x * factor, glCoord.y * factor);
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">Vec2 Director::convertToUI(const Vec2&amp; glPoint)
-</span><span class="line">{
-</span><span class="line">    Mat4 transform;
-</span><span class="line">    GLToClipTransform(&amp;transform);
-</span><span class="line">		...
-</span><span class="line">    return Vec2(glSize.width * (clipCoord.x * 0.5f + 0.5f) * factor, glSize.height * (-clipCoord.y * 0.5f + 0.5f) * factor);
-</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>所以记录点击位置的代码很简单：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">local posx,posy = node:getPosition()
-</span><span class="line">local pos = node:getParent():convertToWorldSpace(cc.p(posx,posy))
-</span><span class="line">local director = cc.Director:getInstance()
-</span><span class="line">local uiPos = director:convertToUI(pos)</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>记录位置，然后保存。大功完成一半。是不是很简单。</p>
-
-<p>接下来说一下回放。<br />
-回放是自动完成，也就意味有一个定时器，定时将位置信息触发。<br />
-我的做法是使用<code>python</code>结合<code>nc</code>，<code>touch</code>命令，将位置信息挨个触发。</p>
-
-<p>python可以调用系统命令。我们使用adb命令将保存的位置信息文件读出来，然后<code>nc连接</code>游戏。在nc命令模式下，调用<code>touch</code>命令。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">touch swipe 300 400 300 400</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>这里touch有一个bug，就是对单点的支持不正确，点击并未触发。于是我尝试使用了多点。就是传递了同一个位置。竟然可以使用。</p>
-
-<p>python代码如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">nc = Netcat(server_address, 5678)
-</span><span class="line">while(index &lt; len(recordArray)):
-</span><span class="line">    nc.read_until('&gt;')
-</span><span class="line">    item = recordArray[index]
-</span><span class="line">    cmd = "touch swipe %d %d %d %d \n"  % (item[0],item[1],item[0],item[1])
-</span><span class="line">    nc.write(cmd)
-</span><span class="line">
-</span><span class="line">    index = index + 1
-</span><span class="line">    time.sleep(4)</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<h3 id="section-2">结语</h3>
-
-<p>至此这个工具的制作过程都讲完了。期间也掉进了坑中，幸运的是和其他同事交流下，脑袋就清晰了一些。慢慢的我的这个大坑也就填上了。<br />
-实践过程中也存在一些问题。也在慢慢优化中。期望有一天成熟起来，能给其他项目中带来便利。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-15074549225204.jpg" alt="" /></p>
 
 ]]></content>
   </entry>

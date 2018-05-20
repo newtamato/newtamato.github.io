@@ -1,0 +1,380 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>Godot基础知识之事件穿透 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="什么是事件穿透 场景上有一个物体A，B，B被A挡住，也就是我们能看到B的一部分。此时我们点击A（只有A的部分，没有挡住B的那部分），A会收到点击事件的通知。但是此时如果我们点击A，B交汇处，会发生什么？这就需要我们具体想让什么先发生。
+A，B均可以收到点击事件。收到事件会有一个先后顺序。 &hellip;">
+  <meta name="keywords" content="godot">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2018/05/20/godot-event-1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">think</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+   <li><a href="/about2">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Godot基础知识之事件穿透</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-05-20T20:03:02+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2 id="section">什么是事件穿透</h2>
+
+<p>场景上有一个物体A，B，B被A挡住，也就是我们能看到B的一部分。此时我们点击A（只有A的部分，没有挡住B的那部分），A会收到点击事件的通知。但是此时如果我们点击A，B交汇处，会发生什么？这就需要我们具体想让什么先发生。<br />
+A，B均可以收到点击事件。收到事件会有一个先后顺序。一般会以显示顺序排序，前面的A会先收到。A收到之后，决定事件是否继续向下传递。如果传递了，就发生穿透。</p>
+
+<p>大部分情况下，我们看到UI下面遮挡场景。点击UI，只希望UI收到点击事件。而UI下面遮挡的场景并不希望收到事件。事件由引擎触发，而由我们来决定是否终止。</p>
+
+<p><code>EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)</code>(用在u3d中)函数检测是否是在UI层，在cocos中，我们使用<code>onTouchBegan()</code>的返回值来判定是否被他吞掉。而在godot中是怎么实现的呢？</p>
+
+<!--more-->
+
+<h2 id="section-1">进入正文</h2>
+
+<p>先来看看godot怎么解释他的input事件。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-152681301816391.png" alt="" /><br />
+User触发了点击事件之后，事件在SceneTree中一直被传递。执行格子_input函数。从图中可以看出，先要寻找_input,如果没有_input最后会寻找_unhandled_input函数。</p>
+
+<p>看这种图也不是很直观。我们来做一个测试。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268241267894.jpg" alt="w350" /><br />
+展示的样子是：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268237116454.jpg" alt="w350" /></p>
+
+<p>连个button，同时button下面还有一个Area。<strong>TestClick和Hud和Area均带有_input函数</strong>，当我点击button1的时候，输出的打印日志如下：</p>
+
+<pre><code>[Hud]_input
+[Area2]_input
+[Area]_input
+[TestClick]_input
+[Hud]_on_Button_pressed
+</code></pre>
+
+<p>事件流是<strong>Hud:_input-&gt;Area2:_input-&gt;Area:_input-&gt;TestClick:_input-&gt;Hud.btn1的点击回调</strong>。</p>
+
+<p>也就是在input事件发生的时候，Node只要有input函数，都会被执行一遍。<strong>注意这里只有button被执行，挡在后面的其他对象（他们都带有真正触发事件的_input_event函数）并没有触发。所以这里已经可以算是方案了</strong></p>
+
+<h3 id="section-2">问题</h3>
+
+<p><strong>如果想要在hud的input先发生，其他的input函数在后面执行，怎么办？</strong></p>
+
+<p>API文档中提供了一个函数：<code>accept_event</code>。我们放到hud的input函数内。</p>
+
+<pre><code>func _input(event):
+	if event.is_pressed():
+		print("[Hud]_input")
+		accept_event()
+</code></pre>
+
+<p>结果打印就是：</p>
+
+<pre><code>[Hud]_input
+</code></pre>
+
+<p>Button函数没有执行啊！这明显不是我们想要的。</p>
+
+<p>幸运的是，我们还有一个<code>_unhandled_input</code>函数。此时我们将Area和TestClick的input函数全部换成这个函数。然后再次点击btn1，看看输出结果。</p>
+
+<pre><code>[Hud]_input
+[Hud]_on_Button_pressed
+</code></pre>
+
+<p>哈！达到了我们的基本目的，只有hud收到了事件。那么如果此时点击非Hud的地方会怎么样？比如我们直接点击非HUD，非Area（蓝色块）的那个黑色地方，看看输出吧。</p>
+
+<pre><code>[Hud]_input
+[Area2]_unhandled_input
+[Area]_unhandled_input
+[TestClick]_unhandled_input
+</code></pre>
+
+<p>这样看来事件流便是 <strong>Hud:_input-&gt;Area2:_unhandled_input-&gt;Area:_unhandled_input-&gt;TestClick:_unhandled_input</strong>。</p>
+
+<p>此时在点击蓝色块的Area，他有一个_input_event()的函数，打印如下：</p>
+
+<pre><code>[Hud]_input
+[Area2]_unhandled_input
+[Area]_unhandled_input
+[TestClick]_unhandled_input
+[Area]_on_Area_input_event
+</code></pre>
+
+<p>上述打印一定要认真看他们的顺序。</p>
+
+<h2 id="section-3">结论</h2>
+
+<p>那么我们直接先来看看结论:</p>
+
+<p><strong>如果点击是发生在hud（control）上，他会触发所有的input函数。无论是control还是Area上的。如果不是发生在hud上的点击，则按照input先触发，在触发_unhandled_input的顺序去触发。</strong></p>
+
+<p>所以再来看我们原先的问题：</p>
+
+<p><strong>如何让hud的input优先级高于其他Node呢？</strong></p>
+
+<p>相信读到这里的读者已经有些答案了，那就是让hud拥有input函数，其他Node只有_unhandled_input。亦或者真正的事件发生不要写在input中，而是在input_event中。input_event是按照显示顺序，在前面的对象如果有这个函数，后面的对象则不触发了。</p>
+
+<p>好了，分享到此结束了。大家有更好的方法欢迎和我交流。</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-05-20T20:03:02+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/godot/'>godot</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2018/05/20/godot-event-1" data-via="" data-counturl="http://www.newtomato.me/blog/2018/05/20/godot-event-1" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2018/05/19/godot-transform-1" title="Previous Post: Godot基础知识之Transform坐标转换">&laquo; Godot基础知识之Transform坐标转换</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/05/20/godot-event-1">Godot基础知识之事件穿透</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/19/godot-transform-1">Godot基础知识之Transform坐标转换</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps">补充在android如何使用dumpsys导出FPS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">OpenGL基础之普通光照</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi">OpenGL基础之矩阵和坐标</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/opengl-glitter">在xcode上运行OpenGL工程-使用Glitter</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行OpenGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/29/gamemakerblendmode">Game maker：Extend Blend Mode</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

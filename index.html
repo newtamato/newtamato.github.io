@@ -9,7 +9,8 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="为什么要介绍坐标矩阵 ？ Godot是一个开源的游戏引擎，支持2D和3D，如果你好奇Unity里面的那些炫酷特效是怎么实现的，又苦于没有unity3d的源码，那么可以考虑阅读Godot源码来帮助你梳理3D的知识库。 从渲染的角度上看，3D和2D在差别不大，都是需要将Texture和顶点（Mesh） &hellip;">
+  <meta name="description" content="什么是事件穿透 场景上有一个物体A，B，B被A挡住，也就是我们能看到B的一部分。此时我们点击A（只有A的部分，没有挡住B的那部分），A会收到点击事件的通知。但是此时如果我们点击A，B交汇处，会发生什么？这就需要我们具体想让什么先发生。
+A，B均可以收到点击事件。收到事件会有一个先后顺序。 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +72,56 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2018/05/20/godot-event-1">Godot基础知识之事件穿透</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-05-20T20:03:02+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="section">什么是事件穿透</h2>
+
+<p>场景上有一个物体A，B，B被A挡住，也就是我们能看到B的一部分。此时我们点击A（只有A的部分，没有挡住B的那部分），A会收到点击事件的通知。但是此时如果我们点击A，B交汇处，会发生什么？这就需要我们具体想让什么先发生。<br />
+A，B均可以收到点击事件。收到事件会有一个先后顺序。一般会以显示顺序排序，前面的A会先收到。A收到之后，决定事件是否继续向下传递。如果传递了，就发生穿透。</p>
+
+<p>大部分情况下，我们看到UI下面遮挡场景。点击UI，只希望UI收到点击事件。而UI下面遮挡的场景并不希望收到事件。事件由引擎触发，而由我们来决定是否终止。</p>
+
+<p><code>EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)</code>(用在u3d中)函数检测是否是在UI层，在cocos中，我们使用<code>onTouchBegan()</code>的返回值来判定是否被他吞掉。而在godot中是怎么实现的呢？</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2018/05/20/godot-event-1">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -527,65 +578,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2018-01-07T17:13:16+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>学习opengl的时候，我们经常用到的函数大致有如下几个，这些函数之间奇怪的命名方式一开始总让我们摸不着头脑。例如<code>glGenVertexArrays</code>之后，怎么传递了数据，怎么使用了这些数据？</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">glGenVertexArrays(1, &amp;VAO)
-</span><span class="line">glGenBuffers(1, &amp;VBO);
-</span><span class="line">glBindVertexArray(VAO);
-</span><span class="line">glBindBuffer(GL_ARRAY_BUFFER, VBO);
-</span><span class="line">glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-</span><span class="line">glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-</span><span class="line">glDrawArrays(GL_TRIANGLES, 0, 36);</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>今天我们就梳理一下这些函数的含义。从我理解的角度讲解一下，增加大家对他的印象。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -599,6 +591,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/05/20/godot-event-1">Godot基础知识之事件穿透</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/05/19/godot-transform-1">Godot基础知识之Transform坐标转换</a>
@@ -658,6 +654,22 @@
     
       <li class="post">
         <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行OpenGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/29/gamemakerblendmode">Game maker：Extend Blend Mode</a>
       </li>
     
   </ul>

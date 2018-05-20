@@ -1,6 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sitemaps.org/schemas/sitemap/0.9 http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd" xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 <url>
+<loc>http://www.newtomato.me/blog/2018/05/20/godot-event-1</loc>
+<lastmod>2018-05-20T20:03:02+08:00</lastmod>
+</url>
+<url>
 <loc>http://www.newtomato.me/blog/2018/05/19/godot-transform-1</loc>
 <lastmod>2018-05-19T21:45:56+08:00</lastmod>
 </url>
@@ -741,6 +745,33 @@
 </url>
 <url>
 <loc>http://www.newtomato.me/blog/categories/bug/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/2/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/3/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/4/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/5/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/6/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/7/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/8/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/9/</loc>
+</url>
+<url>
+<loc>http://www.newtomato.me/posts/10/</loc>
 </url>
 <url>
 <loc>http://www.newtomato.me/about.html</loc>

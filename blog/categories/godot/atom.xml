@@ -4,7 +4,7 @@
   <title><![CDATA[分类:godot | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/godot/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-05-20T00:14:51+08:00</updated>
+  <updated>2018-05-20T21:50:29+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,109 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Godot基础知识之事件穿透]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/20/godot-event-1"/>
+    <updated>2018-05-20T20:03:02+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/20/godot-event-1</id>
+    <content type="html"><![CDATA[<h2 id="section">什么是事件穿透</h2>
+
+<p>场景上有一个物体A，B，B被A挡住，也就是我们能看到B的一部分。此时我们点击A（只有A的部分，没有挡住B的那部分），A会收到点击事件的通知。但是此时如果我们点击A，B交汇处，会发生什么？这就需要我们具体想让什么先发生。<br />
+A，B均可以收到点击事件。收到事件会有一个先后顺序。一般会以显示顺序排序，前面的A会先收到。A收到之后，决定事件是否继续向下传递。如果传递了，就发生穿透。</p>
+
+<p>大部分情况下，我们看到UI下面遮挡场景。点击UI，只希望UI收到点击事件。而UI下面遮挡的场景并不希望收到事件。事件由引擎触发，而由我们来决定是否终止。</p>
+
+<p><code>EventSystem.current.IsPointerOverGameObject(Input.GetTouch(0).fingerId)</code>(用在u3d中)函数检测是否是在UI层，在cocos中，我们使用<code>onTouchBegan()</code>的返回值来判定是否被他吞掉。而在godot中是怎么实现的呢？</p>
+
+<!--more-->
+
+<h2 id="section-1">进入正文</h2>
+
+<p>先来看看godot怎么解释他的input事件。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-152681301816391.png" alt="" /><br />
+User触发了点击事件之后，事件在SceneTree中一直被传递。执行格子_input函数。从图中可以看出，先要寻找_input,如果没有_input最后会寻找_unhandled_input函数。</p>
+
+<p>看这种图也不是很直观。我们来做一个测试。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268241267894.jpg" alt="w350" /><br />
+展示的样子是：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268237116454.jpg" alt="w350" /></p>
+
+<p>连个button，同时button下面还有一个Area。<strong>TestClick和Hud和Area均带有_input函数</strong>，当我点击button1的时候，输出的打印日志如下：</p>
+
+<pre><code>[Hud]_input
+[Area2]_input
+[Area]_input
+[TestClick]_input
+[Hud]_on_Button_pressed
+</code></pre>
+
+<p>事件流是<strong>Hud:_input-&gt;Area2:_input-&gt;Area:_input-&gt;TestClick:_input-&gt;Hud.btn1的点击回调</strong>。</p>
+
+<p>也就是在input事件发生的时候，Node只要有input函数，都会被执行一遍。<strong>注意这里只有button被执行，挡在后面的其他对象（他们都带有真正触发事件的_input_event函数）并没有触发。所以这里已经可以算是方案了</strong></p>
+
+<h3 id="section-2">问题</h3>
+
+<p><strong>如果想要在hud的input先发生，其他的input函数在后面执行，怎么办？</strong></p>
+
+<p>API文档中提供了一个函数：<code>accept_event</code>。我们放到hud的input函数内。</p>
+
+<pre><code>func _input(event):
+	if event.is_pressed():
+		print("[Hud]_input")
+		accept_event()
+</code></pre>
+
+<p>结果打印就是：</p>
+
+<pre><code>[Hud]_input
+</code></pre>
+
+<p>Button函数没有执行啊！这明显不是我们想要的。</p>
+
+<p>幸运的是，我们还有一个<code>_unhandled_input</code>函数。此时我们将Area和TestClick的input函数全部换成这个函数。然后再次点击btn1，看看输出结果。</p>
+
+<pre><code>[Hud]_input
+[Hud]_on_Button_pressed
+</code></pre>
+
+<p>哈！达到了我们的基本目的，只有hud收到了事件。那么如果此时点击非Hud的地方会怎么样？比如我们直接点击非HUD，非Area（蓝色块）的那个黑色地方，看看输出吧。</p>
+
+<pre><code>[Hud]_input
+[Area2]_unhandled_input
+[Area]_unhandled_input
+[TestClick]_unhandled_input
+</code></pre>
+
+<p>这样看来事件流便是 <strong>Hud:_input-&gt;Area2:_unhandled_input-&gt;Area:_unhandled_input-&gt;TestClick:_unhandled_input</strong>。</p>
+
+<p>此时在点击蓝色块的Area，他有一个_input_event()的函数，打印如下：</p>
+
+<pre><code>[Hud]_input
+[Area2]_unhandled_input
+[Area]_unhandled_input
+[TestClick]_unhandled_input
+[Area]_on_Area_input_event
+</code></pre>
+
+<p>上述打印一定要认真看他们的顺序。</p>
+
+<h2 id="section-3">结论</h2>
+
+<p>那么我们直接先来看看结论:</p>
+
+<p><strong>如果点击是发生在hud（control）上，他会触发所有的input函数。无论是control还是Area上的。如果不是发生在hud上的点击，则按照input先触发，在触发_unhandled_input的顺序去触发。</strong></p>
+
+<p>所以再来看我们原先的问题：</p>
+
+<p><strong>如何让hud的input优先级高于其他Node呢？</strong></p>
+
+<p>相信读到这里的读者已经有些答案了，那就是让hud拥有input函数，其他Node只有_unhandled_input。亦或者真正的事件发生不要写在input中，而是在input_event中。input_event是按照显示顺序，在前面的对象如果有这个函数，后面的对象则不触发了。</p>
+
+<p>好了，分享到此结束了。大家有更好的方法欢迎和我交流。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Godot基础知识之Transform坐标转换]]></title>

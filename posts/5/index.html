@@ -9,7 +9,9 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="阅读cocos2dx的代码，我们会发现它里面有很多看似很奇怪的代码，比如cocos2dx/platform/android/jni/下面的c++文件。 里面的函数命名和一般的c++命名不一样！这是因为里面全是JNI规范的函数。 这个JNI是怎么工作的呢？我们先说JAVA是怎么调用c++函数。 &hellip;">
+  <meta name="description" content="如果应用通过web方式登录fb，没有出现问题，但是通过fb应用登录反而报错，报错信息如下：
+Android hash key always does not match any stored key hashes 这个时候，怎么解决呢？
+">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +73,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2017/01/07/android-facebookdeng-lu-wen-ti">Android Facebook登录问题</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2017-01-07T19:31:06+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>如果应用通过web方式登录fb，没有出现问题，但是通过fb应用登录反而报错，报错信息如下：<br />
+<code>Android hash key always does not match any stored key hashes</code></p>
+
+<p>这个时候，怎么解决呢？<br />
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2017/01/07/android-facebookdeng-lu-wen-ti">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -511,53 +558,6 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">Android In-app-billing 接入- 问题总结</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2016-08-31T16:28:48+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="section">准备过程</h2>
-<p>接入Google支付之前，你要预先准备如下几件事情。</p>
-
-<ol>
-  <li>准备一个google开发者账号，绑定信用卡，在花费20美金。否则进入不了Google Play Developer Console。</li>
-  <li>接下来，如果你身在大陆地区，那就你要学会翻墙。同时找一个没被阉割的android手机，这比较难，那就在已有的手机里面安装Google play store和Google Play Service。百度出来的不靠谱，因此最好能够先翻墙，然后google搜索上面两个安装包，安装即可。Android上的翻墙软件，推荐影梭，<a href="http://gjsq.me/1438224">GreenVPN</a>,<a href="http://itxs.co/s/14ff19gw">土行孙</a>。翻墙就祝各位好运了。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2016/08/31/android-in-app-billing-jie-ru-wen-ti-zong-jie">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="6">&larr; Older</a>
@@ -573,6 +573,10 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/05/20/godot-event-1">Godot基础知识之事件穿透</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/05/19/godot-transform-1">Godot基础知识之Transform坐标转换</a>
@@ -632,6 +636,22 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
     
       <li class="post">
         <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行OpenGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/29/gamemakerblendmode">Game maker：Extend Blend Mode</a>
       </li>
     
   </ul>
