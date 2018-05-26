@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-05-20T21:50:29+08:00</updated>
+  <updated>2018-05-26T13:10:13+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,199 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[Godot引擎分析-1]]></title>
+    <link href="http://www.newtomato.me/blog/2018/05/26/godot-1"/>
+    <updated>2018-05-26T13:06:57+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/05/26/godot-1</id>
+    <content type="html"><![CDATA[<p>利用业余时间看了一个星期的godot源码，云里雾里的看不清全貌。记录一下这周的成果，为以后先打个基础。</p>
+
+<p>此处声明，由于个人并没全部看明白，所以我只是分享一部分我看到的东西。我的分享未必都是全部正确的。如果有错误也非常欢迎指正出来。正所谓互相交流才能有所进步。</p>
+
+<p>ok，闲话少说进入正题。<br />
+<!--more--></p>
+
+<h2 id="section">宏观角度看</h2>
+
+<p>先从整体宏观的角度看一下GoDot引擎。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15272453730540.jpg" alt="" /></p>
+
+<p>从上面这张图上看，我们可以看出一下几点：</p>
+
+<ul>
+  <li>最上层<code>MainLoop</code>就是我们的游戏循环逻辑。所有游戏几乎都会有自己的main入口，然后在main函数中做到循环刷新屏幕。Godot也不例外。</li>
+  <li>所有对象都继承自Object，Reference也是继承Object，只有Resource资源继承自Reference。Node，Canvas等显示对象却并不继承Reference。这和其他引擎不太一样。例如在cocos中所有对象都继承自Reference，几乎可以通过调用RefCount来检查对象的被引用的个数。</li>
+  <li>Node有两大子类型，一个是<code>Canvas</code>，一个是<code>Spatial</code>。主要区别在于，<code>Canvas</code>是2d对象的父类，对应的<code>Spatial</code>是所有3D的父类。Canvas下又分成了<code>Control</code>和<code>Node2d</code>，<code>Control</code>是所有UI的父类，<code>Node2d</code>是所有2d物体的父类。例如我们实例化一个button，Lable，PopUpDialog，他们都是继承自Control。而我们实例化的<code>Sprite</code>，<code>Area2d</code>，都是继承自Node2d。为什么godot会将UI和Node2d区别对待呢？是因为底层对UI层做了优化，可以提升引擎的性能。怎么做到的呢？那就涉及到第四点。</li>
+  <li>第二层是开发同学会经常用到的。创建一个物体，给他配上Texture或者Shader，Material。旋转移动物体，去碰撞另外一个物体等等。而这些效果背后真正实现他们，就是第三层。这一层包括物理引擎和渲染引擎还有声音。物理引擎就是负责告诉我们碰撞以及类似Camera需要渲染多少个物体。所以最关键的地方在于高效的碰撞检测算法。渲染引擎负责将Texture，Material，Shader等融合在一起，计算物体的Transform矩阵，准备顶点数据光照数据环境数据然后调用OpenGL命令上传GPU。</li>
+</ul>
+
+<p>上面的那张图大概介绍完了。很多同学估计对第三层很感兴趣，但是现在不是合适的时候。我们需要一步一步的来。</p>
+
+<h3 id="section-1">从代码结构来看</h3>
+
+<p>现在来说一下他的代码结构。了解代码结构有助于辅助我们看懂他的代码。从github上将他的代码clone下来之后，代码结构如下：</p>
+
+<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273033285621.jpg" alt="" /><br />
+这些大部分目录我们不用都去看，</p>
+
+<pre><code>core：是对数据结构的定义。
+platform：是各个平台一些不同处理。
+doc：我们使用godot编辑器的时候，一些代码提示和文档。
+scene：是第二层的实现。
+main：就是第一层的实现。main入口类。以及mainloop等。这里会做初始化的一些操作。
+modules：是一些模块的处理，字体，图片格式解析等。
+servers：是第三层的实现。
+thirdparty：暂时还没有没有看到。
+editor：就是godot编辑器的实现。
+</code></pre>
+
+<p>看了上面的解释，是不是知道重点在哪里了。对！就是<strong>scene和servers</strong>。</p>
+
+<p>scene主要是第二层的实现。包括2d，3d，gui，resource（例如texture，mesh，material，collision shape）。<br />
+servers就是第三层的实现。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273037073232.jpg" alt="" /><br />
+audio就不用说了，visual是负责渲染，physics_2d是2d的物理引擎。physics是3d的物理引擎。arvr就是时下较为流行的ARVR技术了。</p>
+
+<p>所以如果你对任何一块儿感兴趣可以直接去看代码。看他是怎么实现的。不过相信我，硬啃代码绝对是事倍功半的买卖。</p>
+
+<h2 id="section-2">通过一个例子来将整个引擎串起来</h2>
+
+<p>从宏观的角度讲这么多，我们现在通过一个例子，将引擎怎么工作的给串起来。然后在从微观角度，更细节的去分析他的实现。</p>
+
+<p>这个例子是：</p>
+
+<p><strong>将一个Sprite放到舞台上，并给他一张图片，他是怎么被绘制屏幕上的？</strong></p>
+
+<p>这个题目经常是一个前端工程师的面试题目。不同面试官有不一样的点。我这里并不给出答案，只是将流程说一下，所有点都在这里了。你们自行体会。</p>
+
+<h2 id="section-3">应用业务层</h2>
+
+<p>代码实现</p>
+
+<pre><code>var sprite = Sprite.new()
+var texture = ImageTexture.new()
+texture.load("res://MainForm/bg_activityout.png")
+sprite.centered = false
+sprite.set_texture(texture)	
+self.add_child(sprite)
+</code></pre>
+
+<p>ImageTexture加载图片的函数：</p>
+
+<pre><code>void ImageTexture::load(const String &amp;p_path) {
+
+	Ref&lt;Image&gt; img;
+	img.instance();
+	img-&gt;load(p_path);
+	create_from_image(img);
+}
+</code></pre>
+
+<p>Image位于core文件夹，是对图片信息的解析实现。不同格式的图片有各自的存储格式，比如说每个像素是按多少字节存储。而我们知道的是p_path即可。<br />
+然后看看<code>create_from_image</code>函数。</p>
+
+<pre><code>void ImageTexture::create_from_image(const Ref&lt;Image&gt; &amp;p_image, uint32_t p_flags) {
+
+	ERR_FAIL_COND(p_image.is_null());
+	flags = p_flags;
+	w = p_image-&gt;get_width();
+	h = p_image-&gt;get_height();
+	format = p_image-&gt;get_format();
+
+	VisualServer::get_singleton()-&gt;texture_allocate(texture, p_image-&gt;get_width(), p_image-&gt;get_height(), p_image-&gt;get_format(), p_flags);
+	VisualServer::get_singleton()-&gt;texture_set_data(texture, p_image);
+	_change_notify();
+}
+</code></pre>
+
+<p>这个函数出现的如下两句就比较关键了：</p>
+
+<p>VisualServer::get_singleton()-&gt;texture_allocate(texture, p_image-&gt;get_width(), p_image-&gt;get_height(), p_image-&gt;get_format(), p_flags);<br />
+		VisualServer::get_singleton()-&gt;texture_set_data(texture, p_image);</p>
+
+<p>这两个函数的实现就是开始调用opengl创建glBindTexture，glTexImage2D，然后将<code>tex_id</code>这个opengl句柄，赋值给我们刚刚创建的texutre。</p>
+
+<p>VisualServer在platform那里初始化<strong>VisualServerRaster</strong>。但是它并没有texture_allocate函数，这个函数的真正实现是在<code>RasterizerStorageGLES3</code>或者<code>RasterizerStorageGLES2</code>，为什么会这么调用呢？这里算是给大家的一点思考。</p>
+
+<h3 id="opengl">渲染层，设置opengl状态</h3>
+
+<p>ok，我们直接来看一下第一个函数吧。</p>
+
+<p>void RasterizerStorageGLES3::texture_allocate(RID p_texture, int p_width, int p_height, Image::Format p_format, uint32_t p_flags) {</p>
+
+<pre><code>GLenum format;
+GLenum internal_format;
+GLenum type;
+
+bool compressed;
+bool srgb;
+
+if (p_flags &amp; VS::TEXTURE_FLAG_USED_FOR_STREAMING) {
+	p_flags &amp;= ~VS::TEXTURE_FLAG_MIPMAPS; // no mipies for video
+}
+
+Texture *texture = texture_owner.get(p_texture);
+ERR_FAIL_COND(!texture);
+texture-&gt;width = p_width;
+texture-&gt;height = p_height;
+texture-&gt;format = p_format;
+texture-&gt;flags = p_flags;
+texture-&gt;stored_cube_sides = 0;
+texture-&gt;target = (p_flags &amp; VS::TEXTURE_FLAG_CUBEMAP) ? GL_TEXTURE_CUBE_MAP : GL_TEXTURE_2D;
+
+_get_gl_image_and_format(Ref&lt;Image&gt;(), texture-&gt;format, texture-&gt;flags, format, internal_format, type, compressed, srgb);
+
+texture-&gt;alloc_width = texture-&gt;width;
+texture-&gt;alloc_height = texture-&gt;height;
+
+texture-&gt;gl_format_cache = format;
+texture-&gt;gl_type_cache = type;
+texture-&gt;gl_internal_format_cache = internal_format;
+texture-&gt;compressed = compressed;
+texture-&gt;srgb = srgb;
+texture-&gt;data_size = 0;
+texture-&gt;mipmaps = 1;
+
+glActiveTexture(GL_TEXTURE0);
+glBindTexture(texture-&gt;target, texture-&gt;tex_id);
+
+if (p_flags &amp; VS::TEXTURE_FLAG_USED_FOR_STREAMING) {
+	//prealloc if video
+	glTexImage2D(texture-&gt;target, 0, internal_format, p_width, p_height, 0, format, type, NULL);
+}
+
+texture-&gt;active = true; }
+</code></pre>
+
+<p>这个函数先是将Image读出来的p_width,p_height,p_format 等数据都赋值给texture，同时格局p_format来求出opengl需要的internal formate和formate，这两个参数在下面glTexImage2D是用得到的。我们例子中texture的target是GL_TEXTURE_2D。因此这里不会调用glTexImage2D。</p>
+
+<p>opengl加载一个Texture需要有以下几个步骤。<br />
+激活一个Texture，绑定到一个opengl变量上，设置他的状态，绑定图片数据。<br />
+刚才那个函数并没有完成后续的步骤，所以我们还需要继续向下看，那就是看<code>texture_set_data</code>函数。<br />
+这个函数代码太长，这里就不贴出来了。但是从这个代码中我们确实看到了他开始设置状态，绑定图片数据了。</p>
+
+<p>至此，opengl状态已经设定完成。但还没有完，图像真正显示出来，是需要drawcall的。在何处，在何时进行的呢？</p>
+
+<h3 id="gldraw">渲染层，开始glDraw*绘制</h3>
+
+<p>这里的绘制是一个复杂的过程，我尽量以流程图的形势画出来。希望让大家有一个清晰的印象。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273102726934.jpg" alt="" /></p>
+
+<p>所有的渲染命令会被添加到canvas对象的command队列中，而我们循环刷新逻辑在每帧去调用render_canvas，VisualServersCanvas有所有canvas对象，于是遍历循环开始。只要有canvas对象上有command队列就开始调用_canvas_item_render_command函数去<code>glDraw*</code></p>
+
+<p>流程图不复杂，点到为止，你们按照上面的函数名挨个看下去，就能更清晰明了了。</p>
+
+<h2 id="section-4">结束前的话</h2>
+
+<p>相信看过代码的同学一定有很多困惑，里面那么多的状态设置，那么多if的分支都是干什么用的。感觉我说的很简单，但是代码讲了好多事情。不那么简单啊！<br />
+是的，你说对了，因为我的业务简单，只绘制了一个Sprite，但是如果考虑到shader，考虑到混合，考虑到透明，考虑到光线等等，在回头去看绘制函数，是不是就有点明白了。<br />
+因此要想真正搞明白绘制函数，需要对opengl有一定的了解，什么是vbo，vao，ufo，fbo以及如何更新数据等等。</p>
+
+<p>接下来，我会从比较细节的地方去看引擎，顺便对opengl的接口函数做一下梳理。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[Godot基础知识之事件穿透]]></title>
@@ -245,6 +438,17 @@ Vector3 Spatial::to_global(Vector3 p_local) const {
 <p>也就是说音效要共享32个AudioTrack对象。如果超过了32个，是不是就出现声音消失了呢？于是想到对游戏内那些已经播放完毕的音效做处理，卸载掉。</p>
 
 <p>问题果然得到解决！</p>
+
+<p><strong>实际上问题还存在！</strong></p>
+
+<p>但是在经过一系列测试之后发现，这样并没有根本解决问题。声音消失还是会发生，只是不再频繁发生。<br />
+所以还需继续挖掘！</p>
+
+<p>我们定位到音效的播放导致的问题，因此<code>Cocos2dxSound</code>出问题的嫌疑最大。它内部调用了<code>SoundPool</code>播放音效。而<code>SoundPool</code>自身就有一个问题。它的构造函数maxStream限制了一次最多播放多少个音效。超过这个上限，有可能播放不出来，也有可能按照优先级将前面播放的音效释放掉而优先播放当前音效。<br />
+<code>playEffect</code>函数，会返回的就是steamId，经过测试这个steamId是从1开始递增。<br />
+经过测试，steamId如果超过一定数值，也会导致声音播放不出来。</p>
+
+<p>所以鉴于以上的测试，我们对声音的播放进行了优化，同时播放音效控制在10个以内。音效可以循环播放，不必每次都调用<code>playEffect</code>（这可能会影响一些用户体验）。</p>
 
 ]]></content>
   </entry>
@@ -1888,127 +2092,6 @@ python 2.7
   <li><a href="https://www.youtube.com/user/PixelatedPope">PixelatedPope</a></li>
   <li><a href="http://www.davetech.co.uk/">David</a></li>
 </ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Game maker：Extend blend mode]]></title>
-    <link href="http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode"/>
-    <updated>2017-10-29T23:00:17+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/10/29/gamemakerblendmode</id>
-    <content type="html"><![CDATA[<p>最近看到一款游戏，使用了<code>Extend blend mode</code>做了一个非常牛叉的特效。<br />
-特效在此，大家先欣赏一下：<br />
-<img src="http://www.davetech.co.uk/pages/gamemakersurfacedamage//twitter3.gif" alt="" /></p>
-
-<p>作者将如何实现的效果在<a href="http://www.davetech.co.uk/gamemakersurfacedamage">这里</a>介绍了一下。</p>
-
-<!--more-->
-
-<p>里面最关键的代码就是：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">damagemask = surface_create(room_width, room_height)
-</span><span class="line">
-</span><span class="line">surface_set_target(damagemask)
-</span><span class="line">draw_sprite(spr_room1walls,0,0,0);
-</span><span class="line">surface_reset_target();
-</span><span class="line">	
-</span><span class="line">/// obj_damage – draw
-</span><span class="line">if (surface_exists(damagemask)) {
-</span><span class="line">    draw_surface(damagemask,x,y)
-</span><span class="line">}
-</span><span class="line">
-</span><span class="line">
-</span><span class="line">...
-</span><span class="line">draw_set_blend_mode(bm_substract)
-</span><span class="line">draw_circle(x,y,random(10))
-</span><span class="line">draw_line(...)
-</span><span class="line">...
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<h2 id="section">原理介绍</h2>
-
-<p><code>game maker</code>中surface是一个独特的存在，可以绘制任何物品上去，也可以将自己绘制到屏幕上。可以看成是画布。</p>
-
-<p><code>game maker</code>的draw也比较独特，普通情况下，我们是<code>bm_normal</code>的模式，既覆盖的绘制。<br />
-但是这里使用的是<code>bm_subtract</code>的方式，顾名思义就是将要画上去的东西裁减掉。比如上面绘制的是一个圆形和一条射击冲击波的line。则绘制的时候把这个圆形和line裁剪掉。</p>
-
-<p>由此上面的效果，被枪射中，墙壁上留有痕迹的效果就出来了。</p>
-
-<p>这么高级的功能，还需要继续深入的了解！</p>
-
-<h2 id="drawsetblendmode">draw_set_blend_mode</h2>
-
-<p>这方面的资源网络上比较少，现在在GM 2.0上已经改名为<code>gpu_set_blendmode_ext</code>,由此可以看出这个函数是在绘制的时候设置gpu的绘制模式。也就是不需要cpu的计算。</p>
-
-<p>他有两个重要的参数。<code>gpu_set_blendmode_ext(src,dest)</code>。<br />
-src是指：<code>the colour of the pixel we're going to draw</code>，即我们将要绘制的东西。<br />
-dest是指：<code>the colour that's already in the pixel we're drawing to</code>，即我们已经绘制的东西，也就是说我们将<code>src</code>绘制到<code>dest</code>上。可以简单的认为dest是一个背景，在后面，src是个道具，在上面。</p>
-
-<p>这里的概念很重要，因为绘制公式是在这个基础上绘制的。</p>
-
-<p>绘制公式如下</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">Rs * factor_src + Rd * factor_desc = new R
-</span><span class="line">Gs * factor_src + Gd * factor_desc = new G
-</span><span class="line">Bs * factor_src + Bd * factor_desc = new B
-</span><span class="line">As * factor_src + Ad * factor_desc = new A
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>某一个像素点是如何被混合绘制出来的呢？就是上面的公式。将背景和前景的像素颜色值，按照上述公式计算出来一个新的颜色值。</p>
-
-<p>两个参数还有一些默认值。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092877037009.jpg" alt="" /></p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092878217711.jpg" alt="=" /><br />
-所以如何实现<code>bm_subtract</code>的效果呢？参数就是上面的<code>（bm_zero,bm_inv_src_colour）</code>,<br />
-接下来我们套入到公式里面计算一下：</p>
-
-<p>画出来的圆圈和线条，相当于都是遮罩，都是黑色的。因此就是#000000。<br />
-<code>公式里面RGB颜色值是用0~1表示，就是百分比</code>。因此每个都是0。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">0 x 0 + Rd * 1 = Rd
-</span><span class="line">0 x 0 + Gd * 1 = Gd
-</span><span class="line">0 x 0 + Bd * 1 = Bd
-</span><span class="line">1 x 0 + Ad * 0 = 0
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>因此这个像素点就被成了透明的。是不是就实现了画上去的东西，其实被扣除了效果呢？</p>
-
-<h2 id="section-1">后续</h2>
-
-<p>这个功能还没有结束，远远超过你的想象。大名鼎鼎的独立游戏《INK》也是采用这个原理制作的。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-29-15092884978865.jpg" alt="" /></p>
-
-<p>作者使用的方式是<code>（bm_dest_alpha ，bm_inv_src_alpha）</code>。</p>
-
-<p>另外，在<code>reddit</code>上找了一份example工程，可以查看不同模式的组合带来不一样的体验哦。再次也分享给大家。<br />
-<a href="https://pan.baidu.com/s/1gf1WFyr">百度云盘链接</a>：https://pan.baidu.com/s/1gf1WFyr 密码: 8u98</p>
 
 ]]></content>
   </entry>

@@ -125,6 +125,17 @@
 
 <p>问题果然得到解决！</p>
 
+<p><strong>实际上问题还存在！</strong></p>
+
+<p>但是在经过一系列测试之后发现，这样并没有根本解决问题。声音消失还是会发生，只是不再频繁发生。<br />
+所以还需继续挖掘！</p>
+
+<p>我们定位到音效的播放导致的问题，因此<code>Cocos2dxSound</code>出问题的嫌疑最大。它内部调用了<code>SoundPool</code>播放音效。而<code>SoundPool</code>自身就有一个问题。它的构造函数maxStream限制了一次最多播放多少个音效。超过这个上限，有可能播放不出来，也有可能按照优先级将前面播放的音效释放掉而优先播放当前音效。<br />
+<code>playEffect</code>函数，会返回的就是steamId，经过测试这个steamId是从1开始递增。<br />
+经过测试，steamId如果超过一定数值，也会导致声音播放不出来。</p>
+
+<p>所以鉴于以上的测试，我们对声音的播放进行了优化，同时播放音效控制在10个以内。音效可以循环播放，不必每次都调用<code>playEffect</code>（这可能会影响一些用户体验）。</p>
+
 </div>
 
 
@@ -186,6 +197,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/05/26/godot-1">Godot引擎分析-1</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/05/20/godot-event-1">Godot基础知识之事件穿透</a>
@@ -261,10 +276,6 @@
     
       <li class="post">
         <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/10/29/gamemakerblendmode">Game maker：Extend Blend Mode</a>
       </li>
     
   </ul>
