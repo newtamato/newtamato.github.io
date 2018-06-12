@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-06-12T18:48:06+08:00</updated>
+  <updated>2018-06-12T18:58:50+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -164,9 +164,9 @@
 </span><span class="line">Total        12   1      92.31%
 </span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p>看起来顺眼多了，尤其是最后的Summary，可以看到那些函数被调用Hit，那么没有Missed,func里面的MissFunc有定义，但是没有被调用过，所以Missed！</p>
+<p>看起来顺眼多了，尤其是最后的Summary，可以看到那些函数被调用Hit，那么没有,func里面的MissFunc有定义，但是没有被调用过，所以Missed！</p>
 
-<p>这样一来那些函数被用到，那么没有用到，果然是清晰了很多。</p>
+<p>这样一来那些函数被用到，那么没有用到，就很清楚了。</p>
 
 ]]></content>
   </entry>
@@ -620,8 +620,8 @@ Vector3 Spatial::to_global(Vector3 p_local) const {
 
 <p>cocos引擎中提供的CCTableView组件，这个组件由于使用缓存池，创建可见对象，因此性能上相比后来的ListView高出很多。因此在做列表的时候，我一直偏向于使用TableView，但是在一次讨论中发现他有一个缺点就是只能创建cell宽高一致的列表。对于变化的cell则支持不那么友好。</p>
 
-<p>于是抽时间看了一下TableView的实现。就有了几天的这篇分享。<br />
-今天我要分享的主题就是如何使用TableView制作一个TablewCell高度变化的列表。<br />
+<p>于是抽时间看了一下TableView的实现。就有了今天的这篇分享。<br />
+我要分享的主题就是如何使用TableView制作一个TablewCell高度变化的列表。<br />
 闲话不多说，直接进入正题吧。<br />
 <!--more--></p>
 
