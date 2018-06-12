@@ -9,8 +9,7 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="利用业余时间看了一个星期的godot源码，云里雾里的看不清全貌。记录一下这周的成果，为以后先打个基础。 此处声明，由于个人并没全部看明白，所以我只是分享一部分我看到的东西。我的分享未必都是全部正确的。如果有错误也非常欢迎指正出来。正所谓互相交流才能有所进步。 ok，闲话少说进入正题。
-">
+  <meta name="description" content="luacov是一个轻量级的代码覆盖率的检查工具。他总是和busted这个单元测试框架一起被人提到。 今天刚好我准备把他集成到项目中。先来个例子展示一下怎么使用。两个测试lua文件如下: ">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +71,51 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2018/06/12/luacov-test">在lua项目中使用luacov进行代码覆盖率的测试</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-06-12T18:46:43+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p><a href="https://github.com/norman/luacov">luacov</a>是一个轻量级的代码覆盖率的检查工具。他总是和busted这个单元测试框架一起被人提到。</p>
+
+<p>今天刚好我准备把他集成到项目中。先来个例子展示一下怎么使用。两个测试lua文件如下:</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2018/06/12/luacov-test">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -518,61 +562,6 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2018-01-29T10:12:07+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>我们首先来绘制一个矩形。矩形的顶点数据和材质数据如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">GLfloat vertices[] = {
-</span><span class="line">				0.0f,0.0f,0.0f,0.0f,0.0f,
-</span><span class="line">				0.5f,0.0f,0.0f,0.5f,0.0f,
-</span><span class="line">				0.5f,0.5f,0.0f,0.5f,0.5f,
-</span><span class="line">				0.0f,0.5f,0.0f,0.0f,0.5f
-</span><span class="line">				};</span></code></pre></td></tr></table></div></figure></notextile></div>
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2018/01/29/openglgldrawarrays">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -586,6 +575,10 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/06/12/luacov-test">在lua项目中使用luacov进行代码覆盖率的测试</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/05/26/godot-1">Godot引擎分析-1</a>
@@ -741,10 +734,6 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
     
       <li class="post">
         <a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/01/09/chang-yong-gong-ju-wang-zhan-hui-ji-bu-ding-qi-geng-xin-zhong">常用工具网站汇集-不定期更新中</a>
       </li>
     
   </ul>

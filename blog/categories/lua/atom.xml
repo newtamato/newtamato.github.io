@@ -4,7 +4,7 @@
   <title><![CDATA[分类:lua | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/lua/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-06-01T17:39:21+08:00</updated>
+  <updated>2018-06-12T18:48:06+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,110 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[在lua项目中使用luacov进行代码覆盖率的测试]]></title>
+    <link href="http://www.newtomato.me/blog/2018/06/12/luacov-test"/>
+    <updated>2018-06-12T18:46:43+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/06/12/luacov-test</id>
+    <content type="html"><![CDATA[<p><a href="https://github.com/norman/luacov">luacov</a>是一个轻量级的代码覆盖率的检查工具。他总是和busted这个单元测试框架一起被人提到。</p>
+
+<p>今天刚好我准备把他集成到项目中。先来个例子展示一下怎么使用。两个测试lua文件如下:</p>
+
+<!--more-->
+
+<h2 id="section">文件准备</h2>
+
+<pre><code>function Add(a,b)--func.lua
+	return a+b
+end
+
+function Remove(a,b)
+	return a-b
+end
+
+function MissFunc(a,b)
+	return "i will be missed"
+end
+
+</code></pre>
+
+<pre><code>require("func")--funcTest.lua
+r = Add(1,3)
+print(r)
+r = Add(2,3)
+print(r)
+r = Remove(3,1)
+print(r)
+</code></pre>
+
+<h2 id="section-1">开始运行</h2>
+
+<p>然后在命令行下运行：</p>
+
+<p><code>lua -lluacov funcTest.lua</code></p>
+
+<p>此时若没有语法错误，则会在funcTest同级目录下面生成一个<code>luacov.stats.out</code>文件。然后将这个打开看看。好像不是很明白。</p>
+
+<pre><code>11:./func.lua
+1 2 1 0 1 1 1 0 1 0 2 
+7:funcTest.lua
+1 1 1 1 1 1 1 
+
+</code></pre>
+
+<p>第一行7表示func.lua有7行代码，第二行就表示func.lua每一行被调用的次数。Add函数注册1遍，但函数体被调用两次。<br />
+但是这样看起来很不方便，所以我们在此调用如下命令：</p>
+
+<p><code>luacov .</code></p>
+
+<p>此时又新生成了<code>luacov.report.out</code>文件。</p>
+
+<pre><code>==============================================================================
+./func.lua
+==============================================================================
+ 1 function Add(a,b)
+ 2 	return a+b
+   end
+
+ 1 function Remove(a,b)
+ 1 	return a-b
+   end
+
+ 1 function MissFunc(a,b)
+*0 	return "i will be missed"
+   end
+
+==============================================================================
+funcTest.lua
+==============================================================================
+ 1 require("func")
+ 1 r = Add(1,3)
+ 1 print(r)
+ 1 r = Add(2,3)
+ 1 print(r)
+ 1 r = Remove(3,1)
+ 1 print(r)
+
+==============================================================================
+Summary
+==============================================================================
+
+File         Hits Missed Coverage
+---------------------------------
+./func.lua   5    1      83.33%
+funcTest.lua 7    0      100.00%
+---------------------------------
+Total        12   1      92.31%
+
+</code></pre>
+
+<p>看起来顺眼多了，尤其是最后的Summary，可以看到那些函数被调用Hit，那么没有Missed,func里面的MissFunc有定义，但是没有被调用过，所以Missed！</p>
+
+<p>这样一来那些函数被用到，那么没有用到，果然是清晰了很多。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[require机制和自动更新之间的爱恨情仇]]></title>
@@ -362,322 +466,6 @@ table: 0x7fac50500ad0
 
 <p>那么这对于我们习惯面向对象开发的同学来说，如何用lua来实现面向对象的开发呢？<br />
 别急，请看下一篇文章。</p>
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[Lua脚本在C++下的舞步（三）]]></title>
-    <link href="http://www.newtomato.me/blog/2015/11/12/lua-deep-3"/>
-    <updated>2015-11-12T21:48:47+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/11/12/lua-deep-3</id>
-    <content type="html"><![CDATA[<p>转帖来自：http://www.acejoy.com/bbs/viewthread.php?tid=1931&amp;extra=page%3D1</p>
-
-<p>上一讲我把Lua基本的栈规则讲了一下，然后完善了一下我的CLuaFn类。让它可以支持任意参数数量和函数名称的传值。当然，这些功能是为了今天这篇文章而铺路的。</p>
-
-<p>看了七猫的回帖，呵呵，确实应该说一下SWIG这个工具，说真的，我对这个工具理解不深，因为没有怎么用过，读过一些关于它的文章，似乎是帮你把C++的功能封装成一个Lua基本库的东西，但是后来研究，他可以很轻松帮你把公用函数封装成一个Lua的基本库(类似C++的dll)，但是对于我的需求而言，可能不太一样。因为我大量的是需要在C++里面进行数据传输以及变量的交互，所以为了紧贴C++，我需要很多关联数据的处理。 <br />
-我是一名C++程序员，所以在很多时候，不想过多的使用Lua的特性，因为个人感觉，Lua的语法要比C++的更加灵活。而我更希望，在函数调用的某些习惯上，遵循一些C++的规则。</p>
-
-<!--more-->
-
-<p>好了，废话少说，我们先来看一个类（头文件）。假设我们要把这个对象，传输给Lua进行调用。</p>
-
-<pre><code>#ifndef _TEST_H 
-#define _TEST_H
-class CTest 
-{ 
-public: 
-        CTest(void); 
-        ~CTest(void);
-        char* GetData(); 
-        void SetData(const char* pData);
-private: 
-        char m_szData[200]; 
-}; 
-#endif
-</code></pre>
-
-<p>这个类里面有两个函数，一个是GetData()，一个是SetData()，之所以这么写，我要让Lua不仅能使用我的类，还可以给这个类使用参数。 <br />
-那么，cpp文件，我们姑且这样写。（当然，你可以进行修改，按照你喜欢的方式写一个方法，呵呵）</p>
-
-<pre><code>char* CTest::GetData() 
-{ 
-        printf(“[CTest::GetData]%s./n”, m_szData); 
-        return m_szData; 
-}
-
-void CTest::SetData(const char* pData) 
-{ 
-        sprintf(m_szData, “%s”, pData); 
-}
-</code></pre>
-
-<p>这是一个标准的类，我需要这个类在Lua里面可以创造出来，并赋予数值，甚至我可以把CTest作为一个Lua函数参数，传给Lua函数让它去给我处理。让我们来看看怎么做。如果使用标准的Lua语法，有点多，所以我就借用一下上次提到的tolua来做到这一切，我一句句的解释。姑且我们把这些代码放在LuaFn.cpp里面。</p>
-
-<pre><code class="language-c++">static int tolua_new_CTest(lua_State* pState) 
-{ 
-        CTest* pTest = new CTest(); 
-        tolua_pushusertype(pState, pTest, “CTest”); 
-        return 1; 
-}
-
-static int tolua_delete_CTest(lua_State* pState) 
-{ 
-        CTest* pTest = (CTest* )tolua_tousertype(pState, 1, 0); 
-        if(NULL != pTest) 
-        { 
-                delete pTest; 
-        } 
-        return 1; 
-}
-
-static int tolua_SetData_CTest(lua_State* pState) 
-{ 
-        CTest* pTest = (CTest* )tolua_tousertype(pState, 1, 0); 
-        const char* pData = tolua_tostring(pState, 2, 0);
-
-        if(pData != NULL &amp;&amp; pTest != NULL) 
-        { 
-                pTest-&gt;SetData(pData); 
-        }
-
-        return 1; 
-}
-
-static int tolua_GetData_CTest(lua_State* pState) 
-{ 
-        CTest* pTest = (CTest* )tolua_tousertype(pState, 1, 0);
-
-        if(pTest != NULL) 
-        { 
-                char* pData = pTest-&gt;GetData(); 
-                tolua_pushstring(pState, pData); 
-        }
-
-        return 1; 
-}
-</code></pre>
-
-<p>看看这几个静态函数在干什么。 <br />
-我要在Lua里面使用CTest，必须让Lua里这个CTest对象能够顺利的创造和销毁。<code>tolua_new_CTest()</code>和<code>tolua_delete_CTest()</code>就是干这个的。 <br />
-<code>tolua_pushusertype(pState, pTest, “CTest”);</code> 这句话的意思是，将一个已经在Lua注册的”CTest”对象指针，压入数据栈。 <br />
-同理，<code>CTest* pTest = (CTest* )tolua_tousertype(pState, 1, 0);</code>是将数据栈下的对象以(CTest* )的指针形式弹出来。</p>
-
-<p><code>tolua_SetData_CTest()</code>函数和<code>tolua_GetData_CTest</code>分别对应CTest的SetData方法和GetData()方法。因为我们的SetData方法里面存在变量，那么同样，我们需要使用<code>const char* pData = tolua_tostring(pState, 2, 0);</code>将参数弹出来，然后输入到<code>pTest-&gt;SetData(pData);</code>对象中去，当然，你可以有更多若干个参数。随你的喜好。这里只做一个举例。</p>
-
-<p>好了，你一定会问，这么多的静态函数，用在哪里？呵呵，当然是给Lua注册，当你把这些数据注册到Lua里面，你就可以轻松的在Lua中使用它们。 <br />
-让我们看看，注册是怎么做到的。</p>
-
-<p>还是在CLuaFn类里面，我们增加一个函数。比如叫做bool InitClass();</p>
-
-<pre><code class="language-c++">bool CLuaFn::InitClass() 
-{ 
-        if(NULL == m_pState) 
-        { 
-                printf(“[CLuaFn::InitClass]m_pState is NULL./n”); 
-                return false; 
-        }
-
-        tolua_open(m_pState); 
-        tolua_module(m_pState, NULL, 0); 
-        tolua_beginmodule(m_pState, NULL);
-
-        tolua_usertype(m_pState, “CTest”); 
-        tolua_cclass(m_pState, “CTest”, “CTest”, “”, tolua_delete_CTest);
-
-        tolua_beginmodule(m_pState, “CTest”); 
-        tolua_function(m_pState, “new”, tolua_new_CTest); 
-        tolua_function(m_pState, “SetData”, tolua_SetData_CTest); 
-        tolua_function(m_pState, “GetData”, tolua_GetData_CTest); 
-        tolua_endmodule(m_pState);
-
-        tolua_endmodule(m_pState);
-
-        return true; 
-}
-</code></pre>
-
-<p>上面的代码，就是我把上面的几个静态函数，绑定到Lua的基础对象中去。 <br />
-<code>tolua_beginmodule(m_pState, “CTest”);</code>是只注册一个模块，比如，我们管CTest叫做”CTest”，保持和C++的名称一样。这样在Lua的对象库中就会多了一个CTest的对象描述，等同于string,number等等基本类型，同理，你也可以用同样的方法，注册你的MFC类。是不是有点明白了？这里要注意，<code>tolua_beginmodule()</code>和<code>tolua_endmodule()</code>对象必须成对出现，如果出现不成对的，你注册的C++类型将会失败。 <br />
-<code>tolua_function(m_pState, “SetData”, tolua_SetData_CTest);</code>指的是将Lua里面CTest对象的”SetData”绑定到你的<code>tolua_SetData_CTest()</code>函数中去。</p>
-
-<p>好的，让我们来点激动人心的东西。还记得我们的Simple.lua的文件么。我们来改一下它。</p>
-
-<pre><code>function func_Add(x, y) 
-  local test = CTest:new(); 
-  test:SetData(“I’m freeeyes!”); 
-  test:GetData(); 
-  return x..y; 
-end
-</code></pre>
-
-<p>我在这个函数里面，New了一个CTest对象，并进行赋值操作，最后把结果打印在屏幕上。你或许会问，最后一句不是x+y么，怎么变成了x..y，呵呵，在Lua中，..表示联合的意思，就好比在C++里面， string strName += “freeeyes”。原来觉得x+y有点土，索性返回一个两个字符串的联合吧。</p>
-
-<p>好了，我们已经把我们的这个CTest类注册到了Lua里面，让我们来调用一下吧。修改一下Main函数。变成以下的样子。</p>
-
-<pre><code>int _tmain(int argc, _TCHAR* argv[]) 
-{ 
-        CLuaFn LuaFn;
-
-        LuaFn.InitClass();
-
-        LuaFn.LoadLuaFile(“Sample.lua”);
-
-        CParamGroup ParamIn; 
-        CParamGroup ParamOut;
-
-        char szData1[20] = {‘/0′}; 
-        sprintf(szData1, “[freeeyes]“); 
-        _ParamData* pParam1 = new _ParamData(szData1, “string”, (int)strlen(szData1)); 
-        ParamIn.Push(pParam1);
-
-        char szData2[20] = {‘/0′}; 
-        sprintf(szData2, “[shiqiang]“); 
-        _ParamData* pParam2 = new _ParamData(szData2, “string”, (int)strlen(szData2)); 
-        ParamIn.Push(pParam2); 
-        char szData3[40] = {‘/0′}; 
-        _ParamData* pParam3 = new _ParamData(szData3, “string”, 40); 
-        ParamOut.Push(pParam3);
-
-        LuaFn.CallFileFn(“func_Add”, ParamIn, ParamOut);
-
-        char* pData = (char* )ParamOut.GetParam(0)-&gt;GetParam(); 
-        printf("[Main]Sum = %s./n", pData);
-
-        getchar();
-
-        return 0; 
-}
-</code></pre>
-<p>如果你完全按照我的，你就可以编译你的工程了，运行一下，看看是啥结果？</p>
-
-<pre><code>[CTest::GetData]I’m freeeyes!. 
-[Main]Sum = [freeeyes][shiqiang]. 
-</code></pre>
-
-<p>看看，是不是和我输出的一样？<br />
-呵呵，有意思吧，你已经可以在Lua里面用C++的函数了，那么咱们再增加一点难度，比如，我有一个CTest对象，要作为一个参数，传输给func_Add()执行，怎么办？ <br />
-很简单，如果你对上面的代码仔细阅读，你会发现下面的代码一样简洁。为了支持刚才要说的需求，我们需要把Sample.lua再做一点修改。</p>
-
-<pre><code>function func_Add(x, y, f) 
-  f:SetData(“I’m freeeyes!”); 
-  f:GetData(); 
-  return x..y; 
-end
-</code></pre>
-<p>f假设就是我们要传入的CTest对象。我们要在Lua里面使用它。（我们的CLuaFn都不用改，把main函数稍微改一下即可，来看看怎么写。）</p>
-
-<p>LuaSample.cpp : 定义控制台应用程序的入口点。</p>
-
-<pre><code class="language-c++">
-#include “stdafx.h” 
-#include “LuaFn.h”
-
-int _tmain(int argc, _TCHAR* argv[]) 
-{ 
-        CLuaFn LuaFn;
-
-        LuaFn.InitClass();
-
-        LuaFn.LoadLuaFile(“Sample.lua”);
-
-        CParamGroup ParamIn; 
-        CParamGroup ParamOut;
-
-        char szData1[20] = {‘/0′}; 
-        sprintf(szData1, “[freeeyes]“); 
-        _ParamData* pParam1 = new _ParamData(szData1, “string”, (int)strlen(szData1)); 
-        ParamIn.Push(pParam1);
-
-        char szData2[20] = {‘/0′}; 
-        sprintf(szData2, “[shiqiang]“); 
-        _ParamData* pParam2 = new _ParamData(szData2, “string”, (int)strlen(szData2)); 
-        ParamIn.Push(pParam2);
-
-        //只追加了这里 
-        CTest* pTest = new CTest(); 
-        _ParamData* pParam3 = new _ParamData(pTest, “CTest”, sizeof(CTest)); 
-        ParamIn.Push(pParam3); 
-       //追加结束 
-        char szData4[40] = {‘/0′}; 
-        _ParamData* pParam4 = new _ParamData(szData4, “string”, 40); 
-        ParamOut.Push(pParam4);
-
-        LuaFn.CallFileFn(“func_Add”, ParamIn, ParamOut);
-
-        char* pData = (char* )ParamOut.GetParam(0)-&gt;GetParam(); 
-        printf(“[Main]Sum = %s./n”, pData);
-
-        getchar();
-
-        return 0; 
-}
-</code></pre>
-<p>好了，就这么点代码，改好了，我们再Build一下，然后点击运行。看看输出结果，是不是和以前的一样？ <br />
-恩，是不是有点兴奋了？你成功的让Lua开始调用你的C++对象了！并且按照你要的方式执行！还记得我曾在第一篇文章里面许诺过，我会让你画出一个MFC窗体么？呵呵，如果你到现在依然觉得很清晰的话，说明你的距离已经不远了。</p>
-
-<p>既然已经到了这里，我们索性再加点难度，如果我要把CTest作为一个对象返回回来怎么做？很简单，且看。</p>
-
-<pre><code class="language-c++">int _tmain(int argc, _TCHAR* argv[]) 
-{ 
-        CLuaFn LuaFn;
-
-        LuaFn.InitClass();
-
-        LuaFn.LoadLuaFile(“Sample.lua”);
-
-        CParamGroup ParamIn; 
-        CParamGroup ParamOut;
-
-        char szData1[20] = {‘/0′}; 
-        sprintf(szData1, “[freeeyes]“); 
-        _ParamData* pParam1 = new _ParamData(szData1, “string”, (int)strlen(szData1)); 
-        ParamIn.Push(pParam1);
-
-        char szData2[20] = {‘/0′}; 
-        sprintf(szData2, “[shiqiang]“); 
-        _ParamData* pParam2 = new _ParamData(szData2, “string”, (int)strlen(szData2)); 
-        ParamIn.Push(pParam2);
-
-        CTest* pTest = new CTest(); 
-        _ParamData* pParam3 = new _ParamData(pTest, “CTest”, sizeof(CTest)); 
-        ParamIn.Push(pParam3); 
-        CTest* pTestRsult = NULL; 
-        _ParamData* pParam4 = new _ParamData(pTestRsult, “CTest”, sizeof(pTestRsult)); 
-        ParamOut.Push(pParam4);
-
-        LuaFn.CallFileFn(“func_Add”, ParamIn, ParamOut);
-
-        //接受Lua返回参数为CTest类型，并调用其中的方法。 
-        pTestRsult = (CTest* )ParamOut.GetParam(0)-&gt;GetParam(); 
-        pTestRsult-&gt;GetData();
-
-        getchar();
-
-        return 0; 
-}
-</code></pre>
-
-<p>好，编译，执行。呵呵，看到了吧。</p>
-
-<p>看到这里，如果你能看的明白，说明你已经对Lua如何调用C++接口，以及C++如何调用Lua有了一定的理解。当然，我写的这个类也不是很完善，不过做一半的Lua开发，应该是够用了。以以上的方式，你可以使用Lua驾驭你的C++代码。</p>
-
-<p>好了，咱们既然已经说到这里了，再深一步，如果我的类是继承的，怎么办？呵呵，很好的问题。 <br />
-比如，我的CTest继承了一个CBase，我的CBase又继承了一个。。。 <br />
-在Lua里面，一样简单，我拿MFC的例子来举例吧，想必大家更喜欢看。 比如 CCmdTarget继承自CObject。 <br />
-那么我在注册的时候可以这么写。<br />
-<code>
-tolua_cclass(tolua_S, “CCmdTarget”,      ”CCmdTarget”,      ”CObject”,            NULL); 
-</code><br />
-这个表示CCmdTarget继承自CObject对象。 <br />
-当然，MFC里面还会有很多类型，比如常数，Lua一样能处理。 <br />
-举个例子说。<br />
-<code>
-tolua_constant(tolua_S, “ES_AUTOHSCROLL”,   ES_AUTOHSCROLL); 
-</code><br />
-这样注册，你就可以在 Lua里面使用ES_AUTOHSCROLL这个常数，它会自动绑定ES_AUTOHSCROLL这个C++常数对象。<br />
-呵呵，说了这么多，让我们来点实际的。我给大家一个我以前写的MFC封装类（由于代码太多，我变成附件给大家），你们可以调用，当然，如果你有兴趣，就用我的MFC类，来做一个你喜欢的窗体吧，当然，你必须要用Lua脚本把它画出来，作为最后的考验，呵呵。</p>
-
-<p><img src="/images/HelloLua_01_03.rar" alt="附带全部工程（附带Lua及tolua++）" /></p>
 ]]></content>
   </entry>
   
