@@ -1,0 +1,615 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>xlua笔记-协程 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="解说xlua中使用协程的方法">
+  <meta name="keywords" content="unity xlua coroutine 协程">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2018/06/13/xlua-1">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">think</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+   <li><a href="/about2">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">Xlua笔记-协程</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-06-13T19:00:07+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>xlua的源码在github上有，我今天主要想把他关于协程的函数梳理一下。借此巩固自己的知识，增强记忆。<br />
+先上源码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local function async_to_sync(async_func, callback_pos)
+</span><span class="line">    return function(...)
+</span><span class="line">        local _co = coroutine.running() or error ('this function must be run in coroutine')
+</span><span class="line">        local rets
+</span><span class="line">        local waiting = false
+</span><span class="line">        local function cb_func(...)
+</span><span class="line">            if waiting then
+</span><span class="line">                assert(coroutine.resume(_co, ...))
+</span><span class="line">            else
+</span><span class="line">                rets = {...}
+</span><span class="line">            end
+</span><span class="line">        end
+</span><span class="line">        local params = {...}
+</span><span class="line">        table.insert(params, callback_pos or (#params + 1), cb_func)
+</span><span class="line">        async_func(unpack(params))
+</span><span class="line">        if rets == nil then
+</span><span class="line">            waiting = true
+</span><span class="line">            rets = {coroutine.yield()}
+</span><span class="line">        end
+</span><span class="line">        
+</span><span class="line">        return unpack(rets)
+</span><span class="line">    end
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">local function coroutine_call(func)
+</span><span class="line">    return function(...)
+</span><span class="line">        local co = coroutine.create(func)
+</span><span class="line">        assert(coroutine.resume(co, ...))
+</span><span class="line">    end
+</span><span class="line">end
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>阅读xlua代码的时候，看到这段关于lua和c#协程合作实现一种异步转化同步的代码，太佩服作者巧妙的心思和对协程深刻的理解。</p>
+
+<!--more-->
+
+<h2 id="section">协程</h2>
+
+<p>lua的协程函数不多，coroutine.create,coroutine.resume,coroutine,yield差不多是常用的接口了。C#的协程也很简单，C#中只要函数返回迭代器IEnumerator类型，就可以被StartCoroutine()调用。</p>
+
+<p>那协程是什么呢？或者说我们怎么看待它？首先明确一点，他不是线程，仍然是在主线程中运行的。<br />
+协程可以看成将这样，有一段逻辑执行到某一个行，突然收到一个信号（yield）然后执行逻辑挂起。此时去执行别的逻辑。直到收到满足解锁上次挂起的条件，上次没执行完的逻辑继续执行。<br />
+在lua中，这个条件是开发者主动调用一次<code>coroutine.resume(co)</code>,在c#中，就是<code>YieldInstruction</code>对象主动结束，比如WaitForSeconds(2).<br />
+C#中协程的实现可以看成是状态机。知道是状态机之后，我才对协程有了清晰的认识。</p>
+
+<p>例如如下一段伪代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">IEnumerator doAction(){
+</span><span class="line">	xxx-1
+</span><span class="line">	yield return WaitForSeconds(2);
+</span><span class="line">	xxx-2
+</span><span class="line">	yield return new WWW(url);
+</span><span class="line">	xxx-3
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>此时CIL会对上述代码转化成一个类结构，运行时就是一个对象。这个对象有5个状态，yield之前是一个状态，yield是一个状态。<br />
+当xxx-1执行结束，就会触发下一个状态等待2s，等待2s结束，又会触发新的状态xxx-2，一直到最后。</p>
+
+<p>这样理解起来是不是简单了？</p>
+
+<p>比较特别的一点是是：lua中<code>yield</code>会有返回结果，就是开发者再次唤醒协程，调用<code>coroutine.resume(co，param)</code>，此时传递的<code>param</code>最终又会传递给<code>yield</code>成为他的返回结果。</p>
+
+<h2 id="section-1">进入正题</h2>
+
+<p>接下来，我们来分析一下最开始提到的两个函数。<code>coroutine_call</code>是创建一个lua协程。相对比较复杂的<code>async_to_sync</code>函数最终又返回了一个新的函数，我们暂时称之为<code>async_to_sync2号</code>。他第一个参数<code>async_func</code>是<strong>关键函数</strong>。他将<code>async_to_sync2号</code>的参数<code>...</code>和一个闭包函数<code>cb_func</code>做成自己的参数。接下来，根据<code>rets</code>是否为nil决定是否要挂起协程。rets为nil，协程被挂起，最终<code>cb_func</code>被调用之后，他又会唤起协程。并且将结果返回给<code>yield</code>，<code>rets</code>被填充了数据。如果rets存在数据，则直接将rets返回。</p>
+
+<p>这么说，大家是否理顺了？好像应该在加点例子。好在xlua中这样的例子特别多。我们就以他的充值示例来做说明。</p>
+
+<p>文件是<code>async_test.lua.txt</code>,摘录代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">-------------------------async_recharge-----------------------------
+</span><span class="line">local function async_recharge(num, cb) --模拟的异步充值
+</span><span class="line">    print('requst server...')
+</span><span class="line">    cb(true, num)
+</span><span class="line">    print (debug.traceback())
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">local recharge = util.async_to_sync(async_recharge)
+</span><span class="line">-------------------------async_recharge end----------------------------
+</span><span class="line">local buy = function()
+</span><span class="line">    message_box.alert("您余额不足，请充值！", "余额提醒")
+</span><span class="line">	if message_box.confirm("确认充值10元吗？", "确认框") then
+</span><span class="line">		local r1, r2 = recharge(10)
+</span><span class="line">		print('recharge result:', r1, r2)
+</span><span class="line">		message_box.alert("充值成功！", "提示")
+</span><span class="line">	else
+</span><span class="line">	    print('cancel')
+</span><span class="line">	    message_box.alert("取消充值！", "提示")
+</span><span class="line">	end
+</span><span class="line">	print('recharge finished')
+</span><span class="line">end
+</span><span class="line">--将按钮监听点击事件，绑定buy方法
+</span><span class="line">CS.UnityEngine.GameObject.Find("Button"):GetComponent("Button").onClick:AddListener(util.coroutine_call(buy))</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><code>message_box.alert</code>和<code>message_box.confirm</code>的实现也是采用这种方式实现的。代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local sync_alert = util.async_to_sync(CS.MessageBox.ShowAlertBox)
+</span><span class="line">local sync_confirm = util.async_to_sync(CS.MessageBox.ShowConfirmBox) 
+</span><span class="line">
+</span><span class="line">--构造alert和confirm函数
+</span><span class="line">return {
+</span><span class="line">    alert = function(message, title)
+</span><span class="line">		 sync_alert(message, title)
+</span><span class="line">    end;
+</span><span class="line">	
+</span><span class="line">	confirm = function(message, title)
+</span><span class="line">		local ret = sync_confirm(message, title)
+</span><span class="line">		return ret == true
+</span><span class="line">    end;
+</span><span class="line"> }</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p><code>message_box.alert</code>通过<code>sync_alert</code>（此时的sync_alert就是上面提到的async_to_sync2号）将<strong>message, title以及sync_alert函数体内的匿名函数cb_func封装起来传递给CS.MessageBox.ShowAlertBox</strong>。而我们到c#那里去看，发现他确实是三个参数，第三个参数就是点击按钮需要的回调。一旦我们点击了按钮，就触发了<code>cb_func</code>，于是协程被唤醒。下面的逻辑开始继续执行。</p>
+
+<p>下面的<code>recharge函数</code>刚好就没有使用到协程，<code>recharge = util.async_to_sync(async_recharge)</code>，<strong>他的关键函数是async_recharge，recharge将自己的参数和自身闭包函数cb_func传递给async_recharge</strong>，而<code>async_recharge(num,cb)</code>在lua侧就执行了。waiting还是false，rets填充了true,num并且返回。</p>
+
+<p>现在大家理解了这个函数了吗?</p>
+
+<p>在来看看lua协程和c#协程一起处理的事情。比如等待三秒，在继续逻辑。单纯地在c#侧就很简单了。在lua侧怎么做呢?</p>
+
+<p>刚好xlua中也有这样的代码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">[LuaCallCSharp]
+</span><span class="line">public class Coroutine_Runner : MonoBehaviour{
+</span><span class="line">public void YieldAndCallback(object to_yield, Action callback)
+</span><span class="line">{
+</span><span class="line">    StartCoroutine(CoBody(to_yield, callback));
+</span><span class="line">}
+</span><span class="line">private IEnumerator CoBody(object to_yield, Action callback)
+</span><span class="line">{
+</span><span class="line">    if (to_yield is IEnumerator)
+</span><span class="line">        yield return StartCoroutine((IEnumerator)to_yield);
+</span><span class="line">    else
+</span><span class="line">        yield return to_yield;
+</span><span class="line">    callback();
+</span><span class="line">}
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local function async_yield_return(to_yield, cb)
+</span><span class="line">    cs_coroutine_runner:YieldAndCallback(to_yield, cb)
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">yield_return = util.async_to_sync(async_yield_return)`
+</span><span class="line">yield_return(CS.UnityEngine.WaitForSeconds(3))
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>cs_coroutine_runner就是Coroutine_Runner，在运行时传给了lua。因为需要用它调用c#的协程。<strong>yield_return将自己的参数Wait3和内部的cb_func传递给了async_yield_return</strong>，async_yield_return调用了c#对象的协程，协程执行结束，就会回调cb。于是lua侧的协程也就结束了。</p>
+
+<p>看了这几个例子，大家看明白了么？</p>
+
+<h2 id="section-2">总结</h2>
+
+<p>我们先得各自了解lua的协程和c#的协程都是怎么工作的。才能看明白xlua中的那段代码。虽然总是使用却从未仔细深入的了解别人的代码，真是惭愧。建议大家有空多阅读一下别人的代码，总有异想不到的收获。</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-06-13T19:00:07+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/unity/'>unity</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2018/06/13/xlua-1" data-via="" data-counturl="http://www.newtomato.me/blog/2018/06/13/xlua-1" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2018/06/12/luacov-test" title="Previous Post: 在lua项目中使用luacov进行代码覆盖率的测试">&laquo; 在lua项目中使用luacov进行代码覆盖率的测试</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/06/13/xlua-1">Xlua笔记-协程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/06/12/luacov-test">在lua项目中使用luacov进行代码覆盖率的测试</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/26/godot-1">Godot引擎分析-1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/20/godot-event-1">Godot基础知识之事件穿透</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/19/godot-transform-1">Godot基础知识之Transform坐标转换</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps">补充在android如何使用dumpsys导出FPS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">OpenGL基础之普通光照</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi">OpenGL基础之矩阵和坐标</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/opengl-glitter">在xcode上运行OpenGL工程-使用Glitter</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行OpenGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/29/gamemakerblendmode">Game maker：Extend Blend Mode</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/08/hui-fang">为游戏增加记录回放功能</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/06/cocos2dxxing-neng-you-hua">Cocos2dx游戏性能优化技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">[gamemaker]BounceMover代码阅读</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/03/hao-you-xi">什么才算是好游戏？</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding">域名和ip之绑定</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/08/05/djnago-blog-zinnia">使用djnago-blog-zinnia搭建一个博客网站</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/17/install-luacheck">为Atom,Sublime增加linter-luacheck插件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/15/jekins">使用jekins打造一个自动化编译流程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding">如何为第三方c++库导出luabinding (Part One)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/06/25/ren-shi-liquidfun">认识liquidFun（流体物理引擎）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa">MAC上安装git-svn未生效的办法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/24/unityzhi-zuo-platformyou-xi">Unity制作platform游戏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/23/shi-yong-godot">使用GoDot引擎制作一款mini小游戏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/04/15/requirehe-re-geng">Require机制和自动更新之间的爱恨情仇</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">记最近遇到最头疼的一个Bug</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

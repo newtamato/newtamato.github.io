@@ -9,7 +9,38 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="luacov是一个轻量级的代码覆盖率的检查工具。他总是和busted这个单元测试框架一起被人提到。 今天刚好我准备把他集成到项目中。先来个例子展示一下怎么使用。两个测试lua文件如下: ">
+  <meta name="description" content="xlua的源码在github上有，我今天主要想把他关于协程的函数梳理一下。借此巩固自己的知识，增强记忆。
+先上源码： 1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+local &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +102,114 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2018/06/13/xlua-1">Xlua笔记-协程</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-06-13T19:00:07+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>xlua的源码在github上有，我今天主要想把他关于协程的函数梳理一下。借此巩固自己的知识，增强记忆。<br />
+先上源码：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+<span class="line-number">9</span>
+<span class="line-number">10</span>
+<span class="line-number">11</span>
+<span class="line-number">12</span>
+<span class="line-number">13</span>
+<span class="line-number">14</span>
+<span class="line-number">15</span>
+<span class="line-number">16</span>
+<span class="line-number">17</span>
+<span class="line-number">18</span>
+<span class="line-number">19</span>
+<span class="line-number">20</span>
+<span class="line-number">21</span>
+<span class="line-number">22</span>
+<span class="line-number">23</span>
+<span class="line-number">24</span>
+<span class="line-number">25</span>
+<span class="line-number">26</span>
+<span class="line-number">27</span>
+<span class="line-number">28</span>
+<span class="line-number">29</span>
+<span class="line-number">30</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">local function async_to_sync(async_func, callback_pos)
+</span><span class="line">    return function(...)
+</span><span class="line">        local _co = coroutine.running() or error ('this function must be run in coroutine')
+</span><span class="line">        local rets
+</span><span class="line">        local waiting = false
+</span><span class="line">        local function cb_func(...)
+</span><span class="line">            if waiting then
+</span><span class="line">                assert(coroutine.resume(_co, ...))
+</span><span class="line">            else
+</span><span class="line">                rets = {...}
+</span><span class="line">            end
+</span><span class="line">        end
+</span><span class="line">        local params = {...}
+</span><span class="line">        table.insert(params, callback_pos or (#params + 1), cb_func)
+</span><span class="line">        async_func(unpack(params))
+</span><span class="line">        if rets == nil then
+</span><span class="line">            waiting = true
+</span><span class="line">            rets = {coroutine.yield()}
+</span><span class="line">        end
+</span><span class="line">        
+</span><span class="line">        return unpack(rets)
+</span><span class="line">    end
+</span><span class="line">end
+</span><span class="line">
+</span><span class="line">local function coroutine_call(func)
+</span><span class="line">    return function(...)
+</span><span class="line">        local co = coroutine.create(func)
+</span><span class="line">        assert(coroutine.resume(co, ...))
+</span><span class="line">    end
+</span><span class="line">end
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>阅读xlua代码的时候，看到这段关于lua和c#协程合作实现一种异步转化同步的代码，太佩服作者巧妙的心思和对协程深刻的理解。</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2018/06/13/xlua-1">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -506,62 +645,6 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2018-02-11T00:15:49+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-11-15182797972761.jpg" alt="=w200" /><br />
-一直以来，有个想法，希望能够将开发测试工作变得简单。通过简单配置，达到对功能一键测试的目的。<br />
-这种测试不是常说的接口测试，而是UI触发测试。</p>
-
-<h2 id="section">场景描述</h2>
-
-<pre><code>例如:
-比如说，邮箱系统，领取奖励功能。点击邮箱-&gt;弹开界面-&gt;随机选择一个（可能涉及列表滑动）或者
-选择全部领取-&gt;领取成功之后，界面刷新达到的效果是数据正确，界面正确。
-一个完整的领取邮箱奖励功能。
-</code></pre>
-
-<p>尤其是配置测试部分，做到类似流程图那样的效果。整个流程走完，就能看到直观的看到效果。</p>
-
-<p>但是调研发现，实现起来非常复杂。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2018/02/11/ui-ai">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -575,6 +658,10 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/06/13/xlua-1">Xlua笔记-协程</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/06/12/luacov-test">在lua项目中使用luacov进行代码覆盖率的测试</a>
@@ -730,10 +817,6 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
     
       <li class="post">
         <a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">记最近遇到最头疼的一个Bug</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/01/10/shi-yong-android-studiozhi-zuo-duo-ge-qu-dao-bao">使用Android Studio制作多个渠道包</a>
       </li>
     
   </ul>
