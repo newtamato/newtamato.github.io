@@ -9,10 +9,9 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="一直以来，有个想法，希望能够将开发测试工作变得简单。通过简单配置，达到对功能一键测试的目的。
-这种测试不是常说的接口测试，而是UI触发测试。 场景描述 例如:
-比如说，邮箱系统，领取奖励功能。点击邮箱-&gt;弹开界面-&gt;随机选择一个（可能涉及列表滑动）或者
-选择全部领取-&gt; &hellip;">
+  <meta name="description" content="我们知道在unity中tiling和offset是用来设置纹理的重复，也就是俗称的贴瓷砖。
+只要我们将tiling设置为（2，2）那么效果如下： 此时，对这个GameObject添加shader，正确读取具体的uv坐标就要用到TRANSFORM_TEX函数。
+（如果纹理的tiling=1， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -74,6 +73,61 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-02-11T00:30:09+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><p>我们知道在unity中tiling和offset是用来设置纹理的重复，也就是俗称的贴瓷砖。<br />
+只要我们将tiling设置为（2，2）那么效果如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-07-15180039093865.jpg" alt="=w300" /></p>
+
+<p>此时，对这个GameObject添加shader，正确读取具体的uv坐标就要用到<code>TRANSFORM_TEX</code>函数。<br />
+（如果纹理的tiling=1，offset=1的情况下，可以不使用这个函数）</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">#define TRANSFORM_TEX(tex,name) (tex.xy * name##_ST.xy + name##_ST.zw)</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>语法问题，不是我们的重点。大家可以自行搜索。<br />
+这个函数的意思就是对<strong>texture的uv坐标进行一个缩放操作和位移操作</strong>。<br />
+那么<code>tex.xy</code>作为关键的参数，他的范围是多少，这个公式操作之后，生成的uv范围又是多少？</p>
+
+</div>
+  
+  
+    <footer>
+      <a rel="full-article" href="/blog/2018/02/11/unity-transform-tex">阅读全文&rarr;</a>
+    </footer>
+  
+
+
+    </article>
   
   
     <article>
@@ -546,53 +600,6 @@
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2017-11-21T16:50:21+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><h2 id="section">环境：</h2>
-
-<pre><code>MacOS sierra
-python 2.7
-</code></pre>
-
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2017/11/21/pygraphviz">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="3">&larr; Older</a>
@@ -608,6 +615,10 @@ python 2.7
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/07/01/unity-game-ball">用Unity实现物理碰撞游戏</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/06/13/xlua-1">Xlua笔记-协程</a>
@@ -763,10 +774,6 @@ python 2.7
     
       <li class="post">
         <a href="/blog/2017/04/15/requirehe-re-geng">Require机制和自动更新之间的爱恨情仇</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/03/12/ji-zui-jin-yu-dao-zui-tou-teng-de-bug">记最近遇到最头疼的一个Bug</a>
       </li>
     
   </ul>

@@ -1,0 +1,410 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>用Unity实现物理碰撞游戏 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="前几日，看到一款《物理碰撞的游戏》，很是有意思。玩家只要将一个球弹出去，球在碰到一些方块之后会弹回来，同时带着拖尾效果。
+看了之后，结合unity。我决定fast follow一下，看是否能很快做出来。 果不其然，周末用了半天左右的时间，总算搞出了样子。效果如下： 实现方法 注意： &hellip;">
+  <meta name="keywords" content="unity trailrenderer canvas rendermode">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2018/07/01/unity-game-ball">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">think</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+   <li><a href="/about2">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">用Unity实现物理碰撞游戏</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-07-01T19:23:28+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><p>前几日，看到一款《物理碰撞的游戏》，很是有意思。玩家只要将一个球弹出去，球在碰到一些方块之后会弹回来，同时带着拖尾效果。<br />
+看了之后，结合unity。我决定fast follow一下，看是否能很快做出来。</p>
+
+<p>果不其然，周末用了半天左右的时间，总算搞出了样子。效果如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-07-01-circle.gif" alt="circle" /></p>
+
+<!--more-->
+
+<h2 id="section">实现方法</h2>
+
+<p>注意：这里我采用的UGUI来制作。如果不用UGUI也是可以制作的。部分的配置会不一样。</p>
+
+<p>这是一个2D的世界，因此首先我们将镜头设置成正交投影。<br />
+然后创建一个Image（bg）用于放置背景。然后在四周放置四个不同的Image并且增加碰撞器和静态刚体。目的是将小球控制在这个区域之内。然后在区域之内放置几个Image。每个也同样增加一些碰撞器和静态刚体。同时为这些Image（Shape）增加一个脚本，脚本中最重要的事情就是在检测到碰撞之后做scale动作。</p>
+
+<p>在区域上方先放一个小球，增加碰撞器和rigibody刚体。初始化的时候，让小球的rigibody设为<code>RigidbodyType2D.Static</code>的。当我们松手的时候，计算小球运动的方向。同时将Rigibody设置为<code>RigidbodyType2D.Dynamic</code>。然后通过Rigibody组件给他一个运动方向上的力。<br />
+代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">private void Update(){
+</span><span class="line">	if (Input.GetMouseButtonDown(0)){
+</span><span class="line">		direction = (Input.mousePosition - aimObj.transform.position).normalized;
+</span><span class="line">		aimObj.GetComponent&lt;Rigidbody2D&gt;().bodyType = RigidbodyType2D.Dynamic;
+</span><span class="line">		Vector3 force = direction.normalized * init_force;
+</span><span class="line">		aimObj.GetComponent&lt;Rigidbody2D&gt;().AddForce(force);
+</span><span class="line">	}
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>此时运行一下，小球便可以运动，并且对Shape产生碰撞影响。</p>
+
+<p>但是小球的拖尾效果还不在。</p>
+
+<h2 id="section-1">制作小球的拖尾效果</h2>
+
+<p>制作拖尾效果使用的Unity的<code>TrailRenderer</code>组件。如果想要改变这个组件的颜色，单设置他的StartColor和EndColor是没有用的，需要设置<code>TrailRenderer</code>的<code>Material</code>才可以。可以防止一个默认的Material。<br />
+然后通过设置他的StartWidth和EndWidth来设置拖尾效果。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-07-01-15304431920348.jpg" alt="=w300" /><br />
+这样设置之后，在Scene窗口可以看到拖尾效果。但是在Game窗口是看不到的。<br />
+原因是在于Canvas的RenderMode。RenderMode默认是<code>Screen Space – Overlay</code>模式，此时系统自动设置一个UICamera（按理只要z值大于-1000就是可以渲染到UI上面的）。这个Camera我并不确定是否能够渲染<code>TrailRenderer</code>这种组件。于是改为<code>Screen Space – Camera</code>模式，这个Camera是我们在Scene窗口已经可以看到拖尾，因此换成这个模式之后，在Game窗口也看到了。</p>
+
+<h2 id="section-2">后记</h2>
+
+<p>后来对于Canvas的这个设置，我网上查了很多资料。看到这个<a href="https://answers.unity.com/questions/1201050/is-there-way-to-have-line-renderer-on-a-canvas.html">答案</a>,但是也没有更多的解释。<br />
+希望后面自己能够搞明白他的原因，然后再次在做分享。</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-07-01T19:23:28+08:00" pubdate data-updated="true"></time>
+      
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2018/07/01/unity-game-ball" data-via="" data-counturl="http://www.newtomato.me/blog/2018/07/01/unity-game-ball" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2018/06/13/xlua-1" title="Previous Post: xlua笔记-协程">&laquo; xlua笔记-协程</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/07/01/unity-game-ball">用Unity实现物理碰撞游戏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/06/13/xlua-1">Xlua笔记-协程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/06/12/luacov-test">在lua项目中使用luacov进行代码覆盖率的测试</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/26/godot-1">Godot引擎分析-1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/20/godot-event-1">Godot基础知识之事件穿透</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/19/godot-transform-1">Godot基础知识之Transform坐标转换</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps">补充在android如何使用dumpsys导出FPS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">OpenGL基础之普通光照</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi">OpenGL基础之矩阵和坐标</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/opengl-glitter">在xcode上运行OpenGL工程-使用Glitter</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行OpenGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/29/gamemakerblendmode">Game maker：Extend Blend Mode</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/08/hui-fang">为游戏增加记录回放功能</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/06/cocos2dxxing-neng-you-hua">Cocos2dx游戏性能优化技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">[gamemaker]BounceMover代码阅读</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/03/hao-you-xi">什么才算是好游戏？</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding">域名和ip之绑定</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/08/05/djnago-blog-zinnia">使用djnago-blog-zinnia搭建一个博客网站</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/17/install-luacheck">为Atom,Sublime增加linter-luacheck插件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/15/jekins">使用jekins打造一个自动化编译流程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding">如何为第三方c++库导出luabinding (Part One)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/06/25/ren-shi-liquidfun">认识liquidFun（流体物理引擎）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa">MAC上安装git-svn未生效的办法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/24/unityzhi-zuo-platformyou-xi">Unity制作platform游戏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/23/shi-yong-godot">使用GoDot引擎制作一款mini小游戏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/04/15/requirehe-re-geng">Require机制和自动更新之间的爱恨情仇</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2018 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

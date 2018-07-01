@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-06-13T19:17:54+08:00</updated>
+  <updated>2018-07-01T19:25:02+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,65 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[用Unity实现物理碰撞游戏]]></title>
+    <link href="http://www.newtomato.me/blog/2018/07/01/unity-game-ball"/>
+    <updated>2018-07-01T19:23:28+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/07/01/unity-game-ball</id>
+    <content type="html"><![CDATA[<p>前几日，看到一款《物理碰撞的游戏》，很是有意思。玩家只要将一个球弹出去，球在碰到一些方块之后会弹回来，同时带着拖尾效果。<br />
+看了之后，结合unity。我决定fast follow一下，看是否能很快做出来。</p>
+
+<p>果不其然，周末用了半天左右的时间，总算搞出了样子。效果如下：<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-07-01-circle.gif" alt="circle" /></p>
+
+<!--more-->
+
+<h2 id="section">实现方法</h2>
+
+<p>注意：这里我采用的UGUI来制作。如果不用UGUI也是可以制作的。部分的配置会不一样。</p>
+
+<p>这是一个2D的世界，因此首先我们将镜头设置成正交投影。<br />
+然后创建一个Image（bg）用于放置背景。然后在四周放置四个不同的Image并且增加碰撞器和静态刚体。目的是将小球控制在这个区域之内。然后在区域之内放置几个Image。每个也同样增加一些碰撞器和静态刚体。同时为这些Image（Shape）增加一个脚本，脚本中最重要的事情就是在检测到碰撞之后做scale动作。</p>
+
+<p>在区域上方先放一个小球，增加碰撞器和rigibody刚体。初始化的时候，让小球的rigibody设为<code>RigidbodyType2D.Static</code>的。当我们松手的时候，计算小球运动的方向。同时将Rigibody设置为<code>RigidbodyType2D.Dynamic</code>。然后通过Rigibody组件给他一个运动方向上的力。<br />
+代码如下：</p>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+<span class="line-number">6</span>
+<span class="line-number">7</span>
+<span class="line-number">8</span>
+</pre></td><td class="code"><pre><code class=""><span class="line">private void Update(){
+</span><span class="line">	if (Input.GetMouseButtonDown(0)){
+</span><span class="line">		direction = (Input.mousePosition - aimObj.transform.position).normalized;
+</span><span class="line">		aimObj.GetComponent&lt;Rigidbody2D&gt;().bodyType = RigidbodyType2D.Dynamic;
+</span><span class="line">		Vector3 force = direction.normalized * init_force;
+</span><span class="line">		aimObj.GetComponent&lt;Rigidbody2D&gt;().AddForce(force);
+</span><span class="line">	}
+</span><span class="line">}</span></code></pre></td></tr></table></div></figure></notextile></div>
+<p>此时运行一下，小球便可以运动，并且对Shape产生碰撞影响。</p>
+
+<p>但是小球的拖尾效果还不在。</p>
+
+<h2 id="section-1">制作小球的拖尾效果</h2>
+
+<p>制作拖尾效果使用的Unity的<code>TrailRenderer</code>组件。如果想要改变这个组件的颜色，单设置他的StartColor和EndColor是没有用的，需要设置<code>TrailRenderer</code>的<code>Material</code>才可以。可以防止一个默认的Material。<br />
+然后通过设置他的StartWidth和EndWidth来设置拖尾效果。<br />
+<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-07-01-15304431920348.jpg" alt="=w300" /><br />
+这样设置之后，在Scene窗口可以看到拖尾效果。但是在Game窗口是看不到的。<br />
+原因是在于Canvas的RenderMode。RenderMode默认是<code>Screen Space – Overlay</code>模式，此时系统自动设置一个UICamera（按理只要z值大于-1000就是可以渲染到UI上面的）。这个Camera我并不确定是否能够渲染<code>TrailRenderer</code>这种组件。于是改为<code>Screen Space – Camera</code>模式，这个Camera是我们在Scene窗口已经可以看到拖尾，因此换成这个模式之后，在Game窗口也看到了。</p>
+
+<h2 id="section-2">后记</h2>
+
+<p>后来对于Canvas的这个设置，我网上查了很多资料。看到这个<a href="https://answers.unity.com/questions/1201050/is-there-way-to-have-line-renderer-on-a-canvas.html">答案</a>,但是也没有更多的解释。<br />
+希望后面自己能够搞明白他的原因，然后再次在做分享。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[xlua笔记-协程]]></title>
@@ -267,7 +326,7 @@ C#中协程的实现可以看成是状态机。知道是状态机之后，我才
 
 <h2 id="section-2">总结</h2>
 
-<p>我们先得各自了解lua的协程和c#的协程都是怎么工作的。才能看明白xlua中的那段代码。虽然总是使用却从未仔细深入的了解别人的代码，真是惭愧。建议大家有空多阅读一下别人的代码，总有异想不到的收获。</p>
+<p>我们先得各自了解lua的协程和c#的协程都是怎么工作的。才能看明白xlua中的那段代码。虽然一直用，却从未仔细深入的了解别人的代码，真是惭愧。建议大家有空多阅读一下别人的代码，尤其是那些优秀的代码，总有异想不到的收获。</p>
 
 ]]></content>
   </entry>
@@ -2175,120 +2234,6 @@ mac上使用的opengl版本过高以及一些屏幕分辨率的问题，我最�
 
 <p>至此第一种方法，配置mac上opengl的环境已经结束。虽然很费时间。但是这趟流程走下来确实也是值得的。<br />
 下一遍文章我将介绍一个稍微简单的方法。</p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[安装pygraphviz遇到的问题]]></title>
-    <link href="http://www.newtomato.me/blog/2017/11/21/pygraphviz"/>
-    <updated>2017-11-21T16:50:21+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/11/21/pygraphviz</id>
-    <content type="html"><![CDATA[<h2 id="section">环境：</h2>
-
-<pre><code>MacOS sierra
-python 2.7
-</code></pre>
-
-<!--more-->
-
-<h2 id="section-1">使用安装命令：</h2>
-
-<p><code>	sudo pip install pygraphviz</code></p>
-
-<p>命令行报错，不能正确安装。报错日志如下：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-<span class="line-number">6</span>
-<span class="line-number">7</span>
-<span class="line-number">8</span>
-<span class="line-number">9</span>
-<span class="line-number">10</span>
-<span class="line-number">11</span>
-<span class="line-number">12</span>
-<span class="line-number">13</span>
-<span class="line-number">14</span>
-<span class="line-number">15</span>
-<span class="line-number">16</span>
-<span class="line-number">17</span>
-<span class="line-number">18</span>
-<span class="line-number">19</span>
-<span class="line-number">20</span>
-<span class="line-number">21</span>
-<span class="line-number">22</span>
-<span class="line-number">23</span>
-<span class="line-number">24</span>
-<span class="line-number">25</span>
-<span class="line-number">26</span>
-<span class="line-number">27</span>
-<span class="line-number">28</span>
-<span class="line-number">29</span>
-<span class="line-number">30</span>
-<span class="line-number">31</span>
-<span class="line-number">32</span>
-<span class="line-number">33</span>
-<span class="line-number">34</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">Collecting pygraphviz
-</span><span class="line">  Downloading pygraphviz-1.3.1.zip (123kB)
-</span><span class="line">    100% |████████████████████████████████| 133kB 1.5MB/s 
-</span><span class="line">Installing collected packages: pygraphviz
-</span><span class="line">  Running setup.py install for pygraphviz ... error
-</span><span class="line">    Complete output from command /usr/bin/python -u -c "import setuptools, tokenize;__file__='/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-JmwjA6-record/install-record.txt --single-version-externally-managed --compile:
-</span><span class="line">    running install
-</span><span class="line">    Trying pkg-config
-</span><span class="line">    Package libcgraph was not found in the pkg-config search path.
-</span><span class="line">    Perhaps you should add the directory containing `libcgraph.pc'
-</span><span class="line">    to the PKG_CONFIG_PATH environment variable
-</span><span class="line">    No package 'libcgraph' found
-</span><span class="line">    Traceback (most recent call last):
-</span><span class="line">      File "&lt;string&gt;", line 1, in &lt;module&gt;
-</span><span class="line">      File "/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py", line 87, in &lt;module&gt;
-</span><span class="line">        tests_require=['nose&gt;=0.10.1', 'doctest-ignore-unicode&gt;=0.1.0',],
-</span><span class="line">      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/core.py", line 151, in setup
-</span><span class="line">        dist.run_commands()
-</span><span class="line">      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/dist.py", line 953, in run_commands
-</span><span class="line">        self.run_command(cmd)
-</span><span class="line">      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/distutils/dist.py", line 972, in run_command
-</span><span class="line">        cmd_obj.run()
-</span><span class="line">      File "setup_commands.py", line 44, in modified_run
-</span><span class="line">        self.include_path, self.library_path = get_graphviz_dirs()
-</span><span class="line">      File "setup_extra.py", line 121, in get_graphviz_dirs
-</span><span class="line">        include_dirs, library_dirs = _pkg_config()
-</span><span class="line">      File "setup_extra.py", line 44, in _pkg_config
-</span><span class="line">        output = S.check_output(['pkg-config', '--libs-only-L', 'libcgraph'])
-</span><span class="line">      File "/System/Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/subprocess.py", line 573, in check_output
-</span><span class="line">        raise CalledProcessError(retcode, cmd, output=output)
-</span><span class="line">    subprocess.CalledProcessError: Command '['pkg-config', '--libs-only-L', 'libcgraph']' returned non-zero exit status 1
-</span><span class="line">
-</span><span class="line">    ----------------------------------------
-</span><span class="line">Command "/usr/bin/python -u -c "import setuptools, tokenize;__file__='/private/tmp/pip-build-qfFpFG/pygraphviz/setup.py';f=getattr(tokenize, 'open', open)(__file__);code=f.read().replace('\r\n', '\n');f.close();exec(compile(code, __file__, 'exec'))" install --record /tmp/pip-JmwjA6-record/install-record.txt --single-version-externally-managed --compile" failed with error code 1 in /private/tmp/pip-build-qfFpFG/pygraphviz/
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>看报错的消息应该是没有<code>pkg-config</code>这个命令，于是开始安装它。</p>
-
-<p><code>brew install pkg-config</code></p>
-
-<p>再次运行<code>pygraphviz</code> 安装命令，依然报错。</p>
-
-<h2 id="section-2">最后的大招</h2>
-
-<p>最后，经过各种google搜索和尝试，花费了我一上午的时间。才解决了这个问题。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">pkg-config --libs-only-L libcgraph
-</span><span class="line">pkg-config --cflags-only-I libcgraph
-</span><span class="line">pip install pygraphviz --install-option="--include-path='/usr/include/graphviz/'" --install-option="--library-path='/usr/lib/graphviz/'"
-</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>此时graphviz成功安装。在python中就可以使用了</p>
-
-<p><code>import pygraphviz as gv</code></p>
 
 ]]></content>
   </entry>
