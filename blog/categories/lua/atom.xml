@@ -4,7 +4,7 @@
   <title><![CDATA[分类:lua | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/lua/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-01T19:25:02+08:00</updated>
+  <updated>2018-07-08T20:46:44+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,96 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[lua中事件派发而引发的问题]]></title>
+    <link href="http://www.newtomato.me/blog/2018/07/08/lua-problems"/>
+    <updated>2018-07-08T20:46:00+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/07/08/lua-problems</id>
+    <content type="html"><![CDATA[<h2 id="table-key">table key的排序问题</h2>
+<p>在lua中，table的key如果不是数字，用pairs打印出来的顺序和编码的顺序不是一个顺序。那是因为key是按照他的hash值进行排序。如果是数字，这样的问题就不存在。<br />
+但是真的是这样么？<br />
+实际上，如果是有序的数字，1，2，3…这样的确实没有问题。但是如果无序，那么仍然有概率会出现上面的问题。而这个问题近期就发生在我们的项目中。</p>
+
+<p>我们采用了事件。但是我们希望事件能够按照我们要求的顺序来有序派发。<br />
+一个事件对应N个回调函数。打印出来的结构如下：</p>
+
+<pre><code>"Event_Name"={
+	2 = {func,tag}
+	3 = {func,tag}
+	8 = {func,tag}
+}
+</code></pre>
+
+<p>2,3,8就是函数句柄。</p>
+
+<p><code>event.lua</code>对应代码如下：</p>
+
+<pre><code>function Event:on(eventName, listener, tag)
+    assert(type(eventName) == "string" and eventName ~= "",
+        "Event:addEventListener() - invalid eventName")
+    eventName = string.upper(eventName)
+    if self.listeners_[eventName] == nil then
+        self.listeners_[eventName] = {}
+    end
+
+    self.nextListenerHandleIndex_ = self.nextListenerHandleIndex_ + 1
+    local handle = self.nextListenerHandleIndex_
+    tag = tag or ""
+    self.listeners_[eventName][handle] = {listener, tag}
+
+    if DEBUG &gt; 1 then
+        printInfo("%s [Event] addEventListener() - event: %s, handle: %s, tag: \"%s\"",
+                  tostring(self.target_), eventName, handle, tostring(tag))
+    end
+
+    return self.target_, handle
+end
+</code></pre>
+
+<p>我们事先的测试打印确实是2，3，8的顺序，但是奇怪的是，不一样的由小到大数字，执行的顺序却不是。<br />
+于是就造成了实际的顺序和编码的顺序不一致。问题就发生了。<br />
+知道原因，问题就解决了一大半。现将<code>Event:on</code>的代码修改一下。</p>
+
+<pre><code>function Event:on(eventName, listener, tag)
+    assert(type(eventName) == "string" and eventName ~= "",
+        "Event:addEventListener() - invalid eventName")
+    eventName = string.upper(eventName)
+    if self.listeners_[eventName] == nil then
+        self.listeners_[eventName] = {}
+    end
+
+    self.nextListenerHandleIndex_ = self.nextListenerHandleIndex_ + 1
+    local handle = #self.listeners_[eventName]+1 --tostring()
+    tag = tag or ""
+    self.listeners_[eventName][handle] = {listener, tag}
+
+    if DEBUG &gt; 1 then
+        printInfo("%s [Event] addEventListener() - event: %s, handle: %s, tag: \"%s\"",
+                  tostring(self.target_), eventName, handle, tostring(tag))
+    end
+
+    return self.target_, handle
+end
+</code></pre>
+
+<h2 id="section">事件多次监听问题</h2>
+
+<p><code>event</code>事件监听，想必大家都应用过。但是你们是否遇到过这样的情况？</p>
+
+<pre><code>派发了某个事件AEvent之后，回调函数执行了两次。但是实际上只有一个回调函数。
+
+问题出现在哪里？
+</code></pre>
+
+<p>经过仔细核查，发现在处理AEvent的回调函数里面，将事件监听做了删除，<strong>但是</strong>同时对AEvent又增加了一次回调函数。因为事件回调函数的处理是在同一帧即可执行的。对于event而言，自然是有了两次回调函数。</p>
+
+<p>因此在一个事件的回调函数中在重新增加相同事件监听，那么它会在同一帧即可执行。而不是等到下一帧。</p>
+
+<p>解决方案：可以通过避免在事件的回调函数中，对事件再做一次监听，除非你知道在做什么。要么可以等一帧之后，再做监听。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[在lua项目中使用luacov进行代码覆盖率的测试]]></title>
@@ -307,165 +397,6 @@ b.doAction()
 
 <p>setfenv()还有什么特别的用处？敬请等待下回分析！</p>
 
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[lua中require到底做了什么事情？]]></title>
-    <link href="http://www.newtomato.me/blog/2015/11/15/lua-require"/>
-    <updated>2015-11-15T20:47:27+08:00</updated>
-    <id>http://www.newtomato.me/blog/2015/11/15/lua-require</id>
-    <content type="html"><![CDATA[<p>require到底做了什么呢？起初我认为他和其他的语言的require是一样的，即将另一个模块导入进来。比如有一个如下的A.lua文件<br />
-<!--more--></p>
-
-<pre><code>DEBUG = false
-USER_NAME = "newtomao"
-USER_IMAGE = "cat.png"
-VERSION = ""
-
-function printBool(boolValue)
-	print("[printBook]:" .. tostring(boolValue))
-end
-
-function getRandomNumber()
-	return  math.random(100)
-end
-</code></pre>
-
-<p>当我在另一个文件B.lua里面<code>require("A")</code>的时候，我们可以直接调用<code>getRandomNumber</code>和上面定义的常量。因此我们可以任务require就是将另一个文件注册到全局表_G中。这样我们就可以在全局范围内的使用A文件中定义的函数和变量。</p>
-
-<p>我们讲require”A”的结果打印出来如下：</p>
-
-<pre><code>retA = require("A")
-dump(retA)
-</code></pre>
-<p>结果如下：</p>
-
-<pre><code>"require之后的结果" = true
-</code></pre>
-
-<p>但是如果A文件不是上面的样子，而是如下的样子：</p>
-
-<pre><code>local A = {}
-A.userName = "hello"
-function A.doAction()
-	print("doAction")
-end
-return A
-</code></pre>
-
-<p>此时我们require(A.lua)之后，是否可以也直接调用doAction呢？且慢。仔细看下面有一个<code>return</code>, 这表示这个lua文件如果被require进来，返回的是A，就是一个完整的模块table。</p>
-
-<pre><code>retA = require("A")
-dump(retA,"require之后的结果")
-</code></pre>
-<p>打印的结果如下：<br />
-<code>
-"require之后的结果" = {
-    "doAction" = function: 0x7fcc024dddb0
-    "userName" = "hello"
-}
-</code></p>
-
-<p>你看她返回的结果是一个table，打印了A的结构。此时我们就可以通过<code>retA.doAction()</code>的形式去调用。<br />
-retA就是类似一个对象，但是又不完全是对象，它更像是一个命名空间。规定了函数和变量的上下文环境是在A这个空间内。如果外面想要访问userName，需要在前面加上命名空间的限定。<br />
-如果A被我们require多次结果会不会不同呢？比如如下：</p>
-
-<pre><code>a = require("A")
-a2 = require("A")
-print(a == a2)
-</code></pre>
-<p>结果是怎么样的呢？答案就是true，是的，a和a2是一个地址。</p>
-
-<pre><code>print(a)
-table: 0x7fac50500ad0
-print(a2)
-table: 0x7fac50500ad0
-</code></pre>
-
-<p>那么这样看来你require多次和require一次的结果是一样的。那么require到底做了什么？<br />
-我们来看lua中对require函数的实现：</p>
-
-<pre><code>static int ll_require (lua_State *L) {
-  const char *name = luaL_checkstring(L, 1);
-  int i;
-  lua_settop(L, 1);  /* _LOADED table will be at index 2 */
-  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
-  lua_getfield(L, 2, name);
-  if (lua_toboolean(L, -1)) {  /* is it there? */
-    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
-      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
-    return 1;  /* package is already loaded */
-  }
-  /* else must load it; iterate over available loaders */
-  lua_getfield(L, LUA_ENVIRONINDEX, "loaders");
-  if (!lua_istable(L, -1))
-    luaL_error(L, LUA_QL("package.loaders") " must be a table");
-  lua_pushliteral(L, "");  /* error message accumulator */
-  for (i=1; ; i++) {
-    lua_rawgeti(L, -2, i);  /* get a loader */
-    if (lua_isnil(L, -1))
-      luaL_error(L, "module " LUA_QS " not found:%s",
-                    name, lua_tostring(L, -2));
-    lua_pushstring(L, name);
-    lua_call(L, 1, 1);  /* call it */
-    if (lua_isfunction(L, -1))  /* did it find module? */
-      break;  /* module loaded successfully */
-    else if (lua_isstring(L, -1))  /* loader returned error message? */
-      lua_concat(L, 2);  /* accumulate it */
-    else
-      lua_pop(L, 1);
-  }
-  lua_pushlightuserdata(L, sentinel);
-  lua_setfield(L, 2, name);  /* _LOADED[name] = sentinel */
-  lua_pushstring(L, name);  /* pass name as argument to module */
-  lua_call(L, 1, 1);  /* run loaded module */
-  if (!lua_isnil(L, -1))  /* non-nil return? */
-    lua_setfield(L, 2, name);  /* _LOADED[name] = returned value */
-  lua_getfield(L, 2, name);
-  if (lua_touserdata(L, -1) == sentinel) {   /* module did not set a value? */
-    lua_pushboolean(L, 1);  /* use true as result */
-    lua_pushvalue(L, -1);  /* extra copy to be returned */
-    lua_setfield(L, 2, name);  /* _LOADED[name] = true */
-  }
-  return 1;
-}
-</code></pre>
-
-<p>这个函数并不复杂，但是对于初学者来说可能看到之后会被吓到，大部分都是出栈入栈的操作。我们先看前几行</p>
-
-<pre><code>lua_settop(L, 1);  /* _LOADED table will be at index 2 */
-  lua_getfield(L, LUA_REGISTRYINDEX, "_LOADED");
-  lua_getfield(L, 2, name);
-  if (lua_toboolean(L, -1)) {  /* is it there? */
-    if (lua_touserdata(L, -1) == sentinel)  /* check loops */
-      luaL_error(L, "loop or previous error loading module " LUA_QS, name);
-    return 1;  /* package is already loaded */
-  }
-</code></pre>
-<p>不用看函数，且看注释，他的意思就是先将栈指针移到第一个位置，由于lua所以从1开始，移到1即意味着要讲栈里面的元素清空，然后将LUA_REGISTRYINDEX执行的表数据里面名字是“_LOADED” 这个数据放到第2个位置，接下来讲在第2位的数据里面，名字叫做name的数据放到第三位。那么在第二位的不正是loaded的数据嘛！<br />
-接下来，lua检查栈顶元素是否是bool类型，那么栈顶元素是哪一个呢?不正是第三步放进来的数据嘛！<br />
-检查这个数据是否是boolean类型，只要存在，也就是加载过这个name模块，那么就任务已经被加载过了。就直接返回无需再次加载。</p>
-
-<p>而如果没有数据，那么就需要检查是否能够正确地加载。</p>
-
-<p>这就解释了为什么多次require其实并没有什么意义。</p>
-
-<p>接下来代码会寻找一个有效地loader加载器加载lua模块然后讲模块加载的结果放到了_LOADED中。因此我们在require之后，可以通过打印package.loaded来检查。</p>
-
-<pre><code> "package.loaded" = {
-     "A" = {
-         "doAction" = function: 0x7f88fec5c2d0
-         "userName" = "hello"
-     }
-     "B" = true
-    }
-</code></pre>
-
-<p>看到这里，各位同学应该已经了解这个reuqire之后，其实并未创建新的对象，而是将lua文件运行之后的结果返回来了。那么这个已经被放到了loaded的“A”更像是一个类文件的模板。而不是对象。</p>
-
-<p>那么这对于我们习惯面向对象开发的同学来说，如何用lua来实现面向对象的开发呢？<br />
-别急，请看下一篇文章。</p>
 ]]></content>
   </entry>
   

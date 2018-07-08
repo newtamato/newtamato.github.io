@@ -9,8 +9,10 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="前几日，看到一款《物理碰撞的游戏》，很是有意思。玩家只要将一个球弹出去，球在碰到一些方块之后会弹回来，同时带着拖尾效果。
-看了之后，结合unity。我决定fast follow一下，看是否能很快做出来。 果不其然，周末用了半天左右的时间，总算搞出了样子。效果如下： ">
+  <meta name="description" content="table key的排序问题
+在lua中，table的key如果不是数字，用pairs打印出来的顺序和编码的顺序不是一个顺序。那是因为key是按照他的hash值进行排序。如果是数字，这样的问题就不存在。
+但是真的是这样么？
+实际上，如果是有序的数字，1，2，3…这样的确实没有问题。但是如果无序， &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -72,6 +74,125 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2018-07-08T20:46:00+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><h2 id="table-key">table key的排序问题</h2>
+<p>在lua中，table的key如果不是数字，用pairs打印出来的顺序和编码的顺序不是一个顺序。那是因为key是按照他的hash值进行排序。如果是数字，这样的问题就不存在。<br />
+但是真的是这样么？<br />
+实际上，如果是有序的数字，1，2，3…这样的确实没有问题。但是如果无序，那么仍然有概率会出现上面的问题。而这个问题近期就发生在我们的项目中。</p>
+
+<p>我们采用了事件。但是我们希望事件能够按照我们要求的顺序来有序派发。<br />
+一个事件对应N个回调函数。打印出来的结构如下：</p>
+
+<pre><code>"Event_Name"={
+	2 = {func,tag}
+	3 = {func,tag}
+	8 = {func,tag}
+}
+</code></pre>
+
+<p>2,3,8就是函数句柄。</p>
+
+<p><code>event.lua</code>对应代码如下：</p>
+
+<pre><code>function Event:on(eventName, listener, tag)
+    assert(type(eventName) == "string" and eventName ~= "",
+        "Event:addEventListener() - invalid eventName")
+    eventName = string.upper(eventName)
+    if self.listeners_[eventName] == nil then
+        self.listeners_[eventName] = {}
+    end
+
+    self.nextListenerHandleIndex_ = self.nextListenerHandleIndex_ + 1
+    local handle = self.nextListenerHandleIndex_
+    tag = tag or ""
+    self.listeners_[eventName][handle] = {listener, tag}
+
+    if DEBUG &gt; 1 then
+        printInfo("%s [Event] addEventListener() - event: %s, handle: %s, tag: \"%s\"",
+                  tostring(self.target_), eventName, handle, tostring(tag))
+    end
+
+    return self.target_, handle
+end
+</code></pre>
+
+<p>我们事先的测试打印确实是2，3，8的顺序，但是奇怪的是，不一样的由小到大数字，执行的顺序却不是。<br />
+于是就造成了实际的顺序和编码的顺序不一致。问题就发生了。<br />
+知道原因，问题就解决了一大半。现将<code>Event:on</code>的代码修改一下。</p>
+
+<pre><code>function Event:on(eventName, listener, tag)
+    assert(type(eventName) == "string" and eventName ~= "",
+        "Event:addEventListener() - invalid eventName")
+    eventName = string.upper(eventName)
+    if self.listeners_[eventName] == nil then
+        self.listeners_[eventName] = {}
+    end
+
+    self.nextListenerHandleIndex_ = self.nextListenerHandleIndex_ + 1
+    local handle = #self.listeners_[eventName]+1 --tostring()
+    tag = tag or ""
+    self.listeners_[eventName][handle] = {listener, tag}
+
+    if DEBUG &gt; 1 then
+        printInfo("%s [Event] addEventListener() - event: %s, handle: %s, tag: \"%s\"",
+                  tostring(self.target_), eventName, handle, tostring(tag))
+    end
+
+    return self.target_, handle
+end
+</code></pre>
+
+<h2 id="section">事件多次监听问题</h2>
+
+<p><code>event</code>事件监听，想必大家都应用过。但是你们是否遇到过这样的情况？</p>
+
+<pre><code>派发了某个事件AEvent之后，回调函数执行了两次。但是实际上只有一个回调函数。
+
+问题出现在哪里？
+</code></pre>
+
+<p>经过仔细核查，发现在处理AEvent的回调函数里面，将事件监听做了删除，<strong>但是</strong>同时对AEvent又增加了一次回调函数。因为事件回调函数的处理是在同一帧即可执行的。对于event而言，自然是有了两次回调函数。</p>
+
+<p>因此在一个事件的回调函数中在重新增加相同事件监听，那么它会在同一帧即可执行。而不是等到下一帧。</p>
+
+<p>解决方案：可以通过避免在事件的回调函数中，对事件再做一次监听，除非你知道在做什么。要么可以等一帧之后，再做监听。</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -561,52 +682,6 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
 
     </article>
   
-  
-    <article>
-      
-  <header>
-    
-      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
-        <h1 class="entry-title"><a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a></h1>
-      
-    
-    
-      <p class="meta">
-        
-
-
-
-
-
-
-
-
-  
-
-
-<time datetime="2018-03-09T17:53:10+08:00" pubdate data-updated="true"></time>
-        
-      </p>
-    
-  </header>
-
-
-  <div class="entry-content"><p>年前1月份我们上线了一款大富翁游戏。他的玩法是传统的大富翁玩法+实时多人在线+陌生人匹配。这款游戏从立项到上线，设计思路变化过一次。小变化无数。历时半年左右。虽未取得大成功。但是对于我们团队而言，是一次很好的磨合历练。</p>
-
-<p>之所以采用实时socket连接，就是希望玩家能够真实的感受有人在和他一起玩。希望通过玩家产生内容。增加黏性。提到socket实时游戏，常见的比如魔兽世界，王者荣耀以及绝地求生等（他们使用的实时技术是帧同步或者状态同步，均比我们自己项目中的同步要复杂的多，大富翁的规则是每个回合只有一个人才能够摇筛子，因此需要数据量相对轻量级）。如果大家怎么更好的实时同步感兴趣，建议去腾讯学院查找些干货，这里就不展开说了。</p>
-
-<p>我这里主要总结项目的架构和遇到的问题。<br />
-</div>
-  
-  
-    <footer>
-      <a rel="full-article" href="/blog/2018/03/09/2017xiang-mu-zong-jie">阅读全文&rarr;</a>
-    </footer>
-  
-
-
-    </article>
-  
   <div class="pagination">
     
       <a class="prev" href="2">&larr; Older</a>
@@ -620,6 +695,10 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/07/01/unity-game-ball">用Unity实现物理碰撞游戏</a>
@@ -775,10 +854,6 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
     
       <li class="post">
         <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
-      <li class="post">
-        <a href="/blog/2017/04/15/requirehe-re-geng">Require机制和自动更新之间的爱恨情仇</a>
       </li>
     
   </ul>

@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-01T19:25:02+08:00</updated>
+  <updated>2018-07-08T20:46:44+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,96 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[lua中事件派发而引发的问题]]></title>
+    <link href="http://www.newtomato.me/blog/2018/07/08/lua-problems"/>
+    <updated>2018-07-08T20:46:00+08:00</updated>
+    <id>http://www.newtomato.me/blog/2018/07/08/lua-problems</id>
+    <content type="html"><![CDATA[<h2 id="table-key">table key的排序问题</h2>
+<p>在lua中，table的key如果不是数字，用pairs打印出来的顺序和编码的顺序不是一个顺序。那是因为key是按照他的hash值进行排序。如果是数字，这样的问题就不存在。<br />
+但是真的是这样么？<br />
+实际上，如果是有序的数字，1，2，3…这样的确实没有问题。但是如果无序，那么仍然有概率会出现上面的问题。而这个问题近期就发生在我们的项目中。</p>
+
+<p>我们采用了事件。但是我们希望事件能够按照我们要求的顺序来有序派发。<br />
+一个事件对应N个回调函数。打印出来的结构如下：</p>
+
+<pre><code>"Event_Name"={
+	2 = {func,tag}
+	3 = {func,tag}
+	8 = {func,tag}
+}
+</code></pre>
+
+<p>2,3,8就是函数句柄。</p>
+
+<p><code>event.lua</code>对应代码如下：</p>
+
+<pre><code>function Event:on(eventName, listener, tag)
+    assert(type(eventName) == "string" and eventName ~= "",
+        "Event:addEventListener() - invalid eventName")
+    eventName = string.upper(eventName)
+    if self.listeners_[eventName] == nil then
+        self.listeners_[eventName] = {}
+    end
+
+    self.nextListenerHandleIndex_ = self.nextListenerHandleIndex_ + 1
+    local handle = self.nextListenerHandleIndex_
+    tag = tag or ""
+    self.listeners_[eventName][handle] = {listener, tag}
+
+    if DEBUG &gt; 1 then
+        printInfo("%s [Event] addEventListener() - event: %s, handle: %s, tag: \"%s\"",
+                  tostring(self.target_), eventName, handle, tostring(tag))
+    end
+
+    return self.target_, handle
+end
+</code></pre>
+
+<p>我们事先的测试打印确实是2，3，8的顺序，但是奇怪的是，不一样的由小到大数字，执行的顺序却不是。<br />
+于是就造成了实际的顺序和编码的顺序不一致。问题就发生了。<br />
+知道原因，问题就解决了一大半。现将<code>Event:on</code>的代码修改一下。</p>
+
+<pre><code>function Event:on(eventName, listener, tag)
+    assert(type(eventName) == "string" and eventName ~= "",
+        "Event:addEventListener() - invalid eventName")
+    eventName = string.upper(eventName)
+    if self.listeners_[eventName] == nil then
+        self.listeners_[eventName] = {}
+    end
+
+    self.nextListenerHandleIndex_ = self.nextListenerHandleIndex_ + 1
+    local handle = #self.listeners_[eventName]+1 --tostring()
+    tag = tag or ""
+    self.listeners_[eventName][handle] = {listener, tag}
+
+    if DEBUG &gt; 1 then
+        printInfo("%s [Event] addEventListener() - event: %s, handle: %s, tag: \"%s\"",
+                  tostring(self.target_), eventName, handle, tostring(tag))
+    end
+
+    return self.target_, handle
+end
+</code></pre>
+
+<h2 id="section">事件多次监听问题</h2>
+
+<p><code>event</code>事件监听，想必大家都应用过。但是你们是否遇到过这样的情况？</p>
+
+<pre><code>派发了某个事件AEvent之后，回调函数执行了两次。但是实际上只有一个回调函数。
+
+问题出现在哪里？
+</code></pre>
+
+<p>经过仔细核查，发现在处理AEvent的回调函数里面，将事件监听做了删除，<strong>但是</strong>同时对AEvent又增加了一次回调函数。因为事件回调函数的处理是在同一帧即可执行的。对于event而言，自然是有了两次回调函数。</p>
+
+<p>因此在一个事件的回调函数中在重新增加相同事件监听，那么它会在同一帧即可执行。而不是等到下一帧。</p>
+
+<p>解决方案：可以通过避免在事件的回调函数中，对事件再做一次监听，除非你知道在做什么。要么可以等一帧之后，再做监听。</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[用Unity实现物理碰撞游戏]]></title>
@@ -2167,73 +2257,6 @@ mac上使用的opengl版本过高以及一些屏幕分辨率的问题，我最�
 
 <p>只有这样才能让矩阵转换生效。<br />
 <img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-Untitled.gif" alt="" /></p>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在xcode上运行OpenGL工程]]></title>
-    <link href="http://www.newtomato.me/blog/2017/12/03/macshang-openglhuan-jing"/>
-    <updated>2017-12-03T17:36:47+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/12/03/macshang-openglhuan-jing</id>
-    <content type="html"><![CDATA[<p>学习opengl最基础的方法就是将新手教程的工程先运行起来，实战才能收获经验。<br />
-先介绍我的工作环境。<code>MAC Sierra 10.12.6</code>,<code>xcode 9.2</code>。</p>
-
-<h2 id="section">手动安装依赖库，配置各种环境变量。</h2>
-
-<h3 id="glfwglew">glfw以及glew安装</h3>
-
-<p>自己安装各种依赖工具包，主要有<code>glfw</code>和<code>glew</code>,以及<code>glad</code>。</p>
-
-<p><code>glfw</code>和<code>glew</code>最简单安装方法就是通过<code>brew</code>。</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">brew install glfw
-</span><span class="line">brew install glew</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>安装完成之后，会在被存放在<code>/usr/local/Cellar/glew/</code>以及<code>/usr/local/Cellar/glfw</code>这里。</p>
-
-<!--more-->
-
-<h3 id="glad">安装glad</h3>
-
-<p>glad是非常重要的一个工具库，缺失这个库，即使你的工程能够编译通过，也运行不起来。因为opengl的接口函数是需要调用<code>gladLoadGL();</code>被加载进来。</p>
-
-<p>安装的方法：<br />
-	1. 到<a href="http://glad.dav1d.de/">http://glad.dav1d.de/</a>选择,3.3版本的opengl，Profile选择<code>Core</code><br />
-	2. generate a loader。下载zip文件。<br />
-	3. 解压缩之后，待会放到项目中。</p>
-
-<h3 id="xcode">创建一个xcode工程开始配置</h3>
-
-<ol>
-  <li>
-    <p>选择生成一个command line tool工程。</p>
-
-    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122917458581.jpg" alt="=w300" /></p>
-  </li>
-  <li>然后打开<code>Preference-&gt;Locations-&gt;Custom Pathes</code>,设置变量如下：<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122918927071.jpg" alt="" /></li>
-  <li>
-    <p>然后打开<code>Project</code>的基础配置，在<code>Header search paths</code> 和<code>Library search paths</code>这里设置</p>
-
-    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122921103307.jpg" alt="" /></p>
-  </li>
-  <li>
-    <p>最后将上面的glad文件放入到项目中。</p>
-
-    <p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122933160778.jpg" alt="" /></p>
-  </li>
-  <li>最后配置要编译的库文件</li>
-</ol>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122933998643.jpg" alt="" /><br />
-6. 修改你的main.cpp文件。例如我这边使用<a href="https://pan.baidu.com/s/1bp548Bd">main.cpp 密码:yud8</a>在此。运行工程你应该可以看到一个三角形。</p>
-
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15122935323107.jpg" alt="=" /></p>
-
-<p>至此第一种方法，配置mac上opengl的环境已经结束。虽然很费时间。但是这趟流程走下来确实也是值得的。<br />
-下一遍文章我将介绍一个稍微简单的方法。</p>
 
 ]]></content>
   </entry>
