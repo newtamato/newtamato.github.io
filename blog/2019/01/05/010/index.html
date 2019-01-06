@@ -1,0 +1,408 @@
+
+<!DOCTYPE html>
+<!--[if IEMobile 7 ]><html class="no-js iem7"><![endif]-->
+<!--[if lt IE 9]><html class="no-js lte-ie8"><![endif]-->
+<!--[if (gt IE 8)|(gt IEMobile 7)|!(IEMobile)|!(IE)]><!--><html class="no-js" lang="en"><!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  <title>500人同时在线的客户端小工具 - 番茄手册</title>
+  <meta name="author" content="newtomato">
+
+  
+  <meta name="description" content="给服务器做的压力测试工具">
+  <meta name="keywords" content="windows socket">
+
+  <!-- http://t.co/dKP3o1e -->
+  <meta name="HandheldFriendly" content="True">
+  <meta name="MobileOptimized" content="320">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  
+  <link rel="canonical" href="http://www.newtomato.me/blog/2019/01/05/010">
+  <link href="/favicon.png" rel="icon">
+  <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css">
+  <script src="/javascripts/modernizr-2.0.js"></script>
+  <script src="/javascripts/ender.js"></script>
+  <script src="/javascripts/octopress.js" type="text/javascript"></script>
+  <link href="/atom.xml" rel="alternate" title="番茄手册" type="application/atom+xml">
+  <link href='http://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+  <!--Fonts from Google"s Web font directory at http://google.com/webfonts -->
+<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+
+  
+
+</head>
+
+<body   >
+  <header role="banner"><hgroup>
+  <div id="logo">
+  	<div id="logoLeft">{</div>
+  	<div id="logoText">think</div>
+  	<div id="logoRight">}</div>
+  	<div class="clear"></div>
+  </div>
+  <h1><a href="/">番茄手册</a></h1>
+  
+  <div class="clear"></div>
+</hgroup>
+
+</header>
+  <nav role="navigation"><ul class="subscription" data-subscription="rss">
+  <li><a href="/atom.xml" rel="subscribe-rss" title="subscribe via RSS">RSS</a></li>
+  
+</ul>
+  
+<form action="https://www.google.com/search" method="get">
+  <fieldset role="search">
+    <input type="hidden" name="q" value="site:www.newtomato.me" />
+    <input class="search" type="text" name="q" results="0" placeholder="Search"/>
+  </fieldset>
+</form>
+  
+<ul class="main-navigation">
+  <li><a href="/">Blog</a></li>
+  <li><a href="/blog/archives">Archives</a></li>
+   <li><a href="/about2">About</a></li>
+</ul>
+
+</nav>
+  <div id="main">
+    <div id="content">
+      <div>
+<article class="hentry" role="article">
+  
+  <header>
+    
+      
+        <h1 class="entry-title">500人同时在线的客户端小工具</h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2019-01-05T17:58:54+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+<div class="entry-content"><h2 id="section">背景说明</h2>
+
+<p>前段时间为服务器端压力和代码质量测试做了一个小小的贡献。<br />
+这个工具不复杂，却能解决大问题。我借此想要抛砖引玉，希望大家在开发中不要将思路仅仅局限在某个方面，应该拓展视野，发现更多。</p>
+
+<p>一般情况下，服务器上线前，会自己做这方面的测试。而我们的情况还真是特殊。服务器自己用机器人上去跑，没有爆出错误。而我们的用户自己登陆游戏，做些操作，就莫名的出现了问题。尤其是同时在线的人数并不多，有的时候不到100人就爆了。</p>
+
+<p>于是我们怀疑服务器端的机器人逻辑和玩家自己的逻辑可能不一样。由于服务器那边很多代码，都是陈年老酒了。改也改不动。于是我们转换思路，就用大量客户端发起请求测试。</p>
+
+<p>这里的“大量”是同时在线500人。虽不多，但也足以测试出问题。<br />
+<!--more--><br />
+## 问题</p>
+
+<p>问题是一个客户端如何做到同时在线500人？</p>
+
+<h2 id="section-1">动手之前的思考</h2>
+
+<p>以我们底层的架构，玩家需要连接3个socket才能正常操作游戏，并且这三个socket都活着。所以同时500人，实际上就是1500个socket。<br />
+正常操作是直接创建1500个socket吧（先不管他是不是卡的要死），虽然都能创建成功，但只有64个有效。为何呢？因为而windows默认socket同时存在的数量是64个！<br />
+我修改了这个配置，写成了2048，理论上可以支持超过500人。<br />
+只是超过500人，会让我的windows电脑卡的不成样子。</p>
+
+<p>剩下的事，就是抽逻辑。<br />
+相信大家都写过一些工具，比如在UI还没有给的时候，我们自己写逻辑，然后测试一下，美术那边提供了之后，我们在替换进去。<br />
+因此没有UI的那些逻辑才是项目的核心。<br />
+<code>login -&gt; start_game -&gt; buy_something</code></p>
+
+<p>##动手做吧</p>
+
+<p>前面想清楚了，我们在来把客户端大卸八块。首先去掉所有的View（游戏里面View的渲染也是性能消耗的大部头）。核心的网络库部分抽取出来，扩展一下支持多个玩家。游戏里面请求部分抽取出来（这块如果在开发中能够做到独立于view，那么做起来真是相当方便。如果耦合到view中，你懂得。）</p>
+
+<p>工具做出来之后，大量的请求发过去，给服务器极大的压力，即测试同时在线的能力，又测试服务器代码的质量。后期增加新的请求，也都会更新到这来。每天都要跑一跑，有问题也能提早发现。</p>
+
+<p>理论是如此，但是你可定要问了，那么多请求，有些是在特定场景下触发的啊，你怎么做到自动的？或者是，我游戏还有压后台，进前台操作。还有网络不好，断线重连进入游戏呢？都怎么做？</p>
+
+<p>你对一个玩家是怎么做到的，那么就能明白如何管理500个玩家了。</p>
+
+<p>脱离UI写游戏，才能看清这背后的道理。对不对?</p>
+
+<h2 id="section-2">问题来了？</h2>
+
+<p>超过1000人，怎么做？<br />
+哎呀，你有什么办法？</p>
+
+</div>
+
+
+  <footer>
+    <p class="meta">
+      
+  
+
+<span class="byline author vcard">Posted by <span class="fn">newtomato</span></span>
+
+      
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2019-01-05T17:58:54+08:00" pubdate data-updated="true"></time>
+      
+
+<span class="categories">
+  
+    <a class='category' href='/blog/categories/you-xi-gong-ju/'>游戏工具</a>
+  
+</span>
+
+
+    </p>
+    
+      <div class="sharing">
+  
+  <a href="http://twitter.com/share" class="twitter-share-button" data-url="http://www.newtomato.me/blog/2019/01/05/010" data-via="" data-counturl="http://www.newtomato.me/blog/2019/01/05/010" >Tweet</a>
+  
+  
+  
+</div>
+
+    
+    <p class="meta">
+      
+        <a class="basic-alignment left articlenav" href="/blog/2018/07/08/lua-problems" title="Previous Post: lua中事件派发而引发的问题">&laquo; lua中事件派发而引发的问题</a>
+      
+      
+    </p>
+  </footer>
+</article>
+
+</div>
+
+<aside class="sidebar">
+  
+    <section>
+  <h1>Recent Posts</h1>
+  <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/01/05/010">500人同时在线的客户端小工具</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/07/01/unity-game-ball">用Unity实现物理碰撞游戏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/06/13/xlua-1">Xlua笔记-协程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/06/12/luacov-test">在lua项目中使用luacov进行代码覆盖率的测试</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/26/godot-1">Godot引擎分析-1</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/20/godot-event-1">Godot基础知识之事件穿透</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/19/godot-transform-1">Godot基础知识之Transform坐标转换</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/17/bugji-lu">记一个华为手机上声音突然消失不见的bug</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/13/tableviewcelldong-tai-kuan-gao">如何使用tableView制作一个高度可以变化的列表</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/05/07/androidshi-yong-dumpsysdao-chu-fps">补充在android如何使用dumpsys导出FPS</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/03/09/2017xiang-mu-zong-jie">大富翁项目总结</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/unity-transform-tex">Unity Shader基础函数：TRANSFORM_TEX</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/02/11/ui-ai">UI测试AI遇到的问题-尚未解决的难题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/29/openglgldrawarrays">opengl基础之glDrawArrays和glDrawElements之间的区别</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-pu-tong-guang-zhao">OpenGL基础之普通光照</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2018/01/07/openglji-chu-zhi-chang-yong-diao-yong-jie-kou">OpenGL基础之常用调用接口</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/16/opengl-tou-shi-tou-ying-ju-zhen">OpenGL基础之透视投影矩阵</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/15/openglji-chu-zhi-mo-ban-huan-cun">OpenGL基础之模板缓存</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/09/openglji-chu-ju-zhen-zhi-shi">OpenGL基础之矩阵和坐标</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/opengl-glitter">在xcode上运行OpenGL工程-使用Glitter</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/12/03/macshang-openglhuan-jing">在xcode上运行OpenGL工程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/21/pygraphviz">安装pygraphviz遇到的问题</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/12/etcge-shi-tu-pian-zui-jia-shi-jian">ETC格式图片最佳实践</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/11/05/blend-modezhe-dang-xiao-guo">Game Maker：blend Mode遮挡效果</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/29/gamemakerblendmode">Game maker：Extend Blend Mode</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/08/hui-fang">为游戏增加记录回放功能</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/10/06/cocos2dxxing-neng-you-hua">Cocos2dx游戏性能优化技巧</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/03/gamemaker-bouncemoveerdai-ma-yue-du">[gamemaker]BounceMover代码阅读</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/03/hao-you-xi">什么才算是好游戏？</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/09/02/yu-ming-he-ipzhi-bang-ding">域名和ip之绑定</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/08/05/djnago-blog-zinnia">使用djnago-blog-zinnia搭建一个博客网站</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/17/install-luacheck">为Atom,Sublime增加linter-luacheck插件</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/15/jekins">使用jekins打造一个自动化编译流程</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/07/02/ru-he-wei-di-san-fang-c-plus-plus-ku-dao-chu-luabinding">如何为第三方c++库导出luabinding (Part One)</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/06/25/ren-shi-liquidfun">认识liquidFun（流体物理引擎）</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/06/11/macshang-an-zhuang-git-svnwei-sheng-xiao-de-ban-fa">MAC上安装git-svn未生效的办法</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/24/unityzhi-zuo-platformyou-xi">Unity制作platform游戏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/23/shi-yong-godot">使用GoDot引擎制作一款mini小游戏</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
+      </li>
+    
+  </ul>
+</section>
+
+
+
+
+
+  
+</aside>
+
+
+    </div>
+  </div>
+  <footer role="contentinfo"><p>
+  Copyright &copy; 2019 - newtomato -
+  <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
+</p>
+
+</footer>
+  
+
+
+
+
+
+
+
+  <script type="text/javascript">
+    (function(){
+      var twitterWidgets = document.createElement('script');
+      twitterWidgets.type = 'text/javascript';
+      twitterWidgets.async = true;
+      twitterWidgets.src = 'http://platform.twitter.com/widgets.js';
+      document.getElementsByTagName('head')[0].appendChild(twitterWidgets);
+    })();
+  </script>
+
+
+
+
+
+</body>
+</html>

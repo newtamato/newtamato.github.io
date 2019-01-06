@@ -4,7 +4,7 @@
   <title><![CDATA[分类:jekins | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/jekins/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -80,8 +80,8 @@
 如果不是仓库管理方式，那脚本的位置就放在我们提供的工作目录中。</p>
 
 <p>第二步，打包apk，可以使用jekins自己的gradle插件。非常方便。但是gradle需要先指定版本。因此到<code>Manage Jenkins &gt; Configuration Options</code>这里，增加自己要的gradle版本。勾选自动set up选项。然后在构建的时候，指定版本。这样我们在执行到这一步的时候，jenkins会自定下载这个版本。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-15-15001211854325.jpg" alt="" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-15-15001212202303.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-07-15-15001211854325.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-07-15-15001212202303.jpg" alt="" /></p>
 
 <p>剩下的第三步，将apk生成一个新的url地址，这样大家可以在这个地址下载。我使用了一个web服务，apk上传到这里，这样大家都可以在这里下载。启动web服务，很简单。你可以下载tomcat或者使用python的flask。</p>
 
@@ -90,7 +90,7 @@
 <h2 id="section-1">构建的时候怎么已使用参数？</h2>
 
 <p>在创建项目的时候，下面有一个参数化构建过程。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-15-15001216832377.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-07-15-15001216832377.jpg" alt="" /></p>
 
 <p>在这里增加几个参数，就行。使用他也是很方便。<br />
 比如上面的参数是name，那在脚本中直接把他当做变量使用就行。<code>$name</code></p>

@@ -4,7 +4,7 @@
   <title><![CDATA[分类:iap | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/iap/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -39,7 +39,7 @@
 现在假设我们已经通过了成功创建了商品，发布了Alpha测试应用。测试支付，可以先将google的Example工程先做一下修改，然后打包扔上去就可以了。我们需要做的事情有<br />
 ## 打包<br />
 1. 将申请应用的base64publicKey替换成自己的。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-14726312121126.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-08-31-14726312121126.jpg" alt="" /><br />
 2. 修改包名。原先是com.example换成你们想要的就行。然后清理工程重新编译。<br />
 3. 修改配置文件中的包名和applicationId。<br />
 其他保持不变，直接签名打包。提交上去等待审核通过吧。提交要提交到Alpha测试那里。而不是Production.</p>
@@ -48,7 +48,7 @@
 <p>接下来，讲讲怎么测试。<br />
 开发者创建一个Google group或者google plus的社区，将测试同学的google邮箱添加进来。<br />
 应用发布之后，会出现一个测试连接。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-14726296504218.jpg" alt="-w=400" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-08-31-14726296504218.jpg" alt="-w=400" /><br />
 将这个链接发给测试同学。此时他们打开这个链接才能成为有效的Tester。而不是加入到社区就可以了。<br />
 然后在此链接的页面上有一个下载链接，此时就能够下载测试应用了。<br />
 下载完成之后，接下来，我们开始测试支付。<br />
@@ -57,18 +57,18 @@
 <ol>
   <li>
     <p>此版本的应用未配置通过Google Play结算。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-30-15-04-45.jpeg" alt="-w200" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-08-31-Screenshot_2016-08-30-15-04-45.jpeg" alt="-w200" /><br />
 解决方法：检查版本号和Google Play上设置的是否一致。检查签名等。Google那边基本认为这个应用不是一个有效的测试应用。</p>
   </li>
   <li>
     <p>需要验证身份，您需要登录自己的Google账户。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-31-15-55-46.jpeg" alt="-w200" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-08-31-Screenshot_2016-08-31-15-55-46.jpeg" alt="-w200" /><br />
 解决方法：打开手机设置-&gt;账户-&gt;删除Google账户。然后在应用管理中，找到Google Play Store，Google Play Service分别清理缓存数据。然后在打开Google Play商店。此时要求你账户登录。重新登录一遍。在杀死我们的测试应用，重新登录游戏。测试一下。这套方法能成功最好，如果不行，请换一个google账号再试一下。<br />
 或者检查一下购买的商品Id在配置中是否一样。</p>
   </li>
   <li>
     <p>无法购买您要买的商品<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-31-Screenshot_2016-08-30-16-48-47.jpeg" alt="-w200" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-08-31-Screenshot_2016-08-30-16-48-47.jpeg" alt="-w200" /><br />
 解决方法：1. 检查是否自己的账号是不是测试账号，一定要是测试账号，不是开发者账号。怎么成为Tester，上面已经说过了。2. 商品的Id是否配置的正确。</p>
   </li>
 </ol>

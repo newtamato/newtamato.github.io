@@ -109,7 +109,7 @@
 <h2 id="section">宏观角度看</h2>
 
 <p>先从整体宏观的角度看一下GoDot引擎。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15272453730540.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15272453730540.jpg" alt="" /></p>
 
 <p>从上面这张图上看，我们可以看出一下几点：</p>
 
@@ -126,7 +126,7 @@
 
 <p>现在来说一下他的代码结构。了解代码结构有助于辅助我们看懂他的代码。从github上将他的代码clone下来之后，代码结构如下：</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273033285621.jpg" alt="" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273033285621.jpg" alt="" /><br />
 这些大部分目录我们不用都去看，</p>
 
 <pre><code>core：是对数据结构的定义。
@@ -144,7 +144,7 @@ editor：就是godot编辑器的实现。
 
 <p>scene主要是第二层的实现。包括2d，3d，gui，resource（例如texture，mesh，material，collision shape）。<br />
 servers就是第三层的实现。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273037073232.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273037073232.jpg" alt="" /><br />
 audio就不用说了，visual是负责渲染，physics_2d是2d的物理引擎。physics是3d的物理引擎。arvr就是时下较为流行的ARVR技术了。</p>
 
 <p>所以如果你对任何一块儿感兴趣可以直接去看代码。看他是怎么实现的。不过相信我，硬啃代码绝对是事倍功半的买卖。</p>
@@ -270,7 +270,7 @@ texture-&gt;active = true; }
 <h3 id="gldraw">渲染层，开始glDraw*绘制</h3>
 
 <p>这里的绘制是一个复杂的过程，我尽量以流程图的形势画出来。希望让大家有一个清晰的印象。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273102726934.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273102726934.jpg" alt="" /></p>
 
 <p>所有的渲染命令会被添加到canvas对象的command队列中，而我们循环刷新逻辑在每帧去调用render_canvas，VisualServersCanvas有所有canvas对象，于是遍历循环开始。只要有canvas对象上有command队列就开始调用_canvas_item_render_command函数去<code>glDraw*</code></p>
 
@@ -345,6 +345,10 @@ texture-&gt;active = true; }
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/01/05/010">500人同时在线的客户端小工具</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
@@ -502,10 +506,6 @@ texture-&gt;active = true; }
         <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -520,7 +520,7 @@ texture-&gt;active = true; }
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - newtomato -
+  Copyright &copy; 2019 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

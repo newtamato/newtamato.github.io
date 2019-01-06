@@ -4,7 +4,7 @@
   <title><![CDATA[分类:android | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/android/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -39,7 +39,7 @@
 </ol>
 
 <p>效果图：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-07-15256696433353.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-07-15256696433353.jpg" alt="" /></p>
 
 ]]></content>
   </entry>
@@ -67,7 +67,7 @@
 
 <p>我这里使用的是<code>MALI GPU</code> 厂商提供给开发者的工具<code>Mali GPU Texture Compression Tool </code>，可以将图片压缩成ect1或者etc2格式。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-11-12-15104668339680.jpg" alt="" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-11-12-15104668339680.jpg" alt="" /></p>
 
 <p>在导出的时候我们选择如何处理<code>alpha</code>。</p>
 
@@ -185,7 +185,7 @@ gl_FragColor = colour;
 我在这个<a href="http://stackoverflow.com/questions/22818516/android-facebook-api-key-hash-not-match-any-store-key-hashes">stackoverflow</a>下面找到了解决方法。</p>
 
 <p>总结起来的方法就是，fb会弹出提示告诉你，你应用的hash值和我们存储的不一致。我们记下这个hashcode，然后到fb developer console那里设置<code>key Hashes</code><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-07-14837800858205.jpg" alt="-w400" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-01-07-14837800858205.jpg" alt="-w400" /></p>
 
 <p>但是这个key hashes值是怎么创建的呢？<br />
 一番搜索之后，在<a href="https://github.com/AntonioCuevaUrraco/nativescript-facebook-login/issues/14">这里</a>找到了答案</p>
@@ -203,7 +203,7 @@ gl_FragColor = colour;
     <link href="http://www.newtomato.me/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong"/>
     <updated>2016-11-20T16:13:41+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
+    <content type="html"><![CDATA[<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
 
 <p>我们提交应用到Google Store的时候，Google要求应用的大小不能够超过100M，那么超过100M怎么办呢？<br />
 那就用到了本章将要讲的东西<strong>OBB</strong>（扩展二进制文件）。</p>

@@ -4,7 +4,7 @@
   <title><![CDATA[分类:python | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/python/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -314,7 +314,7 @@ jsonResult = json.loads(data)
 	request.execute()
 </code></pre>
 <p>调用结果如下<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-27-14696064871563.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-07-27-14696064871563.jpg" alt="" /></p>
 
 ]]></content>
   </entry>

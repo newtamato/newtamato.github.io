@@ -9,7 +9,12 @@
   <meta name="author" content="newtomato">
 
   
-  <meta name="description" content="项目管理执行力最为重要，其次是需求细节的敲定，将细度调整到每一个像素，是对产品的认真，是对品质的追求。 谈及团队执行，很多人会推荐scrum，他人性化，由开发人员自己估算需要的时间，然后master对这个时间进行管理跟踪，在相关的节点时间开始验收产品，很多人认为这样的管理能够发挥员工主动积极性， &hellip;">
+  <meta name="description" content="首先将Solarized的配色库download下来 1
+git clone git://github.com/altercation/solarized.git 将solarized.vim文件copy 到 ~/.vim/colors/ 文件夹下面 配置.vimrc 1
+2
+3
+4
+5 &hellip;">
   
 
   <!-- http://t.co/dKP3o1e -->
@@ -71,6 +76,69 @@
     <div id="content">
       <div class="blog-index">
   
+  
+  
+    <article>
+      
+  <header>
+    
+      <!-- Now we're back to normal posts. Note the links used under href in both headers.-->
+        <h1 class="entry-title"><a href="/blog/2015/10/17/vimshi-yong-yan-se">Vim使用-颜色</a></h1>
+      
+    
+    
+      <p class="meta">
+        
+
+
+
+
+
+
+
+
+  
+
+
+<time datetime="2015-10-17T22:19:24+08:00" pubdate data-updated="true"></time>
+        
+      </p>
+    
+  </header>
+
+
+  <div class="entry-content"><ol>
+  <li>首先将Solarized的配色库download下来</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">git</span> <span class="n">clone</span> <span class="n">git</span><span class="p">:</span><span class="o">//</span><span class="n">github</span><span class="o">.</span><span class="n">com</span><span class="o">/</span><span class="n">altercation</span><span class="o">/</span><span class="n">solarized</span><span class="o">.</span><span class="n">git</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+<ol>
+  <li>将solarized.vim文件copy 到 ~/.vim/colors/  文件夹下面</li>
+  <li>配置.vimrc</li>
+</ol>
+
+<div class="bogus-wrapper"><notextile><figure class="code"><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
+<span class="line-number">2</span>
+<span class="line-number">3</span>
+<span class="line-number">4</span>
+<span class="line-number">5</span>
+</pre></td><td class="code"><pre><code class="python"><span class="line"><span class="n">syntax</span> <span class="n">on</span>
+</span><span class="line"><span class="nb">set</span> <span class="n">t_Co</span><span class="o">=</span><span class="mi">256</span>
+</span><span class="line"><span class="n">let</span> <span class="n">g</span><span class="p">:</span><span class="n">solarized_termcolors</span><span class="o">=</span><span class="mi">256</span>
+</span><span class="line"><span class="nb">set</span> <span class="n">background</span><span class="o">=</span><span class="n">dark</span>
+</span><span class="line"><span class="n">colorscheme</span> <span class="n">solarized</span>
+</span></code></pre></td></tr></table></div></figure></notextile></div>
+
+<p>**有两处配置颜色的地方，一处在/usr/share/vim/colors/,一处在~/.vim/colors。前一处是给所有user使用的，后一处仅仅是给当前登录的用户使用的配色 **</p>
+
+</div>
+  
+  
+
+
+    </article>
   
   
     <article>
@@ -258,6 +326,10 @@
   <ul id="recent_posts">
     
       <li class="post">
+        <a href="/blog/2019/01/05/010">500人同时在线的客户端小工具</a>
+      </li>
+    
+      <li class="post">
         <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
       </li>
     
@@ -413,10 +485,6 @@
         <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -430,7 +498,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - newtomato -
+  Copyright &copy; 2019 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

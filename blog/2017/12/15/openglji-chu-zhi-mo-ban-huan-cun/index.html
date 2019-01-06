@@ -146,12 +146,12 @@
 </span><span class="line">return TestClippingScene</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>运行上面的代码得到的如下图像。由于没有Alpha测试，导致以图片的矩形为准做遮罩。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1426.png" alt="IMG_1426" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-IMG_1426.png" alt="IMG_1426" /><br />
 将<strong>注释2</strong>的取消掉。就会如下所示。透明区域不起作用。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1427.png" alt="IMG_1427" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-IMG_1427.png" alt="IMG_1427" /></p>
 
 <p>将<strong>注释1</strong>的取消掉，则得到如下的效果:<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1428.png" alt="IMG_1428" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-IMG_1428.png" alt="IMG_1428" /></p>
 
 <p>具体的原理是什么呢？我们需要深入到cocos2dx的源码中。</p>
 
@@ -264,10 +264,10 @@
 </ol>
 
 <p>如果是不调用了<code>setInverted</code>的话。就如下图所示。<br />
-(图1)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-1.png" alt="1" />(图2)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-0.png" alt="0" /></p>
+(图1)<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-1.png" alt="1" />(图2)<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-0.png" alt="0" /></p>
 
 <p>调用<code>setInverted(true)</code>则如下图所示：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-a.png" alt="a" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-b.png" alt="b" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-a.png" alt="a" /><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-b.png" alt="b" /></p>
 
 <p>鉴于此，我们知道将要draw上去的不会通过模板测试，但是却会将模板留下他的形状（凡是为1的地方才会被绘制）。接下来在绘制其他形状的东西时候。在模板测试这里，直接就会按照模板的样子draw出来。<br />
 因此遮罩效果就有了！</p>
@@ -341,6 +341,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/01/05/010">500人同时在线的客户端小工具</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
@@ -498,10 +502,6 @@
         <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -516,7 +516,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - newtomato -
+  Copyright &copy; 2019 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

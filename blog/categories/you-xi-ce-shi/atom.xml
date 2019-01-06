@@ -4,7 +4,7 @@
   <title><![CDATA[分类:游戏测试 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/you-xi-ce-shi/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -18,7 +18,7 @@
     <link href="http://www.newtomato.me/blog/2016/05/29/zi-dong-hua-ce-shi"/>
     <updated>2016-05-29T17:12:45+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/05/29/zi-dong-hua-ce-shi</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-05-29-%E6%9C%BA%E5%99%A8%E4%BA%BA.jpg" alt="机器人-w300" /></p>
+    <content type="html"><![CDATA[<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-05-29-%E6%9C%BA%E5%99%A8%E4%BA%BA.jpg" alt="机器人-w300" /></p>
 
 <p>之所以想到自动化测试，是因为想要能够从技术的角度解决一些我们经常的重复性的工作。<br />
 重复性的工作特别多，如果能够有一套合适的工具，比如有一个智能一点的机器人，辅助我们，而我们只要在喝一杯咖啡的时间，回来就能够看到测试的结果，那么能够省去我们不少的精力和时间。</p>
@@ -53,7 +53,7 @@
   </li>
   <li>
     <p>###TouchTest Lite<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-05-29-TouchTestLogin.png" alt="TouchTestLogin-w200" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-05-29-TouchTestLogin.png" alt="TouchTestLogin-w200" /></p>
 
     <p>他们的官方网站做的视频介绍<a href="https://www.soasta.com/blog/touchtest-lite-part-1/">在此</a>。从视频上面可以看出，他们是将我们的应用的点击事件全部发送到了自己的服务器上面（前提是我们在他们的服务器上面先注册，才能够做测试）。然后通过后台管理，点击录制，收集点击事件。才能做成回放处理。这样有一个好处在于不必越狱手机即可使用。<br />
  但是这样也依赖于网络请求，如果网络环境差，我们的录制就很有可能失败。<br />
@@ -81,7 +81,7 @@
 <p>第一条单纯的录制，是比较简单地，只要把用户的操作都记录下来，如实的播放出来即可。<br />
 第二条就需要特殊处理。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/a.png" alt="流程图-w400" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/a.png" alt="流程图-w400" /></p>
 
 <p>A面板的controller肯定有这两个与控件绑定的函数。<br />
 调用购买确认函数，一定会触发购买是否成功的逻辑函数.<br />

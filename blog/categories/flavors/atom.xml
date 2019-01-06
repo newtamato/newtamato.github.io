@@ -4,7 +4,7 @@
   <title><![CDATA[分类:flavors | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/flavors/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -26,11 +26,11 @@
 <p>然后对生成的apk分析，替换里面的SETTING_UMENG_CHANNEL_CHANNELID_VALUES，重新打包就可以了。</p>
 
 <p>这段时间从Eclipse迁移到android studio上面，发现android studio里面有<code>flavor</code>的一个特殊存在，不太了解，Google了一下，发现这个东西正好可以解决我们多平台制作apk的需求。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-10-14840497981415.jpg" alt="-w250" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-01-10-14840497981415.jpg" alt="-w250" /><br />
 <!--more--><br />
 接下来直奔主题吧！<br />
 首先，我们在AndroidManifest.xml文件中定义一个变量<code>"${channcelValue}"</code>。<br />
-其次，打开工程对应的Setting设置<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-01-10-14840500315961.jpg" alt="" /><br />
+其次，打开工程对应的Setting设置<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-01-10-14840500315961.jpg" alt="" /><br />
 在中间空白列下面点击+依次添加渠道，右侧对应的就是平台的特殊性。比如有的平台有自己的特殊包名，可以修改Application Id,这样编译之后，此id会替换androidmanifest里面的包名。<br />
 第三，打开工程对应的build.gradle文件，你会发现里面多了个<code>productFlavors</code>的配置，刚好是你刚刚配置的东西。在对应的每个平台或者渠道下面，增加<code>manifestPlaceholders = [platformValue:1]</code>。<br />
 我的配置如下：</p>

@@ -4,7 +4,7 @@
   <title><![CDATA[分类:动画工具 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/dong-hua-gong-ju/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -18,7 +18,7 @@
     <link href="http://www.newtomato.me/blog/2016/06/19/dong-hua-gong-ju-zong-jie"/>
     <updated>2016-06-19T20:38:04+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/06/19/dong-hua-gong-ju-zong-jie</id>
-    <content type="html"><![CDATA[<h1 id="fhttp7xuepccom1z0glbclouddncom2016-06-19-fljpg"><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-19-fl.jpg" alt="f" /></h1>
+    <content type="html"><![CDATA[<h1 id="fhttpjolieoss-cn-hangzhoualiyuncscom2016-06-19-fljpg"><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-06-19-fl.jpg" alt="f" /></h1>
 
 <p>制作动画是一个前端工程师的基本功，并且有的时候需要通过代码的编写来实现一些比较复杂的展示。那么是否有一个更好一点的方式，最好能够让更擅长的人完成这样的工作，比如美术工作者。让工程师只负责逻辑就行了呢？我相信是有的。但是在达到这条路之前，我们先将自己常用的方式先列举一下。<br />
 <!--more--> <br />

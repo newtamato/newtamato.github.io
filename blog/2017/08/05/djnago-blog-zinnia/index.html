@@ -125,17 +125,17 @@
 
 <p>到<a href="https://www.pythonanywhere.com/">pythonanywhere</a>,注册账号。就有免费的空间供你使用。同时他已经实现安装了一套python的库，这对于我们后面搭建博客系统方便了需要。<br />
 注册完账户，进入首页,选择web选项卡<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501923895242.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-1501923895242.jpg" alt="=w300" /></p>
 
 <p>此时可以<strong>Add a new web app</strong>.<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019239387431.jpg" alt="=w300" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019240064418.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-15019239387431.jpg" alt="=w300" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-15019240064418.jpg" alt="=w300" /></p>
 
 <p>最终你会看到如下的界面。这个<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019242449324.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-15019242449324.jpg" alt="" /></p>
 
 <p>点击<code>xxx.pythonanywhere.com</code>链接,打开的就是你的网站<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019243247447.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-15019243247447.jpg" alt="=w300" /></p>
 
 <p>但是是不是少点什么？<br />
 是的，那就是这个域名不是你想要的，你的个性化域名还没有和网站有什么关系啊！<br />
@@ -148,7 +148,7 @@
 <code>DNSPod</code>刚好为我们做了这些。当然我们在申请域名服务的地方,就是上面提到的freenom也可以做这件事。<br />
 freenom是个国外的网站，解析起来没有国内的快。所以我选择了DNSPod。<br />
 注册DNSPod之后，<strong>添加域名</strong>，在域名解析里面添加记录<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019251536702.jpg" alt="=w400" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-15019251536702.jpg" alt="=w400" /><br />
 其中的记录值需要改成你的空间地址。</p>
 
 <p>获取空间地址的方法:</p>
@@ -158,7 +158,7 @@ freenom是个国外的网站，解析起来没有国内的快。所以我选择�
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class=""><span class="line">ping xxx.pythonanywhere.com</span></code></pre></td></tr></table></div></figure></notextile></div>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019252613848.jpg" alt="=w400" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-15019252613848.jpg" alt="=w400" /></p>
 
 <p>然后等下，访问你的域名试试。是不是打开了<code>It's work</code>的网页！</p>
 
@@ -166,11 +166,11 @@ freenom是个国外的网站，解析起来没有国内的快。所以我选择�
 
 <p>此时到这里，就差网站搭建了。我选择<code>djnago-blog-zinnia</code>框架。<br />
 最后的效果如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019256268930.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-15019256268930.jpg" alt="=w300" /></p>
 
 <ol>
   <li>进入我们的空间后台<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-1501925720319.jpg" alt="=w300" /></li>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-1501925720319.jpg" alt="=w300" /></li>
   <li>在终端输入，安装我们需要的模块：
     <ol>
       <li><code>virtualenv --python=python2.7 myvenv</code></li>
@@ -254,7 +254,7 @@ application = DjangoWhiteNoise(get_wsgi_application())
 ``` 另外，设置virtualenv，我们在上面已经选择了python2.7，这里配置一下，以后进入后台中断，生效的就是这个python，而不是系统给的python。
 </code></pre>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-08-05-15019275863573.jpg" alt="=w300" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-08-05-15019275863573.jpg" alt="=w300" /><br />
 将你的myvenv的目录写在此处。<code>/home/yourname/myvenv</code></p>
 
 <p>所有的步骤基本完成。运行试试看。<code>python manager.py runserver</code></p>
@@ -398,6 +398,10 @@ application = DjangoWhiteNoise(get_wsgi_application())
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/01/05/010">500人同时在线的客户端小工具</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
@@ -555,10 +559,6 @@ application = DjangoWhiteNoise(get_wsgi_application())
         <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -573,7 +573,7 @@ application = DjangoWhiteNoise(get_wsgi_application())
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - newtomato -
+  Copyright &copy; 2019 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -105,7 +105,7 @@
 
 <p>今天我们就通过一个小游戏来熟悉一下这个引擎。小游戏的效果如下</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-hunter.gif" alt="hunte" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-hunter.gif" alt="hunte" /></p>
 
 <p>这是个2D的游戏，玩家控制英雄四处移动旋转，控制开枪，消灭包围过来的敌人。<br />
 <!--more--></p>
@@ -122,15 +122,15 @@
 <h3 id="section">游戏结构介绍</h3>
 
 <p>游戏的场景结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955237845110.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955237845110.jpg" alt="=w300" /></p>
 
 <p>整个root下面有一个大的节点Node2D,TextureFrame被我用来做背景。Player就是我们将要控制的英雄。<br />
 animal_layer是敌人层。所有敌人都被放到这里，便于管理和控制。Timer是用来计时，用于每隔1秒开始生成新的敌人逻辑。info和info2以及fps都是界面上UI的展示。console就是我们的控制器。<br />
 在这张图上可以看到有三个节点绑定了脚本，一个是Node2D，用于管理和生成敌人。一个是Player，另外一个是console。</p>
 
 <p>Player上多一个影片剪辑一样的图标，这表示他里面还有子元件，双击它打开，里面的样式如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955241457399.jpg" alt="=w300" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955244267190.jpg" alt="=w100" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955241457399.jpg" alt="=w300" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955244267190.jpg" alt="=w100" /></p>
 
 <p>AnimatedSprite是一个类似序列帧一样的动画，可以程序控制固定展示第几张图片。我这里有三张图片，一张是表示idel状态，一张是奔跑状态，还有一张是开枪状态。默认是第一张，开枪则会设置set_frame(2)这样展示第三种状态了。</p>
 
@@ -154,7 +154,7 @@ animal_layer是敌人层。所有敌人都被放到这里，便于管理和控�
 
 <p>上述代码需要求得angle和directionVector，有了这两个变量，Player就可以受我们的控制了。而这两个变量刚好是<code>console</code>这个节点负责提供的。<br />
 console的样式如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955248782400.jpg" alt="=w300" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955248919593.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955248782400.jpg" alt="=w300" /><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955248919593.jpg" alt="=w300" /></p>
 
 <p>玩家触摸左边的控制器，（确切说是整个控制器一分为2，触摸整个左侧任何位置），根据触摸的点，和圆中心的点，可以计算得到angle和directionVector。<br />
 触摸右边的控制器，控制开火。</p>
@@ -283,12 +283,12 @@ console的样式如下：<br />
 </span><span class="line">		translate(distance.normalized() * delta * SPEED)</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>敌人的结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955257583598.jpg" alt="=w200" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955257655740.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955257583598.jpg" alt="=w200" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955257655740.jpg" alt="=w300" /></p>
 
 <p>敌人里面多了几个UI组件。一个是进度条，用于控制血量的展示。一个是爆炸效果。被子弹击中之后，触发这个效果。name的Lable组件。还有一个就是碰撞区域，上面蓝色的圆形区域。用于检测子弹是否碰撞到敌人身上。<br />
 子弹的结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955260774599.jpg" alt="" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955260863005.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955260774599.jpg" alt="" /><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955260863005.jpg" alt="=w300" /></p>
 
 <p>因此当子弹进入到敌人的圆形区域后，会触发body_enter事件。我们可以通过这个事件判定是否被击中了。</p>
 
@@ -388,6 +388,10 @@ console的样式如下：<br />
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/01/05/010">500人同时在线的客户端小工具</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
@@ -545,10 +549,6 @@ console的样式如下：<br />
         <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -563,7 +563,7 @@ console的样式如下：<br />
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - newtomato -
+  Copyright &copy; 2019 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

@@ -4,7 +4,7 @@
   <title><![CDATA[分类:typecho | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/typecho/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -51,10 +51,10 @@
 <h2 id="section-2">域名映射</h2>
 <p>为了能够国内很快访问，就需要有一个做dns映射。freenom也可以做，但是不知道为什么<strong>@</strong>这样的不能够配置。所以转向国内的<a href="https://www.dnspod.cn/">DNSPod</a>。然后在它里面做设置。<br />
 只要添加<strong>www和@</strong>记录即可<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647130072408.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-06-01-14647130072408.jpg" alt="" /></p>
 
 <p>同时由于我们的域名是在freenom上申请的，也需要在freenom上将域名和dnspod做一个中介转换。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647132199295.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-06-01-14647132199295.jpg" alt="" /></p>
 
 <p>此时设置完成之后，并不表示我们就能够访问自己的网站了。但是我们可以用工具测试一下，网站域名是否生效了。</p>
 
@@ -69,10 +69,10 @@
 
 <p>上面如果生效，接下来，对你就很简单了。首先我们要到<a href="http://typecho.org/">Typecho</a>网站上面下载一个稳定版本。<br />
 然后我们打开上面申请的免费虚拟主机目录。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647135779055.jpg" alt="文件" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-06-01-14647135779055.jpg" alt="文件" /></p>
 
 <p>点开它，你会看到自己虚拟主机的结构<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-01-14647136399737.jpg" alt="结构-w300" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-06-01-14647136399737.jpg" alt="结构-w300" /><br />
 我们只要将下载的typecho的zip压缩文件上传到public_html，上传完成之后，解压缩即可。<br />
 完成这些之后，在浏览器中输入<code>http://{你的域名}/build/index.php</code>,此时你会看到Typecho的安装提示。<br />
 只要走到这一步，就证明你的网站已经差不多了。已经完成了90%。</p>

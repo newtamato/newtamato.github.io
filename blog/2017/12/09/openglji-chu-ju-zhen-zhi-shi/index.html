@@ -139,12 +139,12 @@
 <h2 id="section-3">仿射变换</h2>
 <p>向量或者点经过矩阵线性变化加平移之后，转换为另一个向量或者点。<br />
 放射变化可以表示成为如下的公式：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115125390754949.jpg" alt="-w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115125390754949.jpg" alt="-w300" /></p>
 
 <p>这个公式是通过矩阵的缩放旋转以及平移之后计算得到的。所以仿射变换是复合变换。是基本矩阵变换相乘得来的。<br />
 因此我们先得知道基本的矩阵变换。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-15128224606470.jpg" alt="" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-15128224606470.jpg" alt="" /></p>
 
 <p>有了上述公式，我们可以基本写仿射变化的公式了。</p>
 
@@ -178,7 +178,7 @@
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class=""><span class="line">本地屏幕坐标-&gt;世界坐标-&gt;观察坐标(摄像机坐标，eye坐标)-&gt;裁剪坐标-&gt;投影坐标-&gt;标准设备坐标-&gt;屏幕坐标
 </span></code></pre></td></tr></table></div></figure></notextile></div>
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128146409840.png" alt="-w350" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128146409840.png" alt="-w350" /><br />
 因此在opengl中他的最终的参见坐标公式如下：</p>
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -252,13 +252,13 @@
 
 <p>裁剪空间是对世界空间的的范围裁剪。只有在规定范围内的才会被显示出来。这种就是投影。有正交投影和透视投影。<br />
 正交投影产生的效果就是前后一致的裁剪。主要用于2D游戏。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128184208022.png" alt="-w250" />(正交投影)</p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128184208022.png" alt="-w250" />(正交投影)</p>
 
 <p>透视投影会出现近大远小的效果。主要在3D游戏中使用。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128184007944.png" alt="-w250" />(透视投影)</p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128184007944.png" alt="-w250" />(透视投影)</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128185556038.png" alt="-w250" />(图1)<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128157278548.jpg" alt="-w150" />(右手坐标系)</p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128185556038.png" alt="-w250" />(图1)<br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128157278548.jpg" alt="-w150" />(右手坐标系)</p>
 
 <p>投影裁剪之后，只保留在视椎体内的坐标，然后将坐标转换为opengl要求的[-1，1]标准化设备坐标。<br />
 最后<code>opengl</code>通过<code>glViewPort()</code>设定的屏幕分辨率将坐标有转换为屏幕坐标。</p>
@@ -342,6 +342,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/01/05/010">500人同时在线的客户端小工具</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
@@ -499,10 +503,6 @@
         <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -517,7 +517,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - newtomato -
+  Copyright &copy; 2019 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

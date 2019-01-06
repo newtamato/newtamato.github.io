@@ -4,7 +4,7 @@
   <title><![CDATA[分类:luacheck | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/luacheck/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -19,10 +19,10 @@
     <updated>2017-07-17T13:21:18+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/07/17/install-luacheck</id>
     <content type="html"><![CDATA[<p><code>linter-luacheck</code>是一款很酷的插件，它能够检查lua的语法以及对lua未使用过的变量进行提示。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679036933.jpg" alt="=" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-07-17-15002679036933.jpg" alt="=" /></p>
 
 <p>还有这样:<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679458003.jpg" alt="=" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-17-15002679724165.jpg" alt="=" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-07-17-15002679458003.jpg" alt="=" /><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-07-17-15002679724165.jpg" alt="=" /></p>
 
 <p>因此这款能够实时提醒我们帮助我们的插件，你心动了么？<br />
 <!--more--><br />

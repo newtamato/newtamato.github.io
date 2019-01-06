@@ -4,7 +4,7 @@
   <title><![CDATA[分类:stickerpack | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/stickerpack/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -24,9 +24,9 @@
 
 <p>首先，iMessage app分为两种类型，一种是纯图片资源，不需要编写代码，称之为sticker pack，另外一种可以编写代码，调用一些类似支付的接口的API，称之为iMessage app，他们都可以作为应用的扩展，也可以独立成为一个应用。因此有两种不同的创建方式。如下图所示：<br />
 <!--more--><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-a.jpeg" alt="创建应用" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-17-a.jpeg" alt="创建应用" /></p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-b.jpeg" alt="创建应用扩展" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-17-b.jpeg" alt="创建应用扩展" /></p>
 
 <h3 id="sticker-pack">Sticker pack</h3>
 
@@ -38,12 +38,12 @@
 
 <p>而我们遇到了另一个问题，就是需要和应用挂钩，也就是表情包需要成为我们应用的扩展，这样应用在被用户安装到设备上的时候，表情包自然而然的就会出现在用户的iMessage里面。因此，我们用图二扩展的形式在应用下面创建表情包。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-c.jpeg" alt="" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-17-c.jpeg" alt="" /></p>
 
 <p>此时他下面出现一个Info.plist的文件，他也需要一个唯一id的，而且这个id是有强制规则的，<strong>以container app的id为前缀，后面再增加自己的名字。前缀一定要和container app的id保持一致</strong>。</p>
 
 <p>然后模拟器和真机运行测试。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-17-IMG_0585.png" alt="IMG_0585" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-17-IMG_0585.png" alt="IMG_0585" /></p>
 
 <p>在苹果未正式发布ios10的时候，真机需要安装ios10的GM版，需要到苹果官方网站下载一个文件（<code>iOS_10_beta_Configuration_Profile.mobileconfig</code>）,这是一个OTA证书，安装了之后即可以更新最新的ios10开发版。不过现在已经用不到了。</p>
 

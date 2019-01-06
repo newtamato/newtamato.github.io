@@ -4,7 +4,7 @@
   <title><![CDATA[分类:模拟器 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/mo-ni-qi/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -33,7 +33,7 @@
   <li>打开文件管理器-&gt;设置(右上角)-&gt;常规设置-&gt;高级选项。在此处设置为超级用户访问模式。</li>
   <li>设置共享文件夹。<br />
  打开设备上面设置<br />
- <img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-06-08-14653734292772.jpg" alt="" /><br />
+ <img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-06-08-14653734292772.jpg" alt="" /><br />
  然后在弹出的面板上选择<strong>共享文件夹</strong>，在电脑上选择一个与他同步的文件夹。<br />
  此时设置好之后，模拟器会跳转到如下文件夹中<br />
  <code>/mnt/sdcard/droid4xshare/</code></li>

@@ -4,7 +4,7 @@
   <title><![CDATA[分类:排序 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/pai-xu/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -76,7 +76,7 @@
 
 <p>快速排序正因为从头和尾一起查找交换，才是快速的原因。<br />
 他将待排序数据，一分为二，所以最优情况下，是O(N*log(N)), 但是他是个不稳定的算法。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-07-10-Sorting_quicksort_anim.gif" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-07-10-Sorting_quicksort_anim.gif" alt="" /></p>
 
 <h3 id="section-3">希尔排序</h3>
 <p>他是插入排序的一个更好的变种，他增加了步长，步长初始大小是队列长度/2,然后每次循环继续除以2，直到为步长为1，排序结束。</p>

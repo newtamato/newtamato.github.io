@@ -4,7 +4,7 @@
   <title><![CDATA[分类:cocos2dx | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/cocos2dx/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -44,7 +44,7 @@
 <p>因此我们要做的就是在内容尚未确定的情况下就要计算出宽高，然后传递给TableView。<br />
 就是这个样子。现在让我们看看，这样的TableView能做出的效果。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
 
 <p>好像还可以，并且触摸事件也不受一点影响。</p>
 
@@ -62,7 +62,7 @@ local size = text:getContentSize()
 
 <p>此时的size就是我们要求出来的宽高。剩下的工作就简单了。<br />
 接下来，可以看看我们动态增加cell之后的效果吧。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height3.gif" alt="tableview_different_height3" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-13-tableview_different_height3.gif" alt="tableview_different_height3" /></p>
 
 <p>使用<code>insertCellAtIndex</code>函数，外加<code>setContentOffset</code>即可实现上述效果。</p>
 
@@ -116,7 +116,7 @@ local size = text:getContentSize()
 <p>大富翁类型的地图有自己的特殊性。首先地图有顺时针逆时针的方向要求。有多条主路和部分支路的区分。每条主路会成为一个闭环。玩家不能主动进入支路，只能被动进入。所以对策划同学给的地图我们需要按照顺时针方向制作号码标记。1，2，3，4等。在主路分叉路口上增加协议，例如2_main_1_1,2_main_1_2,2_main_1_3,…主路第一条岔路从主路编号2开始，2_main_2_1，2_main_2_2，2_main_2_3,…这是主路的第二条岔路也是主路编号2开始。说明在主路2号这里有两条岔路。<br />
 至于分支，将main改为branch。<br />
 按照这样的协议，就可以通过深度优先算法，求算出一条主路的路径。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-03-09-15201639745417.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-03-09-15201639745417.jpg" alt="=w300" /></p>
 
 <h2 id="section-3">断线重连模块</h2>
 
@@ -171,7 +171,7 @@ local size = text:getContentSize()
 如果发生问题，可以根据请求日志做分析。<br />
 这种方案一般是用在游戏上线之后。在上线之前，只能靠开发和测试同学大量的测试。<br />
 所以当我看到cocos2dx增加一个控制台（<code>Console</code>）类的时候，就突发奇想，是否可以在前端做一个简单的记录回放。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-柴犬.jpg" alt="柴犬" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-10-08-柴犬.jpg" alt="柴犬" /><br />
 柴柴帮忙镇楼！<br />
 <!--more--></p>
 
@@ -305,7 +305,7 @@ while(index &lt; len(recordArray)):
 
 <p>至此这个工具的制作过程都讲完了。期间也掉进了坑中，幸运的是和其他同事交流下，脑袋就清晰了一些。慢慢的我的这个大坑也就填上了。<br />
 实践过程中也存在一些问题。也在慢慢优化中。期望有一天成熟起来，能给其他项目中带来便利。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-08-15074549225204.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-10-08-15074549225204.jpg" alt="" /></p>
 
 ]]></content>
   </entry>
@@ -320,7 +320,7 @@ while(index &lt; len(recordArray)):
 <p>GPU主要用于图像渲染方面。由于现在显卡发展迅速。原本CPU的部分功能，可以转移到GPU上计算运行。这样大大的减轻了CPU的运算压力。提升效率。</p>
 
 <p>GPU和CPU都有各自的性能指标。我们最常优化的地方都是CPU，因此我先从这一部分讲起。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-06-15073018470041.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-10-06-15073018470041.jpg" alt="" /><br />
 我给你演示一下我做的项目！这…,肯定是环境的问题！<br />
 <!--more--></p>
 
@@ -358,7 +358,7 @@ gl vertical不常用，但是也是优化指标之一，他表示当前有多少
 
 <p>因此说GPU的优化分情况而定。而为了降低遮挡，在我们开发游戏中可以通过TexturePacker的多边形裁剪来做到。<br />
 说着这个，最常见的情况是有透明的图片，透明也是像素，也需要被读取到显卡上，增加带宽的浪费。而多边形裁剪就是将透明的部分裁掉。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-10-06-15072972637518.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-10-06-15072972637518.jpg" alt="=w300" /></p>
 
 <p>使用cocos2dx打开<code>CC_SPRITE_DEBUG_DRAW</code>,此时你可以看到一个<code>Sprite</code>的三角形不再是两个。而是多个。<br />
 但同时，我们也发现他的<code>gl vertcail</code>也变得很大。顶点越多，cpu计算越多。而我们使用了这种多边形裁剪，期初是为了降低GPU的计算和渲染。却带来了另一个问题。</p>
@@ -384,7 +384,7 @@ gl vertical不常用，但是也是优化指标之一，他表示当前有多少
     <link href="http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun"/>
     <updated>2017-06-25T23:24:41+08:00</updated>
     <id>http://www.newtomato.me/blog/2017/06/25/ren-shi-liquidfun</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-06-25-14984044203691.png" alt="" /></p>
+    <content type="html"><![CDATA[<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-06-25-14984044203691.png" alt="" /></p>
 
 <h2 id="section">初识</h2>
 
@@ -393,7 +393,7 @@ gl vertical不常用，但是也是优化指标之一，他表示当前有多少
 <p><code>liquidFunc</code>的demo地址<a href="http://google.github.io/liquidfun/testbed/index.html">在此</a>。相信我你看到这个demo之后，绝对会对<code>liquidFun</code>这个引擎产生无比的喜欢。（这里不需要翻墙，只要能打的开github，就能够看得到这个演示。）</p>
 
 <p>先来一睹为快！<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-Untitled.gif" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-07-02-Untitled.gif" alt="" /></p>
 
 <!--more-->
 

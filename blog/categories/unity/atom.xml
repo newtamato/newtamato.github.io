@@ -4,7 +4,7 @@
   <title><![CDATA[分类:unity | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/unity/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -190,7 +190,7 @@ yield_return(CS.UnityEngine.WaitForSeconds(3))
     <id>http://www.newtomato.me/blog/2018/02/11/unity-transform-tex</id>
     <content type="html"><![CDATA[<p>我们知道在unity中tiling和offset是用来设置纹理的重复，也就是俗称的贴瓷砖。<br />
 只要我们将tiling设置为（2，2）那么效果如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-07-15180039093865.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-02-07-15180039093865.jpg" alt="=w300" /></p>
 
 <p>此时，对这个GameObject添加shader，正确读取具体的uv坐标就要用到<code>TRANSFORM_TEX</code>函数。<br />
 （如果纹理的tiling=1，offset=1的情况下，可以不使用这个函数）</p>
@@ -237,7 +237,7 @@ glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 至此重复贴出的效果就实现了。</p>
 
 <p>另外在unity中纹理贴图方式是在如下位置设置的：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-07-15180058478883.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-02-07-15180058478883.jpg" alt="=w300" /></p>
 
 <p>如果你把Wrap Mode设置为<code>Clamp</code>，纹理寻址找不到直接就不显示了。</p>
 

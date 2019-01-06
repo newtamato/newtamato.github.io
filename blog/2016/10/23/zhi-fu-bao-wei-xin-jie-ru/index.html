@@ -114,8 +114,8 @@
 一般android的签名，想到的就是我们项目中使用<code>keytool</code>，<code>jarsigner</code>的方式给项目签名，但是这里不是的。<br />
 这里的签名是微信自己的协议，我们将项目apk安装到自己的手机，然后在安装一个<a href="https://res.wx.qq.com/open/zh_CN/htmledition/res/dev/download/sdk/Gen_Signature_Android1f09c7.apk">微信的签名apk工具</a>，其中这个签名工具，输入自己应用的包名，即可生成一个32位签名。这个就是微信需要的签名。但是注意，我们平时coding的时候，一般是开发模式，debug模式，所以打包生成的apk有可能也是Debug模式，一旦换成Release模式，生成出来的这个签名又会不一样。<br />
 因为为了保证Debug和Release模式签名一致。我们唯一要做的就是设置项目两种模式下面keystore是一样的。我们使用的是Android Studio，因此只要按照如下设置即可。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-release.jpeg" alt="release" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-10-23-debug.jpeg" alt="debug" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-10-23-release.jpeg" alt="release" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-10-23-debug.jpeg" alt="debug" /><br />
 这样生成出来的签名前后都是一致的。</p>
   </li>
   <li>
@@ -199,6 +199,10 @@
     <section>
   <h1>Recent Posts</h1>
   <ul id="recent_posts">
+    
+      <li class="post">
+        <a href="/blog/2019/01/05/010">500人同时在线的客户端小工具</a>
+      </li>
     
       <li class="post">
         <a href="/blog/2018/07/08/lua-problems">Lua中事件派发而引发的问题</a>
@@ -356,10 +360,6 @@
         <a href="/blog/2017/05/14/unity-uguikong-jian">Unity UGUI控件</a>
       </li>
     
-      <li class="post">
-        <a href="/blog/2017/05/14/kong-zhi-jing-tou-gen-sui">怎么控制镜头跟随人物移动</a>
-      </li>
-    
   </ul>
 </section>
 
@@ -374,7 +374,7 @@
     </div>
   </div>
   <footer role="contentinfo"><p>
-  Copyright &copy; 2018 - newtomato -
+  Copyright &copy; 2019 - newtomato -
   <span class="credit">Powered by <a href="http://octopress.org">Octopress</a></span>
 </p>
 

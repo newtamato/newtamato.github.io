@@ -4,7 +4,7 @@
   <title><![CDATA[分类:godot | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/godot/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -28,7 +28,7 @@
 <h2 id="section">宏观角度看</h2>
 
 <p>先从整体宏观的角度看一下GoDot引擎。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15272453730540.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15272453730540.jpg" alt="" /></p>
 
 <p>从上面这张图上看，我们可以看出一下几点：</p>
 
@@ -45,7 +45,7 @@
 
 <p>现在来说一下他的代码结构。了解代码结构有助于辅助我们看懂他的代码。从github上将他的代码clone下来之后，代码结构如下：</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273033285621.jpg" alt="" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273033285621.jpg" alt="" /><br />
 这些大部分目录我们不用都去看，</p>
 
 <pre><code>core：是对数据结构的定义。
@@ -63,7 +63,7 @@ editor：就是godot编辑器的实现。
 
 <p>scene主要是第二层的实现。包括2d，3d，gui，resource（例如texture，mesh，material，collision shape）。<br />
 servers就是第三层的实现。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273037073232.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273037073232.jpg" alt="" /><br />
 audio就不用说了，visual是负责渲染，physics_2d是2d的物理引擎。physics是3d的物理引擎。arvr就是时下较为流行的ARVR技术了。</p>
 
 <p>所以如果你对任何一块儿感兴趣可以直接去看代码。看他是怎么实现的。不过相信我，硬啃代码绝对是事倍功半的买卖。</p>
@@ -189,7 +189,7 @@ texture-&gt;active = true; }
 <h3 id="gldraw">渲染层，开始glDraw*绘制</h3>
 
 <p>这里的绘制是一个复杂的过程，我尽量以流程图的形势画出来。希望让大家有一个清晰的印象。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273102726934.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273102726934.jpg" alt="" /></p>
 
 <p>所有的渲染命令会被添加到canvas对象的command队列中，而我们循环刷新逻辑在每帧去调用render_canvas，VisualServersCanvas有所有canvas对象，于是遍历循环开始。只要有canvas对象上有command队列就开始调用_canvas_item_render_command函数去<code>glDraw*</code></p>
 
@@ -225,13 +225,13 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
 <h2 id="section-1">进入正文</h2>
 
 <p>先来看看godot怎么解释他的input事件。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-152681301816391.png" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-20-152681301816391.png" alt="" /><br />
 User触发了点击事件之后，事件在SceneTree中一直被传递。执行格子_input函数。从图中可以看出，先要寻找_input,如果没有_input最后会寻找_unhandled_input函数。</p>
 
 <p>看这种图也不是很直观。我们来做一个测试。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268241267894.jpg" alt="w350" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-20-15268241267894.jpg" alt="w350" /><br />
 展示的样子是：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268237116454.jpg" alt="w350" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-20-15268237116454.jpg" alt="w350" /></p>
 
 <p>连个button，同时button下面还有一个Area。<strong>TestClick和Hud和Area均带有_input函数</strong>，当我点击button1的时候，输出的打印日志如下：</p>
 
@@ -325,7 +325,7 @@ User触发了点击事件之后，事件在SceneTree中一直被传递。执行�
 
 <p>所以说矩阵非常重要。<br />
 而今天我们先来了解一下Godot中坐标是一个什么样子的？原点在何处？坐标如何转换。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-icon.png" alt="icon" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-19-icon.png" alt="icon" /><br />
 <!--more--><br />
 ## 进入正题</p>
 
@@ -334,7 +334,7 @@ User触发了点击事件之后，事件在SceneTree中一直被传递。执行�
 
 <p>首先我们创建一个空的godot工程，并且创建一个空的场景，里面放置一个Node。命名TestClick。<br />
 然后增加一个Area，并且为他添加一个Shape（用于碰撞），和Mesh用于展示他的样子的。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267174988040.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-19-15267174988040.jpg" alt="" /></p>
 
 <p>此时一定要增加一个Camera，否则运行之后场景里面看不到任何东西。</p>
 
@@ -364,7 +364,7 @@ func _on_Area_input_event(camera, event, click_position, click_normal, shape_idx
 event.position是屏幕坐标，根据你的屏幕分辨率计算出来的屏幕坐标，是一个Vector2类型。<br />
 而click_position则是一个Vector3类型的坐标，但是并不是Area的点击位置坐标，而是当前屏幕的点击坐标，是当前ViewPort的点击坐标。<br />
 这里说一下ViewPort的原点和坐标系。ViewPort的坐标系类似如下图片。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267189437356.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-19-15267189437356.jpg" alt="" /><br />
 ViewPort是屏幕以屏幕的正中心为原点，x向右为正方向，y向上为正方向。正交投影下，ViewPort的区间是[-1，1]。但是Camera选择是透视投影，调整Camera的视角和far，near之后，区间就会发生变化。点击屏幕四个角，输出坐标。比较一下即可。<br />
 但是我们需要的不是viewport坐标，而是Area的坐标，设置可以说是Area的屏幕坐标。</p>
 
@@ -420,7 +420,7 @@ Vector3 Spatial::to_global(Vector3 p_local) const {
 
 <p>今天我们就通过一个小游戏来熟悉一下这个引擎。小游戏的效果如下</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-hunter.gif" alt="hunte" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-hunter.gif" alt="hunte" /></p>
 
 <p>这是个2D的游戏，玩家控制英雄四处移动旋转，控制开枪，消灭包围过来的敌人。<br />
 <!--more--></p>
@@ -437,15 +437,15 @@ Vector3 Spatial::to_global(Vector3 p_local) const {
 <h3 id="section">游戏结构介绍</h3>
 
 <p>游戏的场景结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955237845110.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955237845110.jpg" alt="=w300" /></p>
 
 <p>整个root下面有一个大的节点Node2D,TextureFrame被我用来做背景。Player就是我们将要控制的英雄。<br />
 animal_layer是敌人层。所有敌人都被放到这里，便于管理和控制。Timer是用来计时，用于每隔1秒开始生成新的敌人逻辑。info和info2以及fps都是界面上UI的展示。console就是我们的控制器。<br />
 在这张图上可以看到有三个节点绑定了脚本，一个是Node2D，用于管理和生成敌人。一个是Player，另外一个是console。</p>
 
 <p>Player上多一个影片剪辑一样的图标，这表示他里面还有子元件，双击它打开，里面的样式如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955241457399.jpg" alt="=w300" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955244267190.jpg" alt="=w100" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955241457399.jpg" alt="=w300" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955244267190.jpg" alt="=w100" /></p>
 
 <p>AnimatedSprite是一个类似序列帧一样的动画，可以程序控制固定展示第几张图片。我这里有三张图片，一张是表示idel状态，一张是奔跑状态，还有一张是开枪状态。默认是第一张，开枪则会设置set_frame(2)这样展示第三种状态了。</p>
 
@@ -466,7 +466,7 @@ get_node("Player").set_rot(angle)
 
 <p>上述代码需要求得angle和directionVector，有了这两个变量，Player就可以受我们的控制了。而这两个变量刚好是<code>console</code>这个节点负责提供的。<br />
 console的样式如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955248782400.jpg" alt="=w300" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955248919593.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955248782400.jpg" alt="=w300" /><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955248919593.jpg" alt="=w300" /></p>
 
 <p>玩家触摸左边的控制器，（确切说是整个控制器一分为2，触摸整个左侧任何位置），根据触摸的点，和圆中心的点，可以计算得到angle和directionVector。<br />
 触摸右边的控制器，控制开火。</p>
@@ -543,12 +543,12 @@ console的样式如下：<br />
 </code></pre>
 
 <p>敌人的结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955257583598.jpg" alt="=w200" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955257655740.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955257583598.jpg" alt="=w200" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955257655740.jpg" alt="=w300" /></p>
 
 <p>敌人里面多了几个UI组件。一个是进度条，用于控制血量的展示。一个是爆炸效果。被子弹击中之后，触发这个效果。name的Lable组件。还有一个就是碰撞区域，上面蓝色的圆形区域。用于检测子弹是否碰撞到敌人身上。<br />
 子弹的结构如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955260774599.jpg" alt="" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-05-23-14955260863005.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955260774599.jpg" alt="" /><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-05-23-14955260863005.jpg" alt="=w300" /></p>
 
 <p>因此当子弹进入到敌人的圆形区域后，会触发body_enter事件。我们可以通过这个事件判定是否被击中了。</p>
 

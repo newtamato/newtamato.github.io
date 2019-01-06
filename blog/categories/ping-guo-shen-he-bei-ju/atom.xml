@@ -4,7 +4,7 @@
   <title><![CDATA[分类:苹果审核被拒 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/ping-guo-shen-he-bei-ju/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -18,7 +18,7 @@
     <link href="http://www.newtomato.me/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu"/>
     <updated>2016-09-18T20:15:26+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/09/18/da-jian-ipv6huan-jing-he-wen-ti-ji-lu</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742018443262.png" alt="" /><br />
+    <content type="html"><![CDATA[<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-18-14742018443262.png" alt="" /><br />
 自从16年6月份开始，苹果要求提交的应用一定要支持ipv6。ipv6是做什么用呢？和ipv4有什么区别？<br />
 其实这个教科书上已经和我们解释过了，只是这一天来得太快。<br />
 ipv4的是32位长度，而ipv6是128位，是ipv4的4倍。能够大大的解决ip地址不够用的问题。<br />
@@ -33,11 +33,11 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 有两种方式可以大家ipv6的网络，一种是使用网线的方法，一种是使用手机4G移动网络。</p>
 
 <p>这两种方法都是相似的原理，都需要用到DNS64/NAT64的转发。那么原理是什么呢？看下面的这一张图片<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-1458809-25687ab1e24f61ec.jpg" alt="1458809-25687ab1e24f61e" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-18-1458809-25687ab1e24f61ec.jpg" alt="1458809-25687ab1e24f61e" /></p>
 
 <p>首先要知道的是，发出任何一个请求，最终都会映射成一个地址对地址的请求。所以域名需要转换成IP，这一层是域名解析服务器做的。他很快的将查询的地址发给请求方，请求方在把地址和请求信息封装成信息报，以TCP/IP的协议发出去。</p>
 
-<p>上图中，Client就是手机设备，在我们搭建的ipv6环境中，请求先送到DNS64 Server，为啥呢？因为你搭建的是DNS64/NAT64网络。也就是说你的电脑此时也是一个域名解析服务器。他会去请求DNS服务器，服务器如果存在ipv6地址，就立即返回这个地址，然后ipv6转给DNS64 Server，然后在传给Client。如果DNS Server没有配置这个ipv6，则返回一个ipv4地址。转给DNS64 Server之后，他会将ipv4转换一个下，做成ipv6的样子，转给Client，Client拿到这个组装之后的地址在向外发请求。贴一个更详细的图<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742011971107.jpg" alt="" /></p>
+<p>上图中，Client就是手机设备，在我们搭建的ipv6环境中，请求先送到DNS64 Server，为啥呢？因为你搭建的是DNS64/NAT64网络。也就是说你的电脑此时也是一个域名解析服务器。他会去请求DNS服务器，服务器如果存在ipv6地址，就立即返回这个地址，然后ipv6转给DNS64 Server，然后在传给Client。如果DNS Server没有配置这个ipv6，则返回一个ipv4地址。转给DNS64 Server之后，他会将ipv4转换一个下，做成ipv6的样子，转给Client，Client拿到这个组装之后的地址在向外发请求。贴一个更详细的图<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-18-14742011971107.jpg" alt="" /></p>
 
 <p>所以我们搭建的这个环境就是一个中转站，将我们的ip地址做一下转换。</p>
 
@@ -46,7 +46,7 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 <h3 id="ipv6">使用网线搭建ipv6网络</h3>
 
 <p>找一台MAC电脑，能够使用网线，然后拨号上网，System Preferences -&gt; Sharing (点击此处需要按住option键)，然后在弹出界面上勾选[x]Create NAT64 Network,将我们的有线网络通过Wifi的形式共享出去。在Wifi Option按钮可以不设置密码。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14741972537636.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-18-14741972537636.jpg" alt="" /></p>
 
 <p>然后点击左侧的<strong>互联网共享</strong>。此时弹框，点击<strong>启动</strong>即可。</p>
 
@@ -65,8 +65,8 @@ ipv4能用提供2^32 - 1,ipv6则能够提供2^128 - 1的地址。<br />
 <ol>
   <li>这两种方式，我们使用第二种成功，而第一种却没有成功。MAC电脑使用的是MAC Mini，版本是10.11.6。还没有找到根本原因。</li>
   <li>提交版本审核的时候，被拒。理论上服务器是可以不需要支持ipv6的，但是查到的资料均指向一定要服务器配置这个呢？暂时我的猜测是，DNS64继续ipv6不成功，在请求ipv4，这期间花费了时间超时导致请求不能进入。所以为了能够快速进入最好还是让服务器也支持一下。</li>
-  <li>怎么检查自己的服务器是否支持ipv6呢，easy 方法就是在<a href="http://ipv6-test.com/validate.php">ipv6 test</a>里面输入域名，然后就知道了。百度有一个ipv6的域名，ipv6.baidu.com 。大家可以测试看看他的4A就配置了ipv6的地址。<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14741996623390.jpg" alt="" /></li>
-  <li>自己的服务器怎么配置ipv6的地址呢？只要在自己的域名解析服务商那里设置一个aaaa即可。可是如何获得ipv6呢？目前只有国内的高校网才有NAT64 + NDS64的服务如下图：<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-09-18-14742001654945.jpg" alt="" /><br />
+  <li>怎么检查自己的服务器是否支持ipv6呢，easy 方法就是在<a href="http://ipv6-test.com/validate.php">ipv6 test</a>里面输入域名，然后就知道了。百度有一个ipv6的域名，ipv6.baidu.com 。大家可以测试看看他的4A就配置了ipv6的地址。<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-18-14741996623390.jpg" alt="" /></li>
+  <li>自己的服务器怎么配置ipv6的地址呢？只要在自己的域名解析服务商那里设置一个aaaa即可。可是如何获得ipv6呢？目前只有国内的高校网才有NAT64 + NDS64的服务如下图：<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-09-18-14742001654945.jpg" alt="" /><br />
  具体获得ipv6的方法，可以参考这个链接。里面提供了收费和免费两种方法。<a href="http://www.solve6.com/">ipv6 解决方案</a>。</li>
 </ol>
 

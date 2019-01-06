@@ -4,7 +4,7 @@
   <title><![CDATA[分类:游戏 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/you-xi/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -18,7 +18,7 @@
     <link href="http://www.newtomato.me/blog/2018/02/11/ui-ai"/>
     <updated>2018-02-11T00:15:49+08:00</updated>
     <id>http://www.newtomato.me/blog/2018/02/11/ui-ai</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-11-15182797972761.jpg" alt="=w200" /><br />
+    <content type="html"><![CDATA[<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-02-11-15182797972761.jpg" alt="=w200" /><br />
 一直以来，有个想法，希望能够将开发测试工作变得简单。通过简单配置，达到对功能一键测试的目的。<br />
 这种测试不是常说的接口测试，而是UI触发测试。</p>
 

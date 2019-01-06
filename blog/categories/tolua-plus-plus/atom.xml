@@ -4,7 +4,7 @@
   <title><![CDATA[分类:tolua++ | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/tolua-plus-plus/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -71,7 +71,7 @@ cocos/scripting/lua-bindings/auto/lua_cocos2dx_box2d_auto.hpp
 <h2 id="cpp">使用生成的cpp文件</h2>
 
 <p>将他们添加到工程中，<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-07-02-14989852241192.jpg" alt="=w250" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-07-02-14989852241192.jpg" alt="=w250" /><br />
 同时在cocos2d_lua_binding工程中<code>building setting-&gt;search paths</code>添加一条搜索路径。<code>$(SRCROOT)/../../../../external/Box2D</code></p>
 
 <p>编译运行一下。</p>

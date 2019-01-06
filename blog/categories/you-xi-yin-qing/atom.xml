@@ -4,7 +4,7 @@
   <title><![CDATA[分类:游戏引擎 | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/you-xi-yin-qing/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -29,13 +29,13 @@
 
 <p><a href="http://www.yoyogames.com/showcase/2/defenders-of-ekron">defenders of ekron</a></p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-14_feature.png" alt="14_feature" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-08-28-14_feature.png" alt="14_feature" /></p>
 
 <p><a href="http://www.cybernate.com/">SUPER MUTANT ALIEN ASSAULT</a><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-1033_feature.png" alt="1033_feature" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-08-28-1033_feature.png" alt="1033_feature" /></p>
 
 <p>游戏工具开发整体感受是-简单易用，语法相对于其他游戏语言简直不能太简单。且游戏打包之后体积相对于unity真的惊人的小。且国内不少这方面的开发者，在<a href="http://www.gamemaker.cn/">Game Maker开发者之家</a>里面很多人提供了一些源码工程。真心学习的话，一两个星期就可以上手了。且受益于前人的贡献，gamemaker的文档已被翻译成中文，<a href="http://f1.gamemake.org/gm/">地址</a>,<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-08-28-14723833105217.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-08-28-14723833105217.jpg" alt="" /></p>
 
 <p>不过也有不足之处，首先游戏UI需要自己手写代码，和早期unity的GUI相似，暂时没有找到一些第三方比较好的UI编辑器。</p>
 

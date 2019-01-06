@@ -4,7 +4,7 @@
   <title><![CDATA[分类:obb | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/obb/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -20,7 +20,7 @@
     <id>http://www.newtomato.me/blog/2016/11/20/cocos2dxhe-obbde-jie-he-shi-yong</id>
     <content type="html"><![CDATA[<p>上一篇文章我们讲到OBB文件的下载，但是没有说到如何使用。这一篇文章就讲解一下怎么使用。<br />
 有两种方法可以使用OBB文件。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-11-20-2311393916-0.jpg" alt="=w300" /></p>
 
 <h3 id="section">方法比较</h3>
 
@@ -120,7 +120,7 @@ s_pZipFile = new ZipFile(resourcePath, "assets/");
     <link href="http://www.newtomato.me/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong"/>
     <updated>2016-11-20T16:13:41+08:00</updated>
     <id>http://www.newtomato.me/blog/2016/11/20/google-android-kuo-zhan-wen-jian-obbde-shi-yong</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
+    <content type="html"><![CDATA[<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2016-11-20-IMG_06702.jpg" alt="" /></p>
 
 <p>我们提交应用到Google Store的时候，Google要求应用的大小不能够超过100M，那么超过100M怎么办呢？<br />
 那就用到了本章将要讲的东西<strong>OBB</strong>（扩展二进制文件）。</p>

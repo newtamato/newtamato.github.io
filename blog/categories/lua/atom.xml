@@ -4,7 +4,7 @@
   <title><![CDATA[分类:lua | 番茄手册]]></title>
   <link href="http://www.newtomato.me/blog/categories/lua/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -25,6 +25,8 @@
 
 <p>我们采用了事件。但是我们希望事件能够按照我们要求的顺序来有序派发。<br />
 一个事件对应N个回调函数。打印出来的结构如下：</p>
+
+<!--more-->
 
 <pre><code>"Event_Name"={
 	2 = {func,tag}
@@ -217,7 +219,7 @@ Total        12   1      92.31%
 因此我们热更新之后，为了能够让新的文件生效，会将<code>package.loaded</code>直接清空。这样按照上面的逻辑，<code>require</code>进来得文件肯定都是新的文件了。</p>
 
 <p>事实是，总有意想不到的事情发生。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-04-15-805c3d47ly1fdoys4g14mg209q05g4jr.gif" alt="805c3d47ly1fdoys4g14mg209q05g4j" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-04-15-805c3d47ly1fdoys4g14mg209q05g4jr.gif" alt="805c3d47ly1fdoys4g14mg209q05g4j" /></p>
 
 <!--more-->
 

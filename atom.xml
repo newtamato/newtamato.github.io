@@ -4,7 +4,7 @@
   <title><![CDATA[番茄手册]]></title>
   <link href="http://www.newtomato.me/atom.xml" rel="self"/>
   <link href="http://www.newtomato.me/"/>
-  <updated>2018-07-08T20:46:44+08:00</updated>
+  <updated>2019-01-06T14:03:21+08:00</updated>
   <id>http://www.newtomato.me/</id>
   <author>
     <name><![CDATA[newtomato]]></name>
@@ -12,6 +12,58 @@
   </author>
   <generator uri="http://octopress.org/">Octopress</generator>
 
+  
+  <entry>
+    <title type="html"><![CDATA[500人同时在线的客户端小工具]]></title>
+    <link href="http://www.newtomato.me/blog/2019/01/05/010"/>
+    <updated>2019-01-05T17:58:54+08:00</updated>
+    <id>http://www.newtomato.me/blog/2019/01/05/010</id>
+    <content type="html"><![CDATA[<h2 id="section">背景说明</h2>
+
+<p>前段时间为服务器端压力和代码质量测试做了一个小小的贡献。<br />
+这个工具不复杂，却能解决大问题。我借此想要抛砖引玉，希望大家在开发中不要将思路仅仅局限在某个方面，应该拓展视野，发现更多。</p>
+
+<p>一般情况下，服务器上线前，会自己做这方面的测试。而我们的情况还真是特殊。服务器自己用机器人上去跑，没有爆出错误。而我们的用户自己登陆游戏，做些操作，就莫名的出现了问题。尤其是同时在线的人数并不多，有的时候不到100人就爆了。</p>
+
+<p>于是我们怀疑服务器端的机器人逻辑和玩家自己的逻辑可能不一样。由于服务器那边很多代码，都是陈年老酒了。改也改不动。于是我们转换思路，就用大量客户端发起请求测试。</p>
+
+<p>这里的“大量”是同时在线500人。虽不多，但也足以测试出问题。<br />
+<!--more--><br />
+## 问题</p>
+
+<p>问题是一个客户端如何做到同时在线500人？</p>
+
+<h2 id="section-1">动手之前的思考</h2>
+
+<p>以我们底层的架构，玩家需要连接3个socket才能正常操作游戏，并且这三个socket都活着。所以同时500人，实际上就是1500个socket。<br />
+正常操作是直接创建1500个socket吧（先不管他是不是卡的要死），虽然都能创建成功，但只有64个有效。为何呢？因为而windows默认socket同时存在的数量是64个！<br />
+我修改了这个配置，写成了2048，理论上可以支持超过500人。<br />
+只是超过500人，会让我的windows电脑卡的不成样子。</p>
+
+<p>剩下的事，就是抽逻辑。<br />
+相信大家都写过一些工具，比如在UI还没有给的时候，我们自己写逻辑，然后测试一下，美术那边提供了之后，我们在替换进去。<br />
+因此没有UI的那些逻辑才是项目的核心。<br />
+<code>login -&gt; start_game -&gt; buy_something</code></p>
+
+<p>##动手做吧</p>
+
+<p>前面想清楚了，我们在来把客户端大卸八块。首先去掉所有的View（游戏里面View的渲染也是性能消耗的大部头）。核心的网络库部分抽取出来，扩展一下支持多个玩家。游戏里面请求部分抽取出来（这块如果在开发中能够做到独立于view，那么做起来真是相当方便。如果耦合到view中，你懂得。）</p>
+
+<p>工具做出来之后，大量的请求发过去，给服务器极大的压力，即测试同时在线的能力，又测试服务器代码的质量。后期增加新的请求，也都会更新到这来。每天都要跑一跑，有问题也能提早发现。</p>
+
+<p>理论是如此，但是你可定要问了，那么多请求，有些是在特定场景下触发的啊，你怎么做到自动的？或者是，我游戏还有压后台，进前台操作。还有网络不好，断线重连进入游戏呢？都怎么做？</p>
+
+<p>你对一个玩家是怎么做到的，那么就能明白如何管理500个玩家了。</p>
+
+<p>脱离UI写游戏，才能看清这背后的道理。对不对?</p>
+
+<h2 id="section-2">问题来了？</h2>
+
+<p>超过1000人，怎么做？<br />
+哎呀，你有什么办法？</p>
+
+]]></content>
+  </entry>
   
   <entry>
     <title type="html"><![CDATA[lua中事件派发而引发的问题]]></title>
@@ -25,6 +77,8 @@
 
 <p>我们采用了事件。但是我们希望事件能够按照我们要求的顺序来有序派发。<br />
 一个事件对应N个回调函数。打印出来的结构如下：</p>
+
+<!--more-->
 
 <pre><code>"Event_Name"={
 	2 = {func,tag}
@@ -112,7 +166,7 @@ end
 看了之后，结合unity。我决定fast follow一下，看是否能很快做出来。</p>
 
 <p>果不其然，周末用了半天左右的时间，总算搞出了样子。效果如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-07-01-circle.gif" alt="circle" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-07-01-circle.gif" alt="circle" /></p>
 
 <!--more-->
 
@@ -150,7 +204,7 @@ end
 
 <p>制作拖尾效果使用的Unity的<code>TrailRenderer</code>组件。如果想要改变这个组件的颜色，单设置他的StartColor和EndColor是没有用的，需要设置<code>TrailRenderer</code>的<code>Material</code>才可以。可以防止一个默认的Material。<br />
 然后通过设置他的StartWidth和EndWidth来设置拖尾效果。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-07-01-15304431920348.jpg" alt="=w300" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-07-01-15304431920348.jpg" alt="=w300" /><br />
 这样设置之后，在Scene窗口可以看到拖尾效果。但是在Game窗口是看不到的。<br />
 原因是在于Canvas的RenderMode。RenderMode默认是<code>Screen Space – Overlay</code>模式，此时系统自动设置一个UICamera（按理只要z值大于-1000就是可以渲染到UI上面的）。这个Camera我并不确定是否能够渲染<code>TrailRenderer</code>这种组件。于是改为<code>Screen Space – Camera</code>模式，这个Camera是我们在Scene窗口已经可以看到拖尾，因此换成这个模式之后，在Game窗口也看到了。</p>
 
@@ -594,7 +648,7 @@ C#中协程的实现可以看成是状态机。知道是状态机之后，我才
 <h2 id="section">宏观角度看</h2>
 
 <p>先从整体宏观的角度看一下GoDot引擎。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15272453730540.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15272453730540.jpg" alt="" /></p>
 
 <p>从上面这张图上看，我们可以看出一下几点：</p>
 
@@ -611,7 +665,7 @@ C#中协程的实现可以看成是状态机。知道是状态机之后，我才
 
 <p>现在来说一下他的代码结构。了解代码结构有助于辅助我们看懂他的代码。从github上将他的代码clone下来之后，代码结构如下：</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273033285621.jpg" alt="" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273033285621.jpg" alt="" /><br />
 这些大部分目录我们不用都去看，</p>
 
 <pre><code>core：是对数据结构的定义。
@@ -629,7 +683,7 @@ editor：就是godot编辑器的实现。
 
 <p>scene主要是第二层的实现。包括2d，3d，gui，resource（例如texture，mesh，material，collision shape）。<br />
 servers就是第三层的实现。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273037073232.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273037073232.jpg" alt="" /><br />
 audio就不用说了，visual是负责渲染，physics_2d是2d的物理引擎。physics是3d的物理引擎。arvr就是时下较为流行的ARVR技术了。</p>
 
 <p>所以如果你对任何一块儿感兴趣可以直接去看代码。看他是怎么实现的。不过相信我，硬啃代码绝对是事倍功半的买卖。</p>
@@ -755,7 +809,7 @@ texture-&gt;active = true; }
 <h3 id="gldraw">渲染层，开始glDraw*绘制</h3>
 
 <p>这里的绘制是一个复杂的过程，我尽量以流程图的形势画出来。希望让大家有一个清晰的印象。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-26-15273102726934.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-26-15273102726934.jpg" alt="" /></p>
 
 <p>所有的渲染命令会被添加到canvas对象的command队列中，而我们循环刷新逻辑在每帧去调用render_canvas，VisualServersCanvas有所有canvas对象，于是遍历循环开始。只要有canvas对象上有command队列就开始调用_canvas_item_render_command函数去<code>glDraw*</code></p>
 
@@ -791,13 +845,13 @@ A，B均可以收到点击事件。收到事件会有一个先后顺序。一般
 <h2 id="section-1">进入正文</h2>
 
 <p>先来看看godot怎么解释他的input事件。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-152681301816391.png" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-20-152681301816391.png" alt="" /><br />
 User触发了点击事件之后，事件在SceneTree中一直被传递。执行格子_input函数。从图中可以看出，先要寻找_input,如果没有_input最后会寻找_unhandled_input函数。</p>
 
 <p>看这种图也不是很直观。我们来做一个测试。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268241267894.jpg" alt="w350" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-20-15268241267894.jpg" alt="w350" /><br />
 展示的样子是：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-20-15268237116454.jpg" alt="w350" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-20-15268237116454.jpg" alt="w350" /></p>
 
 <p>连个button，同时button下面还有一个Area。<strong>TestClick和Hud和Area均带有_input函数</strong>，当我点击button1的时候，输出的打印日志如下：</p>
 
@@ -891,7 +945,7 @@ User触发了点击事件之后，事件在SceneTree中一直被传递。执行�
 
 <p>所以说矩阵非常重要。<br />
 而今天我们先来了解一下Godot中坐标是一个什么样子的？原点在何处？坐标如何转换。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-icon.png" alt="icon" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-19-icon.png" alt="icon" /><br />
 <!--more--><br />
 ## 进入正题</p>
 
@@ -900,7 +954,7 @@ User触发了点击事件之后，事件在SceneTree中一直被传递。执行�
 
 <p>首先我们创建一个空的godot工程，并且创建一个空的场景，里面放置一个Node。命名TestClick。<br />
 然后增加一个Area，并且为他添加一个Shape（用于碰撞），和Mesh用于展示他的样子的。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267174988040.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-19-15267174988040.jpg" alt="" /></p>
 
 <p>此时一定要增加一个Camera，否则运行之后场景里面看不到任何东西。</p>
 
@@ -930,7 +984,7 @@ func _on_Area_input_event(camera, event, click_position, click_normal, shape_idx
 event.position是屏幕坐标，根据你的屏幕分辨率计算出来的屏幕坐标，是一个Vector2类型。<br />
 而click_position则是一个Vector3类型的坐标，但是并不是Area的点击位置坐标，而是当前屏幕的点击坐标，是当前ViewPort的点击坐标。<br />
 这里说一下ViewPort的原点和坐标系。ViewPort的坐标系类似如下图片。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-19-15267189437356.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-19-15267189437356.jpg" alt="" /><br />
 ViewPort是屏幕以屏幕的正中心为原点，x向右为正方向，y向上为正方向。正交投影下，ViewPort的区间是[-1，1]。但是Camera选择是透视投影，调整Camera的视角和far，near之后，区间就会发生变化。点击屏幕四个角，输出坐标。比较一下即可。<br />
 但是我们需要的不是viewport坐标，而是Area的坐标，设置可以说是Area的屏幕坐标。</p>
 
@@ -1050,7 +1104,7 @@ Vector3 Spatial::to_global(Vector3 p_local) const {
 <p>因此我们要做的就是在内容尚未确定的情况下就要计算出宽高，然后传递给TableView。<br />
 就是这个样子。现在让我们看看，这样的TableView能做出的效果。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-13-tableview_different_height2.gif" alt="tableview_different_height2" /></p>
 
 <p>好像还可以，并且触摸事件也不受一点影响。</p>
 
@@ -1071,7 +1125,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 
 <p>此时的size就是我们要求出来的宽高。剩下的工作就简单了。<br />
 接下来，可以看看我们动态增加cell之后的效果吧。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-13-tableview_different_height3.gif" alt="tableview_different_height3" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-13-tableview_different_height3.gif" alt="tableview_different_height3" /></p>
 
 <p>使用<code>insertCellAtIndex</code>函数，外加<code>setContentOffset</code>即可实现上述效果。</p>
 
@@ -1108,7 +1162,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 </ol>
 
 <p>效果图：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-05-07-15256696433353.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-05-07-15256696433353.jpg" alt="" /></p>
 
 ]]></content>
   </entry>
@@ -1156,7 +1210,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 <p>大富翁类型的地图有自己的特殊性。首先地图有顺时针逆时针的方向要求。有多条主路和部分支路的区分。每条主路会成为一个闭环。玩家不能主动进入支路，只能被动进入。所以对策划同学给的地图我们需要按照顺时针方向制作号码标记。1，2，3，4等。在主路分叉路口上增加协议，例如2_main_1_1,2_main_1_2,2_main_1_3,…主路第一条岔路从主路编号2开始，2_main_2_1，2_main_2_2，2_main_2_3,…这是主路的第二条岔路也是主路编号2开始。说明在主路2号这里有两条岔路。<br />
 至于分支，将main改为branch。<br />
 按照这样的协议，就可以通过深度优先算法，求算出一条主路的路径。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-03-09-15201639745417.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-03-09-15201639745417.jpg" alt="=w300" /></p>
 
 <h2 id="section-3">断线重连模块</h2>
 
@@ -1208,7 +1262,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
     <id>http://www.newtomato.me/blog/2018/02/11/unity-transform-tex</id>
     <content type="html"><![CDATA[<p>我们知道在unity中tiling和offset是用来设置纹理的重复，也就是俗称的贴瓷砖。<br />
 只要我们将tiling设置为（2，2）那么效果如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-07-15180039093865.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-02-07-15180039093865.jpg" alt="=w300" /></p>
 
 <p>此时，对这个GameObject添加shader，正确读取具体的uv坐标就要用到<code>TRANSFORM_TEX</code>函数。<br />
 （如果纹理的tiling=1，offset=1的情况下，可以不使用这个函数）</p>
@@ -1269,7 +1323,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 至此重复贴出的效果就实现了。</p>
 
 <p>另外在unity中纹理贴图方式是在如下位置设置的：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-07-15180058478883.jpg" alt="=w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-02-07-15180058478883.jpg" alt="=w300" /></p>
 
 <p>如果你把Wrap Mode设置为<code>Clamp</code>，纹理寻址找不到直接就不显示了。</p>
 
@@ -1281,7 +1335,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
     <link href="http://www.newtomato.me/blog/2018/02/11/ui-ai"/>
     <updated>2018-02-11T00:15:49+08:00</updated>
     <id>http://www.newtomato.me/blog/2018/02/11/ui-ai</id>
-    <content type="html"><![CDATA[<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-02-11-15182797972761.jpg" alt="=w200" /><br />
+    <content type="html"><![CDATA[<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-02-11-15182797972761.jpg" alt="=w200" /><br />
 一直以来，有个想法，希望能够将开发测试工作变得简单。通过简单配置，达到对功能一键测试的目的。<br />
 这种测试不是常说的接口测试，而是UI触发测试。</p>
 
@@ -1433,7 +1487,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 </pre></td><td class="code"><pre><code class=""><span class="line">new_light_color = ambient * light_color * 特殊材质变量</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>对漫反射而言，需要参考下面的图计算发射之后颜色。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-01-07-15153188795257.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-01-07-15153188795257.jpg" alt="" /><br />
 光源的位置<code>light_pos</code>以及当前照射那点的法线向量<code>N</code>（此法线在顶点数据中已经设定好了，一般是出模型Mesh的时候已经包含了进来），他们之间的角度决定这一点的亮度，角度越小，光照越垂直于此点。所以求两个向量之间的夹角。使用向量的点乘。</p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
@@ -1444,7 +1498,7 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 </span><span class="line">vec3 new_light_color = diff * light_color * 特殊材质漫反射变量</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>对于镜面反射而言，和漫反射不同的时候，不仅仅有光源和法线还需要有观察者的位置。因为镜面反射对观察者有影响。观察者位置不同看到的镜面反射也不同。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2018-01-07-15153193377520.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2018-01-07-15153193377520.jpg" alt="" /></p>
 
 <p>镜面反射求的是反射光线对观察者的影响，因此就是观察者向量在反射光线向量上的投影。也就是这两个向量之间的夹角。</p>
 
@@ -1740,14 +1794,14 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 
 <p>正如上篇博文说道坐标转换的过程。如下图所示：</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15128199931966.jpg" alt="-" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15128199931966.jpg" alt="-" /></p>
 
 <p>而<strong>透视矩阵</strong>是透视除法的核心。<br />
 按照 <code>P(NDC) = M(透视矩阵) * P(C)</code>的公式如（图1），就能将裁剪坐标转为规范化坐标。</p>
 
 <!--more-->
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126253778019_1.jpg" alt="-w150" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15126253778019_1.jpg" alt="-w150" /><br />
 (图1)</p>
 
 <p>带e下标的表示摄像机坐标，即通过<code>模型矩阵*摄像机矩阵*物体本地坐标</code>计算得来的坐标<br />
@@ -1756,25 +1810,25 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 最终根据<code>glViewPort()</code>传递过来的屏幕大小和上面的标准化坐标，便能转换成屏幕标准。</p>
 
 <h3 id="section">透视锥视体</h3>
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126256321092.jpg" alt="-w300" /><br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126418783276.jpg" alt="-w300" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15126256321092.jpg" alt="-w300" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15126418783276.jpg" alt="-w300" /><br />
 锥视体有<strong>near，far，宽高比以及fov(field of view，可以看成是视角)</strong>来决定箱体的大小。<br />
 只要控制任何一个变量，都能让锥视体变化。<br />
 上图中，坐标原点假设在（0，0，0）,那么近平面的中心点在(0,0,near),远平面的中心同理在（0，0，far）</p>
 
 <h2 id="section-1">透视矩阵推导</h2>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15126252106319.jpg" alt="-w350" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15126252106319.jpg" alt="-w350" /><br />
 在上图，对near进行划分，l=&gt;left,t=&gt;top,r=&gt;right,b=&gt;bottom。<br />
 则如果我们从上面往下看这个锥视体。只有<strong>xz</strong>这个平面。</p>
 
 <p>有三角形相似性，我们得知：<code>Ze/Zp = Xe/Xp</code>。<br />
 我们使用的是near平面。所以Zp的大小是near。方向是z负轴，所有<code>Zp=-n</code>，带入到上面公式，<code>Xp = -n* Xe/Ze</code>。如下图所示：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134146322302.png" alt="-w200" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134146322302.png" alt="-w200" /><br />
 同理，我们可以求得<code>Yp</code>（从X轴看向去，只有YZ平面）。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134147063339.png" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134147063339.png" alt="" /><br />
 因此将一个点投影到锥视体的近平面的坐标（Xp,Yp,Zp）便计算出来。接下来计算这个P点坐标和规范化设备坐标的转换。P坐标的x,y最终要转换成[-1,1]区间。如下图所示，横轴是以Xp为轴，纵轴是Xn。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134159083184.jpg" alt="-w200" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134159083184.jpg" alt="-w200" /><br />
 因此他们满足的关系是二元一次方程:<code>Xn = k*Xp + b</code></p>
 
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
@@ -1798,23 +1852,23 @@ cell计算宽高，可以根据每个元素动态计算宽高。从上面gif中�
 </pre></td><td class="code"><pre><code class=""><span class="line">Yn = 2/(t-b) * Yp - (t+b)/(t-b)</span></code></pre></td></tr></table></div></figure></notextile></div>
 
 <p>将上面Xp,Yp的公式带入到Xn,Yn中。如果下图所示：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134168329201_2.jpg" alt="-w200" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134168191851_2.jpg" alt="-w200" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134168329201_2.jpg" alt="-w200" /><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134168191851_2.jpg" alt="-w200" /><br />
 在最上面的公式，我们知道<code>Xn=Xc/Wc</code>,所以设<code>Wc=Ze</code>。推导出矩阵如下：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134170212170.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134170212170.jpg" alt="" /><br />
 矩阵中第三行还没有解决。<br />
 Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
 我们对上面的矩阵进行修改，用来计算Zn和Ze之间的关系。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134174579880.jpg" alt="" /><br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134174579880.jpg" alt="" /><br />
 在摄像机矩阵中We等于1，因此上面公式可以简化。<br />
 同时Zp=-near的时候，Zn=-1，Zp=-far的时候，Zn=1。<br />
 通过上述条件。我们计算得知：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134176793143.jpg" alt="-w200" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134176793143.jpg" alt="-w200" /></p>
 
 <p>所以投影矩阵最终的样子如下：</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134182206777_2.png" alt="" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134182206777_2.png" alt="" /><br />
 由于锥视体都是对称的。因此r和l的值相等。t和b的值相等。上面的公式又可以转化为：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-16-15134184015016_2.jpg" alt="" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-16-15134184015016_2.jpg" alt="" /></p>
 
 <p>到此投影矩阵的推导基本完成。</p>
 
@@ -1882,12 +1936,12 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
 </span><span class="line">return TestClippingScene</span></code></pre></td></tr></table></div></figure></notextile></div>
 <p>运行上面的代码得到的如下图像。由于没有Alpha测试，导致以图片的矩形为准做遮罩。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1426.png" alt="IMG_1426" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-IMG_1426.png" alt="IMG_1426" /><br />
 将<strong>注释2</strong>的取消掉。就会如下所示。透明区域不起作用。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1427.png" alt="IMG_1427" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-IMG_1427.png" alt="IMG_1427" /></p>
 
 <p>将<strong>注释1</strong>的取消掉，则得到如下的效果:<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-IMG_1428.png" alt="IMG_1428" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-IMG_1428.png" alt="IMG_1428" /></p>
 
 <p>具体的原理是什么呢？我们需要深入到cocos2dx的源码中。</p>
 
@@ -2000,10 +2054,10 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
 </ol>
 
 <p>如果是不调用了<code>setInverted</code>的话。就如下图所示。<br />
-(图1)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-1.png" alt="1" />(图2)<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-0.png" alt="0" /></p>
+(图1)<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-1.png" alt="1" />(图2)<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-0.png" alt="0" /></p>
 
 <p>调用<code>setInverted(true)</code>则如下图所示：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-a.png" alt="a" /><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-15-b.png" alt="b" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-a.png" alt="a" /><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-15-b.png" alt="b" /></p>
 
 <p>鉴于此，我们知道将要draw上去的不会通过模板测试，但是却会将模板留下他的形状（凡是为1的地方才会被绘制）。接下来在绘制其他形状的东西时候。在模板测试这里，直接就会按照模板的样子draw出来。<br />
 因此遮罩效果就有了！</p>
@@ -2064,12 +2118,12 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
 <h2 id="section-3">仿射变换</h2>
 <p>向量或者点经过矩阵线性变化加平移之后，转换为另一个向量或者点。<br />
 放射变化可以表示成为如下的公式：<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115125390754949.jpg" alt="-w300" /></p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115125390754949.jpg" alt="-w300" /></p>
 
 <p>这个公式是通过矩阵的缩放旋转以及平移之后计算得到的。所以仿射变换是复合变换。是基本矩阵变换相乘得来的。<br />
 因此我们先得知道基本的矩阵变换。</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-15128224606470.jpg" alt="" /></p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-15128224606470.jpg" alt="" /></p>
 
 <p>有了上述公式，我们可以基本写仿射变化的公式了。</p>
 
@@ -2103,7 +2157,7 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
 <div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
 </pre></td><td class="code"><pre><code class=""><span class="line">本地屏幕坐标-&gt;世界坐标-&gt;观察坐标(摄像机坐标，eye坐标)-&gt;裁剪坐标-&gt;投影坐标-&gt;标准设备坐标-&gt;屏幕坐标
 </span></code></pre></td></tr></table></div></figure></notextile></div>
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128146409840.png" alt="-w350" /><br />
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128146409840.png" alt="-w350" /><br />
 因此在opengl中他的最终的参见坐标公式如下：</p>
 
 <math xmlns="http://www.w3.org/1998/Math/MathML" display="block">
@@ -2177,13 +2231,13 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
 
 <p>裁剪空间是对世界空间的的范围裁剪。只有在规定范围内的才会被显示出来。这种就是投影。有正交投影和透视投影。<br />
 正交投影产生的效果就是前后一致的裁剪。主要用于2D游戏。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128184208022.png" alt="-w250" />(正交投影)</p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128184208022.png" alt="-w250" />(正交投影)</p>
 
 <p>透视投影会出现近大远小的效果。主要在3D游戏中使用。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128184007944.png" alt="-w250" />(透视投影)</p>
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128184007944.png" alt="-w250" />(透视投影)</p>
 
-<p><img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128185556038.png" alt="-w250" />(图1)<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-09-115128157278548.jpg" alt="-w150" />(右手坐标系)</p>
+<p><img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128185556038.png" alt="-w250" />(图1)<br />
+<img src="http://jolie.oss-cn-hangzhou.aliyuncs.com/2017-12-09-115128157278548.jpg" alt="-w150" />(右手坐标系)</p>
 
 <p>投影裁剪之后，只保留在视椎体内的坐标，然后将坐标转换为opengl要求的[-1，1]标准化设备坐标。<br />
 最后<code>opengl</code>通过<code>glViewPort()</code>设定的屏幕分辨率将坐标有转换为屏幕坐标。</p>
@@ -2205,58 +2259,6 @@ Z轴的数值转化之后的目的是用来进行clipping和Depth Test。<br />
   <li><a href="https://learnopengl-cn.readthedocs.io/zh/latest/01%20Getting%20started/08%20Coordinate%20Systems/">learnopengl-cn</a></li>
   <li><a href="https://oncemore2020.github.io/blog/homogeneous/">齐次坐标系入门级思考</a></li>
 </ol>
-
-]]></content>
-  </entry>
-  
-  <entry>
-    <title type="html"><![CDATA[在xcode上运行OpenGL工程-使用Glitter]]></title>
-    <link href="http://www.newtomato.me/blog/2017/12/03/opengl-glitter"/>
-    <updated>2017-12-03T19:52:27+08:00</updated>
-    <id>http://www.newtomato.me/blog/2017/12/03/opengl-glitter</id>
-    <content type="html"><![CDATA[<p>鉴于我们一般都是在<code>https://learnopengl-cn.github.io</code>这里学习opengl。这个开源的工程的example是非常好的学习工程。但是在mac上运行起来还是很麻烦。上面提到了glew，glfw以及glad等还不足以运行这些工程，手动安装其他依赖也是很痛苦的过程。<br />
-但是<code>glitter</code>帮助我们把这些依赖全部都管理起来了。</p>
-
-<p>githud地址<a href="https://github.com/Polytonic/Glitter">在此</a>.</p>
-
-<!--more-->
-
-<p>git clone之后，在终端中输入：</p>
-
-<div class="bogus-wrapper"><notextile><figure class="code"><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class="line-number">1</span>
-<span class="line-number">2</span>
-<span class="line-number">3</span>
-<span class="line-number">4</span>
-<span class="line-number">5</span>
-</pre></td><td class="code"><pre><code class=""><span class="line">git clone --recursive https://github.com/Polytonic/Glitter
-</span><span class="line">cd Glitter
-</span><span class="line">mkdir Build
-</span><span class="line">cd Build
-</span><span class="line">cmake -G "Xcode" ..</span></code></pre></td></tr></table></div></figure></notextile></div>
-
-<p>就可以在Build中生成一个xcode工程。</p>
-
-<p>这里我遇到最大的问题就是clone花费了很长时间，但是没有遇到安装失败的情况。<br />
-但是这个工程只是一个壳，我们还需要把learnopengl的源码发进来。<br />
-mac上使用的opengl版本过高以及一些屏幕分辨率的问题，我最终尝试到如下工程的修改刚好适合我的测试。作者对learnopengl的源码做了注释和部分修改。在他职业readme上说明了修改的地方：</p>
-
-<p><code>https://github.com/THISISAGOODNAME/learnopengl-glitter</code></p>
-
-<h2 id="learnopengl">如何运行learnopengl</h2>
-
-<p>为了能够运行这些example工程，我们先创建一个<code>target</code>，例如<code>hello_window</code>，然后将hello_window里面的文件全部都拖放进来。<br />
-此刻的target的hello_window需要配置很多才能运行，为了方便起见，我们直接复制<code>Glitter</code>出来一份，然后改名为hello_window。<br />
-在<code>complie source</code>这里将hello window的文件全部包含进来。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-15123014609016.jpg" alt="" /><br />
-然后在scheme中选择hello_window，运行即可。</p>
-
-<h2 id="section">需要注意的问题</h2>
-
-<p>在mac创建一个矩阵对象，默认初始化似乎不正确。<br />
-为了能够正确展示，凡是出现<code>glm::mat4 trans;</code>这样默认初始化的地方，请一律改为了<code>glm::mat4 trans = glm::mat4(1);</code>.</p>
-
-<p>只有这样才能让矩阵转换生效。<br />
-<img src="http://7xuepc.com1.z0.glb.clouddn.com/2017-12-03-Untitled.gif" alt="" /></p>
 
 ]]></content>
   </entry>
